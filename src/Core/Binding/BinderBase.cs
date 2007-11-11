@@ -1,0 +1,76 @@
+#region License
+//
+// Author: Nate Kohari <nkohari@gmail.com>
+// Copyright (c) 2007, Enkari, Ltd.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+#endregion
+#region Using Directives
+using System;
+using Ninject.Core.Activation;
+using Ninject.Core.Infrastructure;
+#endregion
+
+namespace Ninject.Core.Binding
+{
+	/// <summary>
+	/// The baseline definition of a binder, which builds up information about a binding.
+	/// </summary>
+	public abstract class BinderBase : DisposableObject, IBinder
+	{
+		/*----------------------------------------------------------------------------------------*/
+		#region Fields
+		private readonly IBinding _binding;
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Properties
+		/// <summary>
+		/// Gets the binding that the binder should manipulate.
+		/// </summary>
+		public IBinding Binding
+		{
+			get { return _binding; }
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BinderBase"/> class.
+		/// </summary>
+		/// <param name="binding">The binding that the binder should manipulate.</param>
+		protected BinderBase(IBinding binding)
+		{
+			Ensure.ArgumentNotNull(binding, "binding");
+			_binding = binding;
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
+		/// <summary>
+		/// Returns a provider that can create instances of the specified type. Used to choose
+		/// between the <see cref="StandardProvider"/> and the <see cref="GenericProvider"/>.
+		/// </summary>
+		/// <param name="type">The type in question.</param>
+		/// <returns>A provider that can create instances of the specified type</returns>
+		protected virtual IProvider CreateProvider(Type type)
+		{
+			if (type.ContainsGenericParameters)
+				return new GenericProvider(type);
+			else
+				return new StandardProvider(type);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+	}
+}

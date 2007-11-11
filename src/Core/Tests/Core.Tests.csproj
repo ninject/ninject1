@@ -1,0 +1,136 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0A36D480-6DDB-40CA-98F3-F7C31D73D1FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ninject.Core.Tests</RootNamespace>
+    <AssemblyName>Ninject.Core.Tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Tests\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\Tests\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.4.1.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\NUnit 2.4.1\bin\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Activation\ConcurrencyFixture.cs" />
+    <Compile Include="Activation\CustomProviderFixture.cs" />
+    <Compile Include="Activation\LoggerResolverFixture.cs" />
+    <Compile Include="Activation\ExistingInstanceFixture.cs" />
+    <Compile Include="Activation\StrategySupportFixture.cs" />
+    <Compile Include="Activation\FactoryMethodProviderFixture.cs" />
+    <Compile Include="Activation\MethodInjectionStrategyFixture.cs" />
+    <Compile Include="Activation\FieldInjectionStrategyFixture.cs" />
+    <Compile Include="Activation\PropertyInjectionStrategyFixture.cs" />
+    <Compile Include="Activation\StandardProviderFixture.cs" />
+    <Compile Include="Behavior\OnePerThreadBehaviorFixture.cs" />
+    <Compile Include="Behavior\CustomBehaviorFixture.cs" />
+    <Compile Include="Behavior\SingletonBehaviorFixture.cs" />
+    <Compile Include="Behavior\TransientBehaviorFixture.cs" />
+    <Compile Include="BenchmarkFixture.cs" />
+    <Compile Include="Activation\GenericProviderFixture.cs" />
+    <Compile Include="Mocks\CircularConstructorMockA.cs" />
+    <Compile Include="Mocks\CircularConstructorMockB.cs" />
+    <Compile Include="Mocks\ContextAwareMock.cs" />
+    <Compile Include="Mocks\CircularPropertyMockA.cs" />
+    <Compile Include="Mocks\CircularPropertyMockB.cs" />
+    <Compile Include="Mocks\CircularMethodMockA.cs" />
+    <Compile Include="Mocks\CircularMethodMockB.cs" />
+    <Compile Include="Mocks\CircularFieldMockA.cs" />
+    <Compile Include="Mocks\CircularFieldMockB.cs" />
+    <Compile Include="Mocks\RequestsLogger.cs" />
+    <Compile Include="Mocks\InvalidKernel.cs" />
+    <Compile Include="Mocks\HybridInjectionMock.cs" />
+    <Compile Include="Mocks\StartableMock.cs" />
+    <Compile Include="Mocks\InitializableMock.cs" />
+    <Compile Include="Mocks\DisposableMock.cs" />
+    <Compile Include="TestableModule.cs" />
+    <Compile Include="DebugInfoFixture.cs" />
+    <Compile Include="Binding\BindingFixture.cs" />
+    <Compile Include="Binding\OptionalBindingFixture.cs" />
+    <Compile Include="Mocks\BenchmarkObject.cs" />
+    <Compile Include="Mocks\ConstructorInvocationObject.cs" />
+    <Compile Include="Mocks\IMock.cs" />
+    <Compile Include="Mocks\ImplA.cs" />
+    <Compile Include="Mocks\ImplB.cs" />
+    <Compile Include="Mocks\ImplC.cs" />
+    <Compile Include="Mocks\MockProvider.cs" />
+    <Compile Include="Mocks\MockFactory.cs" />
+    <Compile Include="Mocks\IncompatibleGenericImpl.cs" />
+    <Compile Include="Mocks\GenericImpl.cs" />
+    <Compile Include="Mocks\GenericValueHolder.cs" />
+    <Compile Include="Mocks\IGeneric.cs" />
+    <Compile Include="Mocks\IServiceA.cs" />
+    <Compile Include="Mocks\IServiceB.cs" />
+    <Compile Include="Mocks\MethodInvocationObject.cs" />
+    <Compile Include="Mocks\MockBehavior.cs" />
+    <Compile Include="Mocks\MockDirective.cs" />
+    <Compile Include="Mocks\MockModuleA.cs" />
+    <Compile Include="Mocks\MockModuleB.cs" />
+    <Compile Include="Mocks\ObjectWithCustomBehavior.cs" />
+    <Compile Include="Mocks\ObjectWithMultipleInjectionConstructors.cs" />
+    <Compile Include="Mocks\ObjectWithNoInterfaces.cs" />
+    <Compile Include="Mocks\ObjectWithOnePerThreadBehavior.cs" />
+    <Compile Include="Mocks\ObjectWithSingletonBehavior.cs" />
+    <Compile Include="Mocks\ObjectWithTransientBehavior.cs" />
+    <Compile Include="Mocks\PropertyAndFieldInvocationObject.cs" />
+    <Compile Include="Mocks\RequestKernelViaPropertyInjection.cs" />
+    <Compile Include="Mocks\RequestsConstructorInjection.cs" />
+    <Compile Include="Mocks\RequestsFieldInjection.cs" />
+    <Compile Include="Mocks\RequestsGenericObject.cs" />
+    <Compile Include="Mocks\RequestsKernelViaConstructorInjection.cs" />
+    <Compile Include="Mocks\RequestsKernelViaFieldInjection.cs" />
+    <Compile Include="Mocks\RequestsKernelViaMethodInjection.cs" />
+    <Compile Include="Mocks\RequestsMethodInjection.cs" />
+    <Compile Include="Mocks\RequestsOptionalConcreteType.cs" />
+    <Compile Include="Mocks\RequestsOptionalService.cs" />
+    <Compile Include="Mocks\RequestsPropertyInjection.cs" />
+    <Compile Include="Mocks\ServiceImplA.cs" />
+    <Compile Include="Mocks\ServiceImplB.cs" />
+    <Compile Include="Mocks\SimpleObject.cs" />
+    <Compile Include="ModuleFixture.cs" />
+    <Compile Include="Injection\ReflectionInjectorFactoryFixture.cs" />
+    <Compile Include="Injection\DynamicInjectorFactoryFixture.cs" />
+    <Compile Include="KernelFixture.cs" />
+    <Compile Include="Directives\DirectiveCollectionFixture.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core.csproj">
+      <Project>{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,228 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ninject.Core</RootNamespace>
+    <AssemblyName>Ninject.Core</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\Debug\Ninject.Core.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\Release\Ninject.Core.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Activation\ActivatorBase.cs" />
+    <Compile Include="Activation\Context\ContextBase.cs" />
+    <Compile Include="Activation\Context\StandardContext.cs" />
+    <Compile Include="Activation\Context\IContext.cs" />
+    <Compile Include="Activation\Providers\SimpleProvider.cs" />
+    <Compile Include="Activation\Providers\ProviderBase.cs" />
+    <Compile Include="Activation\Providers\InjectionProviderBase.cs" />
+    <Compile Include="Activation\Strategies\ContextAwareStrategy.cs" />
+    <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
+    <Compile Include="IContextAware.cs" />
+    <Compile Include="Infrastructure\PredicateCondition.cs" />
+    <Compile Include="Infrastructure\Utility\Format.cs" />
+    <Compile Include="Logging\LoggerBase.cs" />
+    <Compile Include="Logging\Formatters\StandardMessageFormatter.cs" />
+    <Compile Include="Logging\Formatters\IMessageFormatter.cs" />
+    <Compile Include="Logging\LoggerFactoryBase.cs" />
+    <Compile Include="Logging\Null\NullLoggerFactory.cs" />
+    <Compile Include="Logging\Null\NullLogger.cs" />
+    <Compile Include="IStartable.cs" />
+    <Compile Include="Activation\Providers\Internal\FactoryMethodProviders.cs" />
+    <Compile Include="Activation\Providers\Internal\GenericProvider.cs" />
+    <Compile Include="Activation\References\IInstanceReference.cs" />
+    <Compile Include="Activation\References\StrongInstanceReference.cs" />
+    <Compile Include="Activation\References\WeakInstanceReference.cs" />
+    <Compile Include="Activation\StandardActivator.cs" />
+    <Compile Include="Activation\Providers\Internal\ConstantProvider.cs" />
+    <Compile Include="Activation\Providers\Internal\StandardProvider.cs" />
+    <Compile Include="Activation\Strategies\Base\ActivationStrategyBase.cs" />
+    <Compile Include="Activation\Strategies\StartableStrategy.cs" />
+    <Compile Include="Activation\Strategies\DisposableStrategy.cs" />
+    <Compile Include="Activation\Strategies\Base\IActivationStrategy.cs" />
+    <Compile Include="Activation\Strategies\InitializableStrategy.cs" />
+    <Compile Include="Activation\Strategies\MethodInjectionStrategy.cs" />
+    <Compile Include="Activation\Strategies\FieldInjectionStrategy.cs" />
+    <Compile Include="Activation\Strategies\PropertyInjectionStrategy.cs" />
+    <Compile Include="Binding\StandardBinder.cs" />
+    <Compile Include="Binding\BindingOptions.cs" />
+    <Compile Include="Binding\BinderBase.cs" />
+    <Compile Include="Binding\Syntax\IBindingConditionBehaviorOrArgumentSyntax.cs" />
+    <Compile Include="Binding\Syntax\IBindingConditionSyntax.cs" />
+    <Compile Include="Binding\Syntax\IBindingBehaviorSyntax.cs" />
+    <Compile Include="Binding\Syntax\IBindingTargetSyntax.cs" />
+    <Compile Include="Infrastructure\MethodReference.cs" />
+    <Compile Include="Infrastructure\Delegates\Func.cs" />
+    <Compile Include="Infrastructure\Delegates\Proc.cs" />
+    <Compile Include="Infrastructure\IDisposableEx.cs" />
+    <Compile Include="Logging\LogSeverity.cs" />
+    <Compile Include="Logging\ILoggerFactory.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\TextWriter\ConsoleLoggerFactory.cs" />
+    <Compile Include="Logging\TextWriter\TextWriterLogger.cs" />
+    <Compile Include="Planning\Directives\Base\InjectionDirectiveBase.cs" />
+    <Compile Include="Binding\IBinder.cs" />
+    <Compile Include="Planning\Strategies\Base\PlanningStrategyBase.cs" />
+    <Compile Include="Planning\Strategies\Base\IPlanningStrategy.cs" />
+    <Compile Include="Planning\Strategies\Base\ReflectionStrategyBase.cs" />
+    <Compile Include="Planning\Targets\TargetBase.cs" />
+    <Compile Include="Planning\Targets\FieldTarget.cs" />
+    <Compile Include="Planning\Targets\ParameterTarget.cs" />
+    <Compile Include="Planning\Targets\PropertyTarget.cs" />
+    <Compile Include="Attributes\OptionalAttribute.cs" />
+    <Compile Include="Attributes\TagAttribute.cs" />
+    <Compile Include="Planning\Directives\Base\MultipleInjectionDirective.cs" />
+    <Compile Include="ICondition.cs" />
+    <Compile Include="Infrastructure\DisposableObject.cs" />
+    <Compile Include="Resolution\Plugins\ComponentResolverPlugin.cs" />
+    <Compile Include="Resolution\Plugins\LoggerResolverPlugin.cs" />
+    <Compile Include="Resolution\Plugins\ProviderResolverPlugin.cs" />
+    <Compile Include="Resolution\Plugins\KernelResolverPlugin.cs" />
+    <Compile Include="Resolution\Plugins\IResolverFactoryPlugin.cs" />
+    <Compile Include="Resolution\ResolverFactoryBase.cs" />
+    <Compile Include="Resolution\Resolvers\ComponentResolver.cs" />
+    <Compile Include="Resolution\Resolvers\LoggerResolver.cs" />
+    <Compile Include="Resolution\Resolvers\KernelResolver.cs" />
+    <Compile Include="Resolution\Resolvers\ProviderResolver.cs" />
+    <Compile Include="Resolution\StandardResolverFactory.cs" />
+    <Compile Include="Resolution\Resolvers\ResolverBase.cs" />
+    <Compile Include="Resolution\IResolverFactory.cs" />
+    <Compile Include="StandardModule.cs" />
+    <Compile Include="ModuleBase.cs" />
+    <Compile Include="Infrastructure\Debugging\DebugInfoProvider.cs" />
+    <Compile Include="Infrastructure\Debugging\IDebugInfoProvider.cs" />
+    <Compile Include="KernelOptions.cs" />
+    <Compile Include="Infrastructure\Debugging\DebugInfo.cs" />
+    <Compile Include="IInitializable.cs" />
+    <Compile Include="Planning\Directives\Base\DirectiveBase.cs" />
+    <Compile Include="Infrastructure\Attributes\BehaviorAttribute.cs" />
+    <Compile Include="Attributes\Behavior\CustomBehaviorAttribute.cs" />
+    <Compile Include="Attributes\Behavior\OnePerThreadAttribute.cs" />
+    <Compile Include="Attributes\Behavior\TransientAttribute.cs" />
+    <Compile Include="Attributes\Behavior\SingletonAttribute.cs" />
+    <Compile Include="Attributes\InjectAttribute.cs" />
+    <Compile Include="Behavior\BehaviorBase.cs" />
+    <Compile Include="Behavior\OnePerThreadBehavior.cs" />
+    <Compile Include="Behavior\SingletonBehavior.cs" />
+    <Compile Include="Behavior\TransientBehavior.cs" />
+    <Compile Include="IModule.cs" />
+    <Compile Include="Planning\Targets\ITarget.cs" />
+    <Compile Include="Infrastructure\Argument.cs" />
+    <Compile Include="Infrastructure\Delegates\FactoryMethod.cs" />
+    <Compile Include="Infrastructure\DynamicMethodFactory.cs" />
+    <Compile Include="Infrastructure\Delegates\Getter.cs" />
+    <Compile Include="Infrastructure\Delegates\Invoker.cs" />
+    <Compile Include="Infrastructure\Delegates\Setter.cs" />
+    <Compile Include="Infrastructure\Multimap.cs" />
+    <Compile Include="Infrastructure\Strategies\IStrategy.cs" />
+    <Compile Include="Infrastructure\Strategies\IStrategyChain.cs" />
+    <Compile Include="Infrastructure\Strategies\StrategyBase.cs" />
+    <Compile Include="Injection\Dynamic\DynamicConstructorInjector.cs" />
+    <Compile Include="Injection\IConstructorInjector.cs" />
+    <Compile Include="Injection\Dynamic\DynamicFieldInjector.cs" />
+    <Compile Include="Injection\Dynamic\DynamicInjectorFactory.cs" />
+    <Compile Include="Injection\Dynamic\DynamicMethodInjector.cs" />
+    <Compile Include="Injection\Dynamic\DynamicPropertyInjector.cs" />
+    <Compile Include="Injection\IFieldInjector.cs" />
+    <Compile Include="Injection\IInjector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Injection\IInjectorFactory.cs" />
+    <Compile Include="Injection\IMethodInjector.cs" />
+    <Compile Include="Injection\InjectorBase.cs" />
+    <Compile Include="Injection\IPropertyInjector.cs" />
+    <Compile Include="Injection\Reflection\ReflectionConstructorInjector.cs" />
+    <Compile Include="Injection\Reflection\ReflectionFieldInjector.cs" />
+    <Compile Include="Injection\Reflection\ReflectionInjectorFactory.cs" />
+    <Compile Include="Injection\Reflection\ReflectionMethodInjector.cs" />
+    <Compile Include="Injection\Reflection\ReflectionPropertyInjector.cs" />
+    <Compile Include="Planning\Directives\Base\SingleInjectionDirective.cs" />
+    <Compile Include="Resolution\Resolvers\StandardResolver.cs" />
+    <Compile Include="Infrastructure\Strategies\StrategyChain.cs" />
+    <Compile Include="Planning\IPlanner.cs" />
+    <Compile Include="Planning\PlannerBase.cs" />
+    <Compile Include="Planning\Plans\DirectiveCollection.cs" />
+    <Compile Include="Planning\Plans\IActivationPlan.cs" />
+    <Compile Include="Planning\Plans\StandardActivationPlan.cs" />
+    <Compile Include="Planning\StandardPlanner.cs" />
+    <Compile Include="Planning\Strategies\BehaviorReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\ConstructorReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\FieldReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\MethodReflectionStrategy.cs" />
+    <Compile Include="Planning\Strategies\PropertyReflectionStrategy.cs" />
+    <Compile Include="StandardKernel.cs" />
+    <Compile Include="Exceptions\ActivationException.cs" />
+    <Compile Include="Binding\IBinding.cs" />
+    <Compile Include="Planning\Directives\FieldInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\PropertyInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\MethodInjectionDirective.cs" />
+    <Compile Include="Planning\Directives\ConstructorInjectionDirective.cs" />
+    <Compile Include="Binding\StandardBinding.cs" />
+    <Compile Include="Infrastructure\Components\KernelComponentBase.cs" />
+    <Compile Include="Infrastructure\Components\IKernelComponent.cs" />
+    <Compile Include="KernelBase.cs" />
+    <Compile Include="Infrastructure\StrategyResult.cs" />
+    <Compile Include="Activation\IActivator.cs" />
+    <Compile Include="Behavior\IBehavior.cs" />
+    <Compile Include="Resolution\Resolvers\IResolver.cs" />
+    <Compile Include="Activation\Providers\IProvider.cs" />
+    <Compile Include="Planning\Directives\Base\IDirective.cs" />
+    <Compile Include="IKernel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\Utility\AttributeReader.cs" />
+    <Compile Include="Infrastructure\Utility\ExceptionFormatter.cs" />
+    <Compile Include="Infrastructure\Utility\Ensure.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
