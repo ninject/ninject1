@@ -58,13 +58,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public DateTimeConditionBuilder<TRoot, DateTime> AsUTC
 		{
-			get
-			{
-				return new DateTimeConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.ToUniversalTime(); }
-					);
-			}
+			get { return new DateTimeConditionBuilder<TRoot, DateTime>(this, dt => dt.ToUniversalTime()); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -72,10 +66,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, DateTime> AsFormattedString(IFormatProvider provider)
 		{
-			return new StringConditionBuilder<TRoot, DateTime>(
-				this,
-				delegate(DateTime dt) { return dt.ToString(provider); }
-				);
+			return new StringConditionBuilder<TRoot, DateTime>(this, dt => dt.ToString(provider));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -83,10 +74,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, DateTime> AsFormattedString(string format)
 		{
-			return new StringConditionBuilder<TRoot, DateTime>(
-				this,
-				delegate(DateTime dt) { return dt.ToString(format); }
-				);
+			return new StringConditionBuilder<TRoot, DateTime>(this, dt => dt.ToString(format));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -94,10 +82,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, DateTime> AsFormattedString(string format, IFormatProvider provider)
 		{
-			return new StringConditionBuilder<TRoot, DateTime>(
-				this,
-				delegate(DateTime dt) { return dt.ToString(format, provider); }
-				);
+			return new StringConditionBuilder<TRoot, DateTime>(this, dt => dt.ToString(format, provider));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -105,13 +90,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> Year
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.Year; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.Year); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -119,13 +98,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> Month
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.Month; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.Month); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -133,13 +106,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> Day
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.Day; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.Day); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -147,13 +114,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> Hour
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.Hour; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.Hour); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -161,13 +122,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> Minute
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.Minute; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.Minute); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -175,13 +130,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> Second
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.Second; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.Second); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -189,13 +138,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> Millisecond
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.Millisecond; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.Millisecond); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -203,13 +146,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> DayOfYear
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.DayOfYear; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.DayOfYear); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -217,13 +154,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public ComparableConditionBuilder<TRoot, DateTime, DayOfWeek> DayOfWeek
 		{
-			get
-			{
-				return new ComparableConditionBuilder<TRoot, DateTime, DayOfWeek>(
-					this,
-					delegate(DateTime dt) { return dt.DayOfWeek; }
-					);
-			}
+			get { return new ComparableConditionBuilder<TRoot, DateTime, DayOfWeek>(this, dt => dt.DayOfWeek); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -231,13 +162,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, DateTime> TimeOfDay
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, DateTime>(
-					this,
-					delegate(DateTime dt) { return dt.Year; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, DateTime>(this, dt => dt.Year); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -246,13 +171,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, DateTime> IsDaylightSaving
 		{
-			get
-			{
-				return new TerminatingCondition<TRoot, DateTime>(
-					this,
-					delegate(DateTime subject) { return subject.IsDaylightSavingTime(); }
-					);
-			}
+			get { return Terminate(dt => dt.IsDaylightSavingTime()); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

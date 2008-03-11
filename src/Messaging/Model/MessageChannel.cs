@@ -279,15 +279,15 @@ namespace Ninject.Messaging
 		{
 			Ensure.NotDisposed(this);
 
-			if (_isEnabled)
-			{
-				OnReceivedMessage(new EventArgs());
+			if (!_isEnabled)
+				return;
 
-				lock (_subscriptions)
-				{
-					foreach (IMessageSubscription subscription in _subscriptions)
-						subscription.Deliver(sender, args);
-				}
+			OnReceivedMessage(new EventArgs());
+
+			lock (_subscriptions)
+			{
+				foreach (IMessageSubscription subscription in _subscriptions)
+					subscription.Deliver(sender, args);
 			}
 		}
 		#endregion

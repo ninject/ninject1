@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Globalization;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
@@ -132,7 +133,9 @@ namespace Ninject.Core
 			ILoggerFactory loggerFactory = GetComponent<ILoggerFactory>();
 			_logger = loggerFactory.GetLogger(GetType());
 
-			LoadModules(modules);
+			foreach (IModule module in modules)
+				Load(module);
+
 			ValidateBindings();
 
 			ActivateEagerServices();
@@ -196,6 +199,25 @@ namespace Ninject.Core
 		public IBinding GetBinding(Type type, IContext context)
 		{
 			return ResolveBinding(type, context);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods: Modules
+		/// <summary>
+		/// Loads the specified module, adding its bindings into the kernel.
+		/// </summary>
+		/// <param name="module">The module to load.</param>
+		public void Load(IModule module)
+		{
+			Ensure.ArgumentNotNull(module, "module");
+			Ensure.NotDisposed(this);
+
+			_logger.Debug("Loading module {0}", module.Name);
+
+			module.Kernel = this;
+			module.Load();
+
+			_logger.Debug("Finished loading module {0}.", module.Name);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -356,28 +378,6 @@ namespace Ninject.Core
 		public bool HasComponent(Type type)
 		{
 			return DoHasComponent(type);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods: Modules
-		/// <summary>
-		/// Load the specified modules into the kernel.
-		/// </summary>
-		/// <param name="modules">The modules to load.</param>
-		protected virtual void LoadModules(IEnumerable<IModule> modules)
-		{
-			Ensure.ArgumentNotNull(modules, "modules");
-			Ensure.NotDisposed(this);
-
-			foreach (IModule module in modules)
-			{
-				_logger.Debug("Loading module {0}", module.Name);
-
-				module.Kernel = this;
-				module.Load();
-
-				_logger.Debug("Finished loading module {0}.", module.Name);
-			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -855,6 +855,18 @@ namespace Ninject.Core
 			T component = GetComponent<T>();
 			Disconnect<T>();
 			DisposeMember(component);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region IServiceProvider Implementation
+		/// <summary>
+		/// Resolves an instance of the specified type.
+		/// </summary>
+		/// <param name="serviceType">The type to retrieve.</param>
+		/// <returns>An instance of the requested type.</returns>
+		object IServiceProvider.GetService(Type serviceType)
+		{
+			return Get(serviceType);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

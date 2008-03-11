@@ -59,13 +59,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, Assembly> FullName
 		{
-			get
-			{
-				return new StringConditionBuilder<TRoot, Assembly>(
-					this,
-					delegate(Assembly assembly) { return assembly.FullName; }
-					);
-			}
+			get { return new StringConditionBuilder<TRoot, Assembly>(this, a => a.FullName); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -73,13 +67,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, Assembly> Location
 		{
-			get
-			{
-				return new StringConditionBuilder<TRoot, Assembly>(
-					this,
-					delegate(Assembly assembly) { return assembly.Location; }
-					);
-			}
+			get { return new StringConditionBuilder<TRoot, Assembly>(this, a => a.Location); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -88,13 +76,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, Assembly> LoadedFromGAC
 		{
-			get
-			{
-				return new TerminatingCondition<TRoot, Assembly>(
-					this,
-					delegate(Assembly assembly) { return assembly.GlobalAssemblyCache; }
-					);
-			}
+			get { return Terminate(a => a.GlobalAssemblyCache); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -103,13 +85,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, Assembly> IsReflectionOnly
 		{
-			get
-			{
-				return new TerminatingCondition<TRoot, Assembly>(
-					this,
-					delegate(Assembly assembly) { return assembly.ReflectionOnly; }
-					);
-			}
+			get { return Terminate(a => a.ReflectionOnly); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

@@ -34,101 +34,57 @@ namespace Ninject.Core.Activation
 	public abstract class ContextBase : DebugInfoProvider, IContext
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private IKernel _kernel;
-		private IContext _parentContext;
-		private Type _service;
-		private Type[] _genericArguments;
-		private int _level;
-		private IBinding _binding;
-		private IActivationPlan _plan;
-		private DateTime _time;
-		private MemberInfo _member;
-		private ITarget _target;
-		private bool _isOptional;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the kernel that is processing the activation request.
 		/// </summary>
-		public IKernel Kernel
-		{
-			get { return _kernel; }
-			set { _kernel = value; }
-		}
+		public IKernel Kernel { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the parent context of this context. If this is a root context, this value
 		/// is <see langword="null"/>.
 		/// </summary>
-		public IContext ParentContext
-		{
-			get { return _parentContext; }
-			set { _parentContext = value; }
-		}
+		public IContext ParentContext { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the numeric nesting level for the context.
 		/// </summary>
-		public int Level
-		{
-			get { return _level; }
-			set { _level = value; }
-		}
+		public int Level { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the type of service that is being activated.
 		/// </summary>
-		public Type Service
-		{
-			get { return _service; }
-			set { _service = value; }
-		}
+		public Type Service { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the binding being used to activate items within the context.
 		/// </summary>
-		public IBinding Binding
-		{
-			get { return _binding; }
-			set { _binding = value; }
-		}
+		public IBinding Binding { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the plan.
 		/// </summary>
-		public IActivationPlan Plan
-		{
-			get { return _plan; }
-			set { _plan = value; }
-		}
+		public IActivationPlan Plan { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the generic type arguments associated with the service, if applicable.
 		/// </summary>
-		public Type[] GenericArguments
-		{
-			get { return _genericArguments; }
-		}
+		public Type[] GenericArguments { get; protected set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the time that the context was created.
 		/// </summary>
-		public DateTime Time
-		{
-			get { return _time; }
-			set { _time = value; }
-		}
+		public DateTime Time { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the instance that is being injected.
+		/// </summary>
+		public object Instance { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the member that is being injected.
 		/// </summary>
-		public MemberInfo Member
-		{
-			get { return _member; }
-			set { _member = value; }
-		}
+		public MemberInfo Member { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the target that is being injected.
@@ -138,20 +94,7 @@ namespace Ninject.Core.Activation
 		/// parameter that is being resolved. In the case of field and property injection, it will
 		/// be the member.
 		/// </remarks>
-		public ITarget Target
-		{
-			get { return _target; }
-			set { _target = value; }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets a value indicating whether this is a root context (that is, it originated from an
-		/// active request from client code and not passively via dependency resolution).
-		/// </summary>
-		public bool IsRoot
-		{
-			get { return (_parentContext == null); }
-		}
+		public ITarget Target { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether the dependency resolution occuring in this
@@ -163,10 +106,15 @@ namespace Ninject.Core.Activation
 		/// the kernel will simply inject a <see langword="null"/> value rather than throwing an
 		/// <see cref="ActivationException"/>.
 		/// </remarks>
-		public bool IsOptional
+		public bool IsOptional { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether this is a root context (that is, it originated from an
+		/// active request from client code and not passively via dependency resolution).
+		/// </summary>
+		public bool IsRoot
 		{
-			get { return _isOptional; }
-			set { _isOptional = value; }
+			get { return (ParentContext == null); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -179,14 +127,14 @@ namespace Ninject.Core.Activation
 		{
 			if (disposing && !IsDisposed)
 			{
-				_kernel = null;
-				_parentContext = null;
-				_service = null;
-				_genericArguments = null;
-				_binding = null;
-				_plan = null;
-				_member = null;
-				_target = null;
+				Kernel = null;
+				ParentContext = null;
+				Service = null;
+				GenericArguments = null;
+				Binding = null;
+				Plan = null;
+				Member = null;
+				Target = null;
 			}
 
 			base.Dispose(disposing);
@@ -204,15 +152,15 @@ namespace Ninject.Core.Activation
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			Ensure.ArgumentNotNull(service, "service");
 
-			_time = DateTime.Now;
+			Time = DateTime.Now;
 
-			_kernel = kernel;
-			_level = 0;
+			Kernel = kernel;
+			Level = 0;
 
-			_service = service;
+			Service = service;
 
 			if (service.IsGenericType)
-				_genericArguments = service.GetGenericArguments();
+				GenericArguments = service.GetGenericArguments();
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -225,16 +173,16 @@ namespace Ninject.Core.Activation
 			Ensure.ArgumentNotNull(parentContext, "parentContext");
 			Ensure.ArgumentNotNull(service, "service");
 
-			_time = DateTime.Now;
+			Time = DateTime.Now;
 
-			_parentContext = parentContext;
-			_kernel = parentContext.Kernel;
-			_level = parentContext.Level + 1;
+			ParentContext = parentContext;
+			Kernel = parentContext.Kernel;
+			Level = parentContext.Level + 1;
 
-			_service = service;
+			Service = service;
 
 			if (service.IsGenericType)
-				_genericArguments = service.GetGenericArguments();
+				GenericArguments = service.GetGenericArguments();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

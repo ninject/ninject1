@@ -59,13 +59,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, IKernel> Configuration
 		{
-			get
-			{
-				return new StringConditionBuilder<TRoot, IKernel>(
-					this,
-					delegate(IKernel kernel) { return kernel.Configuration; }
-					);
-			}
+			get { return new StringConditionBuilder<TRoot, IKernel>(this, k => k.Configuration); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

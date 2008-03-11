@@ -58,13 +58,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public AssemblyConditionBuilder<TRoot, Type> Assembly
 		{
-			get
-			{
-				return new AssemblyConditionBuilder<TRoot, Type>(
-					this,
-					delegate(Type type) { return type.Assembly; }
-					);
-			}
+			get { return new AssemblyConditionBuilder<TRoot, Type>(this, t => t.Assembly); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -72,13 +66,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TypeConditionBuilder<TRoot, Type> BaseType
 		{
-			get
-			{
-				return new TypeConditionBuilder<TRoot, Type>(
-					this,
-					delegate(Type type) { return type.BaseType; }
-					);
-			}
+			get { return new TypeConditionBuilder<TRoot, Type>(this, t => t.BaseType); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -86,13 +74,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, Type> Name
 		{
-			get
-			{
-				return new StringConditionBuilder<TRoot, Type>(
-					this,
-					delegate(Type type) { return type.Name; }
-					);
-			}
+			get { return new StringConditionBuilder<TRoot, Type>(this, t => t.Name); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -100,13 +82,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, Type> FullName
 		{
-			get
-			{
-				return new StringConditionBuilder<TRoot, Type>(
-					this,
-					delegate(Type type) { return type.FullName; }
-					);
-			}
+			get { return new StringConditionBuilder<TRoot, Type>(this, t => t.FullName); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -114,13 +90,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, Type> IsAbstract
 		{
-			get
-			{
-				return new TerminatingCondition<TRoot, Type>(
-					this,
-					delegate(Type type) { return type.IsAbstract; }
-					);
-			}
+			get { return Terminate(t => t.IsAbstract); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -129,10 +99,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, Type> IsAssignableFrom(Type type)
 		{
-			return new TerminatingCondition<TRoot, Type>(
-				this,
-				delegate(Type subject) { return subject.IsAssignableFrom(type); }
-				);
+			return Terminate(t => t.IsAssignableFrom(type));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -141,10 +108,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, Type> IsAssignableFrom<T>()
 		{
-			return new TerminatingCondition<TRoot, Type>(
-				this,
-				delegate(Type subject) { return subject.IsAssignableFrom(typeof(T)); }
-				);
+			return Terminate(t => t.IsAssignableFrom(typeof(T)));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -152,13 +116,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, Type> IsInterface
 		{
-			get
-			{
-				return new TerminatingCondition<TRoot, Type>(
-					this,
-					delegate(Type type) { return type.IsInterface; }
-					);
-			}
+			get { return Terminate(t => t.IsInterface); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -167,13 +125,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, Type> IsNested
 		{
-			get
-			{
-				return new TerminatingCondition<TRoot, Type>(
-					this,
-					delegate(Type type) { return type.IsNested; }
-					);
-			}
+			get { return Terminate(t => t.IsNested); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -181,13 +133,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, Type> IsPrimitive
 		{
-			get
-			{
-				return new TerminatingCondition<TRoot, Type>(
-					this,
-					delegate(Type type) { return type.IsPrimitive; }
-					);
-			}
+			get { return Terminate(t => t.IsPrimitive); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

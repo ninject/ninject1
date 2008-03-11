@@ -1,14 +1,19 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2844FFB6-2929-4188-A4F6-11184E0F3A5D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ninject.Conditions</RootNamespace>
     <AssemblyName>Ninject.Conditions</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +55,7 @@
     <Compile Include="Builders\MemberInfoConditionBuilder.cs" />
     <Compile Include="Builders\StringConditionBuilder.cs" />
     <Compile Include="Builders\TargetConditionBuilder.cs" />
-    <Compile Include="Builders\TerminatingCondition.cs" />
+    <Compile Include="TerminatingCondition.cs" />
     <Compile Include="Builders\TypeConditionBuilder.cs" />
     <Compile Include="Builders\VersionConditionBuilder.cs" />
     <Compile Include="Composites\AndCondition.cs" />

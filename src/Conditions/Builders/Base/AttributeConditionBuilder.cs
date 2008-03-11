@@ -64,13 +64,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, TSubject> Tag
 		{
-			get
-			{
-				return new StringConditionBuilder<TRoot, TSubject>(
-					this,
-					delegate(TSubject member) { return TagAttribute.GetTag(member); }
-					);
-			}
+			get { return new StringConditionBuilder<TRoot, TSubject>(this, s => TagAttribute.GetTag(s)); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -81,10 +75,7 @@ namespace Ninject.Conditions.Builders
 		/// <returns>A condition that terminates the chain.</returns>
 		public TerminatingCondition<TRoot, TSubject> HasAttribute(Type attributeType)
 		{
-			return new TerminatingCondition<TRoot, TSubject>(
-				this,
-				delegate(TSubject subject) { return subject.IsDefined(attributeType, true); }
-				);
+			return Terminate(s => s.IsDefined(attributeType, true));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -96,10 +87,7 @@ namespace Ninject.Conditions.Builders
 		public TerminatingCondition<TRoot, TSubject> HasAttribute<T>()
 			where T : Attribute
 		{
-			return new TerminatingCondition<TRoot, TSubject>(
-				this,
-				delegate(TSubject subject) { return subject.IsDefined(typeof(T), true); }
-				);
+			return Terminate(s => s.IsDefined(typeof(T), true));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -112,10 +100,7 @@ namespace Ninject.Conditions.Builders
 		public TerminatingCondition<TRoot, TSubject> HasMatchingAttribute<T>(T attribute)
 			where T : Attribute
 		{
-			return new TerminatingCondition<TRoot, TSubject>(
-				this,
-				delegate(TSubject subject) { return AttributeReader.HasMatch(subject, attribute); }
-				);
+			return Terminate(s => AttributeReader.HasMatch(s, attribute));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

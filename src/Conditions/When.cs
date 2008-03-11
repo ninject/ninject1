@@ -34,7 +34,7 @@ namespace Ninject.Conditions
 	/// examine <see cref="IContext"/> objects. This type can also be extended to customize
 	/// the EDSL.
 	/// </remarks>
-	public class When
+	public static partial class When
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -42,7 +42,7 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static KernelConditionBuilder<IContext, IContext> Kernel
 		{
-			get { return new KernelConditionBuilder<IContext, IContext>(delegate(IContext context) { return context.Kernel; }); }
+			get { return new KernelConditionBuilder<IContext, IContext>(ctx => ctx.Kernel); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -50,7 +50,7 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static DateTimeConditionBuilder<IContext, IContext> Time
 		{
-			get { return new DateTimeConditionBuilder<IContext, IContext>(delegate(IContext context) { return context.Time; }); }
+			get { return new DateTimeConditionBuilder<IContext, IContext>(ctx => ctx.Time); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static TypeConditionBuilder<IContext, IContext> Service
 		{
-			get { return new TypeConditionBuilder<IContext, IContext>(delegate(IContext context) { return context.Service; }); }
+			get { return new TypeConditionBuilder<IContext, IContext>(ctx => ctx.Service); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -68,7 +68,7 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static MemberInfoConditionBuilder<IContext, IContext> Member
 		{
-			get { return new MemberInfoConditionBuilder<IContext, IContext>(delegate(IContext context) { return context.Member; }); }
+			get { return new MemberInfoConditionBuilder<IContext, IContext>(ctx => ctx.Member); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -77,7 +77,7 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static TargetConditionBuilder<IContext, IContext> Target
 		{
-			get { return new TargetConditionBuilder<IContext, IContext>(delegate(IContext context) { return context.Target; }); }
+			get { return new TargetConditionBuilder<IContext, IContext>(ctx => ctx.Target); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -85,7 +85,7 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static Int32ConditionBuilder<IContext, IContext> Level
 		{
-			get { return new Int32ConditionBuilder<IContext, IContext>(delegate(IContext context) { return context.Level; }); }
+			get { return new Int32ConditionBuilder<IContext, IContext>(ctx => ctx.Level); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -93,7 +93,7 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static TerminatingCondition<IContext, IContext> InRootContext
 		{
-			get { return new TerminatingCondition<IContext, IContext>(delegate(IContext context) { return context.IsRoot; }); }
+			get { return new TerminatingCondition<IContext, IContext>(ctx => ctx.IsRoot); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -102,7 +102,7 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static TerminatingCondition<IContext, IContext> InOptionalContext
 		{
-			get { return new TerminatingCondition<IContext, IContext>(delegate(IContext context) { return context.IsOptional; }); }
+			get { return new TerminatingCondition<IContext, IContext>(ctx => ctx.IsOptional); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

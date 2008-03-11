@@ -76,6 +76,11 @@ namespace Ninject.Core.Activation
 		DateTime Time { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets the instance that is being injected.
+		/// </summary>
+		object Instance { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets or sets the member that is being injected.
 		/// </summary>
 		MemberInfo Member { get; set; }

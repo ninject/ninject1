@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Runtime.Remoting;
 using Ninject.Core.Activation.Strategies;
 using Ninject.Core.Infrastructure;
 #endregion

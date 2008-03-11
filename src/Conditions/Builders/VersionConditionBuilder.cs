@@ -58,13 +58,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, Version> Major
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, Version>(
-					this,
-					delegate(Version version) { return version.Minor; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, Version>(this, v => v.Major); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -72,13 +66,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, Version> Minor
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, Version>(
-					this,
-					delegate(Version version) { return version.Minor; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, Version>(this, v => v.Minor); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -86,13 +74,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, Version> Revision
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, Version>(
-					this,
-					delegate(Version version) { return version.Revision; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, Version>(this, v => v.Revision); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -100,13 +82,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, Version> Build
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, Version>(
-					this,
-					delegate(Version version) { return version.Build; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, Version>(this, v => v.Build); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

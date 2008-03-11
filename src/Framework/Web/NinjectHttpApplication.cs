@@ -32,8 +32,11 @@ namespace Ninject.Framework.Web
 	public abstract class NinjectHttpApplication : HttpApplication
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Fields
 		private ILogger _logger;
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Properties
 		/// <summary>
 		/// Gets or sets the logger associated with the object.
 		/// </summary>
@@ -43,7 +46,9 @@ namespace Ninject.Framework.Web
 			get { return _logger; }
 			set { _logger = value; }
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Lifecycle Event Handlers
 		/// <summary>
 		/// Initializes the application.
 		/// </summary>
@@ -59,9 +64,26 @@ namespace Ninject.Framework.Web
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Called when the application is started.
+		/// Finalizes the application.
+		/// </summary>
+		public void Application_End()
+		{
+			OnApplicationEnded();
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
+		/// <summary>
+		/// Called when the application starts.
 		/// </summary>
 		protected virtual void OnApplicationStarted()
+		{
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Called when the application ends.
+		/// </summary>
+		protected virtual void OnApplicationEnded()
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -70,6 +92,7 @@ namespace Ninject.Framework.Web
 		/// </summary>
 		/// <returns>The created kernel.</returns>
 		protected abstract IKernel CreateKernel();
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

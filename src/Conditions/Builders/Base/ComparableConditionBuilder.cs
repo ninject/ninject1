@@ -59,56 +59,94 @@ namespace Ninject.Conditions.Builders
 		/// Creates a terminating condition that determines whether the subject is greater than
 		/// the provided object.
 		/// </summary>
-		/// <param name="obj">The object to compare with.</param>
+		/// <param name="value">The object to compare with.</param>
 		/// <returns>A condition that terminates the chain.</returns>
-		public TerminatingCondition<TRoot, TSubject> GreaterThan(TSubject obj)
+		public TerminatingCondition<TRoot, TSubject> GreaterThan(TSubject value)
 		{
-			return new TerminatingCondition<TRoot, TSubject>(
-				this,
-				delegate(TSubject subject) { return (subject.CompareTo(obj) > 0); }
-				);
+			return Terminate(s => s.CompareTo(value) > 0);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a terminating condition that determines whether the subject is greater than
 		/// or equal to the provided object.
 		/// </summary>
-		/// <param name="obj">The object to compare with.</param>
+		/// <param name="value">The value to compare with.</param>
 		/// <returns>A condition that terminates the chain.</returns>
-		public TerminatingCondition<TRoot, TSubject> GreaterThanOrEqualTo(TSubject obj)
+		public TerminatingCondition<TRoot, TSubject> GreaterThanOrEqualTo(TSubject value)
 		{
-			return new TerminatingCondition<TRoot, TSubject>(
-				this,
-				delegate(TSubject subject) { return (subject.CompareTo(obj) >= 0); }
-				);
+			return Terminate(s => s.CompareTo(value) >= 0);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a terminating condition that determines whether the subject is less than
 		/// the provided object.
 		/// </summary>
-		/// <param name="obj">The object to compare with.</param>
+		/// <param name="value">The object to compare with.</param>
 		/// <returns>A condition that terminates the chain.</returns>
-		public TerminatingCondition<TRoot, TSubject> LessThan(TSubject obj)
+		public TerminatingCondition<TRoot, TSubject> LessThan(TSubject value)
 		{
-			return new TerminatingCondition<TRoot, TSubject>(
-				this,
-				delegate(TSubject subject) { return (subject.CompareTo(obj) < 0); }
-				);
+			return Terminate(s => s.CompareTo(value) < 0);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a terminating condition that determines whether the subject is less than
 		/// or equal to the provided object.
 		/// </summary>
-		/// <param name="obj">The object to compare with.</param>
+		/// <param name="value">The object to compare with.</param>
 		/// <returns>A condition that terminates the chain.</returns>
-		public TerminatingCondition<TRoot, TSubject> LessThanOrEqualTo(TSubject obj)
+		public TerminatingCondition<TRoot, TSubject> LessThanOrEqualTo(TSubject value)
 		{
-			return new TerminatingCondition<TRoot, TSubject>(
-				this,
-				delegate(TSubject subject) { return (subject.CompareTo(obj) <= 0); }
-				);
+			return Terminate(s => s.CompareTo(value) <= 0);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Operators
+		/// <summary>
+		/// Creates a terminating condition that determines whether the subject is greater than
+		/// the provided object.
+		/// </summary>
+		/// <param name="condition">The condition chain to compare.</param>
+		/// <param name="value">The value to compare with.</param>
+		/// <returns>A condition that terminates the chain.</returns>
+		public static TerminatingCondition<TRoot, TSubject> operator >(ComparableConditionBuilder<TRoot, TPrevious, TSubject> condition, TSubject value)
+		{
+			return condition.GreaterThan(value);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that determines whether the subject is greater than
+		/// or equal to the provided object.
+		/// </summary>
+		/// <param name="condition">The condition chain to compare.</param>
+		/// <param name="value">The value to compare with.</param>
+		/// <returns>A condition that terminates the chain.</returns>
+		public static TerminatingCondition<TRoot, TSubject> operator >=(ComparableConditionBuilder<TRoot, TPrevious, TSubject> condition, TSubject value)
+		{
+			return condition.GreaterThanOrEqualTo(value);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that determines whether the subject is less than
+		/// the provided object.
+		/// </summary>
+		/// <param name="condition">The condition chain to compare.</param>
+		/// <param name="value">The value to compare with.</param>
+		/// <returns>A condition that terminates the chain.</returns>
+		public static TerminatingCondition<TRoot, TSubject> operator <(ComparableConditionBuilder<TRoot, TPrevious, TSubject> condition, TSubject value)
+		{
+			return condition.LessThan(value);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that determines whether the subject is less than
+		/// or equal to the provided object.
+		/// </summary>
+		/// <param name="condition">The condition chain to compare.</param>
+		/// <param name="value">The value to compare with.</param>
+		/// <returns>A condition that terminates the chain.</returns>
+		public static TerminatingCondition<TRoot, TSubject> operator <=(ComparableConditionBuilder<TRoot, TPrevious, TSubject> condition, TSubject value)
+		{
+			return condition.LessThanOrEqualTo(value);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

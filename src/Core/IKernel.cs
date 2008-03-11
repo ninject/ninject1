@@ -18,7 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
@@ -29,7 +28,7 @@ namespace Ninject.Core
 	/// <summary>
 	/// A lightweight, flexible, general-purpose inversion-of-control container.
 	/// </summary>
-	public interface IKernel : IDisposable
+	public interface IKernel : IServiceProvider, IDisposable
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -134,6 +133,14 @@ namespace Ninject.Core
 		/// <param name="context">The context in which to resolve the binding.</param>
 		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
 		IBinding GetBinding(Type type, IContext context);
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Methods: Modules
+		/// <summary>
+		/// Loads the specified module, adding its bindings into the kernel.
+		/// </summary>
+		/// <param name="module">The module to load.</param>
+		void Load(IModule module);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Kernel Components

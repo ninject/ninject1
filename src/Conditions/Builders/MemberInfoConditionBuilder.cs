@@ -59,13 +59,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TypeConditionBuilder<TRoot, MemberInfo> DeclaringType
 		{
-			get
-			{
-				return new TypeConditionBuilder<TRoot, MemberInfo>(
-					this,
-					delegate(MemberInfo member) { return member.DeclaringType; }
-					);
-			}
+			get { return new TypeConditionBuilder<TRoot, MemberInfo>(this, m => m.DeclaringType); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -73,13 +67,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public StringConditionBuilder<TRoot, MemberInfo> Name
 		{
-			get
-			{
-				return new StringConditionBuilder<TRoot, MemberInfo>(
-					this,
-					delegate(MemberInfo member) { return member.Name; }
-					);
-			}
+			get { return new StringConditionBuilder<TRoot, MemberInfo>(this, m => m.Name); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

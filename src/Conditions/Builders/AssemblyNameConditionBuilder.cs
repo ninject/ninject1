@@ -60,13 +60,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public VersionConditionBuilder<TRoot, AssemblyName> Version
 		{
-			get
-			{
-				return new VersionConditionBuilder<TRoot, AssemblyName>(
-					this,
-					delegate(AssemblyName name) { return name.Version; }
-					);
-			}
+			get { return new VersionConditionBuilder<TRoot, AssemblyName>(this, n => n.Version); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

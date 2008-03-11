@@ -83,10 +83,13 @@ namespace Ninject.Core.Behavior
 		{
 			Ensure.NotDisposed(this);
 
-			if (_reference == null)
+			lock (this)
 			{
-				object instance = CreateInstance(context, null);
-				_reference = new StrongInstanceReference(instance, context);
+				if (_reference == null)
+				{
+					object instance = CreateInstance(context, null);
+					_reference = new StrongInstanceReference(instance, context);
+				}
 			}
 
 			return _reference.Instance;

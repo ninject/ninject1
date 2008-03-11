@@ -60,13 +60,7 @@ namespace Ninject.Conditions.Builders
 		/// <returns>A condition that terminates the chain.</returns>
 		public TerminatingCondition<TRoot, string> IsEmpty
 		{
-			get
-			{
-				return new TerminatingCondition<TRoot, string>(
-					this,
-					delegate(string subject) { return (subject.Length == 0); }
-					);
-			}
+			get { return Terminate(s => s.Length == 0); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -74,13 +68,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public Int32ConditionBuilder<TRoot, string> Length
 		{
-			get
-			{
-				return new Int32ConditionBuilder<TRoot, string>(
-					this,
-					delegate(string subject) { return subject.Length; }
-					);
-			}
+			get { return new Int32ConditionBuilder<TRoot, string>(this, s => s.Length); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -91,10 +79,7 @@ namespace Ninject.Conditions.Builders
 		/// <returns>A condition that terminates the chain.</returns>
 		public TerminatingCondition<TRoot, string> StartsWith(string value)
 		{
-			return new TerminatingCondition<TRoot, string>(
-				this,
-				delegate(string subject) { return subject.StartsWith(value); }
-				);
+			return Terminate(s => s.StartsWith(value));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -105,10 +90,7 @@ namespace Ninject.Conditions.Builders
 		/// <returns>A condition that terminates the chain.</returns>
 		public TerminatingCondition<TRoot, string> EndsWith(string value)
 		{
-			return new TerminatingCondition<TRoot, string>(
-				this,
-				delegate(string subject) { return subject.EndsWith(value); }
-				);
+			return Terminate(s => s.EndsWith(value));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -119,10 +101,7 @@ namespace Ninject.Conditions.Builders
 		/// <returns>A condition that terminates the chain.</returns>
 		public TerminatingCondition<TRoot, string> Contains(string value)
 		{
-			return new TerminatingCondition<TRoot, string>(
-				this,
-				delegate(string subject) { return subject.Contains(value); }
-				);
+			return Terminate(s => s.Contains(value));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

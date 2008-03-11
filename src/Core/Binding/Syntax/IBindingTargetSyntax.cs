@@ -76,6 +76,12 @@ namespace Ninject.Core.Binding.Syntax
 		IBindingConditionBehaviorOrArgumentSyntax ToConstant<T>(T value);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Indicates that the service should be bound to the remoting channel at the specified URI.
+		/// </summary>
+		/// <param name="uri">The URI to bind the service to.</param>
+		IBindingConditionBehaviorOrArgumentSyntax ToRemotingChannel(string uri);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Indicates that the service should be bound to the specified factory method.
 		/// </summary>
 		/// <typeparam name="R">The return value of the factory method.</typeparam>
