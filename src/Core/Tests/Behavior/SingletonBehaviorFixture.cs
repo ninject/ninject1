@@ -18,6 +18,8 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
 using Ninject.Core.Binding;
@@ -96,6 +98,28 @@ namespace Ninject.Core.Tests.Behavior
 				Assert.That(behavior, Is.Not.Null);
 
 				Assert.That(behavior.Instance, Is.Not.Null);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void SingletonsAreThreadSafe()
+		{
+			using (IKernel kernel = new StandardKernel())
+			{
+				int count = 10;
+				var items = new List<ObjectWithSingletonBehavior>();
+				var threads = new List<Thread>();
+
+				for (int idx = 0; idx < count; idx++)
+					threads.Add(new Thread(x => { items.Add(kernel.Get<ObjectWithSingletonBehavior>()); }));
+
+				threads.ForEach(t => t.Start());
+				threads.ForEach(t => t.Join());
+
+				Assert.That(items.Count, Is.EqualTo(count));
+
+				for (int idx = 1; idx < count; idx++)
+					Assert.That(items[idx], Is.SameAs(items[idx - 1]));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

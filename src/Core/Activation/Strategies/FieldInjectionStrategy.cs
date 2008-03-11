@@ -49,8 +49,7 @@ namespace Ninject.Core.Activation.Strategies
 				FieldInfo field = directive.Member;
 
 				// Create a new context in which the field's value will be activated.
-				IContext injectionContext = context.CreateChild(field, directive.Target,
-					directive.Argument.Optional);
+				IContext injectionContext = context.CreateChild(instance, field, directive.Target, directive.Argument.Optional);
 
 				// Resolve the value to inject into the field.
 				object value = directive.Argument.Resolver.Resolve(context, injectionContext);

@@ -117,8 +117,7 @@ namespace Ninject.Core.Activation
 				else
 				{
 					// Create a new context in which the parameter's value will be activated.
-					IContext injectionContext = context.CreateChild(directive.Member,
-						argument.Target, argument.Optional);
+					IContext injectionContext = context.CreateChild(null, directive.Member, argument.Target, argument.Optional);
 
 					// Resolve the value to inject for the parameter.
 					arguments[index] = argument.Resolver.Resolve(context, injectionContext);

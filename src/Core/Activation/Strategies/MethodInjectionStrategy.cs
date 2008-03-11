@@ -45,14 +45,14 @@ namespace Ninject.Core.Activation.Strategies
 
 			foreach (MethodInjectionDirective directive in directives)
 			{
-				object[] arguments = ResolveArguments(context, directive);
+				object[] arguments = ResolveArguments(context, directive, instance);
 				directive.Injector.Invoke(instance, arguments);
 			}
 
 			return StrategyResult.Proceed;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		private static object[] ResolveArguments(IContext context, MethodInjectionDirective directive)
+		private static object[] ResolveArguments(IContext context, MethodInjectionDirective directive, object instance)
 		{
 			object[] arguments = new object[directive.Arguments.Count];
 
@@ -60,8 +60,7 @@ namespace Ninject.Core.Activation.Strategies
 			foreach (Argument argument in directive.Arguments)
 			{
 				// Create a new context in which the parameter's value will be activated.
-				IContext injectionContext = context.CreateChild(directive.Member, argument.Target,
-					argument.Optional);
+				IContext injectionContext = context.CreateChild(instance, directive.Member, argument.Target, argument.Optional);
 
 				// Resolve the value to inject for the parameter.
 				arguments[index] = argument.Resolver.Resolve(context, injectionContext);

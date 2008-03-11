@@ -77,7 +77,7 @@ namespace Ninject.Core.Activation
 		public DateTime Time { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the instance that is being injected.
+		/// Gets or sets the instance that is being injected, if it has been created.
 		/// </summary>
 		public object Instance { get; set; }
 		/*----------------------------------------------------------------------------------------*/
@@ -190,11 +190,12 @@ namespace Ninject.Core.Activation
 		/// <summary>
 		/// Creates a child context using this context as its parent.
 		/// </summary>
+		/// <param name="instance">The instance receiving the injection.</param>
 		/// <param name="member">The member that the child context will be injecting.</param>
-		/// <param name="target">The injection Point that is being injected.</param>
+		/// <param name="target">The target that is being injected.</param>
 		/// <param name="optional"><see langword="True"/> if the child context's resolution is optional, otherwise, <see langword="false"/>.</param>
-		/// <returns></returns>
-		public abstract IContext CreateChild(MemberInfo member, ITarget target, bool optional);
+		/// <returns>The child context.</returns>
+		public abstract IContext CreateChild(object instance, MemberInfo member, ITarget target, bool optional);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

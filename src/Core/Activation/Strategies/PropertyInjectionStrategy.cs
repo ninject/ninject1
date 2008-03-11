@@ -49,8 +49,7 @@ namespace Ninject.Core.Activation.Strategies
 				PropertyInfo property = directive.Member;
 
 				// Create a new context in which the property's value will be activated.
-				IContext injectionContext = context.CreateChild(property, directive.Target,
-					directive.Argument.Optional);
+				IContext injectionContext = context.CreateChild(instance, property, directive.Target, directive.Argument.Optional);
 
 				// Resolve the value to inject into the property.
 				object value = directive.Argument.Resolver.Resolve(context, injectionContext);
