@@ -35,7 +35,6 @@ namespace Ninject.Core
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private IKernel _kernel;
 		private ILogger _logger;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -44,11 +43,7 @@ namespace Ninject.Core
 		/// Gets or sets the kernel associated with the module.
 		/// </summary>
 		/// <value></value>
-		public IKernel Kernel
-		{
-			get { return _kernel; }
-			set { _kernel = value; }
-		}
+		public IKernel Kernel { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the name of the module.
@@ -67,7 +62,7 @@ namespace Ninject.Core
 			{
 				if (_logger == null)
 				{
-					ILoggerFactory loggerFactory = _kernel.GetComponent<ILoggerFactory>();
+					ILoggerFactory loggerFactory = Kernel.GetComponent<ILoggerFactory>();
 					_logger = loggerFactory.GetLogger(GetType());
 				}
 
@@ -84,7 +79,7 @@ namespace Ninject.Core
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-				_kernel = null;
+				Kernel = null;
 
 			base.Dispose(disposing);
 		}
@@ -127,13 +122,13 @@ namespace Ninject.Core
 		{
 			Logger.Debug("Declaring binding for service {0}", Format.Type(type));
 
-			IBinding binding = _kernel.CreateBinding(type);
+			IBinding binding = Kernel.CreateBinding(type);
 
-			if (_kernel.Options.GenerateDebugInfo)
+			if (Kernel.Options.GenerateDebugInfo)
 				binding.DebugInfo = DebugInfo.FromStackTrace();
 
 			// Register the binding in the kernel.
-			_kernel.AddBinding(binding);
+			Kernel.AddBinding(binding);
 
 			return CreateBinder(binding);
 		}

@@ -33,18 +33,11 @@ namespace Ninject.Core
 	public sealed class TagAttribute : Attribute
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private string _tag;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the tag for the decorated member or parameter.
 		/// </summary>
-		public string Tag
-		{
-			get { return _tag; }
-		}
+		public string Tag { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -54,7 +47,7 @@ namespace Ninject.Core
 		/// <param name="tag">The tag to associate with the decorated member or parameter.</param>
 		public TagAttribute(string tag)
 		{
-			_tag = tag;
+			Tag = tag;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

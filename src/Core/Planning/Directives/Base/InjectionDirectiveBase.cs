@@ -35,30 +35,19 @@ namespace Ninject.Core.Planning.Directives
 	[Serializable]
 	public abstract class InjectionDirectiveBase<TMember, TInjector> : DirectiveBase
 		where TMember : MemberInfo
-		where TInjector : IInjector<TMember>
+		where TInjector : class, IInjector<TMember>
 	{
-		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private TMember _member;
-		private TInjector _injector;
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the member that will be injected.
 		/// </summary>
-		public TMember Member
-		{
-			get { return _member; }
-		}
+		public TMember Member { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the injector that will perform the injection.
 		/// </summary>
-		public TInjector Injector
-		{
-			get { return _injector; }
-		}
+		public TInjector Injector { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -70,10 +59,10 @@ namespace Ninject.Core.Planning.Directives
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeMember(_injector);
+				DisposeMember(Injector);
 
-				_member = null;
-				_injector = default(TInjector);
+				Member = null;
+				Injector = null;
 			}
 
 			base.Dispose(disposing);
@@ -91,8 +80,8 @@ namespace Ninject.Core.Planning.Directives
 			Ensure.ArgumentNotNull(member, "member");
 			Ensure.ArgumentNotNull(injector, "injector");
 
-			_member = member;
-			_injector = injector;
+			Member = member;
+			Injector = injector;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

@@ -33,18 +33,11 @@ namespace Ninject.Core.Planning.Targets
 		where T : ICustomAttributeProvider
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private T _site;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the actual member or parameter that will be injected.
 		/// </summary>
-		public T Site
-		{
-			get { return _site; }
-		}
+		public T Site { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the name of the target.
@@ -66,8 +59,8 @@ namespace Ninject.Core.Planning.Targets
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeMember(_site);
-				_site = default(T);
+				DisposeMember(Site);
+				Site = default(T);
 			}
 
 			base.Dispose(disposing);
@@ -82,7 +75,7 @@ namespace Ninject.Core.Planning.Targets
 		protected TargetBase(T site)
 		{
 			Ensure.ArgumentNotNull(site, "site");
-			_site = site;
+			Site = site;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -95,7 +88,7 @@ namespace Ninject.Core.Planning.Targets
 		/// <returns>An array of matching attributes.</returns>
 		public object[] GetCustomAttributes(Type attributeType, bool inherit)
 		{
-			return _site.GetCustomAttributes(attributeType, inherit);
+			return Site.GetCustomAttributes(attributeType, inherit);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -105,7 +98,7 @@ namespace Ninject.Core.Planning.Targets
 		/// <returns>An array of matching attributes.</returns>
 		public object[] GetCustomAttributes(bool inherit)
 		{
-			return _site.GetCustomAttributes(inherit);
+			return Site.GetCustomAttributes(inherit);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -117,7 +110,7 @@ namespace Ninject.Core.Planning.Targets
 		/// <returns></returns>
 		public bool IsDefined(Type attributeType, bool inherit)
 		{
-			return _site.IsDefined(attributeType, inherit);
+			return Site.IsDefined(attributeType, inherit);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

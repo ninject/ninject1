@@ -34,7 +34,7 @@ namespace Ninject.Core.Behavior
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Static Fields
-		private static LocalDataStoreSlot ThreadSlot = Thread.AllocateNamedDataSlot("Ninject.OnePerThreadBehavior");
+		private static readonly LocalDataStoreSlot ThreadSlot = Thread.AllocateNamedDataSlot("Ninject.OnePerThreadBehavior");
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields

@@ -31,38 +31,21 @@ namespace Ninject.Core.Planning
 	public class StandardActivationPlan : DisposableObject, IActivationPlan
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private Type _type;
-		private IBehavior _behavior;
-		private DirectiveCollection _directives = new DirectiveCollection();
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the type that the plan describes.
 		/// </summary>
-		public Type Type
-		{
-			get { return _type; }
-			set { _type = value; }
-		}
+		public Type Type { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the behavior that decides whether to re-use existing instances or create new ones.
 		/// </summary>
-		public IBehavior Behavior
-		{
-			get { return _behavior; }
-			set { _behavior = value; }
-		}
+		public IBehavior Behavior { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the collection of directives associated with the plan.
 		/// </summary>
-		public DirectiveCollection Directives
-		{
-			get { return _directives; }
-		}
+		public DirectiveCollection Directives { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -74,12 +57,12 @@ namespace Ninject.Core.Planning
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeMember(_behavior);
-				DisposeMember(_directives);
+				DisposeMember(Behavior);
+				DisposeMember(Directives);
 
-				_type = null;
-				_behavior = null;
-				_directives = null;
+				Type = null;
+				Behavior = null;
+				Directives = null;
 			}
 
 			base.Dispose(disposing);
@@ -93,7 +76,8 @@ namespace Ninject.Core.Planning
 		/// <param name="type">The type that the plan will describe.</param>
 		public StandardActivationPlan(Type type)
 		{
-			_type = type;
+			Type = type;
+			Directives = new DirectiveCollection();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

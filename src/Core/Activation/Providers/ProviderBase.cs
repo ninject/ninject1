@@ -29,19 +29,12 @@ namespace Ninject.Core.Activation
 	public abstract class ProviderBase : DisposableObject, IProvider
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private Type _prototype;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the prototype of the provider. This is almost always the type that is returned,
 		/// except in the case of generic argument inference.
 		/// </summary>
-		public Type Prototype
-		{
-			get { return _prototype; }
-		}
+		public Type Prototype { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -52,7 +45,7 @@ namespace Ninject.Core.Activation
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-				_prototype = null;
+				Prototype = null;
 
 			base.Dispose(disposing);
 		}
@@ -66,7 +59,7 @@ namespace Ninject.Core.Activation
 		protected ProviderBase(Type prototype)
 		{
 			Ensure.ArgumentNotNull(prototype, "prototype");
-			_prototype = prototype;
+			Prototype = prototype;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -78,7 +71,7 @@ namespace Ninject.Core.Activation
 		/// <returns><see langword="True"/> if the provider is compatible, otherwise <see langword="false"/>.</returns>
 		public virtual bool IsCompatibleWith(IContext context)
 		{
-			return context.Service.IsAssignableFrom(_prototype);
+			return context.Service.IsAssignableFrom(Prototype);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

@@ -37,59 +37,31 @@ namespace Ninject.Core.Infrastructure
 		private static string[] IGNORE_NAMESPACES = new string[] { "Ninject.Core" };
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private Type _type;
-		private MethodBase _method;
-		private string _fileName;
-		private string _filePath;
-		private int _lineNumber;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the calling type.
 		/// </summary>
-		public Type Type
-		{
-			get { return _type; }
-			set { _type = value; }
-		}
+		public Type Type { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the calling method.
 		/// </summary>
-		public MethodBase Method
-		{
-			get { return _method; }
-			set { _method = value; }
-		}
+		public MethodBase Method { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the name of the file where the call occurred.
 		/// </summary>
-		public string FileName
-		{
-			get { return _fileName; }
-			set { _fileName = value; }
-		}
+		public string FileName { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the full path to the file where the call occurred.
 		/// </summary>
-		public string FilePath
-		{
-			get { return _filePath; }
-			set { _filePath = value; }
-		}
+		public string FilePath { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the line number of the file where the call occurred.
 		/// </summary>
-		public int LineNumber
-		{
-			get { return _lineNumber; }
-			set { _lineNumber = value; }
-		}
+		public int LineNumber { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -101,10 +73,10 @@ namespace Ninject.Core.Infrastructure
 		{
 			if (disposing && !IsDisposed)
 			{
-				_type = null;
-				_method = null;
-				_fileName = null;
-				_filePath = null;
+				Type = null;
+				Method = null;
+				FileName = null;
+				FilePath = null;
 			}
 
 			base.Dispose(disposing);
@@ -119,7 +91,7 @@ namespace Ninject.Core.Infrastructure
 		public override string ToString()
 		{
 			Ensure.NotDisposed(this);
-			return String.Format("{0}.{1}() at {2}:{3}", Format.Type(_type), _method.Name, _fileName, _lineNumber);
+			return String.Format("{0}.{1}() at {2}:{3}", Format.Type(Type), Method.Name, FileName, LineNumber);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

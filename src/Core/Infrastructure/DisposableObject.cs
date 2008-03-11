@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections;
+using System.Collections.Generic;
 #endregion
 
 namespace Ninject.Core.Infrastructure
@@ -29,18 +30,11 @@ namespace Ninject.Core.Infrastructure
 	public abstract class DisposableObject : IDisposableEx
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private bool _disposed;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets a value indicating whether the object has been disposed.
 		/// </summary>
-		public bool IsDisposed
-		{
-			get { return _disposed; }
-		}
+		public bool IsDisposed { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -59,7 +53,7 @@ namespace Ninject.Core.Infrastructure
 		/// <param name="disposing"><see langword="True"/> if managed objects should be disposed, otherwise <see langword="false"/>.</param>
 		protected virtual void Dispose(bool disposing)
 		{
-			_disposed = true;
+			IsDisposed = true;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -104,11 +98,11 @@ namespace Ninject.Core.Infrastructure
 		/// Disposes the dictionary and all of its contents, if they implement <see cref="IDisposable"/>.
 		/// </summary>
 		/// <param name="dictionary">The dictionary to dispose.</param>
-		protected static void DisposeDictionary(IDictionary dictionary)
+		protected static void DisposeDictionary<K, V>(IDictionary<K, V> dictionary)
 		{
 			if (dictionary != null)
 			{
-				foreach (DictionaryEntry entry in dictionary)
+				foreach (KeyValuePair<K, V> entry in dictionary)
 					DisposeMember(entry.Value);
 
 				DisposeMember(dictionary);

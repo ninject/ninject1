@@ -32,18 +32,11 @@ namespace Ninject.Core.Activation
 	public abstract class ActivatorBase : KernelComponentBase, IActivator
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private StrategyChain<IActivator, IActivationStrategy> _strategies;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// The chain of activation strategies.
 		/// </summary>
-		public IStrategyChain<IActivator, IActivationStrategy> Strategies
-		{
-			get { return _strategies; }
-		}
+		public IStrategyChain<IActivator, IActivationStrategy> Strategies { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Event Sources
@@ -53,7 +46,7 @@ namespace Ninject.Core.Activation
 		/// <param name="args">The event arguments.</param>
 		protected override void OnConnected(EventArgs args)
 		{
-			_strategies.Kernel = Kernel;
+			Strategies.Kernel = Kernel;
 
 			base.OnConnected(args);
 		}
@@ -66,8 +59,8 @@ namespace Ninject.Core.Activation
 		{
 			base.OnDisconnected(args);
 
-			if (_strategies != null)
-				_strategies.Kernel = null;
+			if (Strategies != null)
+				Strategies.Kernel = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -80,8 +73,8 @@ namespace Ninject.Core.Activation
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeCollection(_strategies);
-				_strategies = null;
+				DisposeCollection(Strategies);
+				Strategies = null;
 			}
 
 			base.Dispose(disposing);
@@ -94,7 +87,7 @@ namespace Ninject.Core.Activation
 		/// </summary>
 		protected ActivatorBase()
 		{
-			_strategies = new StrategyChain<IActivator, IActivationStrategy>(this);
+			Strategies = new StrategyChain<IActivator, IActivationStrategy>(this);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -112,7 +105,7 @@ namespace Ninject.Core.Activation
 			if (instance == null)
 			{
 				// Execute the "before create" phase.
-				foreach (IActivationStrategy strategy in _strategies)
+				foreach (IActivationStrategy strategy in Strategies)
 				{
 					if (strategy.BeforeCreate(context, ref instance) == StrategyResult.Stop)
 						break;
@@ -125,7 +118,7 @@ namespace Ninject.Core.Activation
 					throw new ActivationException(ExceptionFormatter.ProviderCouldNotCreateInstance(context));
 
 				// Execute the "after create" phase.
-				foreach (IActivationStrategy strategy in _strategies)
+				foreach (IActivationStrategy strategy in Strategies)
 				{
 					if (strategy.AfterCreate(context, ref instance) == StrategyResult.Stop)
 						break;
@@ -133,14 +126,14 @@ namespace Ninject.Core.Activation
 			}
 
 			// Execute the "initialize" phase.
-			foreach (IActivationStrategy strategy in _strategies)
+			foreach (IActivationStrategy strategy in Strategies)
 			{
 				if (strategy.Initialize(context, ref instance) == StrategyResult.Stop)
 					break;
 			}
 
 			// Execute the "after initialize" phase.
-			foreach (IActivationStrategy strategy in _strategies)
+			foreach (IActivationStrategy strategy in Strategies)
 			{
 				if (strategy.AfterInitialize(context, ref instance) == StrategyResult.Stop)
 					break;
@@ -158,21 +151,21 @@ namespace Ninject.Core.Activation
 			Ensure.NotDisposed(this);
 
 			// Execute the "before destroy" phase.
-			foreach (IActivationStrategy strategy in _strategies)
+			foreach (IActivationStrategy strategy in Strategies)
 			{
 				if (strategy.BeforeDestroy(context, ref instance) == StrategyResult.Stop)
 					break;
 			}
 
 			// Execute the "destroy" phase.
-			foreach (IActivationStrategy strategy in _strategies)
+			foreach (IActivationStrategy strategy in Strategies)
 			{
 				if (strategy.Destroy(context, ref instance) == StrategyResult.Stop)
 					break;
 			}
 
 			// Execute the "after destroy" phase.
-			foreach (IActivationStrategy strategy in _strategies)
+			foreach (IActivationStrategy strategy in Strategies)
 			{
 				if (strategy.AfterDestroy(context, ref instance) == StrategyResult.Stop)
 					break;

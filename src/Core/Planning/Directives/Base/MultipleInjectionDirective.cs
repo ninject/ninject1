@@ -36,21 +36,14 @@ namespace Ninject.Core.Planning.Directives
 	[Serializable]
 	public abstract class MultipleInjectionDirective<TMember, TInjector> : InjectionDirectiveBase<TMember, TInjector>
 		where TMember : MemberInfo
-		where TInjector : IInjector<TMember>
+		where TInjector : class, IInjector<TMember>
 	{
-		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private List<Argument> _arguments = new List<Argument>();
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets a collection of mappings between injection points and dependencies.
 		/// </summary>
-		public IList<Argument> Arguments
-		{
-			get { return _arguments; }
-		}
+		public IList<Argument> Arguments { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -62,8 +55,8 @@ namespace Ninject.Core.Planning.Directives
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeCollection(_arguments);
-				_arguments = null;
+				DisposeCollection(Arguments);
+				Arguments = null;
 			}
 
 			base.Dispose(disposing);
@@ -79,6 +72,7 @@ namespace Ninject.Core.Planning.Directives
 		protected MultipleInjectionDirective(TMember member, TInjector injector)
 			: base(member, injector)
 		{
+			Arguments = new List<Argument>();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

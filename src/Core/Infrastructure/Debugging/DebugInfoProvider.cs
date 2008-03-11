@@ -29,26 +29,18 @@ namespace Ninject.Core.Infrastructure
 	public abstract class DebugInfoProvider : DisposableObject, IDebugInfoProvider
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private DebugInfo _debugInfo;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets debugging information for the object.
 		/// </summary>
-		public DebugInfo DebugInfo
-		{
-			get { return _debugInfo; }
-			set { _debugInfo = value; }
-		}
+		public DebugInfo DebugInfo { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the object has debugging information.
 		/// </summary>
 		public bool HasDebugInfo
 		{
-			get { return (_debugInfo != null); }
+			get { return (DebugInfo != null); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -60,7 +52,7 @@ namespace Ninject.Core.Infrastructure
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-				_debugInfo = null;
+				DebugInfo = null;
 
 			base.Dispose(disposing);
 		}

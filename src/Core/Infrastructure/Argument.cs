@@ -31,39 +31,21 @@ namespace Ninject.Core.Infrastructure
 	public class Argument : DisposableObject
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private ITarget _target;
-		private IResolver _resolver;
-		private bool _optional;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the argument's injection point.
 		/// </summary>
-		public ITarget Target
-		{
-			get { return _target; }
-			set { _target = value; }
-		}
+		public ITarget Target { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the argument's dependency marker.
 		/// </summary>
-		public IResolver Resolver
-		{
-			get { return _resolver; }
-			set { _resolver = value; }
-		}
+		public IResolver Resolver { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether the argument is optional.
 		/// </summary>
-		public bool Optional
-		{
-			get { return _optional; }
-			set { _optional = value; }
-		}
+		public bool Optional { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -75,11 +57,11 @@ namespace Ninject.Core.Infrastructure
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeMember(_target);
-				DisposeMember(_resolver);
+				DisposeMember(Target);
+				DisposeMember(Resolver);
 
-				_target = null;
-				_resolver = null;
+				Target = null;
+				Resolver = null;
 			}
 
 			base.Dispose(disposing);
@@ -98,9 +80,9 @@ namespace Ninject.Core.Infrastructure
 			Ensure.ArgumentNotNull(target, "target");
 			Ensure.ArgumentNotNull(resolver, "dependency");
 
-			_target = target;
-			_resolver = resolver;
-			_optional = optional;
+			Target = target;
+			Resolver = resolver;
+			Optional = optional;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

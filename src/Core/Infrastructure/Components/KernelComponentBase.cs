@@ -30,25 +30,18 @@ namespace Ninject.Core.Infrastructure
 	public class KernelComponentBase : DisposableObject, IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private IKernel _kernel;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the kernel associated with the component.
 		/// </summary>
-		public IKernel Kernel
-		{
-			get { return _kernel; }
-		}
+		public IKernel Kernel { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the component is connected to its environment.
 		/// </summary>
 		public bool IsConnected
 		{
-			get { return (_kernel != null); }
+			get { return (Kernel != null); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -92,7 +85,7 @@ namespace Ninject.Core.Infrastructure
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-				_kernel = null;
+				Kernel = null;
 
 			base.Dispose(disposing);
 		}
@@ -107,7 +100,7 @@ namespace Ninject.Core.Infrastructure
 		{
 			Ensure.NotDisposed(this);
 
-			_kernel = kernel;
+			Kernel = kernel;
 			OnConnected(new EventArgs());
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -119,7 +112,7 @@ namespace Ninject.Core.Infrastructure
 			Ensure.NotDisposed(this);
 
 			OnDisconnected(new EventArgs());
-			_kernel = null;
+			Kernel = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

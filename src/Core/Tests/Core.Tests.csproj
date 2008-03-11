@@ -67,6 +67,9 @@
     <Compile Include="Mocks\CircularMethodMockB.cs" />
     <Compile Include="Mocks\CircularFieldMockA.cs" />
     <Compile Include="Mocks\CircularFieldMockB.cs" />
+    <Compile Include="Mocks\RequestsPrivateMethodInjection.cs" />
+    <Compile Include="Mocks\RequestsPrivatePropertyInjection.cs" />
+    <Compile Include="Mocks\RequestsPrivateFieldInjection.cs" />
     <Compile Include="Mocks\RequestsLogger.cs" />
     <Compile Include="Mocks\InvalidKernel.cs" />
     <Compile Include="Mocks\HybridInjectionMock.cs" />

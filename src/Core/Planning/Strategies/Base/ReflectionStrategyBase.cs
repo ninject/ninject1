@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
@@ -44,13 +45,18 @@ namespace Ninject.Core.Planning.Strategies
 		/// </returns>
 		public override StrategyResult Build(IBinding binding, Type type, IActivationPlan plan)
 		{
-			BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+			IEnumerable<TMember> members;
 
 			if (Kernel.Options.InjectNonPublicMembers)
-				flags |= BindingFlags.NonPublic;
-
-			// Get a list of members defined on the type.
-			TMember[] members = GetMembers(binding, type, flags);
+			{
+				// If non-public members should be included, we have to scan the type hierarchy recursively.
+				members = GetMembersRecursive(binding, type);
+			}
+			else 
+			{
+				BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+				members = GetMembers(binding, type, flags);
+			}
 
 			foreach (TMember member in members)
 			{
@@ -67,8 +73,8 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="binding">The binding that points at the type being inspected.</param>
 		/// <param name="type">The type to collect the members from.</param>
 		/// <param name="flags">The <see cref="BindingFlags"/> that describe the scope of the search.</param>
-		/// <returns></returns>
-		protected abstract TMember[] GetMembers(IBinding binding, Type type, BindingFlags flags);
+		/// <returns>A collection of members.</returns>
+		protected abstract IEnumerable<TMember> GetMembers(IBinding binding, Type type, BindingFlags flags);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Adds an injection directive related to the specified member to the specified activation plan.
@@ -78,6 +84,29 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="plan">The activation plan to add the directive to.</param>
 		/// <param name="member">The member to create a directive for.</param>
 		protected abstract void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, TMember member);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Walks the type hierarchy starting with the specified type, returning all members from
+		/// the type and all of its ancestors.
+		/// </summary>
+		/// <param name="binding">The binding that points at the type being inspected.</param>
+		/// <param name="type">The lowest type in the hierarchy to collect the members from.</param>
+		/// <returns>A collection of members.</returns>
+		private IEnumerable<TMember> GetMembersRecursive(IBinding binding, Type type)
+		{
+			BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+			Type current = type;
+
+			var members = new List<TMember>();
+
+			while ((current != null) && (current != typeof(object)))
+			{
+				members.AddRange(GetMembers(binding, current, flags));
+				current = current.BaseType;
+			}
+
+			return members;
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

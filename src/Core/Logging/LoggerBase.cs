@@ -29,18 +29,11 @@ namespace Ninject.Core.Logging
 	public abstract class LoggerBase : DisposableObject, ILogger
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private readonly Type _type;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the type associated with the logger.
 		/// </summary>
-		public Type Type
-		{
-			get { return _type; }
-		}
+		public Type Type { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -51,7 +44,7 @@ namespace Ninject.Core.Logging
 		protected LoggerBase(Type type)
 		{
 			Ensure.ArgumentNotNull(type, "type");
-			_type = type;
+			Type = type;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

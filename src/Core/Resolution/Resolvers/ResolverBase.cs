@@ -31,18 +31,11 @@ namespace Ninject.Core.Resolution
 	public abstract class ResolverBase : DisposableObject, IResolver
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private ITarget _target;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the target whose values will be resolved.
 		/// </summary>
-		public ITarget Target
-		{
-			get { return _target; }
-		}
+		public ITarget Target { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -53,7 +46,7 @@ namespace Ninject.Core.Resolution
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-				_target = null;
+				Target = null;
 
 			base.Dispose(disposing);
 		}
@@ -67,7 +60,7 @@ namespace Ninject.Core.Resolution
 		protected ResolverBase(ITarget target)
 		{
 			Ensure.ArgumentNotNull(target, "target");
-			_target = target;
+			Target = target;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

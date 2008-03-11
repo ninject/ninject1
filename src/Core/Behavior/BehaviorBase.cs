@@ -30,20 +30,11 @@ namespace Ninject.Core.Behavior
 	public abstract class BehaviorBase : DisposableObject, IBehavior
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private IKernel _kernel;
-		private readonly bool _supportsEagerActivation;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the kernel related to the behavior.
 		/// </summary>
-		public IKernel Kernel
-		{
-			get { return _kernel; }
-			set { _kernel = value; }
-		}
+		public IKernel Kernel { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the behavior supports eager activation.
@@ -53,10 +44,7 @@ namespace Ninject.Core.Behavior
 		/// activated if the <c>UseEagerActivation</c> option is set for the kernel. If
 		/// <see langword="false"/>, all instances of the type will be lazily activated.
 		/// </remarks>
-		public bool SupportsEagerActivation
-		{
-			get { return _supportsEagerActivation; }
-		}
+		public bool SupportsEagerActivation { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -66,7 +54,7 @@ namespace Ninject.Core.Behavior
 		/// <param name="supportsEagerActivation">A value indicating whether the behavior supports eager activation.</param>
 		protected BehaviorBase(bool supportsEagerActivation)
 		{
-			_supportsEagerActivation = supportsEagerActivation;
+			SupportsEagerActivation = supportsEagerActivation;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -78,7 +66,7 @@ namespace Ninject.Core.Behavior
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-				_kernel = null;
+				Kernel = null;
 
 			base.Dispose(disposing);
 		}

@@ -30,18 +30,11 @@ namespace Ninject.Core.Binding
 	public abstract class BinderBase : DisposableObject, IBinder
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private readonly IBinding _binding;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the binding that the binder should manipulate.
 		/// </summary>
-		public IBinding Binding
-		{
-			get { return _binding; }
-		}
+		public IBinding Binding { get; protected set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -52,7 +45,7 @@ namespace Ninject.Core.Binding
 		protected BinderBase(IBinding binding)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
-			_binding = binding;
+			Binding = binding;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

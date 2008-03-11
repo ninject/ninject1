@@ -18,19 +18,29 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-
 #endregion
 
-namespace Ninject.Interception
+namespace Ninject.Core.Tests.Mocks
 {
-	public interface IProxy
+	public class RequestsPrivateMethodInjectionBase : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
-		object Target { get; }
+		private SimpleObject _child;
 		/*----------------------------------------------------------------------------------------*/
-		Type Type { get; }
+		public SimpleObject Child
+		{
+			get { return _child; }
+		}
 		/*----------------------------------------------------------------------------------------*/
+		[Inject]
+		public void SetChild(SimpleObject child)
+		{
+			_child = child;
+		}
+		/*----------------------------------------------------------------------------------------*/
+	}
+
+	public class RequestsPrivateMethodInjection : RequestsPrivateMethodInjectionBase
+	{
 	}
 }

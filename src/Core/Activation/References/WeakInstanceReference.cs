@@ -33,7 +33,6 @@ namespace Ninject.Core.Activation
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private WeakReference _instance;
-		private IContext _context;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -48,10 +47,7 @@ namespace Ninject.Core.Activation
 		/// <summary>
 		/// Gets the context in which the instance was activated.
 		/// </summary>
-		public IContext Context
-		{
-			get { return _context; }
-		}
+		public IContext Context { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -64,7 +60,7 @@ namespace Ninject.Core.Activation
 			if (disposing && !IsDisposed)
 			{
 				_instance = null;
-				_context = null;
+				Context = null;
 			}
 
 			base.Dispose(disposing);
@@ -80,7 +76,7 @@ namespace Ninject.Core.Activation
 		public WeakInstanceReference(object instance, IContext context)
 		{
 			_instance = new WeakReference(instance);
-			_context = context;
+			Context = context;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

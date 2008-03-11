@@ -50,8 +50,6 @@ namespace Ninject.Core
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private readonly KernelOptions _options;
-		private readonly string _configuration;
 		private readonly Dictionary<Type, IKernelComponent> _components = new Dictionary<Type, IKernelComponent>();
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly List<IInstanceReference> _references = new List<IInstanceReference>();
@@ -63,18 +61,12 @@ namespace Ninject.Core
 		/// Gets the name of the configuration that the kernel is currently using. This
 		/// value can be referred to in conditions to alter bindings.
 		/// </summary>
-		public string Configuration
-		{
-			get { return _configuration; }
-		}
+		public string Configuration { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets an object containing configuration information about the kernel.
 		/// </summary>
-		public KernelOptions Options
-		{
-			get { return _options; }
-		}
+		public KernelOptions Options { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -124,8 +116,8 @@ namespace Ninject.Core
 		{
 			Ensure.ArgumentNotNull(options, "options");
 
-			_options = options;
-			_configuration = configuration;
+			Options = options;
+			Configuration = configuration;
 
 			InitializeComponents();
 			ValidateComponents();
@@ -432,7 +424,7 @@ namespace Ninject.Core
 		/// </summary>
 		protected virtual void ActivateEagerServices()
 		{
-			if (!_options.UseEagerActivation)
+			if (!Options.UseEagerActivation)
 			{
 				_logger.Debug("Skipping eager activation of services, since it is disabled via options.");
 				return;
@@ -490,7 +482,7 @@ namespace Ninject.Core
 				// Determine whether any bindings have been registered for the service.
 				if (!_bindings.ContainsKey(service))
 				{
-					if (!_options.ImplicitSelfBinding || !StandardProvider.CanSupportType(service))
+					if (!Options.ImplicitSelfBinding || !StandardProvider.CanSupportType(service))
 					{
 						_logger.Debug("No binding exists for service {0}, and type is not self-bindable", Format.Type(service));
 						return null;
@@ -631,7 +623,7 @@ namespace Ninject.Core
 			Type type = context.Binding.Provider.GetImplementationType(context);
 
 			// Unless we are ignoring compatibility, ensure the provider can resolve the service.
-			if (!_options.IgnoreProviderCompatibility)
+			if (!Options.IgnoreProviderCompatibility)
 			{
 				if (!provider.IsCompatibleWith(context))
 					throw new ActivationException(ExceptionFormatter.ProviderIncompatibleWithService(context, type));
@@ -832,7 +824,7 @@ namespace Ninject.Core
 			IContext context = new StandardContext(this, service);
 
 			// Inject debug information into the context, if applicable.
-			if (_options.GenerateDebugInfo)
+			if (Options.GenerateDebugInfo)
 				context.DebugInfo = DebugInfo.FromStackTrace();
 
 			return context;

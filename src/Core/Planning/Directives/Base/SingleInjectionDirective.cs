@@ -36,31 +36,19 @@ namespace Ninject.Core.Planning.Directives
 	[Serializable]
 	public abstract class SingleInjectionDirective<TMember, TInjector> : InjectionDirectiveBase<TMember, TInjector>
 		where TMember : MemberInfo
-		where TInjector : IInjector<TMember>
+		where TInjector : class, IInjector<TMember>
 	{
-		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private ITarget _target;
-		private Argument _argument;
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the injection point that will be injected.
 		/// </summary>
-		public ITarget Target
-		{
-			get { return _target; }
-		}
+		public ITarget Target { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets an argument describing the dependency that will be resolved and injected.
 		/// </summary>
-		public Argument Argument
-		{
-			get { return _argument; }
-			set { _argument = value; }
-		}
+		public Argument Argument { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -72,11 +60,11 @@ namespace Ninject.Core.Planning.Directives
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeMember(_target);
-				DisposeMember(_argument);
+				DisposeMember(Target);
+				DisposeMember(Argument);
 
-				_target = null;
-				_argument = null;
+				Target = null;
+				Argument = null;
 			}
 
 			base.Dispose(disposing);
@@ -94,7 +82,7 @@ namespace Ninject.Core.Planning.Directives
 			: base(member, injector)
 		{
 			Ensure.ArgumentNotNull(target, "target");
-			_target = target;
+			Target = target;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

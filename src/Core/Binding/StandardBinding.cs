@@ -32,76 +32,41 @@ namespace Ninject.Core.Binding
 	public class StandardBinding : DebugInfoProvider, IBinding
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private IKernel _kernel;
-		private Type _service;
-		private IProvider _provider;
-		private IBehavior _behavior;
-		private ICondition<IContext> _condition;
-		private readonly Dictionary<string, object> _inlineArguments = new Dictionary<string, object>();
-		private BindingOptions _options;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the kernel that created the binding.
 		/// </summary>
-		public IKernel Kernel
-		{
-			get { return _kernel; }
-		}
+		public IKernel Kernel { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the service type that the binding is associated with.
 		/// </summary>
-		public Type Service
-		{
-			get { return _service; }
-		}
+		public Type Service { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the provider that can create instances of the type.
 		/// </summary>
-		public IProvider Provider
-		{
-			get { return _provider; }
-			set { _provider = value; }
-		}
+		public IProvider Provider { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the behavior that decides whether to re-use existing instances or create new ones.
 		/// </summary>
-		public IBehavior Behavior
-		{
-			get { return _behavior; }
-			set { _behavior = value; }
-		}
+		public IBehavior Behavior { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the condition under which this binding should be used.
 		/// </summary>
-		public ICondition<IContext> Condition
-		{
-			get { return _condition; }
-			set { _condition = value; }
-		}
+		public ICondition<IContext> Condition { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets additional arguments that should be passed to the type's constructor.
 		/// </summary>
-		public IDictionary<string, object> InlineArguments
-		{
-			get { return _inlineArguments; }
-		}
+		public IDictionary<string, object> InlineArguments { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the binding option flags that further define the binding.
 		/// </summary>
-		public BindingOptions Options
-		{
-			get { return _options; }
-			set { _options = value; }
-		}
+		public BindingOptions Options { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the binding is the default binding for the type.
@@ -109,7 +74,7 @@ namespace Ninject.Core.Binding
 		/// </summary>
 		public bool IsDefault
 		{
-			get { return (_condition == null); }
+			get { return (Condition == null); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -122,15 +87,15 @@ namespace Ninject.Core.Binding
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeMember(_provider);
-				DisposeMember(_behavior);
-				DisposeMember(_condition);
+				DisposeMember(Provider);
+				DisposeMember(Behavior);
+				DisposeMember(Condition);
 
-				_kernel = null;
-				_service = null;
-				_provider = null;
-				_behavior = null;
-				_condition = null;
+				Kernel = null;
+				Service = null;
+				Provider = null;
+				Behavior = null;
+				Condition = null;
 			}
 
 			base.Dispose(disposing);
@@ -148,8 +113,9 @@ namespace Ninject.Core.Binding
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			Ensure.ArgumentNotNull(service, "service");
 
-			_kernel = kernel;
-			_service = service;
+			InlineArguments = new Dictionary<string, object>();
+			Kernel = kernel;
+			Service = service;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -163,7 +129,7 @@ namespace Ninject.Core.Binding
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);
 
-			return _condition.Matches(context);
+			return Condition.Matches(context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

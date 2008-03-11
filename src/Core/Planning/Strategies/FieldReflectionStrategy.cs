@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
@@ -42,7 +43,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="type">The type to collect the members from.</param>
 		/// <param name="flags">The <see cref="BindingFlags"/> that describe the scope of the search.</param>
 		/// <returns>An array of members that the strategy should examine.</returns>
-		protected override FieldInfo[] GetMembers(IBinding binding, Type type, BindingFlags flags)
+		protected override IEnumerable<FieldInfo> GetMembers(IBinding binding, Type type, BindingFlags flags)
 		{
 			return type.GetFields(flags);
 		}

@@ -31,34 +31,24 @@ namespace Ninject.Core.Infrastructure
 	/// <typeparam name="TOwner">The type of object that owns the strategies.</typeparam>
 	/// <typeparam name="TStrategy">The type of strategy stored in the collection.</typeparam>
 	public class StrategyChain<TOwner, TStrategy> : DisposableObject, IStrategyChain<TOwner, TStrategy>
-		where TStrategy : IStrategy<TOwner>
-		where TOwner : IKernelComponent
+		where TStrategy : class, IStrategy<TOwner>
+		where TOwner : class, IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private LinkedList<TStrategy> _items = new LinkedList<TStrategy>();
-		private IKernel _kernel;
-		private TOwner _owner;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the kernel associated with the collection.
 		/// </summary>
-		public IKernel Kernel
-		{
-			get { return _kernel; }
-			set { _kernel = value; }
-		}
+		public IKernel Kernel { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the owner of the collection's strategies.
 		/// </summary>
-		public TOwner Owner
-		{
-			get { return _owner; }
-			set { _owner = value; }
-		}
+		public TOwner Owner { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the count of strategies stored in the collection.
@@ -80,8 +70,8 @@ namespace Ninject.Core.Infrastructure
 			{
 				DisposeCollection(_items);
 
-				_kernel = null;
-				_owner = default(TOwner);
+				Kernel = null;
+				Owner = null;
 				_items = null;
 			}
 
@@ -96,7 +86,7 @@ namespace Ninject.Core.Infrastructure
 		/// <param name="owner">The owner of the collection's strategies.</param>
 		public StrategyChain(TOwner owner)
 		{
-			_owner = owner;
+			Owner = owner;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -199,7 +189,7 @@ namespace Ninject.Core.Infrastructure
 		/// <param name="item">The strategy to connect.</param>
 		protected void ConnectItem(TStrategy item)
 		{
-			item.Connect(_kernel, _owner);
+			item.Connect(Kernel, Owner);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

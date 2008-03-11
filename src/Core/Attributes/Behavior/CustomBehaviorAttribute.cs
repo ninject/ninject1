@@ -33,18 +33,11 @@ namespace Ninject.Core
 	public sealed class CustomBehaviorAttribute : BehaviorAttribute
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private Type _type;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the custom behavior type.
 		/// </summary>
-		public Type Type
-		{
-			get { return _type; }
-		}
+		public Type Type { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
@@ -62,7 +55,7 @@ namespace Ninject.Core
 					Resources.Ex_InvalidCustomBehavior, type));
 			}
 
-			_type = type;
+			Type = type;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -73,7 +66,7 @@ namespace Ninject.Core
 		/// <returns>The instance of the behavior that will manage the decorated type.</returns>
 		public override IBehavior CreateBehavior()
 		{
-			return Activator.CreateInstance(_type) as IBehavior;
+			return Activator.CreateInstance(Type) as IBehavior;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

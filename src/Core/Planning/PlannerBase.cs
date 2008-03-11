@@ -33,20 +33,17 @@ namespace Ninject.Core.Planning
 	public abstract class PlannerBase : KernelComponentBase, IPlanner
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private StrategyChain<IPlanner, IPlanningStrategy> _strategies;
-		private Dictionary<Type, IActivationPlan> _plans = new Dictionary<Type, IActivationPlan>();
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// The chain of strategies that contribute to the creation and destruction of activation plans.
 		/// </summary>
 		/// <value></value>
-		public IStrategyChain<IPlanner, IPlanningStrategy> Strategies
-		{
-			get { return _strategies; }
-		}
+		public IStrategyChain<IPlanner, IPlanningStrategy> Strategies { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// The collection of activation plans that have been generated.
+		/// </summary>
+		public IDictionary<Type, IActivationPlan> Plans { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Event Sources
@@ -56,7 +53,7 @@ namespace Ninject.Core.Planning
 		/// <param name="args">The event arguments.</param>
 		protected override void OnConnected(EventArgs args)
 		{
-			_strategies.Kernel = Kernel;
+			Strategies.Kernel = Kernel;
 			base.OnConnected(args);
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -68,8 +65,8 @@ namespace Ninject.Core.Planning
 		{
 			base.OnDisconnected(args);
 
-			if (_strategies != null)
-				_strategies.Kernel = null;
+			if (Strategies != null)
+				Strategies.Kernel = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -82,11 +79,11 @@ namespace Ninject.Core.Planning
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeCollection(_strategies);
-				DisposeDictionary(_plans);
+				DisposeCollection(Strategies);
+				DisposeDictionary(Plans);
 
-				_strategies = null;
-				_plans = null;
+				Strategies = null;
+				Plans = null;
 			}
 
 			base.Dispose(disposing);
@@ -99,7 +96,8 @@ namespace Ninject.Core.Planning
 		/// </summary>
 		protected PlannerBase()
 		{
-			_strategies = new StrategyChain<IPlanner, IPlanningStrategy>(this);
+			Strategies = new StrategyChain<IPlanner, IPlanningStrategy>(this);
+			Plans = new Dictionary<Type, IActivationPlan>();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -116,27 +114,27 @@ namespace Ninject.Core.Planning
 			Ensure.ArgumentNotNull(type, "type");
 			Ensure.NotDisposed(this);
 
-			lock (_plans)
+			lock (Plans)
 			{
-				if (_plans.ContainsKey(type))
-					return _plans[type];
+				if (Plans.ContainsKey(type))
+					return Plans[type];
 
 				IActivationPlan plan = CreateEmptyPlan(type);
-				_plans.Add(type, plan);
+				Plans.Add(type, plan);
 
-				foreach (IPlanningStrategy strategy in _strategies)
+				foreach (IPlanningStrategy strategy in Strategies)
 				{
 					if (strategy.BeforeBuild(binding, type, plan) == StrategyResult.Stop)
 						break;
 				}
 
-				foreach (IPlanningStrategy strategy in _strategies)
+				foreach (IPlanningStrategy strategy in Strategies)
 				{
 					if (strategy.Build(binding, type, plan) == StrategyResult.Stop)
 						break;
 				}
 
-				foreach (IPlanningStrategy strategy in _strategies)
+				foreach (IPlanningStrategy strategy in Strategies)
 				{
 					if (strategy.AfterBuild(binding, type, plan) == StrategyResult.Stop)
 						break;
@@ -157,32 +155,32 @@ namespace Ninject.Core.Planning
 			Ensure.ArgumentNotNull(type, "type");
 			Ensure.NotDisposed(this);
 
-			lock (_plans)
+			lock (Plans)
 			{
-				if (!_plans.ContainsKey(type))
+				if (!Plans.ContainsKey(type))
 					return;
 
-				IActivationPlan plan = _plans[type];
+				IActivationPlan plan = Plans[type];
 
-				foreach (IPlanningStrategy strategy in _strategies)
+				foreach (IPlanningStrategy strategy in Strategies)
 				{
 					if (strategy.BeforeRelease(binding, type, plan) == StrategyResult.Stop)
 						break;
 				}
 
-				foreach (IPlanningStrategy strategy in _strategies)
+				foreach (IPlanningStrategy strategy in Strategies)
 				{
 					if (strategy.Release(binding, type, plan) == StrategyResult.Stop)
 						break;
 				}
 
-				foreach (IPlanningStrategy strategy in _strategies)
+				foreach (IPlanningStrategy strategy in Strategies)
 				{
 					if (strategy.AfterRelease(binding, type, plan) == StrategyResult.Stop)
 						break;
 				}
 
-				_plans.Remove(type);
+				Plans.Remove(type);
 			}
 		}
 		#endregion

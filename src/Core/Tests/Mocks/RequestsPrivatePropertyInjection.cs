@@ -18,31 +18,25 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-
 #endregion
 
-namespace Ninject.Interception
+namespace Ninject.Core.Tests.Mocks
 {
-	public interface IMethodCall
+	public class RequestsPrivatePropertyInjectionBase : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
-		object Target { get; }
+		private SimpleObject _child;
 		/*----------------------------------------------------------------------------------------*/
-		MethodInfo Method { get; }
+		[Inject]
+		public SimpleObject Child
+		{
+			get { return _child; }
+			set { _child = value; }
+		}
 		/*----------------------------------------------------------------------------------------*/
-		object[] Arguments { get; }
-		/*----------------------------------------------------------------------------------------*/
-		object ReturnValue { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		Exception Exception { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		ICollection<IInterceptor> Interceptors { get; }
-		/*----------------------------------------------------------------------------------------*/
-		bool Failed { get; }
-		/*----------------------------------------------------------------------------------------*/
-		void Proceed();
-		/*----------------------------------------------------------------------------------------*/
+	}
+
+	public class RequestsPrivatePropertyInjection : RequestsPrivateFieldInjectionBase
+	{
 	}
 }

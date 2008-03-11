@@ -31,27 +31,16 @@ namespace Ninject.Core.Activation
 	public class StrongInstanceReference : DisposableObject, IInstanceReference
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private object _instance;
-		private IContext _context;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the instance that the reference is tracking.
 		/// </summary>
-		public object Instance
-		{
-			get { return _instance; }
-		}
+		public object Instance { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the context in which the instance was activated.
 		/// </summary>
-		public IContext Context
-		{
-			get { return _context; }
-		}
+		public IContext Context { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -63,8 +52,8 @@ namespace Ninject.Core.Activation
 		{
 			if (disposing && !IsDisposed)
 			{
-				_instance = null;
-				_context = null;
+				Instance = null;
+				Context = null;
 			}
 
 			base.Dispose(disposing);
@@ -79,8 +68,8 @@ namespace Ninject.Core.Activation
 		/// <param name="context">The context in which the instance was activated.</param>
 		public StrongInstanceReference(object instance, IContext context)
 		{
-			_instance = instance;
-			_context = context;
+			Instance = instance;
+			Context = context;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

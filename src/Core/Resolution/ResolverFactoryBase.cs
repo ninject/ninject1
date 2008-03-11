@@ -34,17 +34,25 @@ namespace Ninject.Core.Resolution
 	public abstract class ResolverFactoryBase : KernelComponentBase, IResolverFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
-		private readonly List<IResolverFactoryPlugin> _plugins = new List<IResolverFactoryPlugin>();
-		/*----------------------------------------------------------------------------------------*/
+		#region Properties
 		/// <summary>
 		/// Gets a collection of plug-in factories that can contribute to the creation of specialized
 		/// resolvers.
 		/// </summary>
-		public IList<IResolverFactoryPlugin> Plugins
-		{
-			get { return _plugins; }
-		}
+		public IList<IResolverFactoryPlugin> Plugins { get; protected set; }
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ResolverFactoryBase"/> class.
+		/// </summary>
+		protected ResolverFactoryBase()
+		{
+			Plugins = new List<IResolverFactoryPlugin>();
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
 		/// <summary>
 		/// Creates a dependency resolver for the specified binding and target.
 		/// </summary>
@@ -54,7 +62,7 @@ namespace Ninject.Core.Resolution
 		public IResolver Create(IBinding binding, ITarget target)
 		{
 			// If any of the plug-in factories match the target, use the resolver they create.
-			foreach (IResolverFactoryPlugin plugin in _plugins)
+			foreach (IResolverFactoryPlugin plugin in Plugins)
 			{
 				if (plugin.Matches(target))
 					return plugin.Create(binding, target);
@@ -63,6 +71,7 @@ namespace Ninject.Core.Resolution
 			// If none of the plugins matched, fall back on the StandardResolver.
 			return new StandardResolver(target);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

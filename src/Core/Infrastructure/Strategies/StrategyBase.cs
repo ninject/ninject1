@@ -31,34 +31,23 @@ namespace Ninject.Core.Infrastructure
 		where TOwner : class, IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private IKernel _kernel;
-		private TOwner _owner;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the kernel associated with the strategy.
 		/// </summary>
-		public IKernel Kernel
-		{
-			get { return _kernel; }
-		}
+		public IKernel Kernel { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the owner of the strategy.
 		/// </summary>
-		public TOwner Owner
-		{
-			get { return _owner; }
-		}
+		public TOwner Owner { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the strategy has been connected to its environment.
 		/// </summary>
 		public bool IsConnected
 		{
-			get { return (_kernel != null) && (_owner != null); }
+			get { return (Kernel != null) && (Owner != null); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -106,8 +95,8 @@ namespace Ninject.Core.Infrastructure
 				if (IsConnected)
 					Disconnect();
 
-				_kernel = null;
-				_owner = null;
+				Kernel = null;
+				Owner = null;
 			}
 
 			base.Dispose(disposing);
@@ -124,8 +113,8 @@ namespace Ninject.Core.Infrastructure
 		{
 			Ensure.NotDisposed(this);
 
-			_kernel = kernel;
-			_owner = owner;
+			Kernel = kernel;
+			Owner = owner;
 
 			OnConnected(new EventArgs());
 		}
@@ -139,8 +128,8 @@ namespace Ninject.Core.Infrastructure
 
 			OnDisconnected(new EventArgs());
 
-			_kernel = null;
-			_owner = null;
+			Kernel = null;
+			Owner = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

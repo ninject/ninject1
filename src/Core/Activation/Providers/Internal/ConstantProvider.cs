@@ -30,29 +30,17 @@ namespace Ninject.Core.Activation
 	public class ConstantProvider : InjectionProviderBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private object _value;
-		private IFormatProvider _formatProvider;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the value that is returned by the provider.
 		/// </summary>
-		public object Value
-		{
-			get { return _value; }
-		}
+		public object Value { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the format provider that will be used when converting the constant value,
 		/// if a conversion is necessary.
 		/// </summary>
-		public IFormatProvider FormatProvider
-		{
-			get { return _formatProvider; }
-			set { _formatProvider = value; }
-		}
+		public IFormatProvider FormatProvider { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -64,11 +52,11 @@ namespace Ninject.Core.Activation
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeMember(_value);
-				DisposeMember(_formatProvider);
+				DisposeMember(Value);
+				DisposeMember(FormatProvider);
 
-				_value = null;
-				_formatProvider = null;
+				Value = null;
+				FormatProvider = null;
 			}
 
 			base.Dispose(disposing);
@@ -96,8 +84,8 @@ namespace Ninject.Core.Activation
 			Ensure.ArgumentNotNull(value, "value");
 			Ensure.ArgumentNotNull(formatProvider, "formatProvider");
 
-			_value = value;
-			_formatProvider = formatProvider;
+			Value = value;
+			FormatProvider = formatProvider;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -125,7 +113,7 @@ namespace Ninject.Core.Activation
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);
 
-			return _value;
+			return Value;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

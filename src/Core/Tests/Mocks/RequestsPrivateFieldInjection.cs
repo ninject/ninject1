@@ -20,12 +20,21 @@
 using System;
 #endregion
 
-namespace Ninject.Interception
+namespace Ninject.Core.Tests.Mocks
 {
-	public interface IInterceptor
+	public class RequestsPrivateFieldInjectionBase : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
-		void Intercept(IMethodCall call);
+		[Inject] private SimpleObject _child;
 		/*----------------------------------------------------------------------------------------*/
+		public SimpleObject Child
+		{
+			get { return _child; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+	}
+
+	public class RequestsPrivateFieldInjection : RequestsPrivateFieldInjectionBase
+	{
 	}
 }

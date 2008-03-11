@@ -42,6 +42,20 @@ namespace Ninject.Core.Tests.Activation
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
+		public void SelfBoundTypeReceivesPrivateMethodInjection()
+		{
+			var options = new KernelOptions { InjectNonPublicMembers = true };
+
+			using (IKernel kernel = new StandardKernel(options))
+			{
+				RequestsPrivateMethodInjection mock = kernel.Get<RequestsPrivateMethodInjection>();
+
+				Assert.That(mock, Is.Not.Null);
+				Assert.That(mock.Child, Is.Not.Null);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
 		public void ServiceBoundTypeReceivesMethodInjection()
 		{
 			IModule module = new TestableModule(delegate(TestableModule m)
@@ -55,6 +69,28 @@ namespace Ninject.Core.Tests.Activation
 				Assert.That(mock, Is.Not.Null);
 
 				RequestsMethodInjection typedMock = mock as RequestsMethodInjection;
+				Assert.That(typedMock, Is.Not.Null);
+				Assert.That(typedMock.Child, Is.Not.Null);
+				Assert.That(typedMock.Child, Is.InstanceOfType(typeof(SimpleObject)));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void ServiceBoundTypeReceivesPrivateMethodInjection()
+		{
+			var options = new KernelOptions { InjectNonPublicMembers = true };
+
+			IModule module = new TestableModule(delegate(TestableModule m)
+			{
+				m.Bind<IMock>().To<RequestsPrivateMethodInjection>();
+			});
+
+			using (IKernel kernel = new StandardKernel(options, module))
+			{
+				IMock mock = kernel.Get<IMock>();
+				Assert.That(mock, Is.Not.Null);
+
+				RequestsPrivateMethodInjection typedMock = mock as RequestsPrivateMethodInjection;
 				Assert.That(typedMock, Is.Not.Null);
 				Assert.That(typedMock.Child, Is.Not.Null);
 				Assert.That(typedMock.Child, Is.InstanceOfType(typeof(SimpleObject)));
