@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core;
+using Ninject.Core.Logging;
 using Ninject.Core.Tests.Mocks;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;

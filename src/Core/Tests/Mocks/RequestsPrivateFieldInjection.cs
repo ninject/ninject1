@@ -25,7 +25,7 @@ namespace Ninject.Core.Tests.Mocks
 	public class RequestsPrivateFieldInjectionBase : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
-		[Inject] private SimpleObject _child;
+		[Inject] private SimpleObject _child = null;
 		/*----------------------------------------------------------------------------------------*/
 		public SimpleObject Child
 		{

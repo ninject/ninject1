@@ -56,6 +56,9 @@
     <Compile Include="Activation\Strategies\ContextAwareStrategy.cs" />
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
     <Compile Include="IContextAware.cs" />
+    <Compile Include="Infrastructure\Utility\ReflectionDictionaryBuilder.cs" />
+    <Compile Include="Infrastructure\InstanceWithContext.cs" />
+    <Compile Include="Infrastructure\WeakReferenceComparer.cs" />
     <Compile Include="Infrastructure\PredicateCondition.cs" />
     <Compile Include="Infrastructure\Utility\Format.cs" />
     <Compile Include="Logging\LoggerBase.cs" />
@@ -67,9 +70,6 @@
     <Compile Include="IStartable.cs" />
     <Compile Include="Activation\Providers\Internal\FactoryMethodProviders.cs" />
     <Compile Include="Activation\Providers\Internal\GenericProvider.cs" />
-    <Compile Include="Activation\References\IInstanceReference.cs" />
-    <Compile Include="Activation\References\StrongInstanceReference.cs" />
-    <Compile Include="Activation\References\WeakInstanceReference.cs" />
     <Compile Include="Activation\StandardActivator.cs" />
     <Compile Include="Activation\Providers\Internal\ConstantProvider.cs" />
     <Compile Include="Activation\Providers\Internal\StandardProvider.cs" />
@@ -97,6 +97,9 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\TextWriter\ConsoleLoggerFactory.cs" />
     <Compile Include="Logging\TextWriter\TextWriterLogger.cs" />
+    <Compile Include="Parameters\IParameterCollection.cs" />
+    <Compile Include="Parameters\ParameterCollection.cs" />
+    <Compile Include="Parameters\With.cs" />
     <Compile Include="Planning\Directives\Base\InjectionDirectiveBase.cs" />
     <Compile Include="Binding\IBinder.cs" />
     <Compile Include="Planning\Strategies\Base\PlanningStrategyBase.cs" />
@@ -214,6 +217,8 @@
     <Compile Include="Infrastructure\Utility\AttributeReader.cs" />
     <Compile Include="Infrastructure\Utility\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Utility\Ensure.cs" />
+    <Compile Include="Tracking\StandardTracker.cs" />
+    <Compile Include="Tracking\ITracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

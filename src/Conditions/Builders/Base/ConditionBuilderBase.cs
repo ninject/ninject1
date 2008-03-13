@@ -66,11 +66,20 @@ namespace Ninject.Conditions.Builders
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
+		/// <summary>
+		/// Determines whether this object is equal to the specified object.
+		/// </summary>
+		/// <param name="obj">The object to compare.</param>
+		/// <returns><see langword="True"/> if the objects are equal, otherwise <see langword="false"/>.</returns>
 		public override bool Equals(object obj)
 		{
 			return base.Equals(obj);
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a hash code for the object.
+		/// </summary>
+		/// <returns>A hash code for the object.</returns>
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();

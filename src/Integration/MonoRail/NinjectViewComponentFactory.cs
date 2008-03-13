@@ -27,20 +27,41 @@ using Ninject.Core;
 
 namespace Ninject.Integration.MonoRail
 {
+	/// <summary>
+	/// Creates Monorail <see cref="ViewComponent"/>s by activating them via the Ninject <see cref="IKernel"/>.
+	/// </summary>
 	public class NinjectViewComponentFactory : AbstractViewComponentFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// The kernel to use to activate the controllers.
+		/// </summary>
 		[Inject] public IKernel Kernel { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// The MonoRail view component registry.
+		/// </summary>
 		[Inject] public IViewComponentRegistry ViewComponentRegistry { get; set; }
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// The MonoRail view engine.
+		/// </summary>
 		public override IViewEngine ViewEngine { get; set; }
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Activates an instance of the requested view component.
+		/// </summary>
+		/// <param name="name">The name of the view component to create.</param>
+		/// <returns>The instance of the requested view component.</returns>
 		public override ViewComponent Create(String name)
 		{
 			Type type = ResolveType(name);
 			return Kernel.Get(type) as ViewComponent;
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the view component registry.
+		/// </summary>
 		protected override IViewComponentRegistry GetViewComponentRegistry()
 		{
 			return ViewComponentRegistry;

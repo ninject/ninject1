@@ -18,34 +18,30 @@
 #endregion
 #region Using Directives
 using System;
-using System.Web;
-using Castle.MonoRail.Framework;
-using Castle.MonoRail.Framework.Services;
-using Ninject.Core;
+using System.Collections.Generic;
 #endregion
 
-namespace Ninject.Integration.MonoRail
+namespace Ninject.Core.Parameters
 {
 	/// <summary>
-	/// An internal module that will be loaded into the <see cref="IKernel"/> when it is created
-	/// by a <see cref="NinjectHttpApplication"/>. Contains bindings for MonoRail internals.
+	/// A collection of transient parameters used during injection.
 	/// </summary>
-	public class NinjectIntegrationModule : StandardModule
+	public interface IParameterCollection
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Loads the module into the kernel.
+		/// Gets the value for the specified constructor argument, if one has been defined.
 		/// </summary>
-		public override void Load()
-		{
-			Bind<IControllerTree>().To<DefaultControllerTree>();
-			Bind<IServiceInitializer>().To<DefaultServiceInitializer>();
-			Bind<IViewComponentRegistry>().To<DefaultViewComponentRegistry>();
-			Bind<IControllerFactory>().To<NinjectControllerFactory>();
-			Bind<IFilterFactory>().To<NinjectFilterFactory>();
-			Bind<IViewComponentFactory>().To<NinjectViewComponentFactory>();
-			Bind<IHelperFactory>().To<NinjectHelperFactory>();
-		}
+		/// <param name="name">The name of the argument.</param>
+		/// <returns>The value for the argument, or <see langword="null"/> if none has been defined.</returns>
+		object GetConstructorArgument(string name);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the value for the specified property, if one has been defined.
+		/// </summary>
+		/// <param name="name">The name of the property.</param>
+		/// <returns>The value for the property, or <see langword="null"/> if none has been defined.</returns>
+		object GetPropertyValue(string name);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

@@ -70,6 +70,7 @@ namespace Ninject.Core.Activation
 			Ensure.NotDisposed(this);
 
 			StandardContext child = new StandardContext(this, target.Type);
+			child.Instance = instance;
 			child.Member = member;
 			child.Target = target;
 			child.Instance = instance;

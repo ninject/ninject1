@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Directives;
+using Ninject.Core.Planning.Targets;
 #endregion
 
 namespace Ninject.Core.Activation.Strategies
@@ -48,17 +49,29 @@ namespace Ninject.Core.Activation.Strategies
 			{
 				PropertyInfo property = directive.Member;
 
-				// Create a new context in which the property's value will be activated.
-				IContext injectionContext = context.CreateChild(instance, property, directive.Target, directive.Argument.Optional);
+				// First, check the context for a transient value for the property.
+				object value = GetValueFromTransientParameter(context, directive.Target);
 
-				// Resolve the value to inject into the property.
-				object value = directive.Argument.Resolver.Resolve(context, injectionContext);
+				// If no overrides have been declared, activate a service of the proper type to use as the value.
+				if (value == null)
+				{
+					// Create a new context in which the property's value will be activated.
+					IContext injectionContext = context.CreateChild(instance, property, directive.Target, directive.Argument.Optional);
+
+					// Resolve the value to inject into the property.
+					value = directive.Argument.Resolver.Resolve(context, injectionContext);
+				}
 
 				// Inject the value.
 				directive.Injector.Set(instance, value);
 			}
 
 			return StrategyResult.Proceed;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		private static object GetValueFromTransientParameter(IContext context, ITarget target)
+		{
+			return (context.Parameters == null) ? null : context.Parameters.GetPropertyValue(target.Name);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

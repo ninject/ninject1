@@ -26,16 +26,33 @@ using Ninject.Core;
 
 namespace Ninject.Integration.MonoRail
 {
+	/// <summary>
+	/// Creates MonoRail controller helpers by activating them via the Ninject <see cref="IKernel"/>.
+	/// </summary>
 	public class NinjectHelperFactory : IHelperFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Properties
+		/// <summary>
+		/// The kernel that will be used to activate the filters.
+		/// </summary>
 		[Inject] public IKernel Kernel { get; set; }
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Creates a helper with the specified type.
+		/// </summary>
+		/// <param name="helperType">The type of helper to create.</param>
+		/// <param name="engineContext">The context in which the helper was requested.</param>
+		/// <param name="initialized">A value indicating whether the helper is initialized.</param>
+		/// <returns>The created helper.</returns>
 		public object Create(Type helperType, IEngineContext engineContext, out bool initialized)
 		{
 			initialized = false;
 			return Kernel.Get(helperType);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

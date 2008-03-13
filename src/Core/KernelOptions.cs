@@ -37,20 +37,6 @@ namespace Ninject.Core
 		public static readonly KernelOptions Default = new KernelOptions();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private bool _implicitSelfBinding = true;
-#if DEBUG
-		private bool _generateDebugInfo = true;
-#else
-		private bool _generateDebugInfo = false;
-#endif
-		private bool _injectNonPublicMembers = false;
-		private bool _useEagerActivation = false;
-		private bool _ignoreProviderCompatibility = false;
-		private Type _defaultBehaviorType = typeof(TransientBehavior);
-		private Type _injectAttributeType = typeof(InjectAttribute);
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets a value indicating whether automatic self-binding is enabled.
@@ -61,11 +47,7 @@ namespace Ninject.Core
 		/// be self-bound. If <see langword="false"/>, the kernel will throw an exception when a type
 		/// with no bindings is requested.
 		/// </remarks>
-		public bool ImplicitSelfBinding
-		{
-			get { return _implicitSelfBinding; }
-			set { _implicitSelfBinding = value; }
-		}
+		public bool ImplicitSelfBinding { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether the kernel should generate debugging information
@@ -75,11 +57,7 @@ namespace Ninject.Core
 		/// This adds information to the error message that is displayed if there is a problem during
 		/// binding or activation at the expense of additional overhead.
 		/// </remarks>
-		public bool GenerateDebugInfo
-		{
-			get { return _generateDebugInfo; }
-			set { _generateDebugInfo = value; }
-		}
+		public bool GenerateDebugInfo { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether non-public members should be injected by the
@@ -90,11 +68,7 @@ namespace Ninject.Core
 		/// and internal) members for injection. If <see langword="false"/>, only public members
 		/// will be considered.
 		/// </remarks>
-		public bool InjectNonPublicMembers
-		{
-			get { return _injectNonPublicMembers; }
-			set { _injectNonPublicMembers = value; }
-		}
+		public bool InjectNonPublicMembers { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether types with restricted instantation (i.e.
@@ -105,11 +79,7 @@ namespace Ninject.Core
 		/// when bindings are registered for them. If <see langword="false"/>, the instances
 		/// will be lazily activated the first time they are requested.
 		/// </remarks>
-		public bool UseEagerActivation
-		{
-			get { return _useEagerActivation; }
-			set { _useEagerActivation = value; }
-		}
+		public bool UseEagerActivation { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether the kernel should throw an exception if a
@@ -122,11 +92,7 @@ namespace Ninject.Core
 		/// the instance as normal, but may throw an <see cref="InvalidCastException"/> if an
 		/// activation strategy does not correct the incompatibility (via a proxy, for example).
 		/// </remarks>
-		public bool IgnoreProviderCompatibility
-		{
-			get { return _ignoreProviderCompatibility; }
-			set { _ignoreProviderCompatibility = value; }
-		}
+		public bool IgnoreProviderCompatibility { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the built-in behavior that should be used for services registered without
@@ -135,11 +101,7 @@ namespace Ninject.Core
 		/// <remarks>
 		/// By default, the kernel will use the <see cref="TransientBehavior"/>.
 		/// </remarks>
-		public Type DefaultBehaviorType
-		{
-			get { return _defaultBehaviorType; }
-			set { _defaultBehaviorType = value; }
-		}
+		public Type DefaultBehaviorType { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the attribute type that will control injections. The kernel will look for
@@ -149,10 +111,36 @@ namespace Ninject.Core
 		/// <remarks>
 		/// By default, the kernel will look for members decorated with <see cref="InjectAttribute"/>.
 		/// </remarks>
-		public Type InjectAttributeType
+		public Type InjectAttributeType { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the attribute type that will indicate optional injections.
+		/// </summary>
+		/// <remarks>
+		/// By default, the kernel will look for members decorated with <see cref="OptionalAttribute"/>.
+		/// </remarks>
+		public Type OptionalAttributeType { get; set; }
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="KernelOptions"/> class.
+		/// </summary>
+		public KernelOptions()
 		{
-			get { return _injectAttributeType; }
-			set { _injectAttributeType = value; }
+			ImplicitSelfBinding = true;
+			InjectNonPublicMembers = false;
+			UseEagerActivation = false;
+			IgnoreProviderCompatibility = false;
+			DefaultBehaviorType = typeof(TransientBehavior);
+			InjectAttributeType = typeof(InjectAttribute);
+			OptionalAttributeType = typeof(OptionalAttribute);
+
+#if DEBUG
+			GenerateDebugInfo = true;
+#else
+			GenerateDebugInfo = false;
+#endif
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

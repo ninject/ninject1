@@ -26,8 +26,11 @@ using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Logging;
+using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
 using Ninject.Core.Properties;
+using Ninject.Core.Resolution;
+using Ninject.Core.Tracking;
 #endregion
 
 namespace Ninject.Core
@@ -44,7 +47,9 @@ namespace Ninject.Core
 			{
 				typeof(IPlanner),
 				typeof(IActivator),
+				typeof(ITracker),
 				typeof(IInjectorFactory),
+				typeof(IResolverFactory),
 				typeof(ILoggerFactory)
 			};
 		#endregion
@@ -52,7 +57,6 @@ namespace Ninject.Core
 		#region Fields
 		private readonly Dictionary<Type, IKernelComponent> _components = new Dictionary<Type, IKernelComponent>();
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
-		private readonly List<IInstanceReference> _references = new List<IInstanceReference>();
 		private readonly ILogger _logger = NullLogger.Instance;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -80,10 +84,10 @@ namespace Ninject.Core
 			{
 				_logger.Debug("Disposing of kernel");
 
-				List<IInstanceReference> refs = new List<IInstanceReference>(_references);
-				foreach (IInstanceReference reference in refs)
-					ReleaseInstance(reference);
+				// Dispose the tracker, which will release all of the existing instances.
+				DisposeComponent<ITracker>();
 
+				// Release all of the registered bindings.
 				foreach (List<IBinding> bindings in _bindings.Values)
 					DisposeCollection(bindings);
 
@@ -98,7 +102,6 @@ namespace Ninject.Core
 
 				_components.Clear();
 				_bindings.Clear();
-				_references.Clear();
 			}
 
 			base.Dispose(disposing);
@@ -158,7 +161,7 @@ namespace Ninject.Core
 		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
 		public IBinding GetBinding<T>()
 		{
-			return ResolveBinding(typeof(T), CreateRootContext(typeof(T)));
+			return ResolveBinding(typeof(T), CreateRootContext(typeof(T), null));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -179,7 +182,7 @@ namespace Ninject.Core
 		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
 		public IBinding GetBinding(Type type)
 		{
-			return ResolveBinding(type, CreateRootContext(type));
+			return ResolveBinding(type, CreateRootContext(type, null));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -221,7 +224,20 @@ namespace Ninject.Core
 		/// <returns>An instance of the requested type.</returns>
 		public T Get<T>()
 		{
-			return (T) ResolveInstance(typeof(T), CreateRootContext(typeof(T)), false);
+			IContext context = CreateRootContext(typeof(T), null);
+			return (T)ResolveInstance(typeof(T), context, false);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Retrieves an instance of the specified type from the kernel.
+		/// </summary>
+		/// <typeparam name="T">The type to retrieve.</typeparam>
+		/// <param name="parameters">A collection of transient parameters to use.</param>
+		/// <returns>An instance of the requested type.</returns>
+		public T Get<T>(IParameterCollection parameters)
+		{
+			IContext context = CreateRootContext(typeof(T), parameters);
+			return (T)ResolveInstance(typeof(T), context, false);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -242,7 +258,20 @@ namespace Ninject.Core
 		/// <returns>An instance of the requested type.</returns>
 		public object Get(Type type)
 		{
-			return ResolveInstance(type, CreateRootContext(type), false);
+			IContext context = CreateRootContext(type, null);
+			return ResolveInstance(type, context, false);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Retrieves an instance of the specified type from the kernel.
+		/// </summary>
+		/// <param name="type">The type to retrieve.</param>
+		/// <param name="parameters">A collection of transient parameters to use.</param>
+		/// <returns>An instance of the requested type.</returns>
+		public object Get(Type type, IParameterCollection parameters)
+		{
+			IContext context = CreateRootContext(type, parameters);
+			return ResolveInstance(type, context, false);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -271,19 +300,12 @@ namespace Ninject.Core
 		/// longer needed.
 		/// </summary>
 		/// <param name="instance">The instance to release.</param>
-		public void Release(object instance)
+		public bool Release(object instance)
 		{
 			Ensure.ArgumentNotNull(instance, "instance");
+			Ensure.NotDisposed(this);
 
-			IInstanceReference reference = GetReference(instance);
-
-			if (reference == null)
-			{
-				throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_KernelNotManagingInstance));
-			}
-
-			ReleaseInstance(reference);
+			return GetComponent<ITracker>().Release(instance);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -435,7 +457,7 @@ namespace Ninject.Core
 				_logger.Debug("Eagerly activating service {0}", service.Name);
 
 				// Create a new root context.
-				IContext context = CreateRootContext(service);
+				IContext context = CreateRootContext(service, null);
 
 				// Resolve an instance of the component to "prime" the behavior.
 				ResolveInstance(service, context, true);
@@ -513,9 +535,10 @@ namespace Ninject.Core
 							matches.Add(candidate);
 					}
 
-					_logger.Debug("{0} default binding and {1} conditional binding(s) match the current context",
+					_logger.Debug("{0} default binding and {1} conditional binding{2} match the current context",
 						(defaultBinding == null ? "No" : "One"),
-						matches.Count);
+						matches.Count,
+						(matches.Count == 1 ? "" : "s"));
 
 					if (matches.Count == 0)
 					{
@@ -632,8 +655,7 @@ namespace Ninject.Core
 			_logger.Debug("Will create instance of type {0} for service {1}", Format.Type(type), Format.Type(service));
 
 			// Ask the planner to resolve or build the activation plan for the type, and add it to the context.
-			IPlanner planner = context.Kernel.GetComponent<IPlanner>();
-			context.Plan = planner.GetPlan(context.Binding, type);
+			context.Plan = GetComponent<IPlanner>().GetPlan(context.Binding, type);
 
 			// Now that we have an activation plan, if this is an eager activation request, and the
 			// plan's behavior doesn't support eager activation, don't actually resolve an instance.
@@ -646,11 +668,8 @@ namespace Ninject.Core
 			// Request an instance via the behavior.
 			object instance = context.Plan.Behavior.Resolve(context);
 
-			lock (_references)
-			{
-				// Save a weak reference to the instance so we can release it via the correct binding.
-				_references.Add(new WeakInstanceReference(instance, context));
-			}
+			// Register the contextualized instance with the tracker.
+			GetComponent<ITracker>().Track(instance, context);
 
 			_logger.Debug("Instance of service {0} resolved successfully", Format.Type(service));
 
@@ -665,43 +684,20 @@ namespace Ninject.Core
 		{
 			Type type = instance.GetType();
 
-			IContext context = CreateRootContext(type);
+			IContext context = CreateRootContext(type, null);
 			context.Binding = ResolveBinding(type, context);
 
 			if (context.Binding == null)
 				throw new ActivationException(ExceptionFormatter.CouldNotResolveBindingForType(type, context));
 
-			IPlanner planner = context.Kernel.GetComponent<IPlanner>();
-			context.Plan = planner.GetPlan(context.Binding, type);
+			// Generate the activation plan for the instance.
+			context.Plan = GetComponent<IPlanner>().GetPlan(context.Binding, type);
 
-			IActivator activator = GetComponent<IActivator>();
-			activator.Create(context, ref instance);
+			// Activate the instance.
+      GetComponent<IActivator>().Create(context, ref instance);
 
-			lock (_references)
-			{
-				// Save a weak reference to the instance so we can release it via the correct binding.
-				_references.Add(new WeakInstanceReference(instance, context));
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Release an instance via its reference.
-		/// </summary>
-		/// <param name="reference">The reference to the instance held by the kernel.</param>
-		protected virtual void ReleaseInstance(IInstanceReference reference)
-		{
-			Ensure.ArgumentNotNull(reference, "reference");
-			Ensure.NotDisposed(this);
-
-			_logger.Debug("Releasing instance of service {0}", Format.Type(reference.Context.Service));
-
-			if (reference.Instance != null)
-				reference.Context.Plan.Behavior.Release(reference);
-
-			lock (_references)
-				_references.Remove(reference);
-
-			_logger.Debug("Instance of service {0} released successfully", Format.Type(reference.Context.Service));
+			// Register the contextualized instance with the tracker.
+			GetComponent<ITracker>().Track(instance, context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -792,32 +788,12 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods: Miscellaneous
 		/// <summary>
-		/// Finds the stored reference to the specified instance.
-		/// </summary>
-		/// <param name="instance">The instance to search for.</param>
-		/// <returns>The <see cref="IInstanceReference"/> object describing the instance, or <see langword="null"/> if none exists.</returns>
-		protected virtual IInstanceReference GetReference(object instance)
-		{
-			Ensure.NotDisposed(this);
-
-			lock (_references)
-			{
-				foreach (IInstanceReference reference in _references)
-				{
-					if (ReferenceEquals(reference.Instance, instance))
-						return reference;
-				}
-			}
-
-			return null;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Creates a new root context.
 		/// </summary>
 		/// <param name="service">The type that was requested.</param>
+		/// <param name="parameters">A collection of transient parameters, or <see langword="null"/> for none.</param>
 		/// <returns>A new <see cref="IContext"/> representing the root context.</returns>
-		protected internal virtual IContext CreateRootContext(Type service)
+		protected internal virtual IContext CreateRootContext(Type service, IParameterCollection parameters)
 		{
 			Ensure.NotDisposed(this);
 
@@ -826,6 +802,10 @@ namespace Ninject.Core
 			// Inject debug information into the context, if applicable.
 			if (Options.GenerateDebugInfo)
 				context.DebugInfo = DebugInfo.FromStackTrace();
+
+			// Apply the transient parameters to the context, if applicable.
+			if (parameters != null)
+				context.Parameters = parameters;
 
 			return context;
 		}

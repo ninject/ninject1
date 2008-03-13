@@ -38,7 +38,7 @@ namespace Ninject.Core.Behavior
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private List<StrongInstanceReference> _references = new List<StrongInstanceReference>();
+		private List<InstanceWithContext> _references = new List<InstanceWithContext>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -50,8 +50,11 @@ namespace Ninject.Core.Behavior
 		{
 			if (disposing && !IsDisposed)
 			{
-				foreach (StrongInstanceReference instance in _references)
-					DestroyInstance(instance);
+				foreach (InstanceWithContext reference in _references)
+				{
+					DestroyInstance(reference);
+					DisposeMember(reference);
+				}
 
 				_references.Clear();
 				_references = null;
@@ -87,7 +90,7 @@ namespace Ninject.Core.Behavior
 			{
 				object instance = CreateInstance(context, null);
 				map.Add(context.Binding, instance);
-				_references.Add(new StrongInstanceReference(instance, context));
+				_references.Add(new InstanceWithContext(instance, context));
 			}
 
 			return map[context.Binding];
@@ -96,8 +99,9 @@ namespace Ninject.Core.Behavior
 		/// <summary>
 		/// Does nothing; the instances will be released when the behavior is disposed.
 		/// </summary>
-		/// <param name="reference">A contextual reference to the instance to be released.</param>
-		public override void Release(IInstanceReference reference)
+		/// <param name="context">The context in which the instance was activated.</param>
+		/// <param name="instance">The instance to release.</param>
+		public override void Release(IContext context, object instance)
 		{
 		}
 		#endregion

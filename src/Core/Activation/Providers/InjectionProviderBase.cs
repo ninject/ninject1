@@ -20,6 +20,7 @@
 using System;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Directives;
+using Ninject.Core.Planning.Targets;
 #endregion
 
 namespace Ninject.Core.Activation
@@ -92,41 +93,59 @@ namespace Ninject.Core.Activation
 			int index = 0;
 			foreach (Argument argument in directive.Arguments)
 			{
-				if (context.Binding.InlineArguments.ContainsKey(argument.Target.Name))
-				{
-					// If an inline argument has been specified, it overrides any injection.
-					object inlineArgument = context.Binding.InlineArguments[argument.Target.Name];
+				// First, try to get the value from a transient parameter in the context.
+				object value = GetValueFromTransientParameter(context, argument.Target);
 
-					// See if we can just inject the argument directly.
-					if (!argument.Target.Type.IsAssignableFrom(inlineArgument.GetType()))
-					{
-						try
-						{
-							// Try to convert the inline argument to the expected type.
-							inlineArgument = Convert.ChangeType(inlineArgument, argument.Target.Type);
-						}
-						catch (InvalidCastException)
-						{
-							// If the conversion failed, we're out of options, so throw an ActivationException.
-							throw new ActivationException(ExceptionFormatter.InvalidInlineArgument(argument, inlineArgument, context));
-						}
-					}
+				// Next, try to get the value from an inline argument associated with the binding.
+				if (value == null)
+					value = GetValueFromInlineArgument(context, argument.Target);
 
-					arguments[index] = inlineArgument;
-				}
-				else
+				// If no overrides have been declared, activate a service of the proper type to use as the value.
+        if (value == null)
 				{
 					// Create a new context in which the parameter's value will be activated.
 					IContext injectionContext = context.CreateChild(null, directive.Member, argument.Target, argument.Optional);
 
 					// Resolve the value to inject for the parameter.
-					arguments[index] = argument.Resolver.Resolve(context, injectionContext);
+					value = argument.Resolver.Resolve(context, injectionContext);
 				}
 
-				index++;
+				arguments[index++] = value;
 			}
 
 			return arguments;
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Private Methods
+		private static object GetValueFromInlineArgument(IContext context, ITarget target)
+		{
+			if (!context.Binding.InlineArguments.ContainsKey(target.Name))
+				return null;
+
+			object value = context.Binding.InlineArguments[target.Name];
+
+			// See if we can just inject the argument directly.
+			if (!target.Type.IsAssignableFrom(value.GetType()))
+			{
+				try
+				{
+					// Try to convert the inline argument to the expected type.
+					value = Convert.ChangeType(value, target.Type);
+				}
+				catch (InvalidCastException)
+				{
+					// If the conversion failed, we're out of options, so throw an ActivationException.
+					throw new ActivationException(ExceptionFormatter.InvalidInlineArgument(target, value, context));
+				}
+			}
+
+			return value;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		private static object GetValueFromTransientParameter(IContext context, ITarget target)
+		{
+			return (context.Parameters == null) ? null : context.Parameters.GetConstructorArgument(target.Name);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

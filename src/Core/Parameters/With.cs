@@ -18,33 +18,25 @@
 #endregion
 #region Using Directives
 using System;
-using System.Web;
-using Castle.MonoRail.Framework;
-using Castle.MonoRail.Framework.Services;
-using Ninject.Core;
+using System.Collections;
+using Ninject.Core.Parameters;
 #endregion
 
-namespace Ninject.Integration.MonoRail
+namespace Ninject.Core.Parameters
 {
 	/// <summary>
-	/// An internal module that will be loaded into the <see cref="IKernel"/> when it is created
-	/// by a <see cref="NinjectHttpApplication"/>. Contains bindings for MonoRail internals.
+	/// A container for the transient parameter fluent interface.
 	/// </summary>
-	public class NinjectIntegrationModule : StandardModule
+	public static partial class With
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Loads the module into the kernel.
+		/// Declares a new collection of parameters.
 		/// </summary>
-		public override void Load()
+		/// <value>The parameters.</value>
+		public static ParameterCollection Parameters
 		{
-			Bind<IControllerTree>().To<DefaultControllerTree>();
-			Bind<IServiceInitializer>().To<DefaultServiceInitializer>();
-			Bind<IViewComponentRegistry>().To<DefaultViewComponentRegistry>();
-			Bind<IControllerFactory>().To<NinjectControllerFactory>();
-			Bind<IFilterFactory>().To<NinjectFilterFactory>();
-			Bind<IViewComponentFactory>().To<NinjectViewComponentFactory>();
-			Bind<IHelperFactory>().To<NinjectHelperFactory>();
+			get { return new ParameterCollection(); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

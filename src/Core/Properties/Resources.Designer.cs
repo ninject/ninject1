@@ -97,6 +97,15 @@ namespace Ninject.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The constructor argument &apos;{0}&apos; has already been given a transient value..
+        /// </summary>
+        internal static string Ex_ConstructorArgumentAlreadyHasTransientvalue {
+            get {
+                return ResourceManager.GetString("Ex_ConstructorArgumentAlreadyHasTransientvalue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The service type {0} of the custom binding was registered under the type {1}. These types must match..
         /// </summary>
         internal static string Ex_CustomBindingServiceTypeMismatch {
@@ -174,6 +183,15 @@ namespace Ninject.Core.Properties {
         internal static string Ex_ObjectHasBeenDisposed {
             get {
                 return ResourceManager.GetString("Ex_ObjectHasBeenDisposed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The property &apos;{0}&apos; has already been given a transient value..
+        /// </summary>
+        internal static string Ex_PropertyAlreadyHasTransientValue {
+            get {
+                return ResourceManager.GetString("Ex_PropertyAlreadyHasTransientValue", resourceCulture);
             }
         }
         

@@ -25,6 +25,7 @@ using Ninject.Core.Injection;
 using Ninject.Core.Logging;
 using Ninject.Core.Planning;
 using Ninject.Core.Resolution;
+using Ninject.Core.Tracking;
 #endregion
 
 namespace Ninject.Core
@@ -98,6 +99,7 @@ namespace Ninject.Core
 			Connect<ILoggerFactory>(new NullLoggerFactory());
 			Connect<IActivator>(new StandardActivator());
 			Connect<IPlanner>(new StandardPlanner());
+			Connect<ITracker>(new StandardTracker());
 			Connect<IResolverFactory>(new StandardResolverFactory());
 			Connect<IInjectorFactory>(new DynamicInjectorFactory());
 		}

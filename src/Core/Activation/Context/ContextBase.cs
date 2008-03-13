@@ -18,10 +18,12 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Behavior;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
 using Ninject.Core.Planning.Targets;
 #endregion
@@ -33,6 +35,10 @@ namespace Ninject.Core.Activation
 	/// </summary>
 	public abstract class ContextBase : DebugInfoProvider, IContext
 	{
+		/*----------------------------------------------------------------------------------------*/
+		#region Fields
+		private WeakReference _reference;
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
@@ -77,9 +83,18 @@ namespace Ninject.Core.Activation
 		public DateTime Time { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets the transient parameters for the context, if any are defined.
+		/// </summary>
+		public IParameterCollection Parameters { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets or sets the instance that is being injected, if it has been created.
 		/// </summary>
-		public object Instance { get; set; }
+		public object Instance
+		{
+			get { return (_reference.IsAlive ? _reference.Target : null); }
+			set { _reference = new WeakReference(value); }
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the member that is being injected.

@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Ninject.Core.Tests.Mocks
@@ -26,7 +27,7 @@ namespace Ninject.Core.Tests.Mocks
 	public class CircularFieldMockB
 	{
 		/*----------------------------------------------------------------------------------------*/
-		[Inject] private CircularFieldMockA _mockA;
+		[Inject] private CircularFieldMockA _mockA = null;
 		/*----------------------------------------------------------------------------------------*/
 		public CircularFieldMockA MockA
 		{

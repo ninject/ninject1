@@ -5,7 +5,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		src\GlobalAssemblyInfo.cs = src\GlobalAssemblyInfo.cs
 		LICENSE.txt = LICENSE.txt
-		src\Ninject.snk = src\Ninject.snk
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{4378F1FE-F506-49AE-A51D-784421805732}"

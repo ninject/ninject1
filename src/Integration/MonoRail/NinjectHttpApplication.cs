@@ -29,11 +29,23 @@ using IContextAware=Castle.MonoRail.Framework.IContextAware;
 
 namespace Ninject.Integration.MonoRail
 {
+	/// <summary>
+	/// A <see cref="HttpApplication"/> that creates and maintains a Ninject <see cref="IKernel"/>.
+	/// </summary>
 	public abstract class NinjectHttpApplication : HttpApplication, IServiceProviderEx
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Properties
+		/// <summary>
+		/// Gets or sets the kernel associated with the application.
+		/// </summary>
 		public IKernel Kernel { get; protected set; }
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Executes custom initialization code after all event handler modules have been added.
+		/// </summary>
 		public override void Init()
 		{
 			base.Init();
@@ -46,6 +58,11 @@ namespace Ninject.Integration.MonoRail
 			Kernel.Inject(this);
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Activates an instance of the service with the specified type.
+		/// </summary>
+		/// <typeparam name="T">The type of service to create.</typeparam>
+		/// <returns>An instance of the specified service, or <see langword="null"/> if none have been registered.</returns>
 		public T GetService<T>() where T : class
 		{
 			IContext context = new StandardContext(Kernel, typeof(T));
@@ -54,6 +71,11 @@ namespace Ninject.Integration.MonoRail
 			return Kernel.Get<T>(context);
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Activates an instance of the service with the specified type.
+		/// </summary>
+		/// <param name="serviceType">The type of service to create.</param>
+		/// <returns>An instance of the specified service, or <see langword="null"/> if none have been registered.</returns>
 		public object GetService(Type serviceType)
 		{
 			IContext context = new StandardContext(Kernel, serviceType);
@@ -61,8 +83,15 @@ namespace Ninject.Integration.MonoRail
 
 			return Kernel.Get(serviceType, context);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
+		/// <summary>
+		/// Creates the kernel for the application.
+		/// </summary>
+		/// <returns>The kernel.</returns>
 		protected abstract IKernel CreateKernel();
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

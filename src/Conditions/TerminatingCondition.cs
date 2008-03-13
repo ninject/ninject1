@@ -75,19 +75,12 @@ namespace Ninject.Conditions.Builders
 		{
 			if (_previous == null)
 			{
-				if (ReferenceEquals(default(TRoot), value))
-					return false;
-				else
-					return _directPredicate(value);
+				return _directPredicate(value);
 			}
 			else
 			{
 				TSubject subject = _previous.ResolveSubject(value);
-
-				if (ReferenceEquals(default(TSubject), subject))
-					return false;
-				else
-					return _predicate(subject);
+				return _predicate(subject);
 			}
 		}
 		#endregion

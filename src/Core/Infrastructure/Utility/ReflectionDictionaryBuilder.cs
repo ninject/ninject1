@@ -18,33 +18,39 @@
 #endregion
 #region Using Directives
 using System;
-using System.Web;
-using Castle.MonoRail.Framework;
-using Castle.MonoRail.Framework.Services;
-using Ninject.Core;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using Ninject.Core.Activation;
+using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution;
 #endregion
 
-namespace Ninject.Integration.MonoRail
+namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// An internal module that will be loaded into the <see cref="IKernel"/> when it is created
-	/// by a <see cref="NinjectHttpApplication"/>. Contains bindings for MonoRail internals.
+	/// Provides a shortcut to creating dictionaries from the properties of anonymous types.
 	/// </summary>
-	public class NinjectIntegrationModule : StandardModule
+	public static class ReflectionDictionaryBuilder
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Loads the module into the kernel.
+		/// Creates a dictionary from the properties of the specified object. The keys of the dictionary
+		/// will be the names of the object's public 
 		/// </summary>
-		public override void Load()
+		/// <param name="obj">The object to create the dictionary from.</param>
+		/// <returns>The created dictionary.</returns>
+		public static IDictionary Create(object obj)
 		{
-			Bind<IControllerTree>().To<DefaultControllerTree>();
-			Bind<IServiceInitializer>().To<DefaultServiceInitializer>();
-			Bind<IViewComponentRegistry>().To<DefaultViewComponentRegistry>();
-			Bind<IControllerFactory>().To<NinjectControllerFactory>();
-			Bind<IFilterFactory>().To<NinjectFilterFactory>();
-			Bind<IViewComponentFactory>().To<NinjectViewComponentFactory>();
-			Bind<IHelperFactory>().To<NinjectHelperFactory>();
+			var results = new Dictionary<string, object>();
+
+			Type type = obj.GetType();
+			PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+			foreach (PropertyInfo property in properties)
+				results.Add(property.Name, property.GetValue(obj, null));
+
+			return results;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

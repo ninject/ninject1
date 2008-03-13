@@ -19,44 +19,36 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Behavior
+namespace Ninject.Core.Tracking
 {
 	/// <summary>
-	/// Defines the instantiation behavior for a type.
+	/// Tracks contextualized instances so they can be properly disposed of.
 	/// </summary>
-	public interface IBehavior : IDisposable
+	public interface ITracker : IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the kernel related to the behavior.
+		/// Gets the number of instances currently being tracked.
 		/// </summary>
-		IKernel Kernel { get; set; }
+		int ReferenceCount { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets a value indicating whether the behavior supports eager activation.
+		/// Begins tracking the specified instance.
 		/// </summary>
-		/// <remarks>
-		/// If <see langword="true"/>, instances of the associated type will be automatically
-		/// activated if the <c>UseEagerActivation</c> option is set for the kernel. If
-		/// <see langword="false"/>, all instances of the type will be lazily activated.
-		/// </remarks>
-		bool SupportsEagerActivation { get; }
+		/// <param name="instance">The instance to track.</param>
+		/// <param name="context">The context in which it was activated.</param>
+		void Track(object instance, IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Resolves an instance of the type based on the rules of the behavior.
+		/// Releases the specified instance via the binding which was used to activate it, and
+		/// stops tracking it.
 		/// </summary>
-		/// <param name="context">The context in which the instance is being activated.</param>
-		/// <returns>An instance of the type associated with the behavior.</returns>
-		object Resolve(IContext context);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Releases an instance of the type based on the rules of the behavior.
-		/// </summary>
-		/// <param name="context">The context in which the instance was activated.</param>
 		/// <param name="instance">The instance to release.</param>
-		void Release(IContext context, object instance);
+		/// <returns><see langword="True"/> if the instance was being tracked, otherwise <see langword="false"/>.</returns>
+		bool Release(object instance);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

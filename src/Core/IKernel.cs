@@ -18,9 +18,11 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Parameters;
 #endregion
 
 namespace Ninject.Core
@@ -53,6 +55,14 @@ namespace Ninject.Core
 		T Get<T>();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Retrieves an instance of the specified type from the kernel.
+		/// </summary>
+		/// <typeparam name="T">The type to retrieve.</typeparam>
+		/// <param name="parameters">A collection of transient parameters to use.</param>
+		/// <returns>An instance of the requested type.</returns>
+		T Get<T>(IParameterCollection parameters);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Retrieves an instance of the specified type from the kernel, within an existing context.
 		/// </summary>
 		/// <typeparam name="T">The type to retrieve.</typeparam>
@@ -66,6 +76,14 @@ namespace Ninject.Core
 		/// <param name="type">The type to retrieve.</param>
 		/// <returns>An instance of the requested type.</returns>
 		object Get(Type type);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Retrieves an instance of the specified type from the kernel.
+		/// </summary>
+		/// <param name="type">The type to retrieve.</param>
+		/// <param name="parameters">A collection of transient parameters to use.</param>
+		/// <returns>An instance of the requested type.</returns>
+		object Get(Type type, IParameterCollection parameters);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Retrieves an instance of the specified type from the kernel, within an existing context.
@@ -87,7 +105,8 @@ namespace Ninject.Core
 		/// longer needed.
 		/// </summary>
 		/// <param name="instance">The instance to release.</param>
-		void Release(object instance);
+		/// <returns><see langword="True"/> if the kernel was tracking the instance, otherwise <see langword="false"/>.</returns>
+		bool Release(object instance);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Bindings

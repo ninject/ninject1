@@ -18,34 +18,29 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Infrastructure;
+using System.Collections.Generic;
+using Ninject.Core.Activation;
+using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution;
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// Represents a weak reference to the instance that has been activated, along with the
-	/// context in which it was activated. This will allow the instance to be garbage-collected
-	/// automatically without being explicitly released.
+	/// An activated instance of a service, with the context it was activated in. Used to properly
+	/// release instances for services with non-transient behaviors.
 	/// </summary>
-	public class WeakInstanceReference : DisposableObject, IInstanceReference
+	public class InstanceWithContext : DisposableObject
 	{
-		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private WeakReference _instance;
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets the instance that the reference is tracking.
+		/// The contextualized instance.
 		/// </summary>
-		public object Instance
-		{
-			get { return (!_instance.IsAlive ? null : _instance.Target); }
-		}
+		public object Instance { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the context in which the instance was activated.
+		/// The context in which the instance was activated.
 		/// </summary>
 		public IContext Context { get; private set; }
 		#endregion
@@ -59,7 +54,9 @@ namespace Ninject.Core.Activation
 		{
 			if (disposing && !IsDisposed)
 			{
-				_instance = null;
+				DisposeMember(Context);
+
+				Instance = null;
 				Context = null;
 			}
 
@@ -69,13 +66,13 @@ namespace Ninject.Core.Activation
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Creates a new instance reference.
+		/// Initializes a new instance of the <see cref="InstanceWithContext"/> class.
 		/// </summary>
-		/// <param name="instance">The instance to track.</param>
-		/// <param name="context">The context in which the instance was activated.</param>
-		public WeakInstanceReference(object instance, IContext context)
+		/// <param name="instance">The instance.</param>
+		/// <param name="context">The context.</param>
+		public InstanceWithContext(object instance, IContext context)
 		{
-			_instance = new WeakReference(instance);
+			Instance = instance;
 			Context = context;
 		}
 		#endregion

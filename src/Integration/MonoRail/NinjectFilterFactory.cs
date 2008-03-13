@@ -26,20 +26,39 @@ using Ninject.Core;
 
 namespace Ninject.Integration.MonoRail
 {
+	/// <summary>
+	/// Creates MonoRail <see cref="IFilter"/>s by activating them via the Ninject <see cref="IKernel"/>.
+	/// </summary>
 	public class NinjectFilterFactory : IFilterFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Properties
+		/// <summary>
+		/// The kernel that will be used to activate the filters.
+		/// </summary>
 		[Inject] public IKernel Kernel { get; set; }
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Activates the filer with the specified type.
+		/// </summary>
+		/// <param name="filterType">The type of filter to create.</param>
+		/// <returns>The activated filter.</returns>
 		public IFilter Create(Type filterType)
 		{
 			return Kernel.Get(filterType) as IFilter;
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases the specified filter via the kernel.
+		/// </summary>
+		/// <param name="filter">The filter to release.</param>
 		public void Release(IFilter filter)
 		{
 			Kernel.Release(filter);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

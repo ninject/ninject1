@@ -20,6 +20,7 @@
 using System;
 using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Tests.Mocks
@@ -27,7 +28,7 @@ namespace Ninject.Core.Tests.Mocks
 	public class MockBehavior : BehaviorBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		private StrongInstanceReference _reference;
+		private InstanceWithContext _reference;
 		/*----------------------------------------------------------------------------------------*/
 		public MockBehavior()
 			: base(true)
@@ -39,13 +40,13 @@ namespace Ninject.Core.Tests.Mocks
 			if (_reference == null)
 			{
 				object instance = CreateInstance(context, null);
-				_reference = new StrongInstanceReference(instance, context);
+				_reference = new InstanceWithContext(instance, context);
 			}
 
 			return _reference.Instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		public override void Release(IInstanceReference reference)
+		public override void Release(IContext context, object instance)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/

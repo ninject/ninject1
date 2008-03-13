@@ -27,7 +27,7 @@ namespace Ninject.Core.Tests.Mocks
 	public class CircularFieldMockA
 	{
 		/*----------------------------------------------------------------------------------------*/
-		[Inject] private CircularFieldMockB _mockB;
+		[Inject] private CircularFieldMockB _mockB = null;
 		/*----------------------------------------------------------------------------------------*/
 		public CircularFieldMockB MockB
 		{

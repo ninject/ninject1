@@ -162,4 +162,10 @@
   <data name="Ex_KernelMissingRequiredComponent" xml:space="preserve">
     <value>The kernel is missing an implementation of the required component {0}.</value>
   </data>
+  <data name="Ex_ConstructorArgumentAlreadyHasTransientvalue" xml:space="preserve">
+    <value>The constructor argument '{0}' has already been given a transient value.</value>
+  </data>
+  <data name="Ex_PropertyAlreadyHasTransientValue" xml:space="preserve">
+    <value>The property '{0}' has already been given a transient value.</value>
+  </data>
 </root>

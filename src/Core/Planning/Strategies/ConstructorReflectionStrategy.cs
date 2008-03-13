@@ -103,7 +103,7 @@ namespace Ninject.Core.Planning.Strategies
 				IResolver resolver = resolverFactory.Create(binding, target);
 
 				// Determine if the dependency is optional.
-				bool optional = AttributeReader.Has<OptionalAttribute>(parameter);
+				bool optional = AttributeReader.Has(Kernel.Options.OptionalAttributeType, parameter);
 
 				// Add the mapping between the injection point and the dependency resolver.
 				directive.Arguments.Add(new Argument(target, resolver, optional));

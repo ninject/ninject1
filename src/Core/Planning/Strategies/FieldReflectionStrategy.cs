@@ -70,7 +70,7 @@ namespace Ninject.Core.Planning.Strategies
 			IResolver resolver = resolverFactory.Create(binding, target);
 
 			// Determine if the dependency is optional.
-			bool optional = AttributeReader.Has<OptionalAttribute>(member);
+			bool optional = AttributeReader.Has(Kernel.Options.OptionalAttributeType, member);
 
 			// Create an argument representing the field and add it to the directive.
 			directive.Argument = new Argument(target, resolver, optional);

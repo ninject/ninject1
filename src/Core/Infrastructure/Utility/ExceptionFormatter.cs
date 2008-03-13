@@ -24,6 +24,7 @@ using System.Reflection;
 using System.Text;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
+using Ninject.Core.Planning.Targets;
 #endregion
 
 namespace Ninject.Core.Infrastructure
@@ -299,21 +300,21 @@ namespace Ninject.Core.Infrastructure
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region InvalidInlineArgument
-		public static string InvalidInlineArgument(Argument argument, object inlineArgument, IContext context)
+		public static string InvalidInlineArgument(ITarget target, object inlineArgument, IContext context)
 		{
-			Ensure.ArgumentNotNull(argument, "argument");
+			Ensure.ArgumentNotNull(target, "target");
 			Ensure.ArgumentNotNull(context, "context");
 
 			using (StringWriter sw = new StringWriter())
 			{
 				sw.WriteLine("Error activating {0}: Invalid inline argument specified for constructor parameter '{1}' of type {2}.",
 					Format.Type(context.Service),
-					argument.Target.Name,
+					target.Name,
 					Format.Type(context.Plan.Type));
 
 				sw.WriteLine("The argument's type ({0}) is not compatible with the expected type ({1}), and the value cannot be converted.",
 					Format.Type(inlineArgument.GetType()),
-					Format.Type(argument.Target.Type));
+					Format.Type(target.Type));
 
 				sw.WriteLine("Using {0}", Format.Binding(context.Binding));
 

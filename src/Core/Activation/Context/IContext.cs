@@ -18,10 +18,11 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
-using Ninject.Core.Behavior;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
 using Ninject.Core.Planning.Targets;
 #endregion
@@ -76,7 +77,13 @@ namespace Ninject.Core.Activation
 		DateTime Time { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the instance that is being injected, if it has been created.
+		/// Gets or sets the transient parameters for the context, if any are defined.
+		/// </summary>
+		IParameterCollection Parameters { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the instance that is being injected, if it has been created, and not
+		/// garbage collected.
 		/// </summary>
 		object Instance { get; set; }
 		/*----------------------------------------------------------------------------------------*/

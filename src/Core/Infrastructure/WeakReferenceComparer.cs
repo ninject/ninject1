@@ -18,25 +18,40 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
+using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution;
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// A contextual reference to an instance created by the kernel.
+	/// Compares the targets of two WeakReferences to see if they are the same.
 	/// </summary>
-	public interface IInstanceReference
+	public class WeakReferenceComparer : IEqualityComparer<WeakReference>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the instance that the reference is tracking.
+		/// Determines whether the specified references refer to the same instance.
 		/// </summary>
-		object Instance { get; }
+		/// <param name="x">The first reference to compare.</param>
+		/// <param name="y">The second reference to compare.</param>
+		/// <returns><see langword="True"/> if the references refer to the same object, otherwise <see langword="false"/>.</returns>
+		public bool Equals(WeakReference x, WeakReference y)
+		{
+			return ReferenceEquals(x.Target, y.Target);
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the context in which the instance was activated.
+		/// Gets a hash code for the reference.
 		/// </summary>
-		IContext Context { get; }
+		/// <param name="reference">The reference.</param>
+		/// <returns>The hash code.</returns>
+		public int GetHashCode(WeakReference reference)
+		{
+			Ensure.ArgumentNotNull(reference, "reference");
+			return reference.IsAlive ? reference.Target.GetHashCode() : reference.GetHashCode();
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

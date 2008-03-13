@@ -18,28 +18,31 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Behavior
+namespace Ninject.Core.Tracking
 {
 	/// <summary>
-	/// A behavior that causes only a single instance of the type to exist throughout the application.
+	/// Tracks contextualized instances so they can be properly disposed of.
 	/// </summary>
-	public class SingletonBehavior : BehaviorBase
+	public class StandardTracker : KernelComponentBase, ITracker
 	{
+		/*----------------------------------------------------------------------------------------*/
+		#region Fields
+		private Dictionary<WeakReference, IContext> _contextCache = new Dictionary<WeakReference, IContext>(new WeakReferenceComparer());
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets the instance associated with the behavior.
+		/// Gets the number of instances currently being tracked.
 		/// </summary>
-		public object Instance { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets or sets the context in which the singleton instance was activated.
-		/// </summary>
-		public IContext Context { get; private set; }
+		public int ReferenceCount
+		{
+			get { return _contextCache.Count; }
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -51,59 +54,66 @@ namespace Ninject.Core.Behavior
 		{
 			if (disposing && !IsDisposed)
 			{
-				if (Instance != null)
+				foreach (KeyValuePair<WeakReference, IContext> entry in _contextCache)
 				{
-					DestroyInstance(Context, Instance);
-					DisposeMember(Context);
+					WeakReference reference = entry.Key;
+					IContext context = entry.Value;
+
+					if (reference.IsAlive)
+						DoRelease(context, reference.Target);
 				}
 
-				Instance = null;
-				Context = null;
+				_contextCache.Clear();
+				_contextCache = null;
 			}
 
 			base.Dispose(disposing);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
+		#region Public Methods
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SingletonBehavior"/> class.
+		/// Begins tracking the specified instance.
 		/// </summary>
-		public SingletonBehavior()
-			: base(true)
+		/// <param name="instance">The instance to track.</param>
+		/// <param name="context">The context in which it was activated.</param>
+		public void Track(object instance, IContext context)
 		{
+			lock (_contextCache)
+			{
+				WeakReference reference = new WeakReference(instance);
+				_contextCache[reference] = context;
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases the specified instance via the binding which was used to activate it, and
+		/// stops tracking it.
+		/// </summary>
+		/// <param name="instance">The instance to release.</param>
+		/// <returns><see langword="True"/> if the instance was being tracked, otherwise <see langword="false"/>.</returns>
+		public bool Release(object instance)
+		{
+			lock (_contextCache)
+			{
+				WeakReference reference = new WeakReference(instance);
+
+				if (!_contextCache.ContainsKey(reference))
+					return false;
+
+				IContext context = _contextCache[reference];
+				DoRelease(context, instance);
+
+				return true;
+			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
-		/// <summary>
-		/// Resolves an instance of the type based on the rules of the behavior.
-		/// </summary>
-		/// <param name="context">The context in which the instance is being activated.</param>
-		/// <returns>An instance of the type associated with the behavior.</returns>
-		public override object Resolve(IContext context)
+		#region Private Methods
+		private static void DoRelease(IContext context, object instance)
 		{
-			Ensure.NotDisposed(this);
-
-			lock (this)
-			{
-				if (Instance == null)
-				{
-					Instance = CreateInstance(context, null);
-					Context = context;
-				}
-			}
-
-			return Instance;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Does nothing; the instance will be released when the behavior is disposed.
-		/// </summary>
-		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to release.</param>
-		public override void Release(IContext context, object instance)
-		{
+			// Release the instance via the behavior it was activated with.
+			context.Plan.Behavior.Release(context, instance);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

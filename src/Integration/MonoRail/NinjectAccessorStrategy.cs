@@ -26,9 +26,15 @@ using Ninject.Core;
 
 namespace Ninject.Integration.MonoRail
 {
+	/// <summary>
+	/// Provides access to the <see cref="NinjectHttpApplication"/>.
+	/// </summary>
 	public class NinjectAccessorStrategy : ServiceProviderLocator.IAccessorStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a reference to the <see cref="NinjectHttpApplication"/>.
+		/// </summary>
 		public IServiceProviderEx LocateProvider()
 		{
 			var application = HttpContext.Current.ApplicationInstance as NinjectHttpApplication;

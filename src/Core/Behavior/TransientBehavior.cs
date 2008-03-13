@@ -55,11 +55,12 @@ namespace Ninject.Core.Behavior
 		/// <summary>
 		/// Releases an instance of the type based on the rules of the behavior.
 		/// </summary>
-		/// <param name="reference">A contextual reference to the instance to be released.</param>
-		public override void Release(IInstanceReference reference)
+		/// <param name="context">The context in which the instance was activated.</param>
+		/// <param name="instance">The instance to release.</param>
+		public override void Release(IContext context, object instance)
 		{
 			Ensure.NotDisposed(this);
-			DestroyInstance(reference);
+			DestroyInstance(context, instance);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

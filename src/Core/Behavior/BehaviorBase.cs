@@ -83,8 +83,9 @@ namespace Ninject.Core.Behavior
 		/// <summary>
 		/// Releases an instance of the type based on the rules of the behavior.
 		/// </summary>
-		/// <param name="reference">A contextual reference to the instance to be released.</param>
-		public abstract void Release(IInstanceReference reference);
+		/// <param name="context">The context in which the instance was activated.</param>
+		/// <param name="instance">The instance to release.</param>
+		public abstract void Release(IContext context, object instance);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
@@ -110,14 +111,22 @@ namespace Ninject.Core.Behavior
 		/// <summary>
 		/// Destroys an instance of the type via the kernel's <see cref="IActivator"/>.
 		/// </summary>
-		/// <param name="reference">A reference to the instance to destroy.</param>
-		protected virtual void DestroyInstance(IInstanceReference reference)
+		/// <param name="context">The context in which the instance was activated.</param>
+		/// <param name="instance">The instance to destroy.</param>
+		protected virtual void DestroyInstance(IContext context, object instance)
 		{
-			IActivator activator = Kernel.GetComponent<IActivator>();
-			object instance = reference.Instance;
-
 			if (instance != null)
-				activator.Destroy(reference.Context, ref instance);
+				Kernel.GetComponent<IActivator>().Destroy(context, ref instance);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Destroys an instance of the type via the kernel's <see cref="IActivator"/>.
+		/// </summary>
+		/// <param name="contextualized">The contextualized instance to destroy.</param>
+		protected virtual void DestroyInstance(InstanceWithContext contextualized)
+		{
+			object instance = contextualized.Instance;
+			Kernel.GetComponent<IActivator>().Destroy(contextualized.Context, ref instance);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
