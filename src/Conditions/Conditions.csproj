@@ -50,6 +50,7 @@
     <Compile Include="Builders\Base\AttributeConditionBuilder.cs" />
     <Compile Include="Builders\Base\ComparableConditionBuilder.cs" />
     <Compile Include="Builders\Base\ConditionBuilderBase.cs" />
+    <Compile Include="Builders\Base\SimpleConditionBuilder.cs" />
     <Compile Include="Builders\Base\IConditionBuilder.cs" />
     <Compile Include="Builders\DateTimeConditionBuilder.cs" />
     <Compile Include="Builders\Int32ConditionBuilder.cs" />

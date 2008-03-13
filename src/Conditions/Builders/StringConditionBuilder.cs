@@ -28,7 +28,7 @@ namespace Ninject.Conditions.Builders
 	/// </summary>
 	/// <typeparam name="TRoot">The root type of the conversion chain.</typeparam>
 	/// <typeparam name="TPrevious">The subject type of that the previous link in the condition chain.</typeparam>
-	public class StringConditionBuilder<TRoot, TPrevious> : ConditionBuilderBase<TRoot, TPrevious, string>
+	public class StringConditionBuilder<TRoot, TPrevious> : SimpleConditionBuilder<TRoot, TPrevious, string>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

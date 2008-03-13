@@ -32,7 +32,7 @@ namespace Ninject.Conditions.Builders
 	/// <typeparam name="TRoot">The root type of the conversion chain.</typeparam>
 	/// <typeparam name="TPrevious">The subject type of that the previous link in the condition chain.</typeparam>
 	/// <typeparam name="TSubject">The type of object that this condition builder deals with.</typeparam>
-	public class AttributeConditionBuilder<TRoot, TPrevious, TSubject> : ConditionBuilderBase<TRoot, TPrevious, TSubject>
+	public class AttributeConditionBuilder<TRoot, TPrevious, TSubject> : SimpleConditionBuilder<TRoot, TPrevious, TSubject>
 		where TSubject : ICustomAttributeProvider
 	{
 		/*----------------------------------------------------------------------------------------*/

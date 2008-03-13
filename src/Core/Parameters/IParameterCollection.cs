@@ -43,5 +43,12 @@ namespace Ninject.Core.Parameters
 		/// <returns>The value for the property, or <see langword="null"/> if none has been defined.</returns>
 		object GetPropertyValue(string name);
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the value for the specified context variable, if one has been defined.
+		/// </summary>
+		/// <param name="name">The name of the context variable.</param>
+		/// <returns>The value for the variable, or <see langword="null"/> if none has been defined.</returns>
+		object GetContextVariable(string name);
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

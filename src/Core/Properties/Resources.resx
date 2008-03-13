@@ -168,4 +168,7 @@
   <data name="Ex_PropertyAlreadyHasTransientValue" xml:space="preserve">
     <value>The property '{0}' has already been given a transient value.</value>
   </data>
+  <data name="Ex_ContextVariableAlreadyDefined" xml:space="preserve">
+    <value>The context variable '{0}' has already been defined for this context.</value>
+  </data>
 </root>

@@ -65,27 +65,6 @@ namespace Ninject.Conditions.Builders
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
-		/// <summary>
-		/// Determines whether this object is equal to the specified object.
-		/// </summary>
-		/// <param name="obj">The object to compare.</param>
-		/// <returns><see langword="True"/> if the objects are equal, otherwise <see langword="false"/>.</returns>
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a hash code for the object.
-		/// </summary>
-		/// <returns>A hash code for the object.</returns>
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Subject Conversion
 		/// <summary>
 		/// Resolves the conditional chain to retrieve this builder's subject.
@@ -113,51 +92,6 @@ namespace Ninject.Conditions.Builders
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region EDSL Members
-		/// <summary>
-		/// Continues the condition chain, evaluating the subject as a string.
-		/// </summary>
-		public StringConditionBuilder<TRoot, TSubject> AsString
-		{
-			get { return new StringConditionBuilder<TRoot, TSubject>(this, s => s.ToString()); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that determines whether the subject is not null.
-		/// </summary>
-		public TerminatingCondition<TRoot, TSubject> IsDefined
-		{
-			get { return Terminate(s => !ReferenceEquals(s, null)); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that determines whether the subject is equivalent
-		/// to the specified value.
-		/// </summary>
-		public TerminatingCondition<TRoot, TSubject> EqualTo(TSubject value)
-		{
-			return Terminate(s => value.Equals(s));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that determines whether the subject is the same
-		/// instance as the specified object.
-		/// </summary>
-		public TerminatingCondition<TRoot, TSubject> SameAs(TSubject obj)
-		{
-			return Terminate(s => ReferenceEquals(s, obj));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that determines whether the subject is an instance
-		/// of the specified type.
-		/// </summary>
-		public TerminatingCondition<TRoot, TSubject> InstanceOf(Type type)
-		{
-			return Terminate(s => type.IsInstanceOfType(s));
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
 		/// <summary>
 		/// Creates a terminating condition for the chain with the specified predicate.
@@ -167,32 +101,6 @@ namespace Ninject.Conditions.Builders
 		protected TerminatingCondition<TRoot, TSubject> Terminate(Predicate<TSubject> predicate)
 		{
 			return new TerminatingCondition<TRoot, TSubject>(this, predicate);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Operators
-		/// <summary>
-		/// Creates a terminating condition that determines whether the subject is equivalent
-		/// to the specified value.
-		/// </summary>
-		/// <param name="condition">The condition chain to compare.</param>
-		/// <param name="value">The value to compare to.</param>
-		/// <returns>A terminating condition.</returns>
-		public static TerminatingCondition<TRoot, TSubject> operator ==(ConditionBuilderBase<TRoot, TPrevious, TSubject> condition, TSubject value)
-		{
-			return condition.EqualTo(value);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that determines whether the subject is not equivalent
-		/// to the specified value.
-		/// </summary>
-		/// <param name="condition">The condition chain to compare.</param>
-		/// <param name="value">The value to compare to.</param>
-		/// <returns>A terminating condition.</returns>
-		public static TerminatingCondition<TRoot, TSubject> operator !=(ConditionBuilderBase<TRoot, TPrevious, TSubject> condition, TSubject value)
-		{
-			return new TerminatingCondition<TRoot, TSubject>(condition, s => !value.Equals(s));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

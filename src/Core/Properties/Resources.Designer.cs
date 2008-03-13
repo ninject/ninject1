@@ -106,6 +106,15 @@ namespace Ninject.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The context variable &apos;{0}&apos; has already been defined for this context..
+        /// </summary>
+        internal static string Ex_ContextVariableAlreadyDefined {
+            get {
+                return ResourceManager.GetString("Ex_ContextVariableAlreadyDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The service type {0} of the custom binding was registered under the type {1}. These types must match..
         /// </summary>
         internal static string Ex_CustomBindingServiceTypeMismatch {

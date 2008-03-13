@@ -89,6 +89,16 @@ namespace Ninject.Conditions
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Begins a conditional chain that examines the value of the specified context variable.
+		/// </summary>
+		public static SimpleConditionBuilder<IContext, IContext, object> ContextVariable(string name)
+		{
+			return new SimpleConditionBuilder<IContext, IContext, object>(ctx =>
+				(ctx.Parameters == null) ? null : ctx.Parameters.GetContextVariable(name)
+			);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Creates a terminating condition that determines whether the context is a root context.
 		/// </summary>
 		public static TerminatingCondition<IContext, IContext> InRootContext

@@ -37,6 +37,7 @@ namespace Ninject.Core.Parameters
 		#region Fields
 		private readonly Dictionary<string, object> _constructorArguments = new Dictionary<string, object>();
 		private readonly Dictionary<string, object> _propertyValues = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _contextVariables = new Dictionary<string, object>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods: Constructor Arguments
@@ -117,6 +118,45 @@ namespace Ninject.Core.Parameters
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods: Context Variable
+		/// <summary>
+		/// Adds a variable to the context.
+		/// </summary>
+		/// <param name="name">The name of the variable.</param>
+		/// <param name="value">The value for the variable.</param>
+		public ParameterCollection ContextVariable(string name, object value)
+		{
+			AddContextVariable(name, value);
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Adds context variables for the properties defined in the dictionary.
+		/// </summary>
+		/// <param name="values">A dictionary of context variables and their associated values.</param>
+		public ParameterCollection ContextVariables(IDictionary values)
+		{
+			foreach (DictionaryEntry entry in values)
+				AddContextVariable(entry.Key.ToString(), entry.Value);
+
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Adds context variables for the properties defined on the object.
+		/// </summary>
+		/// <param name="values">An object containing the values to define as context variables.</param>
+		public ParameterCollection ContextVariables(object values)
+		{
+			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
+
+			foreach (DictionaryEntry entry in dictionary)
+				AddContextVariable(entry.Key.ToString(), entry.Value);
+
+			return this;
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Private Methods
 		private void AddConstructorArgument(string name, object value)
 		{
@@ -139,6 +179,17 @@ namespace Ninject.Core.Parameters
 
 			_propertyValues.Add(name, value);
 		}
+		/*----------------------------------------------------------------------------------------*/
+		private void AddContextVariable(string name, object value)
+		{
+			if (_contextVariables.ContainsKey(name))
+			{
+				throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
+					Resources.Ex_ContextVariableAlreadyDefined, name));
+			}
+
+			_contextVariables.Add(name, value);
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IParameterCollection Implementation
@@ -150,6 +201,11 @@ namespace Ninject.Core.Parameters
 		object IParameterCollection.GetPropertyValue(string name)
 		{
 			return _propertyValues.ContainsKey(name) ? _propertyValues[name] : null;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		object IParameterCollection.GetContextVariable(string name)
+		{
+			return _contextVariables.ContainsKey(name) ? _contextVariables[name] : null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
