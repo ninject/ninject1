@@ -58,6 +58,9 @@
     <Compile Include="Behavior\TransientBehaviorFixture.cs" />
     <Compile Include="BenchmarkFixture.cs" />
     <Compile Include="Activation\GenericProviderFixture.cs" />
+    <Compile Include="Mocks\ThrowsExceptionFromInjectedConstructor.cs" />
+    <Compile Include="Mocks\ThrowsExceptionFromInjectedProperty.cs" />
+    <Compile Include="Mocks\ThrowsExceptionFromInjectedMethod.cs" />
     <Compile Include="Mocks\RequestsPrivateFieldInjection.cs" />
     <Compile Include="Mocks\RequestsPrivateMethodInjection.cs" />
     <Compile Include="Mocks\RequestsPrivatePropertyInjection.cs" />

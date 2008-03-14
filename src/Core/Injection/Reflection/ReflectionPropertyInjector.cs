@@ -56,7 +56,18 @@ namespace Ninject.Core.Injection
 		/// <returns>The value stored in the property.</returns>
 		public object Get(object target)
 		{
-			return _getMethod.Invoke(target, new object[0]);
+			try
+			{
+				return _getMethod.Invoke(target, new object[0]);
+			}
+			catch (TargetInvocationException ex)
+			{
+				// If an exception occurs inside the called member, unwrap it and re-throw.
+				if (ex.InnerException != null)
+					throw ex.InnerException;
+				else
+					throw;
+			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -66,7 +77,18 @@ namespace Ninject.Core.Injection
 		/// <param name="value">The value to store in the property.</param>
 		public void Set(object target, object value)
 		{
-			_setMethod.Invoke(target, new object[] {value});
+			try
+			{
+				_setMethod.Invoke(target, new object[] {value});
+			}
+			catch (TargetInvocationException ex)
+			{
+				// If an exception occurs inside the called member, unwrap it and re-throw.
+				if (ex.InnerException != null)
+					throw ex.InnerException;
+				else
+					throw;
+			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

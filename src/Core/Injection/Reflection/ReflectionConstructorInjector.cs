@@ -62,7 +62,7 @@ namespace Ninject.Core.Injection
 			}
 			catch (TargetInvocationException ex)
 			{
-				// If an exception occurs inside the called constructor, unwrap it and re-throw.
+				// If an exception occurs inside the called member, unwrap it and re-throw.
 				if (ex.InnerException != null)
 					throw ex.InnerException;
 				else 

@@ -50,7 +50,18 @@ namespace Ninject.Core.Injection
 		/// <returns>The return value of the method.</returns>
 		public object Invoke(object target, params object[] arguments)
 		{
-			return Member.Invoke(target, arguments);
+			try
+			{
+				return Member.Invoke(target, arguments);
+			}
+			catch (TargetInvocationException ex)
+			{
+				// If an exception occurs inside the called member, unwrap it and re-throw.
+				if (ex.InnerException != null)
+					throw ex.InnerException;
+				else
+					throw;
+			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

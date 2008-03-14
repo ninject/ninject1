@@ -84,6 +84,17 @@ namespace Ninject.Core.Tests.Injection
 			Assert.That(result, Is.EqualTo("42"));
 		}
 		/*----------------------------------------------------------------------------------------*/
+		[Test, ExpectedException(typeof(Exception), ExpectedMessage = "test")]
+		public void ExceptionInInjectedMethodIsThrownProperly()
+		{
+			MethodInfo method = typeof(ThrowsExceptionFromInjectedMethod).GetMethod("Foo");
+			IMethodInjector injector = _factory.Create(method);
+			Assert.That(injector, Is.Not.Null);
+
+			ThrowsExceptionFromInjectedMethod mock = new ThrowsExceptionFromInjectedMethod();
+			injector.Invoke(mock, new object[0]);
+		}
+		/*----------------------------------------------------------------------------------------*/
 		[Test]
 		public void FieldInjectorCanSetValueType()
 		{
@@ -198,6 +209,43 @@ namespace Ninject.Core.Tests.Injection
 
 			string message = (string) injector.Get(mock);
 			Assert.That(message, Is.EqualTo("Hello, world!"));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test, ExpectedException(typeof(Exception), ExpectedMessage = "test")]
+		public void ExceptionInPropertySetterIsThrownProperly()
+		{
+			PropertyInfo property =
+				typeof(ThrowsExceptionFromInjectedProperty).GetProperty("Foo", BindingFlags.Public | BindingFlags.Instance);
+			IPropertyInjector injector = _factory.Create(property);
+			Assert.That(injector, Is.Not.Null);
+
+			ThrowsExceptionFromInjectedProperty mock = new ThrowsExceptionFromInjectedProperty();
+			injector.Set(mock, null);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void ConstructorInjectorCanCreateInstanceOfType()
+		{
+			ConstructorInfo constructor = typeof(ConstructorInvocationObject).GetConstructor(new Type[] { typeof(int) });
+
+			IConstructorInjector injector = _factory.Create(constructor);
+			Assert.That(injector, Is.Not.Null);
+
+			ConstructorInvocationObject mock = injector.Invoke(new object[] { 42 }) as ConstructorInvocationObject;
+
+			Assert.That(mock, Is.Not.Null);
+			Assert.That(mock.Value, Is.EqualTo(42));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test, ExpectedException(typeof(Exception), ExpectedMessage = "test")]
+		public void ExceptionInConstructorIsThrownProperly()
+		{
+			ConstructorInfo constructor = typeof(ThrowsExceptionFromInjectedConstructor).GetConstructor(Type.EmptyTypes);
+
+			IConstructorInjector injector = _factory.Create(constructor);
+			Assert.That(injector, Is.Not.Null);
+
+			ThrowsExceptionFromInjectedConstructor mock = injector.Invoke(new object[0]) as ThrowsExceptionFromInjectedConstructor;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}
