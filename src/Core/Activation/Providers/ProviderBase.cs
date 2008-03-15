@@ -37,20 +37,6 @@ namespace Ninject.Core.Activation
 		public Type Prototype { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Disposal
-		/// <summary>
-		/// Releases all resources currently held by the object.
-		/// </summary>
-		/// <param name="disposing"><see langword="True"/> if managed objects should be disposed, otherwise <see langword="false"/>.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && !IsDisposed)
-				Prototype = null;
-
-			base.Dispose(disposing);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ProviderBase"/> class.

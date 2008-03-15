@@ -35,7 +35,7 @@ namespace Ninject.Core.Activation
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SimpleProvider{T}"/> class.
 		/// </summary>
-		public SimpleProvider()
+		protected SimpleProvider()
 			: base(typeof(T))
 		{
 		}

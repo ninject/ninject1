@@ -37,6 +37,11 @@ namespace Ninject.Core.Infrastructure
 		public IKernel Kernel { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets the logger associated with the component.
+		/// </summary>
+		public ILogger Logger { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets a value indicating whether the component is connected to its environment.
 		/// </summary>
 		public bool IsConnected
@@ -101,6 +106,10 @@ namespace Ninject.Core.Infrastructure
 			Ensure.NotDisposed(this);
 
 			Kernel = kernel;
+
+			if (Kernel.HasComponent<ILoggerFactory>())
+        Logger = Kernel.GetComponent<ILoggerFactory>().GetLogger(GetType());
+
 			OnConnected(new EventArgs());
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -112,7 +121,9 @@ namespace Ninject.Core.Infrastructure
 			Ensure.NotDisposed(this);
 
 			OnDisconnected(new EventArgs());
+
 			Kernel = null;
+			Logger = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

@@ -123,6 +123,8 @@ namespace Ninject.Core.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		public static string Type(Type type)
 		{
+			Ensure.ArgumentNotNull(type, "type");
+
 			if (type.IsGenericType)
 			{
 				StringBuilder sb = new StringBuilder();
@@ -168,6 +170,8 @@ namespace Ninject.Core.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		public static string Binding(IBinding binding)
 		{
+			Ensure.ArgumentNotNull(binding, "binding");
+
 			using (StringWriter sw = new StringWriter())
 			{
 				if (binding.IsDefault)

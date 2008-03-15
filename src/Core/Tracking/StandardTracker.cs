@@ -81,6 +81,8 @@ namespace Ninject.Core.Tracking
 		{
 			lock (_contextCache)
 			{
+				Logger.Debug("Starting to track instance resulting from {0}", Format.Context(context));
+
 				WeakReference reference = new WeakReference(instance);
 				_contextCache[reference] = context;
 			}
@@ -102,7 +104,13 @@ namespace Ninject.Core.Tracking
 					return false;
 
 				IContext context = _contextCache[reference];
+
+				Logger.Debug("Releasing tracked instance resulting from {0}", Format.Context(context));
+
 				DoRelease(context, instance);
+				_contextCache.Remove(reference);
+
+				Logger.Debug("Instance released, no longer tracked");
 
 				return true;
 			}

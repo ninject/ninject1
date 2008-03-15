@@ -102,6 +102,8 @@ namespace Ninject.Core.Activation
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);
 
+			Logger.Debug("Activating {0}", Format.Context(context));
+
 			if (instance == null)
 			{
 				// Execute the "before create" phase.
@@ -138,6 +140,8 @@ namespace Ninject.Core.Activation
 				if (strategy.AfterInitialize(context, ref instance) == StrategyResult.Stop)
 					break;
 			}
+
+			Logger.Debug("Activation complete");
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -149,6 +153,8 @@ namespace Ninject.Core.Activation
 		{
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);
+
+			Logger.Debug("Destroying instance activated by {0}", Format.Context(context));
 
 			// Execute the "before destroy" phase.
 			foreach (IActivationStrategy strategy in Strategies)
@@ -170,6 +176,8 @@ namespace Ninject.Core.Activation
 				if (strategy.AfterDestroy(context, ref instance) == StrategyResult.Stop)
 					break;
 			}
+
+			Logger.Debug("Destruction complete");
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

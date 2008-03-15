@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Logging;
 #endregion
 
 namespace Ninject.Core.Infrastructure
@@ -41,6 +42,11 @@ namespace Ninject.Core.Infrastructure
 		/// Gets the owner of the strategy.
 		/// </summary>
 		public TOwner Owner { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the logger associated with the strategy.
+		/// </summary>
+		public ILogger Logger { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the strategy has been connected to its environment.
@@ -116,6 +122,9 @@ namespace Ninject.Core.Infrastructure
 			Kernel = kernel;
 			Owner = owner;
 
+			if (Kernel.HasComponent<ILoggerFactory>())
+				Logger = Kernel.GetComponent<ILoggerFactory>().GetLogger(GetType());
+
 			OnConnected(new EventArgs());
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -130,6 +139,7 @@ namespace Ninject.Core.Infrastructure
 
 			Kernel = null;
 			Owner = null;
+			Logger = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
