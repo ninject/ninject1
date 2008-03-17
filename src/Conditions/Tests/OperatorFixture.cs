@@ -102,7 +102,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void NoMatchingConditionalBindingsWithNoDefaultBindingThrowsException()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Kernel.Configuration == "foo");
 				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Kernel.Configuration == "bar");
@@ -117,7 +117,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test]
 		public void MultipleMatchingConditionalBindingsWithDefaultBindingUsesDefaultBinding()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.InRootContext);
 				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Kernel.IsDefined);

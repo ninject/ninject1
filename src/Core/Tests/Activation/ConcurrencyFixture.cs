@@ -44,8 +44,8 @@ namespace Ninject.Core.Tests.Activation
 					threads.Add(thread);
 				}
 
-				threads.ForEach(delegate(Thread t) { t.Start(); });
-				threads.ForEach(delegate(Thread t) { t.Join(); });
+				threads.ForEach(t => t.Start());
+				threads.ForEach(t => t.Join());
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

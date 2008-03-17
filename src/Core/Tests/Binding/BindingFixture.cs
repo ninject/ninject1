@@ -35,7 +35,7 @@ namespace Ninject.Core.Tests.Binding
 		[Test]
 		public void CanBindType()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>().To<SimpleObject>();
 			});
@@ -57,7 +57,7 @@ namespace Ninject.Core.Tests.Binding
 		[Test]
 		public void CanBindConstant()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<string>().ToConstant("test");
 			});
@@ -79,7 +79,7 @@ namespace Ninject.Core.Tests.Binding
 		[Test, ExpectedException(typeof(NotSupportedException))]
 		public void DefiningMultipleDefaultBindingsThrowsException()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA));
 				m.Bind(typeof(IMock)).To(typeof(ImplB));
@@ -100,7 +100,7 @@ namespace Ninject.Core.Tests.Binding
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void IncompatibleProviderAndBindingServiceTypeThrowsException()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ObjectWithNoInterfaces));
 			});
@@ -117,7 +117,7 @@ namespace Ninject.Core.Tests.Binding
 		[Test]
 		public void IncompatibleProviderAllowedIfProviderCompatibilityIsIgnored()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ObjectWithNoInterfaces));
 			});
@@ -135,7 +135,7 @@ namespace Ninject.Core.Tests.Binding
 		[Test]
 		public void CanOverrideBehaviorViaBindingDeclaration()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>().To<ImplA>().Using<SingletonBehavior>();
 			});
@@ -154,7 +154,7 @@ namespace Ninject.Core.Tests.Binding
 		[Test, ExpectedException(typeof(InvalidOperationException))]
 		public void IncompleteBindingCausesKernelToThrowException()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>();
 			});

@@ -36,7 +36,7 @@ namespace Ninject.Core.Tests.Activation
 		{
 			MockProvider provider = new MockProvider();
 
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>().ToProvider(provider);
 			});

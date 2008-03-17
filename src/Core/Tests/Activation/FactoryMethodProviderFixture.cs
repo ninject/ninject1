@@ -33,7 +33,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void CanBindToParameterlessStaticFactoryMethod()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<IMock>(MockFactory.CreateStatic));
 			});
@@ -49,7 +49,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void CanBindToStaticFactoryMethodWithParameters()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<string, int, IMock>(MockFactory.CreateStatic, "foo", 42));
 			});
@@ -65,7 +65,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void CanBindToParameterlessInstanceFactoryMethod()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				MockFactory factory = new MockFactory();
 				m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<IMock>(factory.Create));
@@ -82,7 +82,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void CanBindToInstanceFactoryMethodWithParameters()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				MockFactory factory = new MockFactory();
 				m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<string, int, IMock>(factory.Create, "foo", 42));

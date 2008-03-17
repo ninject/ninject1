@@ -167,7 +167,7 @@ namespace Ninject.Messaging
 		/*----------------------------------------------------------------------------------------*/
 		private void DeliverViaBackgroundThread(object sender, object args)
 		{
-			ThreadPool.QueueUserWorkItem(delegate { DeliverMessage(sender, args); });
+			ThreadPool.QueueUserWorkItem(s => DeliverMessage(sender, args));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

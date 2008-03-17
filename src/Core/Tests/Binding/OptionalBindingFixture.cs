@@ -45,7 +45,7 @@ namespace Ninject.Core.Tests.Binding
 		[Test]
 		public void OptionalDependenciesForServiceBoundTypesAreResolved()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>().To<SimpleObject>();
 			});

@@ -72,7 +72,7 @@ namespace Ninject.Core.Tests.Activation
 		[Ignore("Circular references are broken")]
 		public void CircularReferencesInConstructorsThrowsException()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<CircularConstructorMockA>().ToSelf();
 				m.Bind<CircularConstructorMockB>().ToSelf();
@@ -93,7 +93,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void InlineArgumentsAllowHybridInjectionOfMissingConstructorArguments()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>().To<ImplA>();
 
@@ -118,7 +118,7 @@ namespace Ninject.Core.Tests.Activation
 		{
 			IMock childMock = new ImplA();
 
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<HybridInjectionMock>()
 				 .ToSelf()
@@ -140,7 +140,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void InlineArgumentsAreConvertedIfNecessary()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>().To<ImplA>();
 
@@ -161,7 +161,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void HybridInjectionWithInlineArgumentThatCannotBeConvertedThrowsException()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<HybridInjectionMock>()
 				 .ToSelf()

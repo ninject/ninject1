@@ -56,6 +56,7 @@
     <Compile Include="Activation\Strategies\ContextAwareStrategy.cs" />
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
     <Compile Include="IContextAware.cs" />
+    <Compile Include="Infrastructure\Utility\Guard.cs" />
     <Compile Include="Infrastructure\Utility\ReflectionDictionaryBuilder.cs" />
     <Compile Include="Infrastructure\InstanceWithContext.cs" />
     <Compile Include="Infrastructure\WeakReferenceComparer.cs" />

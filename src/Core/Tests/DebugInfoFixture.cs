@@ -34,7 +34,7 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void DebugInfoCreatedFromStackTrace()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>().To<SimpleObject>();
 			});
@@ -55,7 +55,7 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void DebugInfoFromStackFrameContainsFileInfo()
 		{
-			IModule module = new TestableModule(delegate(TestableModule m)
+			IModule module = new TestableModule(m =>
 			{
 				m.Bind<IMock>().To<SimpleObject>();
 			});

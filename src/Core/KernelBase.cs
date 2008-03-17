@@ -425,14 +425,14 @@ namespace Ninject.Core
 
 				// Ensure there are no bindings registered without providers.
 
-				List<IBinding> incompleteBindings = bindings.FindAll(delegate(IBinding b) { return b.Provider == null; });
+				List<IBinding> incompleteBindings = bindings.FindAll(b => b.Provider == null);
 
 				if (incompleteBindings.Count > 0)
 					throw new InvalidOperationException(ExceptionFormatter.IncompleteBindingsRegistered(service, incompleteBindings));
 
 				// Ensure there is at most one default binding declared for a service.
 
-				List<IBinding> defaultBindings = bindings.FindAll(delegate(IBinding b) { return b.IsDefault; });
+				List<IBinding> defaultBindings = bindings.FindAll(b => b.IsDefault);
 
 				if (defaultBindings.Count > 1)
 					throw new NotSupportedException(ExceptionFormatter.MultipleDefaultBindingsRegistered(service, defaultBindings));
@@ -832,13 +832,14 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region IServiceProvider Implementation
 		/// <summary>
-		/// Resolves an instance of the specified type.
+		/// Resolves an instance of the specified type, if a default binding has been registered for it.
 		/// </summary>
 		/// <param name="serviceType">The type to retrieve.</param>
-		/// <returns>An instance of the requested type.</returns>
+		/// <returns>An instance of the requested type, or <see langword="null"/> if there is no default binding.</returns>
 		object IServiceProvider.GetService(Type serviceType)
 		{
-			return Get(serviceType);
+			IBinding binding = GetBinding(serviceType);
+			return (binding == null) ? null : Get(serviceType);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
