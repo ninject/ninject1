@@ -91,8 +91,7 @@ namespace Ninject.Core.Planning.Strategies
 			IInjectorFactory injectorFactory = Kernel.GetComponent<IInjectorFactory>();
 			IResolverFactory resolverFactory = Kernel.GetComponent<IResolverFactory>();
 
-			// Create a new injector that can inject values into the method.
-			IConstructorInjector injector = injectorFactory.Create(constructor);
+			IConstructorInjector injector = injectorFactory.GetInjector(constructor);
 
 			// Create a new directive that will hold the injection information.
 			ConstructorInjectionDirective directive = new ConstructorInjectionDirective(constructor, injector);

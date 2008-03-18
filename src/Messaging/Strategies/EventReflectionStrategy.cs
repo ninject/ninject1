@@ -94,7 +94,7 @@ namespace Ninject.Messaging.Strategies
 		private SubscriptionDirective CreateSubscriptionDirective(string channel, MethodInfo method, DeliveryThread thread)
 		{
 			IInjectorFactory injectorFactory = Kernel.GetComponent<IInjectorFactory>();
-			IMethodInjector injector = injectorFactory.Create(method);
+			IMethodInjector injector = injectorFactory.GetInjector(method);
 
 			return new SubscriptionDirective(channel, injector, thread);
 		}

@@ -43,7 +43,7 @@ namespace Ninject.Core.Tests.Injection
 		public void CanCreateMethodInjector()
 		{
 			MethodInfo method = typeof(MethodInvocationObject).GetMethod("Foo");
-			IMethodInjector injector = _factory.Create(method);
+			IMethodInjector injector = _factory.GetInjector(method);
 
 			Assert.That(injector, Is.Not.Null);
 		}
@@ -52,7 +52,7 @@ namespace Ninject.Core.Tests.Injection
 		public void MethodInjectorCanReturnValueType()
 		{
 			MethodInfo method = typeof(MethodInvocationObject).GetMethod("Boink");
-			IMethodInjector injector = _factory.Create(method);
+			IMethodInjector injector = _factory.GetInjector(method);
 			Assert.That(injector, Is.Not.Null);
 
 			MethodInvocationObject mock = new MethodInvocationObject();
@@ -65,7 +65,7 @@ namespace Ninject.Core.Tests.Injection
 		public void MethodInjectorCanReturnReferenceType()
 		{
 			MethodInfo method = typeof(MethodInvocationObject).GetMethod("Foo");
-			IMethodInjector injector = _factory.Create(method);
+			IMethodInjector injector = _factory.GetInjector(method);
 			Assert.That(injector, Is.Not.Null);
 
 			MethodInvocationObject mock = new MethodInvocationObject();
@@ -78,7 +78,7 @@ namespace Ninject.Core.Tests.Injection
 		public void ExceptionInInjectedMethodIsThrownProperly()
 		{
 			MethodInfo method = typeof(ThrowsExceptionFromInjectedMethod).GetMethod("Foo");
-			IMethodInjector injector = _factory.Create(method);
+			IMethodInjector injector = _factory.GetInjector(method);
 			Assert.That(injector, Is.Not.Null);
 
 			ThrowsExceptionFromInjectedMethod mock = new ThrowsExceptionFromInjectedMethod();
@@ -90,7 +90,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			FieldInfo field =
 				typeof(PropertyAndFieldInvocationObject).GetField("_value", BindingFlags.NonPublic | BindingFlags.Instance);
-			IFieldInjector injector = _factory.Create(field);
+			IFieldInjector injector = _factory.GetInjector(field);
 			Assert.That(injector, Is.Not.Null);
 
 			PropertyAndFieldInvocationObject mock = new PropertyAndFieldInvocationObject();
@@ -104,7 +104,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			FieldInfo field =
 				typeof(PropertyAndFieldInvocationObject).GetField("_value", BindingFlags.NonPublic | BindingFlags.Instance);
-			IFieldInjector injector = _factory.Create(field);
+			IFieldInjector injector = _factory.GetInjector(field);
 			Assert.That(injector, Is.Not.Null);
 
 			PropertyAndFieldInvocationObject mock = new PropertyAndFieldInvocationObject();
@@ -119,7 +119,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			FieldInfo field =
 				typeof(PropertyAndFieldInvocationObject).GetField("_message", BindingFlags.NonPublic | BindingFlags.Instance);
-			IFieldInjector injector = _factory.Create(field);
+			IFieldInjector injector = _factory.GetInjector(field);
 			Assert.That(injector, Is.Not.Null);
 
 			PropertyAndFieldInvocationObject mock = new PropertyAndFieldInvocationObject();
@@ -133,7 +133,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			FieldInfo field =
 				typeof(PropertyAndFieldInvocationObject).GetField("_message", BindingFlags.NonPublic | BindingFlags.Instance);
-			IFieldInjector injector = _factory.Create(field);
+			IFieldInjector injector = _factory.GetInjector(field);
 			Assert.That(injector, Is.Not.Null);
 
 			PropertyAndFieldInvocationObject mock = new PropertyAndFieldInvocationObject();
@@ -148,7 +148,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			PropertyInfo property =
 				typeof(PropertyAndFieldInvocationObject).GetProperty("Value", BindingFlags.Public | BindingFlags.Instance);
-			IPropertyInjector injector = _factory.Create(property);
+			IPropertyInjector injector = _factory.GetInjector(property);
 			Assert.That(injector, Is.Not.Null);
 
 			PropertyAndFieldInvocationObject mock = new PropertyAndFieldInvocationObject();
@@ -162,7 +162,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			PropertyInfo property =
 				typeof(PropertyAndFieldInvocationObject).GetProperty("Value", BindingFlags.Public | BindingFlags.Instance);
-			IPropertyInjector injector = _factory.Create(property);
+			IPropertyInjector injector = _factory.GetInjector(property);
 			Assert.That(injector, Is.Not.Null);
 
 			PropertyAndFieldInvocationObject mock = new PropertyAndFieldInvocationObject();
@@ -177,7 +177,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			PropertyInfo property =
 				typeof(PropertyAndFieldInvocationObject).GetProperty("Message", BindingFlags.Public | BindingFlags.Instance);
-			IPropertyInjector injector = _factory.Create(property);
+			IPropertyInjector injector = _factory.GetInjector(property);
 			Assert.That(injector, Is.Not.Null);
 
 			PropertyAndFieldInvocationObject mock = new PropertyAndFieldInvocationObject();
@@ -191,7 +191,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			PropertyInfo property =
 				typeof(PropertyAndFieldInvocationObject).GetProperty("Message", BindingFlags.Public | BindingFlags.Instance);
-			IPropertyInjector injector = _factory.Create(property);
+			IPropertyInjector injector = _factory.GetInjector(property);
 			Assert.That(injector, Is.Not.Null);
 
 			PropertyAndFieldInvocationObject mock = new PropertyAndFieldInvocationObject();
@@ -206,7 +206,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			PropertyInfo property =
 				typeof(ThrowsExceptionFromInjectedProperty).GetProperty("Foo", BindingFlags.Public | BindingFlags.Instance);
-			IPropertyInjector injector = _factory.Create(property);
+			IPropertyInjector injector = _factory.GetInjector(property);
 			Assert.That(injector, Is.Not.Null);
 
 			ThrowsExceptionFromInjectedProperty mock = new ThrowsExceptionFromInjectedProperty();
@@ -218,7 +218,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			ConstructorInfo constructor = typeof(ConstructorInvocationObject).GetConstructor(new Type[] { typeof(int) });
 
-			IConstructorInjector injector = _factory.Create(constructor);
+			IConstructorInjector injector = _factory.GetInjector(constructor);
 			Assert.That(injector, Is.Not.Null);
 
 			ConstructorInvocationObject mock = injector.Invoke(new object[] { 42 }) as ConstructorInvocationObject;
@@ -232,7 +232,7 @@ namespace Ninject.Core.Tests.Injection
 		{
 			ConstructorInfo constructor = typeof(ThrowsExceptionFromInjectedConstructor).GetConstructor(Type.EmptyTypes);
 
-			IConstructorInjector injector = _factory.Create(constructor);
+			IConstructorInjector injector = _factory.GetInjector(constructor);
 			Assert.That(injector, Is.Not.Null);
 
 			ThrowsExceptionFromInjectedConstructor mock = injector.Invoke(new object[0]) as ThrowsExceptionFromInjectedConstructor;

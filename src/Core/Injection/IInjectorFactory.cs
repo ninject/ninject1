@@ -31,32 +31,32 @@ namespace Ninject.Core.Injection
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new constructor injector.
+		/// Gets an injector for the specified constructor.
 		/// </summary>
 		/// <param name="constructor">The constructor that the injector will invoke.</param>
 		/// <returns>A new injector for the constructor.</returns>
-		IConstructorInjector Create(ConstructorInfo constructor);
+		IConstructorInjector GetInjector(ConstructorInfo constructor);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new method injector.
+		/// Gets an injector for the specified method.
 		/// </summary>
 		/// <param name="method">The method that the injector will invoke.</param>
 		/// <returns>A new injector for the method.</returns>
-		IMethodInjector Create(MethodInfo method);
+		IMethodInjector GetInjector(MethodInfo method);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new property injector.
+		/// Gets an injector for the specified property.
 		/// </summary>
 		/// <param name="property">The property that the injector will read and write.</param>
 		/// <returns>A new injector for the property.</returns>
-		IPropertyInjector Create(PropertyInfo property);
+		IPropertyInjector GetInjector(PropertyInfo property);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new field injector.
+		/// Gets an injector for the specified field.
 		/// </summary>
 		/// <param name="field">The field that the injector will read and write.</param>
 		/// <returns>A new injector for the field.</returns>
-		IFieldInjector Create(FieldInfo field);
+		IFieldInjector GetInjector(FieldInfo field);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

@@ -29,7 +29,7 @@ namespace Ninject.Core.Injection
 	/// Creates instances of injectors that use generated <see cref="DynamicMethod"/> objects
 	/// for invocation.
 	/// </summary>
-	public class DynamicInjectorFactory : KernelComponentBase, IInjectorFactory
+	public class DynamicInjectorFactory : InjectorFactoryBase
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -37,7 +37,7 @@ namespace Ninject.Core.Injection
 		/// </summary>
 		/// <param name="constructor">The constructor that the injector will invoke.</param>
 		/// <returns>A new injector for the constructor.</returns>
-		public IConstructorInjector Create(ConstructorInfo constructor)
+		protected override IConstructorInjector CreateInjector(ConstructorInfo constructor)
 		{
 			return new DynamicConstructorInjector(constructor);
 		}
@@ -47,7 +47,7 @@ namespace Ninject.Core.Injection
 		/// </summary>
 		/// <param name="method">The method that the injector will invoke.</param>
 		/// <returns>A new injector for the method.</returns>
-		public IMethodInjector Create(MethodInfo method)
+		protected override IMethodInjector CreateInjector(MethodInfo method)
 		{
 			return new DynamicMethodInjector(method);
 		}
@@ -57,7 +57,7 @@ namespace Ninject.Core.Injection
 		/// </summary>
 		/// <param name="property">The property that the injector will read and write.</param>
 		/// <returns>A new injector for the property.</returns>
-		public IPropertyInjector Create(PropertyInfo property)
+		protected override IPropertyInjector CreateInjector(PropertyInfo property)
 		{
 			return new DynamicPropertyInjector(property);
 		}
@@ -67,7 +67,7 @@ namespace Ninject.Core.Injection
 		/// </summary>
 		/// <param name="field">The field that the injector will read and write.</param>
 		/// <returns>A new injector for the field.</returns>
-		public IFieldInjector Create(FieldInfo field)
+		protected override IFieldInjector CreateInjector(FieldInfo field)
 		{
 			return new DynamicFieldInjector(field);
 		}
