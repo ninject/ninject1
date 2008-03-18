@@ -37,21 +37,21 @@ namespace Ninject.Core.Binding.Syntax
 		/// <summary>
 		/// Indicates that the binding should be used by default.
 		/// </summary>
-		IBindingBehaviorSyntax Always();
+		IBindingBehaviorOrArgumentSyntax Always();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used if the specified condition is true
 		/// in the context in which the service is activated.
 		/// </summary>
 		/// <param name="condition">The condition to test.</param>
-		IBindingBehaviorSyntax Only(ICondition<IContext> condition);
+		IBindingBehaviorOrArgumentSyntax Only(ICondition<IContext> condition);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used if the specified predicate evalutes t
 		/// true when the component is being activated.
 		/// </summary>
 		/// <param name="predicate">The predicate to invoke.</param>
-		IBindingBehaviorSyntax OnlyIf(Predicate<IContext> predicate);
+		IBindingBehaviorOrArgumentSyntax OnlyIf(Predicate<IContext> predicate);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

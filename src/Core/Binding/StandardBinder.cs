@@ -18,12 +18,11 @@
 #endregion
 #region Using Directives
 using System;
-using System.Globalization;
+using System.Collections;
 using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
 using Ninject.Core.Binding.Syntax;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core.Binding
@@ -31,7 +30,7 @@ namespace Ninject.Core.Binding
 	/// <summary>
 	/// The stock definition of a binder.
 	/// </summary>
-	public class StandardBinder : BinderBase, IBindingTargetSyntax, IBindingConditionBehaviorOrArgumentSyntax, IBindingInlineArgumentSyntax
+	public class StandardBinder : BinderBase, IBindingTargetSyntax, IBindingConditionBehaviorOrArgumentSyntax, IBindingBehaviorOrArgumentSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -132,19 +131,19 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingConditionSyntax Members
-		IBindingBehaviorSyntax IBindingConditionSyntax.Always()
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.Always()
 		{
 			Binding.Condition = null;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorSyntax IBindingConditionSyntax.Only(ICondition<IContext> condition)
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.Only(ICondition<IContext> condition)
 		{
 			Binding.Condition = condition;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorSyntax IBindingConditionSyntax.OnlyIf(Predicate<IContext> predicate)
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.OnlyIf(Predicate<IContext> predicate)
 		{
 			Binding.Condition = new PredicateCondition<IContext>(predicate);
 			return this;
@@ -174,6 +173,24 @@ namespace Ninject.Core.Binding
 		IBindingInlineArgumentSyntax IBindingInlineArgumentSyntax.WithArgument<T>(string name, T value)
 		{
 			Binding.InlineArguments.Add(name, value);
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingInlineArgumentSyntax IBindingInlineArgumentSyntax.WithArguments(IDictionary arguments)
+		{
+			foreach (DictionaryEntry entry in arguments)
+        Binding.InlineArguments.Add(entry.Key.ToString(), entry.Value);
+
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingInlineArgumentSyntax IBindingInlineArgumentSyntax.WithArguments(object values)
+		{
+			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
+
+			foreach (DictionaryEntry entry in dictionary)
+				Binding.InlineArguments.Add(entry.Key.ToString(), entry.Value);
+
 			return this;
 		}
 		#endregion

@@ -39,5 +39,19 @@ namespace Ninject.Core.Binding.Syntax
 		/// <param name="value">The value to inject.</param>
 		IBindingInlineArgumentSyntax WithArgument<T>(string name, T value);
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Indicates that arguments on the service's constructor matching the keys of the
+		/// dictionary will be overridden by their associated values.
+		/// </summary>
+		/// <param name="arguments">The arguments to override.</param>
+		IBindingInlineArgumentSyntax WithArguments(IDictionary arguments);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Indicates that arguments matching the properties defined on the object will be overridden
+		/// by the properties' values.
+		/// </summary>
+		/// <param name="values">An object defining the values for the arguments.</param>
+		IBindingInlineArgumentSyntax WithArguments(object values);
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

@@ -114,6 +114,61 @@ namespace Ninject.Core.Tests.Activation
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
+		public void CanOverrideMultipleConstructorArgumentsViaDictionary()
+		{
+			IMock child = new ImplA();
+
+			IModule module = new TestableModule(m =>
+			{
+				Dictionary<string, object> arguments = new Dictionary<string, object>();
+
+				arguments.Add("connectionString", "this is a connection string");
+				arguments.Add("child", child);
+
+				m.Bind<HybridInjectionMock>()
+				 .ToSelf()
+				 .WithArguments(arguments);
+			});
+
+			using (IKernel kernel = new StandardKernel(module))
+			{
+				HybridInjectionMock mock = kernel.Get<HybridInjectionMock>();
+
+				Assert.That(mock, Is.Not.Null);
+				Assert.That(mock.Child, Is.Not.Null);
+				Assert.That(mock.Child, Is.SameAs(child));
+				Assert.That(mock.ConnectionString, Is.EqualTo("this is a connection string"));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void CanOverrideMultipleConstructorArgumentsViaAnonymouslyTypedObject()
+		{
+			IMock child = new ImplA();
+
+			IModule module = new TestableModule(m =>
+			{
+				m.Bind<HybridInjectionMock>()
+				 .ToSelf()
+				 .WithArguments(new
+				 {
+					 connectionString = "this is a connection string",
+					 child = child
+				 });
+			});
+
+			using (IKernel kernel = new StandardKernel(module))
+			{
+				HybridInjectionMock mock = kernel.Get<HybridInjectionMock>();
+
+				Assert.That(mock, Is.Not.Null);
+				Assert.That(mock.Child, Is.Not.Null);
+				Assert.That(mock.Child, Is.SameAs(child));
+				Assert.That(mock.ConnectionString, Is.EqualTo("this is a connection string"));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
 		public void InlineArgumentsOverrideResolutionOfDependencies()
 		{
 			IMock childMock = new ImplA();

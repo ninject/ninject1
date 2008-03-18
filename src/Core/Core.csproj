@@ -54,6 +54,7 @@
     <Compile Include="Activation\Providers\ProviderBase.cs" />
     <Compile Include="Activation\Providers\InjectionProviderBase.cs" />
     <Compile Include="Activation\Strategies\ContextAwareStrategy.cs" />
+    <Compile Include="Binding\Syntax\IBindingBehaviorOrArgumentSyntax.cs" />
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
     <Compile Include="Interfaces\IContextAware.cs" />
     <Compile Include="Infrastructure\Utility\Guard.cs" />
