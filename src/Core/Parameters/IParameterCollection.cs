@@ -30,25 +30,33 @@ namespace Ninject.Core.Parameters
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the value for the specified constructor argument, if one has been defined.
+		/// Adds the specified parameter to the collection.
 		/// </summary>
+		/// <typeparam name="T">The type to organize the parameter under.</typeparam>
+		/// <param name="parameter">The parameter to add.</param>
+		void Add<T>(T parameter) where T : class, IParameter;
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Adds the specified parameters to the collection.
+		/// </summary>
+		/// <typeparam name="T">The type to organize the parameters under.</typeparam>
+		/// <param name="parameters">The parameters to add.</param>
+		void AddRange<T>(IEnumerable<T> parameters) where T : class, IParameter;
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the parameter with the specified type and name, if one has been defined.
+		/// </summary>
+		/// <typeparam name="T">The type of parameter.</typeparam>
 		/// <param name="name">The name of the argument.</param>
-		/// <returns>The value for the argument, or <see langword="null"/> if none has been defined.</returns>
-		object GetConstructorArgument(string name);
+		/// <returns>The parameter, or <see langword="null"/> if none has been defined.</returns>
+		T GetOne<T>(string name) where T : class, IParameter;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the value for the specified property, if one has been defined.
+		/// Gets all registered parameters of the specified type.
 		/// </summary>
-		/// <param name="name">The name of the property.</param>
-		/// <returns>The value for the property, or <see langword="null"/> if none has been defined.</returns>
-		object GetPropertyValue(string name);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the value for the specified context variable, if one has been defined.
-		/// </summary>
-		/// <param name="name">The name of the context variable.</param>
-		/// <returns>The value for the variable, or <see langword="null"/> if none has been defined.</returns>
-		object GetContextVariable(string name);
+		/// <typeparam name="T">The type of parameter.</typeparam>
+		/// <returns>A collection of parameters of the specified type.</returns>
+		ICollection<T> GetAll<T>() where T : class, IParameter;
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

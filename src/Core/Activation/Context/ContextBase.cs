@@ -176,6 +176,8 @@ namespace Ninject.Core.Activation
 
 			if (service.IsGenericType)
 				GenericArguments = service.GetGenericArguments();
+
+			Parameters = new ParameterCollection();
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -198,6 +200,8 @@ namespace Ninject.Core.Activation
 
 			if (service.IsGenericType)
 				GenericArguments = service.GetGenericArguments();
+
+			Parameters = new ParameterCollection();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

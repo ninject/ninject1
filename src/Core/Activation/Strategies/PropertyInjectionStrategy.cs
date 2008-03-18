@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Parameters;
 using Ninject.Core.Planning.Directives;
 using Ninject.Core.Planning.Targets;
 #endregion
@@ -71,7 +72,8 @@ namespace Ninject.Core.Activation.Strategies
 		/*----------------------------------------------------------------------------------------*/
 		private static object GetValueFromTransientParameter(IContext context, ITarget target)
 		{
-			return (context.Parameters == null) ? null : context.Parameters.GetPropertyValue(target.Name);
+			PropertyValueParameter parameter = context.Parameters.GetOne<PropertyValueParameter>(target.Name);
+			return (parameter == null) ? null : parameter.Value;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

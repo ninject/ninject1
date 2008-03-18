@@ -29,183 +29,85 @@ using Ninject.Core.Properties;
 namespace Ninject.Core.Parameters
 {
 	/// <summary>
-	/// An implementation of a parameter collection with its own fluent interface.
+	/// A collection that organizes parameters by type.
 	/// </summary>
 	public class ParameterCollection : IParameterCollection
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private readonly Dictionary<string, object> _constructorArguments = new Dictionary<string, object>();
-		private readonly Dictionary<string, object> _propertyValues = new Dictionary<string, object>();
-		private readonly Dictionary<string, object> _contextVariables = new Dictionary<string, object>();
+		private readonly Dictionary<Type, Dictionary<string, IParameter>> _items = new Dictionary<Type, Dictionary<string, IParameter>>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods: Constructor Arguments
+		#region Public Methods
 		/// <summary>
-		/// Adds a transient value for the constructor argument with the specified name.
+		/// Adds the specified parameter to the collection.
 		/// </summary>
+		/// <typeparam name="T">The type to organize the parameter under.</typeparam>
+		/// <param name="parameter">The parameter to add.</param>
+		public void Add<T>(T parameter)
+			where T : class, IParameter
+		{
+			Ensure.ArgumentNotNull(parameter, "parameter");
+
+			Type type = typeof(T);
+
+			if (!_items.ContainsKey(type))
+				_items.Add(type, new Dictionary<string, IParameter>());
+
+			Guard.Against(_items[type].ContainsKey(parameter.Name), "A parameter with the name '{0}' has already been defined.", parameter.Name);
+
+			_items[type].Add(parameter.Name, parameter);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Adds the specified parameters to the collection.
+		/// </summary>
+		/// <typeparam name="T">The type to organize the parameters under.</typeparam>
+		/// <param name="parameters">The parameters to add.</param>
+		public void AddRange<T>(IEnumerable<T> parameters)
+			where T : class, IParameter
+		{
+			Ensure.ArgumentNotNull(parameters, "parameters");
+
+			foreach (T parameter in parameters)
+				Add(parameter);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the parameter with the specified type and name, if one has been defined.
+		/// </summary>
+		/// <typeparam name="T">The type of parameter.</typeparam>
 		/// <param name="name">The name of the argument.</param>
-		/// <param name="value">The value to inject.</param>
-		public ParameterCollection ConstructorArgument(string name, object value)
+		/// <returns>The parameter, or <see langword="null"/> if none has been defined.</returns>
+		public T GetOne<T>(string name)
+			where T: class, IParameter
 		{
-			AddConstructorArgument(name, value);
-			return this;
+			Type type = typeof(T);
+
+			if (!_items.ContainsKey(type) || !_items[type].ContainsKey(name))
+				return null;
+			else 
+				return _items[type][name] as T;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Adds transient values for the arguments defined in the dictionary.
+		/// Gets all registered parameters of the specified type.
 		/// </summary>
-		/// <param name="arguments">A dictionary of argument names and values to define.</param>
-		public ParameterCollection ConstructorArguments(IDictionary arguments)
+		/// <typeparam name="T">The type of parameter.</typeparam>
+		/// <returns>A collection of parameters of the specified type.</returns>
+		public ICollection<T> GetAll<T>()
+			where T: class, IParameter
 		{
-			foreach (DictionaryEntry entry in arguments)
-				AddConstructorArgument(entry.Key.ToString(), entry.Value);
+			Type type = typeof(T);
+			List<T> matches = new List<T>();
 
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Adds transient values for constructor arguments matching the properties defined on the object.
-		/// </summary>
-		/// <param name="arguments">An object containing the values to define as arguments.</param>
-		public ParameterCollection ConstructorArguments(object arguments)
-		{
-			IDictionary dictionary = ReflectionDictionaryBuilder.Create(arguments);
-
-			foreach (DictionaryEntry entry in dictionary)
-				AddConstructorArgument(entry.Key.ToString(), entry.Value);
-
-			return this;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods: Property Values
-		/// <summary>
-		/// Adds a transient value for the property with the specified name.
-		/// </summary>
-		/// <param name="name">The name of the property.</param>
-		/// <param name="value">The value to inject.</param>
-		public ParameterCollection PropertyValue(string name, object value)
-		{
-			AddPropertyValue(name, value);
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Adds transient values for the properties defined in the dictionary.
-		/// </summary>
-		/// <param name="values">A dictionary of property names and values to define.</param>
-		public ParameterCollection PropertyValues(IDictionary values)
-		{
-			foreach (DictionaryEntry entry in values)
-				AddPropertyValue(entry.Key.ToString(), entry.Value);
-
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Adds transient values for properties matching those defined on the object.
-		/// </summary>
-		/// <param name="values">An object containing the values to define as arguments.</param>
-		public ParameterCollection PropertyValues(object values)
-		{
-			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
-
-			foreach (DictionaryEntry entry in dictionary)
-				AddPropertyValue(entry.Key.ToString(), entry.Value);
-
-			return this;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods: Context Variable
-		/// <summary>
-		/// Adds a variable to the context.
-		/// </summary>
-		/// <param name="name">The name of the variable.</param>
-		/// <param name="value">The value for the variable.</param>
-		public ParameterCollection ContextVariable(string name, object value)
-		{
-			AddContextVariable(name, value);
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Adds context variables for the properties defined in the dictionary.
-		/// </summary>
-		/// <param name="values">A dictionary of context variables and their associated values.</param>
-		public ParameterCollection ContextVariables(IDictionary values)
-		{
-			foreach (DictionaryEntry entry in values)
-				AddContextVariable(entry.Key.ToString(), entry.Value);
-
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Adds context variables for the properties defined on the object.
-		/// </summary>
-		/// <param name="values">An object containing the values to define as context variables.</param>
-		public ParameterCollection ContextVariables(object values)
-		{
-			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
-
-			foreach (DictionaryEntry entry in dictionary)
-				AddContextVariable(entry.Key.ToString(), entry.Value);
-
-			return this;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		private void AddConstructorArgument(string name, object value)
-		{
-			if (_constructorArguments.ContainsKey(name))
+			if (_items.ContainsKey(type))
 			{
-				throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_ConstructorArgumentAlreadyHasTransientvalue, name));
+				foreach (IParameter parameter in _items[type].Values)
+					matches.Add((T) parameter);
 			}
 
-			_constructorArguments.Add(name, value);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private void AddPropertyValue(string name, object value)
-		{
-			if (_propertyValues.ContainsKey(name))
-			{
-				throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_PropertyAlreadyHasTransientValue, name));
-			}
-
-			_propertyValues.Add(name, value);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private void AddContextVariable(string name, object value)
-		{
-			if (_contextVariables.ContainsKey(name))
-			{
-				throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_ContextVariableAlreadyDefined, name));
-			}
-
-			_contextVariables.Add(name, value);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region IParameterCollection Implementation
-		object IParameterCollection.GetConstructorArgument(string name)
-		{
-			return _constructorArguments.ContainsKey(name) ? _constructorArguments[name] : null;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		object IParameterCollection.GetPropertyValue(string name)
-		{
-			return _propertyValues.ContainsKey(name) ? _propertyValues[name] : null;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		object IParameterCollection.GetContextVariable(string name)
-		{
-			return _contextVariables.ContainsKey(name) ? _contextVariables[name] : null;
+			return matches;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

@@ -99,6 +99,11 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\TextWriter\ConsoleLoggerFactory.cs" />
     <Compile Include="Logging\TextWriter\TextWriterLogger.cs" />
+    <Compile Include="Parameters\Model\ConstructorArgumentParameter.cs" />
+    <Compile Include="Parameters\Model\ContextVariableParameter.cs" />
+    <Compile Include="Parameters\Model\PropertyValueParameter.cs" />
+    <Compile Include="Parameters\ParameterCollectionBuilder.cs" />
+    <Compile Include="Parameters\IParameter.cs" />
     <Compile Include="Parameters\IParameterCollection.cs" />
     <Compile Include="Parameters\ParameterCollection.cs" />
     <Compile Include="Parameters\With.cs" />

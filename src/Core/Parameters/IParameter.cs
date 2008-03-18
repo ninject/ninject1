@@ -18,25 +18,21 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections;
-using Ninject.Core.Parameters;
+using System.Collections.Generic;
 #endregion
 
 namespace Ninject.Core.Parameters
 {
 	/// <summary>
-	/// A container for the transient parameter fluent interface.
+	/// A transient parameter used during activation.
 	/// </summary>
-	public static partial class With
+	public interface IParameter
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Declares a new collection of parameters.
+		/// Gets the name of the parameter.
 		/// </summary>
-		public static ParameterCollectionBuilder Parameters
-		{
-			get { return new ParameterCollectionBuilder(); }
-		}
+		string Name { get; }
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

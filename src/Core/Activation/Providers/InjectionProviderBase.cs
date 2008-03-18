@@ -21,6 +21,7 @@ using System;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Directives;
 using Ninject.Core.Planning.Targets;
+using Ninject.Core.Parameters;
 #endregion
 
 namespace Ninject.Core.Activation
@@ -145,7 +146,8 @@ namespace Ninject.Core.Activation
 		/*----------------------------------------------------------------------------------------*/
 		private static object GetValueFromTransientParameter(IContext context, ITarget target)
 		{
-			return (context.Parameters == null) ? null : context.Parameters.GetConstructorArgument(target.Name);
+			ConstructorArgumentParameter parameter = context.Parameters.GetOne<ConstructorArgumentParameter>(target.Name);
+			return (parameter == null) ? null : parameter.Value;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

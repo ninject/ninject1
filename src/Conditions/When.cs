@@ -21,6 +21,7 @@ using System;
 using Ninject.Core;
 using Ninject.Core.Activation;
 using Ninject.Conditions.Builders;
+using Ninject.Core.Parameters;
 #endregion
 
 namespace Ninject.Conditions
@@ -93,9 +94,11 @@ namespace Ninject.Conditions
 		/// </summary>
 		public static SimpleConditionBuilder<IContext, IContext, object> ContextVariable(string name)
 		{
-			return new SimpleConditionBuilder<IContext, IContext, object>(ctx =>
-				(ctx.Parameters == null) ? null : ctx.Parameters.GetContextVariable(name)
-			);
+			return new SimpleConditionBuilder<IContext, IContext, object>(ctx => 
+			{
+				ContextVariableParameter parameter = ctx.Parameters.GetOne<ContextVariableParameter>(name);
+				return (parameter == null) ? null : parameter.Value;
+			});
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
