@@ -63,6 +63,8 @@ namespace Ninject.Core.Injection
 		/// <returns>A new injector for the method.</returns>
 		public IMethodInjector GetInjector(MethodInfo method)
 		{
+			Guard.Against(method.IsGenericMethodDefinition, "Cannot create injector from generic type definition.");
+
 			if (_methodInjectors.ContainsKey(method))
 				return _methodInjectors[method];
 

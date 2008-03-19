@@ -18,23 +18,20 @@
 #endregion
 #region Using Directives
 using System;
-using System.Reflection;
-using Ninject.Core.Injection;
-using Ninject.Core.Tests.Mocks;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 #endregion
 
-namespace Ninject.Core.Tests.Injection
+namespace Ninject.Core.Tests.Mocks
 {
-	[TestFixture]
-	public class DynamicInjectorFactoryFixture : InjectorFactoryFixtureBase
+	public class ObjectWithGenericMethod
 	{
-		/*----------------------------------------------------------------------------------------*/
-		protected override IInjectorFactory CreateFactory()
+		public string Convert(object obj)
 		{
-			return new DynamicInjectorFactory();
+			return obj.ToString();
 		}
-		/*----------------------------------------------------------------------------------------*/
+
+		public string ConvertGeneric<T>(T obj)
+		{
+			return obj.ToString();
+		}
 	}
 }
