@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A7151D7B-5A99-4DDA-9D0B-C6BBDCC218B7}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -58,9 +58,9 @@
       <Project>{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}</Project>
       <Name>Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Web\Web.csproj">
+    <ProjectReference Include="..\..\Framework\Web\Framework.Web.csproj">
       <Project>{C46075DB-A0FB-466B-BA76-C093227FA9C7}</Project>
-      <Name>Web</Name>
+      <Name>Framework.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -25,15 +25,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conditions", "src\Condition
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conditions.Tests", "src\Conditions\Tests\Conditions.Tests.csproj", "{13BCEAB4-CAAD-49A1-9479-62BAA888E873}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Log4net", "src\Integration\Log4net\Log4net.csproj", "{17FBF64E-E523-412D-B507-077B5DE726AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Log4net", "src\Integration\Log4net\Integration.Log4net.csproj", "{17FBF64E-E523-412D-B507-077B5DE726AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinForms", "src\Framework\WinForms\WinForms.csproj", "{0A16E885-951D-4E84-A42E-FFAAE5C8B340}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.WinForms", "src\Framework\WinForms\Framework.WinForms.csproj", "{0A16E885-951D-4E84-A42E-FFAAE5C8B340}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "src\Framework\Web\Web.csproj", "{C46075DB-A0FB-466B-BA76-C093227FA9C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Web", "src\Framework\Web\Framework.Web.csproj", "{C46075DB-A0FB-466B-BA76-C093227FA9C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AjaxPro", "src\Integration\AjaxPro\AjaxPro.csproj", "{A7151D7B-5A99-4DDA-9D0B-C6BBDCC218B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.AjaxPro", "src\Integration\AjaxPro\Integration.AjaxPro.csproj", "{A7151D7B-5A99-4DDA-9D0B-C6BBDCC218B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoRail", "src\Integration\MonoRail\MonoRail.csproj", "{82404394-A1B7-475A-BCF5-3C5708E36979}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.MonoRail", "src\Integration\MonoRail\Integration.MonoRail.csproj", "{82404394-A1B7-475A-BCF5-3C5708E36979}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
