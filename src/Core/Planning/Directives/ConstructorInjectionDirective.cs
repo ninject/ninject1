@@ -29,7 +29,7 @@ namespace Ninject.Core.Planning.Directives
 	/// A directive that describes a constructor call.
 	/// </summary>
 	[Serializable]
-	public class ConstructorInjectionDirective : MultipleInjectionDirective<ConstructorInfo, IConstructorInjector>
+	public class ConstructorInjectionDirective : MultipleInjectionDirective<ConstructorInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -37,9 +37,8 @@ namespace Ninject.Core.Planning.Directives
 		/// Creates a new ConstructorInjectionDirective.
 		/// </summary>
 		/// <param name="member">The member that the directive relates to.</param>
-		/// <param name="injector">The injector that will be used to inject values into the constructor.</param>
-		public ConstructorInjectionDirective(ConstructorInfo member, IConstructorInjector injector)
-			: base(member, injector)
+		public ConstructorInjectionDirective(ConstructorInfo member)
+			: base(member)
 		{
 		}
 		#endregion

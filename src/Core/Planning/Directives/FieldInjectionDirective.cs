@@ -30,7 +30,7 @@ namespace Ninject.Core.Planning.Directives
 	/// A directive that describes a field injection.
 	/// </summary>
 	[Serializable]
-	public class FieldInjectionDirective : SingleInjectionDirective<FieldInfo, IFieldInjector>
+	public class FieldInjectionDirective : SingleInjectionDirective<FieldInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -38,9 +38,8 @@ namespace Ninject.Core.Planning.Directives
 		/// Creates a new FieldInjectionDirective.
 		/// </summary>
 		/// <param name="member">The member that the directive relates to.</param>
-		/// <param name="injector">The injector that will be used to inject a value into the field.</param>
-		public FieldInjectionDirective(FieldInfo member, IFieldInjector injector)
-			: base(member, injector, new FieldTarget(member))
+		public FieldInjectionDirective(FieldInfo member)
+			: base(member, new FieldTarget(member))
 		{
 		}
 		#endregion

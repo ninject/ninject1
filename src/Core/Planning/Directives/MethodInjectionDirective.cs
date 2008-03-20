@@ -29,7 +29,7 @@ namespace Ninject.Core.Planning.Directives
 	/// A directive that describes a method injection.
 	/// </summary>
 	[Serializable]
-	public class MethodInjectionDirective : MultipleInjectionDirective<MethodInfo, IMethodInjector>
+	public class MethodInjectionDirective : MultipleInjectionDirective<MethodInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -37,9 +37,8 @@ namespace Ninject.Core.Planning.Directives
 		/// Creates a new MethodInjectionDirective.
 		/// </summary>
 		/// <param name="member">The member that the directive relates to.</param>
-		/// <param name="injector">The injector that will be used to inject values into the method.</param>
-		public MethodInjectionDirective(MethodInfo member, IMethodInjector injector)
-			: base(member, injector)
+		public MethodInjectionDirective(MethodInfo member)
+			: base(member)
 		{
 		}
 		#endregion

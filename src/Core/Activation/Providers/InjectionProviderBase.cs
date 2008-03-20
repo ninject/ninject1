@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Parameters;
@@ -76,8 +77,12 @@ namespace Ninject.Core.Activation
 			// Resolve the dependency markers in the constructor injection directive.
 			object[] arguments = ResolveConstructorArguments(context, directive);
 
-			// Trigger the directive's injector to create the instance.
-			return directive.Injector.Invoke(arguments);
+			// Get an injector that can call the injection constructor.
+			IInjectorFactory injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
+			IConstructorInjector injector = injectorFactory.GetInjector(directive.Member);
+
+			// Call the constructor and return the created object.
+			return injector.Invoke(arguments);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

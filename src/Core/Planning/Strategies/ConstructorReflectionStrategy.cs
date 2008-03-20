@@ -88,13 +88,10 @@ namespace Ninject.Core.Planning.Strategies
 		/*----------------------------------------------------------------------------------------*/
 		private ConstructorInjectionDirective CreateDirective(IBinding binding, ConstructorInfo constructor)
 		{
-			IInjectorFactory injectorFactory = Kernel.GetComponent<IInjectorFactory>();
 			IResolverFactory resolverFactory = Kernel.GetComponent<IResolverFactory>();
 
-			IConstructorInjector injector = injectorFactory.GetInjector(constructor);
-
 			// Create a new directive that will hold the injection information.
-			ConstructorInjectionDirective directive = new ConstructorInjectionDirective(constructor, injector);
+			ConstructorInjectionDirective directive = new ConstructorInjectionDirective(constructor);
 
 			foreach (ParameterInfo parameter in constructor.GetParameters())
 			{

@@ -29,13 +29,11 @@ namespace Ninject.Core.Planning.Directives
 	/// A baseline definition of an injection directive.
 	/// </summary>
 	/// <typeparam name="TMember">The type of member that will be injected.</typeparam>
-	/// <typeparam name="TInjector">The type of injector that will perform the injection.</typeparam>
-	/// <seealso cref="MultipleInjectionDirective{TMember,TInjector}"/>
-	/// <seealso cref="SingleInjectionDirective{TMember,TInjector}"/>
+	/// <seealso cref="MultipleInjectionDirective{TMember}"/>
+	/// <seealso cref="SingleInjectionDirective{TMember}"/>
 	[Serializable]
-	public abstract class InjectionDirectiveBase<TMember, TInjector> : DirectiveBase
+	public abstract class InjectionDirectiveBase<TMember> : DirectiveBase
 		where TMember : MemberInfo
-		where TInjector : class, IInjector<TMember>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -43,11 +41,6 @@ namespace Ninject.Core.Planning.Directives
 		/// Gets the member that will be injected.
 		/// </summary>
 		public TMember Member { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the injector that will perform the injection.
-		/// </summary>
-		public TInjector Injector { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -58,12 +51,7 @@ namespace Ninject.Core.Planning.Directives
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-			{
-				DisposeMember(Injector);
-
 				Member = null;
-				Injector = null;
-			}
 
 			base.Dispose(disposing);
 		}
@@ -74,14 +62,10 @@ namespace Ninject.Core.Planning.Directives
 		/// Creates a new MultipleInjectionDirective.
 		/// </summary>
 		/// <param name="member">The member that will be injected.</param>
-		/// <param name="injector">The injector that will perform the injection.</param>
-		protected InjectionDirectiveBase(TMember member, TInjector injector)
+		protected InjectionDirectiveBase(TMember member)
 		{
 			Ensure.ArgumentNotNull(member, "member");
-			Ensure.ArgumentNotNull(injector, "injector");
-
 			Member = member;
-			Injector = injector;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

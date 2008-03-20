@@ -30,7 +30,7 @@ namespace Ninject.Core.Planning.Directives
 	/// A directive that describes a property injection.
 	/// </summary>
 	[Serializable]
-	public class PropertyInjectionDirective : SingleInjectionDirective<PropertyInfo, IPropertyInjector>
+	public class PropertyInjectionDirective : SingleInjectionDirective<PropertyInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -38,9 +38,8 @@ namespace Ninject.Core.Planning.Directives
 		/// Creates a new PropertyInjectionDirective.
 		/// </summary>
 		/// <param name="member">The member that the directive relates to.</param>
-		/// <param name="injector">The injector that will be used to inject a value into the property.</param>
-		public PropertyInjectionDirective(PropertyInfo member, IPropertyInjector injector)
-			: base(member, injector, new PropertyTarget(member))
+		public PropertyInjectionDirective(PropertyInfo member)
+			: base(member, new PropertyTarget(member))
 		{
 		}
 		#endregion

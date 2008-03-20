@@ -31,12 +31,10 @@ namespace Ninject.Core.Planning.Directives
 	/// (For example, this is used for methods and constructors.)
 	/// </summary>
 	/// <typeparam name="TMember">The type of member that will be injected.</typeparam>
-	/// <typeparam name="TInjector">The type of injector that will perform the injection.</typeparam>
-	/// <seealso cref="SingleInjectionDirective{TMember,TInjector}"/>
+	/// <seealso cref="SingleInjectionDirective{TMember}"/>
 	[Serializable]
-	public abstract class MultipleInjectionDirective<TMember, TInjector> : InjectionDirectiveBase<TMember, TInjector>
+	public abstract class MultipleInjectionDirective<TMember> : InjectionDirectiveBase<TMember>
 		where TMember : MemberInfo
-		where TInjector : class, IInjector<TMember>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -68,9 +66,8 @@ namespace Ninject.Core.Planning.Directives
 		/// Creates a new MultipleInjectionDirective.
 		/// </summary>
 		/// <param name="member">The member that will be injected.</param>
-		/// <param name="injector">The injector that will perform the injection.</param>
-		protected MultipleInjectionDirective(TMember member, TInjector injector)
-			: base(member, injector)
+		protected MultipleInjectionDirective(TMember member)
+			: base(member)
 		{
 			Arguments = new List<Argument>();
 		}

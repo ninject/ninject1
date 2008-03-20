@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
 #endregion
 
@@ -43,10 +44,21 @@ namespace Ninject.Core.Activation.Strategies
 		{
 			IList<MethodInjectionDirective> directives = context.Plan.Directives.GetAll<MethodInjectionDirective>();
 
-			foreach (MethodInjectionDirective directive in directives)
+			if (directives.Count > 0)
 			{
-				object[] arguments = ResolveArguments(context, directive, instance);
-				directive.Injector.Invoke(instance, arguments);
+				IInjectorFactory injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
+
+				foreach (MethodInjectionDirective directive in directives)
+				{
+					// Resolve the arguments that should be injected via the method's arguments.
+					object[] arguments = ResolveArguments(context, directive, instance);
+
+					// Get an injector that can call the method.
+					IMethodInjector injector = injectorFactory.GetInjector(directive.Member);
+
+					// Call the method.
+					injector.Invoke(instance, arguments);
+				}
 			}
 
 			return StrategyResult.Proceed;

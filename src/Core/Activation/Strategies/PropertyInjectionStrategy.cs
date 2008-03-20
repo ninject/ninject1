@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Injection;
 using Ninject.Core.Parameters;
 using Ninject.Core.Planning.Directives;
 using Ninject.Core.Planning.Targets;
@@ -46,25 +47,33 @@ namespace Ninject.Core.Activation.Strategies
 		{
 			IList<PropertyInjectionDirective> directives = context.Plan.Directives.GetAll<PropertyInjectionDirective>();
 
-			foreach (PropertyInjectionDirective directive in directives)
+			if (directives.Count > 0)
 			{
-				PropertyInfo property = directive.Member;
+				IInjectorFactory injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
 
-				// First, check the context for a transient value for the property.
-				object value = GetValueFromTransientParameter(context, directive.Target);
-
-				// If no overrides have been declared, activate a service of the proper type to use as the value.
-				if (value == null)
+				foreach (PropertyInjectionDirective directive in directives)
 				{
-					// Create a new context in which the property's value will be activated.
-					IContext injectionContext = context.CreateChild(instance, property, directive.Target, directive.Argument.Optional);
+					PropertyInfo property = directive.Member;
 
-					// Resolve the value to inject into the property.
-					value = directive.Argument.Resolver.Resolve(context, injectionContext);
+					// First, check the context for a transient value for the property.
+					object value = GetValueFromTransientParameter(context, directive.Target);
+
+					// If no overrides have been declared, activate a service of the proper type to use as the value.
+					if (value == null)
+					{
+						// Create a new context in which the property's value will be activated.
+						IContext injectionContext = context.CreateChild(instance, property, directive.Target, directive.Argument.Optional);
+
+						// Resolve the value to inject into the property.
+						value = directive.Argument.Resolver.Resolve(context, injectionContext);
+					}
+
+					// Get an injector that can set the property's value.
+					IPropertyInjector injector = injectorFactory.GetInjector(directive.Member);
+
+					// Inject the value.
+					injector.Set(instance, value);
 				}
-
-				// Inject the value.
-				directive.Injector.Set(instance, value);
 			}
 
 			return StrategyResult.Proceed;

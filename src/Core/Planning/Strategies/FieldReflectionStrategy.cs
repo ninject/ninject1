@@ -57,13 +57,10 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="member">The member to create a directive for.</param>
 		protected override void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, FieldInfo member)
 		{
-			IInjectorFactory injectorFactory = Kernel.GetComponent<IInjectorFactory>();
 			IResolverFactory resolverFactory = Kernel.GetComponent<IResolverFactory>();
 
-			IFieldInjector injector = injectorFactory.GetInjector(member);
-
 			// Create a new directive that will hold the injection information.
-			FieldInjectionDirective directive = new FieldInjectionDirective(member, injector);
+			FieldInjectionDirective directive = new FieldInjectionDirective(member);
 
 			ITarget target = new FieldTarget(member);
 			IResolver resolver = resolverFactory.Create(binding, target);

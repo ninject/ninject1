@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
 #endregion
 
@@ -44,18 +45,26 @@ namespace Ninject.Core.Activation.Strategies
 		{
 			IList<FieldInjectionDirective> directives = context.Plan.Directives.GetAll<FieldInjectionDirective>();
 
-			foreach (FieldInjectionDirective directive in directives)
+			if (directives.Count > 0)
 			{
-				FieldInfo field = directive.Member;
+				IInjectorFactory injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
 
-				// Create a new context in which the field's value will be activated.
-				IContext injectionContext = context.CreateChild(instance, field, directive.Target, directive.Argument.Optional);
+				foreach (FieldInjectionDirective directive in directives)
+				{
+					FieldInfo field = directive.Member;
 
-				// Resolve the value to inject into the field.
-				object value = directive.Argument.Resolver.Resolve(context, injectionContext);
+					// Create a new context in which the field's value will be activated.
+					IContext injectionContext = context.CreateChild(instance, field, directive.Target, directive.Argument.Optional);
 
-				// Inject the value.
-				directive.Injector.Set(instance, value);
+					// Resolve the value to inject into the field.
+					object value = directive.Argument.Resolver.Resolve(context, injectionContext);
+
+					// Get an injector that can inject the value.
+					IFieldInjector injector = injectorFactory.GetInjector(directive.Member);
+
+					// Inject the value.
+					injector.Set(instance, value);
+				}
 			}
 
 			return StrategyResult.Proceed;
