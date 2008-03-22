@@ -23,6 +23,7 @@ using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Logging;
 using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution.Plugins;
 #endregion
 
 namespace Ninject.Core.Resolution

@@ -24,9 +24,10 @@ using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Logging;
 using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution.Resolvers;
 #endregion
 
-namespace Ninject.Core.Resolution
+namespace Ninject.Core.Resolution.Plugins
 {
 	/// <summary>
 	/// A <see cref="IResolverFactoryPlugin"/> that creates <see cref="ComponentResolver"/>s if

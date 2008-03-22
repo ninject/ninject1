@@ -21,14 +21,15 @@ using System;
 using Ninject.Core;
 using Ninject.Core.Activation;
 using Ninject.Conditions.Builders;
+using Ninject.Core.Interception;
 using Ninject.Core.Parameters;
 #endregion
 
 namespace Ninject.Conditions
 {
 	/// <summary>
-	/// The root type for Ninject's standard binding EDSL (embedded domain-specific language).
-	/// This is most commonly used from within <see cref="StandardModule"/>s.
+	/// The root type for Ninject's EDSL (embedded domain-specific language). This is most
+	/// commonly used from within <see cref="StandardModule"/>s.
 	/// </summary>
 	/// <remarks>
 	/// This type can be used as a shortcut to creating complex conditional statements that
@@ -39,83 +40,19 @@ namespace Ninject.Conditions
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Begins a conditional chain that examines the kernel associated with the context.
+		/// Begins a conditional chain that examines an activation context.
 		/// </summary>
-		public static KernelConditionBuilder<IContext, IContext> Kernel
+		public static ContextConditionBuilder<IContext, IContext> Context
 		{
-			get { return new KernelConditionBuilder<IContext, IContext>(ctx => ctx.Kernel); }
+			get { return new ContextConditionBuilder<IContext, IContext>(ctx => ctx); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Begins a conditional chain that examines the time the context was created.
+		/// Begins a conditional chain that examines an intercepted message call.
 		/// </summary>
-		public static DateTimeConditionBuilder<IContext, IContext> Time
+		public static RequestConditionBuilder<IRequest, IRequest> Request
 		{
-			get { return new DateTimeConditionBuilder<IContext, IContext>(ctx => ctx.Time); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Begins a conditional chain that examines the service currently being activated within
-		/// the context.
-		/// </summary>
-		public static TypeConditionBuilder<IContext, IContext> Service
-		{
-			get { return new TypeConditionBuilder<IContext, IContext>(ctx => ctx.Service); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Begins a conditional chain that examines the member that will be injected with the value
-		/// that is resolved within the context.
-		/// </summary>
-		public static MemberInfoConditionBuilder<IContext, IContext> Member
-		{
-			get { return new MemberInfoConditionBuilder<IContext, IContext>(ctx => ctx.Member); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Begins a conditional chain that examines the injection target that will receive the actual
-		/// value that is resolved within the context.
-		/// </summary>
-		public static TargetConditionBuilder<IContext, IContext> Target
-		{
-			get { return new TargetConditionBuilder<IContext, IContext>(ctx => ctx.Target); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Begins a conditional chain that examines the nesting level of the context.
-		/// </summary>
-		public static Int32ConditionBuilder<IContext, IContext> Level
-		{
-			get { return new Int32ConditionBuilder<IContext, IContext>(ctx => ctx.Level); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Begins a conditional chain that examines the value of the specified context variable.
-		/// </summary>
-		public static SimpleConditionBuilder<IContext, IContext, object> ContextVariable(string name)
-		{
-			return new SimpleConditionBuilder<IContext, IContext, object>(ctx => 
-			{
-				ContextVariableParameter parameter = ctx.Parameters.GetOne<ContextVariableParameter>(name);
-				return (parameter == null) ? null : parameter.Value;
-			});
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that determines whether the context is a root context.
-		/// </summary>
-		public static TerminatingCondition<IContext, IContext> InRootContext
-		{
-			get { return new TerminatingCondition<IContext, IContext>(ctx => ctx.IsRoot); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that determines whether the context is an optional
-		/// injection request.
-		/// </summary>
-		public static TerminatingCondition<IContext, IContext> InOptionalContext
-		{
-			get { return new TerminatingCondition<IContext, IContext>(ctx => ctx.IsOptional); }
+			get { return new RequestConditionBuilder<IRequest, IRequest>(r => r); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

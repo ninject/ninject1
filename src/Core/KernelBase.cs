@@ -57,6 +57,7 @@ namespace Ninject.Core
 		#region Fields
 		private readonly Dictionary<Type, IKernelComponent> _components = new Dictionary<Type, IKernelComponent>();
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
+		private readonly Stack<IScope> _scopes = new Stack<IScope>();
 		private readonly ILogger _logger = NullLogger.Instance;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -213,6 +214,29 @@ namespace Ninject.Core
 			module.Load();
 
 			_logger.Debug("Finished loading module {0}.", module.Name);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods: Scopes
+		/// <summary>
+		/// Begins a new activation scope. When the scope is disposed, all instances activated
+		/// within it will be released.
+		/// </summary>
+		/// <returns>The newly-created scope.</returns>
+		public IScope BeginScope()
+		{
+			IScope scope = new StandardScope(this);
+			_scopes.Push(scope);
+
+			return scope;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Ends the previous scope.
+		/// </summary>
+		public void EndScope()
+		{
+			_scopes.Pop();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -670,6 +694,10 @@ namespace Ninject.Core
 
 			// Register the contextualized instance with the tracker.
 			GetComponent<ITracker>().Track(instance, context);
+
+			// If there is an activation scope defined, register the instance with it as well.
+      if (_scopes.Count > 0)
+				_scopes.Peek().Register(instance);
 
 			_logger.Debug("Instance of service {0} resolved successfully", Format.Type(service));
 

@@ -23,6 +23,7 @@ using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Parameters;
+using Ninject.Core.Tracking;
 #endregion
 
 namespace Ninject.Core
@@ -160,6 +161,20 @@ namespace Ninject.Core
 		/// </summary>
 		/// <param name="module">The module to load.</param>
 		void Load(IModule module);
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Methods: Scopes
+		/// <summary>
+		/// Begins a new activation scope. When the scope is disposed, all instances activated
+		/// within it will be released.
+		/// </summary>
+		/// <returns>The newly-created scope.</returns>
+		IScope BeginScope();
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Ends the previous scope.
+		/// </summary>
+		void EndScope();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Kernel Components

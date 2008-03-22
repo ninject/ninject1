@@ -68,6 +68,12 @@ namespace Ninject.Core.Binding
 		BindingOptions Options { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets a value indicating whether the binding is conditional (that is, whether it has
+		/// a condition associated with it.)
+		/// </summary>
+		bool IsConditional { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets a value indicating whether the binding is the default binding for the type.
 		/// (If a binding has no condition associated with it, it is the default binding.)
 		/// </summary>

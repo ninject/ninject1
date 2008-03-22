@@ -24,7 +24,7 @@ using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Targets;
 #endregion
 
-namespace Ninject.Core.Resolution
+namespace Ninject.Core.Resolution.Resolvers
 {
 	/// <summary>
 	/// A dependency resolver that retrieves <see cref="IProvider"/>s from the kernel.

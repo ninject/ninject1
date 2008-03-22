@@ -24,7 +24,7 @@ using Ninject.Core.Logging;
 using Ninject.Core.Planning.Targets;
 #endregion
 
-namespace Ninject.Core.Resolution
+namespace Ninject.Core.Resolution.Resolvers
 {
 	/// <summary>
 	/// A dependency resolver that returns <see cref="ILogger"/>s.

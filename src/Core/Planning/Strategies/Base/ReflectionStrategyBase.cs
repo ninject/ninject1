@@ -34,6 +34,7 @@ namespace Ninject.Core.Planning.Strategies
 		where TMember : ICustomAttributeProvider
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
 		/// <summary>
 		/// Executed to build the activation plan.
 		/// </summary>
@@ -66,7 +67,9 @@ namespace Ninject.Core.Planning.Strategies
 
 			return StrategyResult.Proceed;
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
 		/// <summary>
 		/// Gets an array of members that the strategy should examine.
 		/// </summary>
@@ -84,7 +87,9 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="plan">The activation plan to add the directive to.</param>
 		/// <param name="member">The member to create a directive for.</param>
 		protected abstract void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, TMember member);
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Private Methods
 		/// <summary>
 		/// Walks the type hierarchy starting with the specified type, returning all members from
 		/// the type and all of its ancestors.
@@ -107,6 +112,7 @@ namespace Ninject.Core.Planning.Strategies
 
 			return members;
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

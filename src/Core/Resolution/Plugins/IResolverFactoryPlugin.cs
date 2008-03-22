@@ -21,9 +21,10 @@ using System;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution.Resolvers;
 #endregion
 
-namespace Ninject.Core.Resolution
+namespace Ninject.Core.Resolution.Plugins
 {
 	/// <summary>
 	/// A factory that can be plugged into a <see cref="IResolverFactory"/> to conditionally

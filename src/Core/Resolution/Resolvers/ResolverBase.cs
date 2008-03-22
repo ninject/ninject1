@@ -23,7 +23,7 @@ using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Targets;
 #endregion
 
-namespace Ninject.Core.Resolution
+namespace Ninject.Core.Resolution.Resolvers
 {
 	/// <summary>
 	/// A baseline definition of a dependency resolver.

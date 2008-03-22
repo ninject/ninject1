@@ -31,7 +31,7 @@ using NUnit.Framework.SyntaxHelpers;
 namespace Ninject.Core.Tests
 {
 	[TestFixture]
-	public class TrackerFixture
+	public class TrackingFixture
 	{
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
@@ -114,6 +114,33 @@ namespace Ninject.Core.Tests
 
 			Assert.That(obj1.Disposed, Is.True);
 			Assert.That(obj2.Disposed, Is.True);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void DisposingActivationScopeReleasesAllInstancesCreatedTherein()
+		{
+			DisposableMock obj1;
+			DisposableMock obj2;
+
+			using (IKernel kernel = new StandardKernel())
+			{
+				obj1 = kernel.Get<DisposableMock>();
+
+				Assert.That(obj1, Is.Not.Null);
+				Assert.That(kernel.GetComponent<ITracker>().ReferenceCount, Is.EqualTo(1));
+
+				using (kernel.BeginScope())
+				{
+					obj2 = kernel.Get<DisposableMock>();
+
+					Assert.That(obj2, Is.Not.Null);
+					Assert.That(kernel.GetComponent<ITracker>().ReferenceCount, Is.EqualTo(2));
+				}
+
+				Assert.That(obj1.Disposed, Is.False);
+				Assert.That(obj2.Disposed, Is.True);
+				Assert.That(kernel.GetComponent<ITracker>().ReferenceCount, Is.EqualTo(1));
+			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

@@ -46,6 +46,7 @@ namespace Ninject.Core.Planning
 			Strategies.Append(new PropertyReflectionStrategy());
 			Strategies.Append(new MethodReflectionStrategy());
 			Strategies.Append(new FieldReflectionStrategy());
+			Strategies.Append(new InterceptorRegistrationStrategy());
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

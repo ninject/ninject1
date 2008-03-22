@@ -74,19 +74,45 @@ namespace Ninject.Core.Parameters
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets a value indicating whether a parameter with the specified name and type has
+		/// been defined.
+		/// </summary>
+		/// <typeparam name="T">The type of parameter.</typeparam>
+		/// <param name="name">The name of the parameter.</param>
+		/// <returns><see langword="True"/> if the parameter has been defined, otherwise <see langword="false"/>.</returns>
+		public bool Has<T>(string name)
+			where T : class, IParameter
+		{
+			Type type = typeof(T);
+			return (_items.ContainsKey(type) && _items[type].ContainsKey(name));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether one or more parameters of the specified type have
+		/// been defined.
+		/// </summary>
+		/// <typeparam name="T">The type of parameter.</typeparam>
+		/// <returns><see langword="True"/> if there are such parameters, otherwise <see langword="false"/>.</returns>
+		public bool HasOneOrMore<T>()
+			where T : class, IParameter
+		{
+			return _items.ContainsKey(typeof(T));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the parameter with the specified type and name, if one has been defined.
 		/// </summary>
 		/// <typeparam name="T">The type of parameter.</typeparam>
 		/// <param name="name">The name of the argument.</param>
 		/// <returns>The parameter, or <see langword="null"/> if none has been defined.</returns>
 		public T GetOne<T>(string name)
-			where T: class, IParameter
+			where T : class, IParameter
 		{
 			Type type = typeof(T);
 
 			if (!_items.ContainsKey(type) || !_items[type].ContainsKey(name))
 				return null;
-			else 
+			else
 				return _items[type][name] as T;
 		}
 		/*----------------------------------------------------------------------------------------*/

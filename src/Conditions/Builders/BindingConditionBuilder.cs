@@ -18,36 +18,37 @@
 #endregion
 #region Using Directives
 using System;
-using System.Reflection;
+using Ninject.Core.Activation;
+using Ninject.Core.Binding;
 #endregion
 
 namespace Ninject.Conditions.Builders
 {
 	/// <summary>
-	/// A condition builder that deals with <see cref="MemberInfo"/> objects. This class
-	/// supports Ninject's EDSL and should generally not be used directly.
+	/// A condition builder that deals with <see cref="IBinding"/> objects. This class supports Ninject's
+	/// EDSL and should generally not be used directly.
 	/// </summary>
 	/// <typeparam name="TRoot">The root type of the conversion chain.</typeparam>
 	/// <typeparam name="TPrevious">The subject type of that the previous link in the condition chain.</typeparam>
-	public class MemberInfoConditionBuilder<TRoot, TPrevious> : AttributeConditionBuilder<TRoot, TPrevious, MemberInfo>
+	public class BindingConditionBuilder<TRoot, TPrevious> : SimpleConditionBuilder<TRoot, TPrevious, IBinding>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Creates a new MemberInfoConditionBuilder.
+		/// Creates a new BindingConditionBuilder.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		public MemberInfoConditionBuilder(Converter<TRoot, MemberInfo> converter)
+		public BindingConditionBuilder(Converter<TRoot, IBinding> converter)
 			: base(converter)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new MemberInfoConditionBuilder.
+		/// Creates a new ContextConditionBuilder.
 		/// </summary>
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
-		public MemberInfoConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Converter<TPrevious, MemberInfo> converter)
+		public BindingConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Converter<TPrevious, IBinding> converter)
 			: base(last, converter)
 		{
 		}
@@ -55,19 +56,43 @@ namespace Ninject.Conditions.Builders
 		/*----------------------------------------------------------------------------------------*/
 		#region EDSL Members
 		/// <summary>
-		/// Continues the condition chain by examining the member's declaring type.
+		/// Continues the conditional chain by examining the binding's service type.
 		/// </summary>
-		public TypeConditionBuilder<TRoot, MemberInfo> DeclaringType
+		public TypeConditionBuilder<TRoot, IBinding> Service
 		{
-			get { return new TypeConditionBuilder<TRoot, MemberInfo>(this, m => m.DeclaringType); }
+			get { return new TypeConditionBuilder<TRoot, IBinding>(this, b => b.Service); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Continues the condition chain by examining the member's name.
+		/// Continues the conditional chain by examining the binding's provider.
 		/// </summary>
-		public StringConditionBuilder<TRoot, MemberInfo> Name
+		public ProviderConditionBuilder<TRoot, IBinding> Provider
 		{
-			get { return new StringConditionBuilder<TRoot, MemberInfo>(this, m => m.Name); }
+			get { return new ProviderConditionBuilder<TRoot, IBinding>(this, b => b.Provider); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Continues the conditional chain by examining the binding's provider.
+		/// </summary>
+		public BehaviorConditionBuilder<TRoot, IBinding> Behavior
+		{
+			get { return new BehaviorConditionBuilder<TRoot, IBinding>(this, b => b.Behavior); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that determines whether the binding is conditional.
+		/// </summary>
+		public TerminatingCondition<TRoot, IBinding> IsConditional
+		{
+			get { return Terminate(b => b.IsConditional); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that determines whether the binding is a default binding.
+		/// </summary>
+		public TerminatingCondition<TRoot, IBinding> IsDefault
+		{
+			get { return Terminate(b => b.IsDefault); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

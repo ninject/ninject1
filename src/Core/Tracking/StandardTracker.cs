@@ -103,6 +103,7 @@ namespace Ninject.Core.Tracking
 				if (!_contextCache.ContainsKey(reference))
 					return false;
 
+				// Release the instance by using its activation context.
 				IContext context = _contextCache[reference];
 
 				Logger.Debug("Releasing tracked instance resulting from {0}", Format.Context(context));

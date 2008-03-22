@@ -21,7 +21,7 @@ using System;
 using Ninject.Core.Activation;
 #endregion
 
-namespace Ninject.Core.Resolution
+namespace Ninject.Core.Resolution.Resolvers
 {
 	/// <summary>
 	/// Defines a means to resolve a dependency.

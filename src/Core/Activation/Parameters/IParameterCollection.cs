@@ -44,10 +44,27 @@ namespace Ninject.Core.Parameters
 		void AddRange<T>(IEnumerable<T> parameters) where T : class, IParameter;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets a value indicating whether a parameter with the specified name and type has
+		/// been defined.
+		/// </summary>
+		/// <typeparam name="T">The type of parameter.</typeparam>
+		/// <param name="name">The name of the parameter.</param>
+		/// <returns><see langword="True"/> if the parameter has been defined, otherwise <see langword="false"/>.</returns>
+		bool Has<T>(string name) where T : class, IParameter;
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether one or more parameters of the specified type have
+		/// been defined.
+		/// </summary>
+		/// <typeparam name="T">The type of parameter.</typeparam>
+		/// <returns><see langword="True"/> if there are such parameters, otherwise <see langword="false"/>.</returns>
+		bool HasOneOrMore<T>() where T : class, IParameter;
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the parameter with the specified type and name, if one has been defined.
 		/// </summary>
 		/// <typeparam name="T">The type of parameter.</typeparam>
-		/// <param name="name">The name of the argument.</param>
+		/// <param name="name">The name of the parameter.</param>
 		/// <returns>The parameter, or <see langword="null"/> if none has been defined.</returns>
 		T GetOne<T>(string name) where T : class, IParameter;
 		/*----------------------------------------------------------------------------------------*/

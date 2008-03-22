@@ -38,9 +38,9 @@ namespace Ninject.Conditions.Tests.Binding
 		{
 			IModule module = new TestableModule(m =>
 			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.ContextVariable("bind").EqualTo("foo"));
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.ContextVariable("bind").EqualTo("bar"));
-				m.Bind(typeof(IMock)).To(typeof(ImplC)).Only(When.ContextVariable("bind").IsNotDefined);
+				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Variable("bind").EqualTo("foo"));
+				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Variable("bind").EqualTo("bar"));
+				m.Bind(typeof(IMock)).To(typeof(ImplC)).Only(When.Context.Variable("bind").IsNotDefined);
 			}); 
 
 			using (IKernel kernel = new StandardKernel(module))

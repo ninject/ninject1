@@ -84,6 +84,14 @@ namespace Ninject.Conditions.Builders
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Continues the condition chain, examining the type of the subject.
+		/// </summary>
+		public TypeConditionBuilder<TRoot, TSubject> Type
+		{
+			get { return new TypeConditionBuilder<TRoot, TSubject>(this, s => s.GetType()); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Creates a terminating condition that determines whether the subject is not null.
 		/// </summary>
 		public TerminatingCondition<TRoot, TSubject> IsDefined

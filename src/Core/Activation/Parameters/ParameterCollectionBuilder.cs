@@ -180,42 +180,31 @@ namespace Ninject.Core.Parameters
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IParameterCollection Implementation
-		/// <summary>
-		/// Adds the specified parameter to the collection.
-		/// </summary>
-		/// <typeparam name="T">The type to organize the parameter under.</typeparam>
-		/// <param name="parameter">The parameter to add.</param>
 		void IParameterCollection.Add<T>(T parameter)
 		{
 			_collection.Add(parameter);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Adds the specified parameters to the collection.
-		/// </summary>
-		/// <typeparam name="T">The type to organize the parameters under.</typeparam>
-		/// <param name="parameters">The parameters to add.</param>
 		void IParameterCollection.AddRange<T>(IEnumerable<T> parameters)
 		{
 			_collection.AddRange(parameters);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the parameter with the specified type and name, if one has been defined.
-		/// </summary>
-		/// <typeparam name="T">The type of parameter.</typeparam>
-		/// <param name="name">The name of the argument.</param>
-		/// <returns>The parameter, or <see langword="null"/> if none has been defined.</returns>
+		bool IParameterCollection.Has<T>(string name)
+		{
+			return _collection.Has<T>(name);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		bool IParameterCollection.HasOneOrMore<T>()
+		{
+			return _collection.HasOneOrMore<T>();
+		}
+		/*----------------------------------------------------------------------------------------*/
 		T IParameterCollection.GetOne<T>(string name)
 		{
 			return _collection.GetOne<T>(name);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets all registered parameters of the specified type.
-		/// </summary>
-		/// <typeparam name="T">The type of parameter.</typeparam>
-		/// <returns>A collection of parameters of the specified type.</returns>
 		ICollection<T> IParameterCollection.GetAll<T>()
 		{
 			return _collection.GetAll<T>();

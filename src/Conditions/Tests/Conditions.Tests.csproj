@@ -44,6 +44,10 @@
   <ItemGroup>
     <Compile Include="ConditionalBindingFixture.cs" />
     <Compile Include="ContextVariablesFixture.cs" />
+    <Compile Include="ConditionalInterceptionFixture.cs" />
+    <Compile Include="Mocks\CountAttribute.cs" />
+    <Compile Include="Mocks\CountInterceptor.cs" />
+    <Compile Include="Mocks\ObjectWithMethodInterceptor.cs" />
     <Compile Include="OperatorFixture.cs" />
     <Compile Include="Mocks\RequestsFooBarConstant.cs" />
     <Compile Include="Mocks\RequestsHelloWorldConstant.cs" />

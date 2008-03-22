@@ -67,7 +67,7 @@ namespace Ninject.Conditions.Builders
 		/// <summary>
 		/// Continues the condition chain, examining the injection point's type.
 		/// </summary>
-		public TypeConditionBuilder<TRoot, ITarget> Type
+		public TypeConditionBuilder<TRoot, ITarget> TargetType
 		{
 			get { return new TypeConditionBuilder<TRoot, ITarget>(this, t => t.Type); }
 		}

@@ -20,6 +20,7 @@
 using System;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Interception;
 using Ninject.Core.Logging;
 
 #endregion
@@ -110,6 +111,47 @@ namespace Ninject.Core
 		{
 			return DoBind(type);
 		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <typeparam name="T">The type of interceptor to attach.</typeparam>
+		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
+		public void Intercept<T>(ICondition<IRequest> condition)
+		{
+			RegisterInterceptor(typeof(T), 0, condition);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
+		public void Intercept<T>(int order, ICondition<IRequest> condition)
+		{
+			RegisterInterceptor(typeof(T), order, condition);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="type">The type of interceptor to attach.</param>
+		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
+		public void Intercept(Type type, ICondition<IRequest> condition)
+		{
+			RegisterInterceptor(type, 0, condition);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="type">The type of interceptor to attach.</param>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
+		public void Intercept(Type type, int order, ICondition<IRequest> condition)
+		{
+			RegisterInterceptor(type, order, condition);
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
@@ -131,6 +173,17 @@ namespace Ninject.Core
 			Kernel.AddBinding(binding);
 
 			return CreateBinder(binding);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Registers a dynamic interceptor.
+		/// </summary>
+		/// <param name="type">The type of interceptor to attach.</param>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
+		protected virtual void RegisterInterceptor(Type type, int order, ICondition<IRequest> condition)
+		{
+			Kernel.GetComponent<IInterceptorRegistry>().RegisterDynamic(type, order, condition);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

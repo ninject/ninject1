@@ -44,6 +44,7 @@ namespace Ninject.Core.Activation
 			Strategies.Append(new PropertyInjectionStrategy());
 			Strategies.Append(new MethodInjectionStrategy());
 			Strategies.Append(new FieldInjectionStrategy());
+			Strategies.Append(new ProxyStrategy());
 			Strategies.Append(new InitializableStrategy());
 			Strategies.Append(new ContextAwareStrategy());
 			Strategies.Append(new StartableStrategy());

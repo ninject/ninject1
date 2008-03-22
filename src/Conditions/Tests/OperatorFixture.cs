@@ -37,9 +37,9 @@ namespace Ninject.Conditions.Tests.Binding
 		{
 			IModule module = new TestableModule(m =>
 			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Member.Tag == "A");
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Member.Tag == "B");
-				m.Bind(typeof(IMock)).To(typeof(ImplC)).Only(When.Member.Tag != "A" & When.Member.Tag != "B");
+				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Member.Tag == "A");
+				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Member.Tag == "B");
+				m.Bind(typeof(IMock)).To(typeof(ImplC)).Only(When.Context.Member.Tag != "A" & When.Context.Member.Tag != "B");
 			}); 
 
 			using (IKernel kernel = new StandardKernel(module))
@@ -66,8 +66,8 @@ namespace Ninject.Conditions.Tests.Binding
 		{
 			IModule module = new TestableModule(m =>
 			{
-				m.Bind<string>().ToConstant("Hello, world!").Only(When.Member.Tag == "HelloWorld");
-				m.Bind<string>().ToConstant("SNAFU").Only(When.Member.Tag == "FooBar");
+				m.Bind<string>().ToConstant("Hello, world!").Only(When.Context.Member.Tag == "HelloWorld");
+				m.Bind<string>().ToConstant("SNAFU").Only(When.Context.Member.Tag == "FooBar");
 			});
 
 			using (IKernel kernel = new StandardKernel(module))
@@ -89,8 +89,8 @@ namespace Ninject.Conditions.Tests.Binding
 		{
 			IModule module = new TestableModule(m =>
 			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Kernel.IsDefined);
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Kernel.IsDefined);
+				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Kernel.IsDefined);
+				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.IsDefined);
 			});
 
 			using (IKernel kernel = new StandardKernel(module))
@@ -104,8 +104,8 @@ namespace Ninject.Conditions.Tests.Binding
 		{
 			IModule module = new TestableModule(m =>
 			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Kernel.Configuration == "foo");
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Kernel.Configuration == "bar");
+				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Kernel.Configuration == "foo");
+				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.Configuration == "bar");
 			});
 
 			using (IKernel kernel = new StandardKernel(module))
@@ -119,8 +119,8 @@ namespace Ninject.Conditions.Tests.Binding
 		{
 			IModule module = new TestableModule(m =>
 			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.InRootContext);
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Kernel.IsDefined);
+				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.IsRoot);
+				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.IsDefined);
 				m.Bind(typeof(IMock)).To(typeof(ImplC));
 			});
 

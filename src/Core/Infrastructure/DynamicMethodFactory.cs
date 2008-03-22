@@ -248,10 +248,7 @@ namespace Ninject.Core.Infrastructure
 		private static void EmitDefineLocals(DelegateBuildInfo info, ILGenerator il)
 		{
 			for (int index = 0; index < info.Parameters.Length; index++)
-			{
-				// TODO: Do the locals really need to be pinned?
 				info.Locals[index] = il.DeclareLocal(info.ParameterTypes[index], true);
-			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		private static void EmitCheckParameters(DelegateBuildInfo info, ILGenerator il, int argIndex)
@@ -403,37 +400,17 @@ namespace Ninject.Core.Infrastructure
 		#region Inner Types
 		private class DelegateBuildInfo
 		{
-			private MethodBase _method;
-			private ParameterInfo[] _parameters;
-			private Type[] _parameterTypes;
-			private LocalBuilder[] _locals;
-
-			public MethodBase Method
-			{
-				get { return _method; }
-			}
-
-			public ParameterInfo[] Parameters
-			{
-				get { return _parameters; }
-			}
-
-			public Type[] ParameterTypes
-			{
-				get { return _parameterTypes; }
-			}
-
-			public LocalBuilder[] Locals
-			{
-				get { return _locals; }
-			}
+			public MethodBase Method { get; private set; }
+			public ParameterInfo[] Parameters { get; private set; }
+			public Type[] ParameterTypes { get; private set; }
+			public LocalBuilder[] Locals { get; private set; }
 
 			public DelegateBuildInfo(MethodBase method)
 			{
-				_method = method;
-				_parameters = method.GetParameters();
-				_parameterTypes = GetActualParameterTypes(_parameters);
-				_locals = new LocalBuilder[_parameters.Length];
+				Method = method;
+				Parameters = method.GetParameters();
+				ParameterTypes = GetActualParameterTypes(Parameters);
+				Locals = new LocalBuilder[Parameters.Length];
 			}
 		}
 		#endregion

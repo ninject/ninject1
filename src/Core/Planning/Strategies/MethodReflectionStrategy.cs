@@ -26,6 +26,7 @@ using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Resolution;
+using Ninject.Core.Resolution.Resolvers;
 #endregion
 
 namespace Ninject.Core.Planning.Strategies
