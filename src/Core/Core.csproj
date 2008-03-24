@@ -58,6 +58,8 @@
     <Compile Include="Activation\Strategies\ProxyStrategy.cs" />
     <Compile Include="Attributes\DoNotInterceptAttribute.cs" />
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
+    <Compile Include="Modules\InlineModule.cs" />
+    <Compile Include="Planning\Directives\ProxyDirective.cs" />
     <Compile Include="Tracking\IScope.cs" />
     <Compile Include="Tracking\StandardScope.cs" />
     <Compile Include="Interception\Request\StandardRequest.cs" />

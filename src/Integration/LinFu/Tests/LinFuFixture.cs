@@ -28,6 +28,7 @@ using Ninject.Core.Injection;
 using Ninject.Core.Interception;
 using Ninject.Core.Planning;
 using Ninject.Core.Planning.Directives;
+using Ninject.Integration.LinFu.Infrastructure;
 using Ninject.Integration.LinFu.Tests.Mocks;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -42,7 +43,7 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsAreProxied()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
@@ -60,7 +61,7 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsCanBeReleased()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
@@ -79,7 +80,7 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsAreIntercepted()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
@@ -104,7 +105,7 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringInterceptorsOnGenericMethodsAreIntercepted()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithGenericMethod>().ToSelf();
 			});
@@ -129,7 +130,7 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsAreProxied()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
@@ -147,7 +148,7 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsCanBeReleased()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
@@ -166,7 +167,7 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsAreIntercepted()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
@@ -190,7 +191,7 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringInterceptorsOnGenericMethodsAreIntercepted()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<IGeneric>().To<ObjectWithGenericMethod>();
 			});

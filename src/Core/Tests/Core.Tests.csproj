@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Activation\ConcurrencyFixture.cs" />
     <Compile Include="Activation\CustomProviderFixture.cs" />
     <Compile Include="Activation\LoggerResolverFixture.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="BenchmarkFixture.cs" />
     <Compile Include="Activation\GenericProviderFixture.cs" />
     <Compile Include="Injection\InjectorFactoryFixtureBase.cs" />
+    <Compile Include="Mocks\DummyProxyFactory.cs" />
     <Compile Include="Mocks\FlagAttribute.cs" />
     <Compile Include="Mocks\ObjectWithGenericMethod.cs" />
     <Compile Include="Mocks\FlagInterceptor.cs" />
@@ -91,7 +95,6 @@
     <Compile Include="Mocks\StartableMock.cs" />
     <Compile Include="Mocks\InitializableMock.cs" />
     <Compile Include="Mocks\DisposableMock.cs" />
-    <Compile Include="TestableModule.cs" />
     <Compile Include="DebugInfoFixture.cs" />
     <Compile Include="Binding\BindingFixture.cs" />
     <Compile Include="Binding\OptionalBindingFixture.cs" />

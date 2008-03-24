@@ -171,4 +171,7 @@
   <data name="Ex_ContextVariableAlreadyDefined" xml:space="preserve">
     <value>The context variable '{0}' has already been defined for this context.</value>
   </data>
+  <data name="Ex_KernelDoesNotHaveProxyFactory" xml:space="preserve">
+    <value>The type {0} has one or more static interceptors, or there are dynamic interceptors defined, but the kernel does not have an IProxyFactory component connected.</value>
+  </data>
 </root>

@@ -34,7 +34,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test]
 		public void MemberBasedBindingOfTypeDependencies()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Member.Tag.EqualTo("A"));
 				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Member.Tag.EqualTo("B"));
@@ -63,7 +63,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test]
 		public void MemberBasedBindingOfConstantDependencies()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<string>().ToConstant("Hello, world!").Only(When.Context.Member.Tag.EqualTo("HelloWorld"));
 				m.Bind<string>().ToConstant("SNAFU").Only(When.Context.Member.Tag.EqualTo("FooBar"));
@@ -86,7 +86,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void MultipleMatchingConditionalBindingsWithNoDefaultBindingThrowsException()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Kernel.IsDefined);
 				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.IsDefined);
@@ -101,7 +101,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void NoMatchingConditionalBindingsWithNoDefaultBindingThrowsException()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Kernel.Configuration.EqualTo("foo"));
 				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.Configuration.EqualTo("bar"));
@@ -116,7 +116,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test]
 		public void MultipleMatchingConditionalBindingsWithDefaultBindingUsesDefaultBinding()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.IsRoot);
 				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.IsDefined);
@@ -134,7 +134,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test]
 		public void ConditionalBindingViaPredicate()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA)).OnlyIf(c => c.IsRoot);
 				m.Bind(typeof(IMock)).To(typeof(ImplB));

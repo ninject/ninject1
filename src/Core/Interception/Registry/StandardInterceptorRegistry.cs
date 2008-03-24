@@ -39,6 +39,16 @@ namespace Ninject.Core.Interception
 		private readonly Dictionary<RuntimeMethodHandle, List<IInterceptor>> _cache = new Dictionary<RuntimeMethodHandle, List<IInterceptor>>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Properties
+		/// <summary>
+		/// Gets a value indicating whether one or more dynamic interceptors have been registered.
+		/// </summary>
+		public bool HasDynamicInterceptors
+		{
+			get { return (_dynamicInterceptors.Count > 0); }
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
 		/// Registers a static interceptor, which affects only a single method.

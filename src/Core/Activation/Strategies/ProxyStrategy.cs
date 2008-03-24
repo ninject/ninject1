@@ -19,9 +19,11 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Interception;
 using Ninject.Core.Planning.Directives;
+using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core.Activation.Strategies
@@ -42,8 +44,13 @@ namespace Ninject.Core.Activation.Strategies
 		/// </returns>
 		public override StrategyResult AfterInitialize(IContext context, ref object instance)
 		{
-			if (Kernel.HasComponent<IProxyFactory>())
+			if (ShouldProxy(context, instance))
+			{
+				if (!Kernel.HasComponent<IProxyFactory>())
+					throw new InvalidOperationException(ExceptionFormatter.NoProxyFactoryAvailable(context));
+
 				instance = Kernel.GetComponent<IProxyFactory>().Wrap(context, instance);
+			}
 
 			return StrategyResult.Proceed;
 		}
@@ -62,6 +69,24 @@ namespace Ninject.Core.Activation.Strategies
 				instance = Kernel.GetComponent<IProxyFactory>().Unwrap(context, instance);
 
 			return StrategyResult.Proceed;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a value indicating whether the specified instance should be proxied.
+		/// </summary>
+		/// <param name="context">The context in which the activation is occurring.</param>
+		/// <param name="instance">The instance being activated.</param>
+		/// <returns><see langword="True"/> if the instance should be proxied, otherwise <see langword="false"/>.</returns>
+		protected virtual bool ShouldProxy(IContext context, object instance)
+		{
+			// If dynamic interceptors have been defined, all types will be proxied, regardless
+			// of whether or not they request interceptors.
+			// TODO: Maybe this decision should actually evaluate the type?
+			if (Kernel.GetComponent<IInterceptorRegistry>().HasDynamicInterceptors)
+				return true;
+      
+			// Otherwise, check the type's activation plan.
+			return context.Plan.Directives.HasOneOrMore<ProxyDirective>();
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

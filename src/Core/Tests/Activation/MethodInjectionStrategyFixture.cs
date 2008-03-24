@@ -58,7 +58,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void ServiceBoundTypeReceivesMethodInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<IMock>().To<RequestsMethodInjection>();
 			});
@@ -80,7 +80,7 @@ namespace Ninject.Core.Tests.Activation
 		{
 			var options = new KernelOptions { InjectNonPublicMembers = true };
 
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<IMock>().To<RequestsPrivateMethodInjection>();
 			});
@@ -114,7 +114,7 @@ namespace Ninject.Core.Tests.Activation
 		[Ignore("Circular references are broken")]
 		public void CanInjectCircularReferencesIntoMethods()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<CircularMethodMockA>().ToSelf();
 				m.Bind<CircularMethodMockB>().ToSelf();

@@ -14,6 +14,11 @@ namespace Ninject.Core.Interception
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets a value indicating whether one or more dynamic interceptors have been registered.
+		/// </summary>
+		bool HasDynamicInterceptors { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Registers a static interceptor, which affects only a single method.
 		/// </summary>
 		/// <param name="interceptorType">The type of interceptor to register.</param>

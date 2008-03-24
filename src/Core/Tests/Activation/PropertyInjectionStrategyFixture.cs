@@ -58,7 +58,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void ServiceBoundTypeReceivesPropertyInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(RequestsPropertyInjection));
 			});
@@ -80,7 +80,7 @@ namespace Ninject.Core.Tests.Activation
 		{
 			var options = new KernelOptions { InjectNonPublicMembers = true };
 
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(RequestsPrivatePropertyInjection));
 			});
@@ -114,7 +114,7 @@ namespace Ninject.Core.Tests.Activation
 		[Ignore("Circular references are broken")]
 		public void CanInjectCircularReferencesIntoProperties()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<CircularPropertyMockA>().ToSelf();
 				m.Bind<CircularPropertyMockB>().ToSelf();

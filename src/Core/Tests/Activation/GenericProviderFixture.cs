@@ -34,7 +34,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void CanBindGenericTypeDefinitions()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IGeneric<>)).To(typeof(GenericImpl<>));
 			});
@@ -51,7 +51,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void CanActivateGenericTypeViaGenericTypeDefinitionBinding()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IGeneric<>)).To(typeof(GenericImpl<>));
 			});
@@ -68,7 +68,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void GenericTypeReceivesInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<string>().ToConstant("Hello, world!");
 				m.Bind<int>().ToConstant(42);
@@ -93,7 +93,7 @@ namespace Ninject.Core.Tests.Activation
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void GenericProviderThrowsExceptionForIncompatibleBinding()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IGeneric<>)).To(typeof(IncompatibleGenericImpl<>));
 			});

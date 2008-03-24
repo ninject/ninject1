@@ -56,7 +56,13 @@ namespace Ninject.Core.Planning.Strategies
 				InterceptAttribute[] attributes = AttributeReader.GetAll<InterceptAttribute>(method);
 
 				if (attributes.Length > 0)
+				{
 					RegisterMethodInterceptors(binding, type, plan, method, attributes);
+
+					// Indicate that instances of the type should be proxied.
+					if (!plan.Directives.HasOneOrMore<ProxyDirective>())
+						plan.Directives.Add(new ProxyDirective());
+				}
 			}
 
 			return StrategyResult.Proceed;
@@ -83,6 +89,9 @@ namespace Ninject.Core.Planning.Strategies
 				if (!AttributeReader.Has<DoNotInterceptAttribute>(method))
 					RegisterMethodInterceptors(binding, type, plan, method, attributes);
 			}
+
+			// Indicate that instances of the type should be proxied.
+			plan.Directives.Add(new ProxyDirective());
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

@@ -24,6 +24,7 @@ using Castle.MonoRail.Framework;
 using Ninject.Core;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
+using Ninject.Integration.MonoRail.Infrastructure;
 using IContextAware=Castle.MonoRail.Framework.IContextAware;
 #endregion
 
@@ -51,7 +52,7 @@ namespace Ninject.Integration.MonoRail
 			base.Init();
 
 			Kernel = CreateKernel();
-			Kernel.Load(new NinjectIntegrationModule());
+			Kernel.Load(new MonoRailModule());
 
 			ServiceProviderLocator.Instance.AddLocatorStrategy(new NinjectAccessorStrategy());
 

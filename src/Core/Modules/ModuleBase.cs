@@ -88,9 +88,23 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
+		/// Prepares the module for being loaded. Can be used to connect component dependencies.
+		/// </summary>
+		public virtual void BeforeLoad()
+		{
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Loads the module into the kernel.
 		/// </summary>
 		public abstract void Load();
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Executes any tasks after the module has been loaded into the kernel.
+		/// </summary>
+		public virtual void AfterLoad()
+		{
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Begins a binding definition.

@@ -129,11 +129,9 @@ namespace Ninject.Core
 			ILoggerFactory loggerFactory = GetComponent<ILoggerFactory>();
 			_logger = loggerFactory.GetLogger(GetType());
 
-			foreach (IModule module in modules)
-				Load(module);
+			LoadModules(modules);
 
 			ValidateBindings();
-
 			ActivateEagerServices();
 		}
 		#endregion
@@ -200,20 +198,27 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods: Modules
 		/// <summary>
-		/// Loads the specified module, adding its bindings into the kernel.
+		/// Loads the specified modules into the kernel.
 		/// </summary>
-		/// <param name="module">The module to load.</param>
-		public void Load(IModule module)
+		/// <param name="modules">The modules to load.</param>
+		public void Load(params IModule[] modules)
 		{
-			Ensure.ArgumentNotNull(module, "module");
+			Ensure.ArgumentNotNull(modules, "modules");
 			Ensure.NotDisposed(this);
 
-			_logger.Debug("Loading module {0}", module.Name);
+			LoadModules(modules);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Loads the specified modules into the kernel.
+		/// </summary>
+		/// <param name="modules">The modules to load.</param>
+		public void Load(IEnumerable<IModule> modules)
+		{
+			Ensure.ArgumentNotNull(modules, "modules");
+			Ensure.NotDisposed(this);
 
-			module.Kernel = this;
-			module.Load();
-
-			_logger.Debug("Finished loading module {0}.", module.Name);
+			LoadModules(modules);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -420,6 +425,40 @@ namespace Ninject.Core
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods: Initialization
+		/// <summary>
+		/// Loads the specified modules into the kernel.
+		/// </summary>
+		protected virtual void LoadModules(IEnumerable<IModule> modules)
+		{
+			// Inject the kernel into each module.
+			foreach (IModule module in modules)
+				module.Kernel = this;
+
+			// Allow modules a chance to prepare.
+			foreach (IModule module in modules)
+			{
+				_logger.Debug("Preparing module {0} for connection", module.Name);
+				module.BeforeLoad();
+				_logger.Debug("Finished preparing module {0}", module.Name);
+			}
+
+			// Load each module into the kernel.
+			foreach (IModule module in modules)
+			{
+				_logger.Debug("Loading module {0}", module.Name);
+				module.Load();
+				_logger.Debug("Finished loading module {0}", module.Name);
+			}
+
+			// Allow modules a chance to clean up.
+			foreach (IModule module in modules)
+			{
+				_logger.Debug("Cleaning up module {0}", module.Name);
+				module.AfterLoad();
+				_logger.Debug("Finished cleaning up module {0}", module.Name);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Ensure all required components exist.
 		/// </summary>

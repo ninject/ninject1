@@ -36,7 +36,7 @@ namespace Ninject.Conditions.Tests.Binding
 		[Test]
 		public void ContextVariablesCanBeUsedToAlterBindings()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Variable("bind").EqualTo("foo"));
 				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Variable("bind").EqualTo("bar"));

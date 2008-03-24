@@ -42,11 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ConditionalBindingFixture.cs" />
     <Compile Include="ContextVariablesFixture.cs" />
     <Compile Include="ConditionalInterceptionFixture.cs" />
     <Compile Include="Mocks\CountAttribute.cs" />
     <Compile Include="Mocks\CountInterceptor.cs" />
+    <Compile Include="Mocks\DummyProxyFactory.cs" />
     <Compile Include="Mocks\ObjectWithMethodInterceptor.cs" />
     <Compile Include="OperatorFixture.cs" />
     <Compile Include="Mocks\RequestsFooBarConstant.cs" />
@@ -59,7 +63,6 @@
     <Compile Include="Mocks\ImplB.cs" />
     <Compile Include="Mocks\ImplC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestableModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj">

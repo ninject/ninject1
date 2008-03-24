@@ -151,6 +151,15 @@ namespace Ninject.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The type {0} has one or more static interceptors, or there are dynamic interceptors defined, but the kernel does not have an IProxyFactory component connected..
+        /// </summary>
+        internal static string Ex_KernelDoesNotHaveProxyFactory {
+            get {
+                return ResourceManager.GetString("Ex_KernelDoesNotHaveProxyFactory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The kernel is missing an implementation of the required component {0}..
         /// </summary>
         internal static string Ex_KernelMissingRequiredComponent {

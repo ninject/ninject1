@@ -329,5 +329,28 @@ namespace Ninject.Core.Infrastructure
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region NoProxyFactoryAvailable
+		public static string NoProxyFactoryAvailable(IContext context)
+		{
+			using (StringWriter sw = new StringWriter())
+			{
+				sw.Write("Error activating {0}: the implementation type {1} requests static interceptors, or dynamic interceptors have been defined. " +
+				         "In order to provide interception, you must connect an IProxyFactory component to the kernel.",
+					Format.Type(context.Binding.Service),
+					Format.Type(context.Plan.Type));
+
+				sw.WriteLine("Using {0}", Format.Binding(context.Binding));
+
+				if (context.Binding.HasDebugInfo)
+					sw.WriteLine("  declared by {0}", context.Binding.DebugInfo);
+
+				sw.WriteLine("Activation path:");
+				sw.Write(Format.ActivationPath(context));
+
+				return sw.ToString();
+			}
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

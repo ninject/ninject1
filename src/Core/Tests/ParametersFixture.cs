@@ -39,7 +39,7 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void TransientConstructorArgumentDefinedDirectlyOverridesInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<RequestsConstructorInjection>().ToSelf();
 				m.Bind<SimpleObject>().ToSelf();
@@ -63,7 +63,7 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void TransientConstructorArgumentDefinedViaDictionaryOverridesInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<RequestsConstructorInjection>().ToSelf();
 				m.Bind<SimpleObject>().ToSelf();
@@ -90,7 +90,7 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void TransientConstructorArgumentDefinedViaAnonymousTypeOverridesInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<RequestsConstructorInjection>().ToSelf();
 				m.Bind<SimpleObject>().ToSelf();
@@ -113,7 +113,7 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void TransientPropertyValueDefinedDirectlyOverridesInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<RequestsPropertyInjection>().ToSelf();
 				m.Bind<SimpleObject>().ToSelf();
@@ -137,7 +137,7 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void TransientPropertyValueDefinedViaDictionaryOverridesInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<RequestsPropertyInjection>().ToSelf();
 				m.Bind<SimpleObject>().ToSelf();
@@ -164,7 +164,7 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void TransientPropertyValueDefinedViaAnonymousTypeOverridesInjection()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<RequestsPropertyInjection>().ToSelf();
 				m.Bind<SimpleObject>().ToSelf();

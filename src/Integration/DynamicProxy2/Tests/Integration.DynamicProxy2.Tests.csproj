@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DynamicProxy2Fixture.cs" />
     <Compile Include="Mocks\CountAttribute.cs" />
     <Compile Include="Mocks\CountInterceptor.cs" />
@@ -59,7 +62,6 @@
     <Compile Include="Mocks\ObjectWithGenericMethod.cs" />
     <Compile Include="Mocks\ObjectWithMethodInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestableModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\Core.csproj">

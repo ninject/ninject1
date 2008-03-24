@@ -18,9 +18,11 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Castle.Core.Interceptor;
 using Ninject.Core;
 using Ninject.Core.Interception;
+using Ninject.Integration.DynamicProxy2.Infrastructure;
 using Ninject.Integration.DynamicProxy2.Tests.Mocks;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -35,15 +37,13 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsAreProxied()
 		{
-			IModule module = new TestableModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
-
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxyTargetAccessor)));
@@ -53,15 +53,13 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsCanBeReleased()
 		{
-			IModule module = new TestableModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
-
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 				Assert.That(obj, Is.Not.Null);
 
@@ -72,15 +70,13 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsAreIntercepted()
 		{
-			IModule module = new TestableModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
-
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxyTargetAccessor)));
@@ -97,15 +93,13 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringInterceptorsOnGenericMethodsAreIntercepted()
 		{
-			IModule module = new TestableModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithGenericMethod>().ToSelf();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
-
 				ObjectWithGenericMethod obj = kernel.Get<ObjectWithGenericMethod>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxyTargetAccessor)));
@@ -122,15 +116,13 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsAreProxied()
 		{
-			IModule module = new TestableModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
-
 				IFoo obj = kernel.Get<IFoo>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxyTargetAccessor)));
@@ -140,15 +132,13 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsCanBeReleased()
 		{
-			IModule module = new TestableModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
-
 				IFoo obj = kernel.Get<IFoo>();
 				Assert.That(obj, Is.Not.Null);
 
@@ -159,12 +149,12 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsAreIntercepted()
 		{
-			IModule module = new TestableModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
 				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
 
@@ -183,15 +173,13 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringInterceptorsOnGenericMethodsAreIntercepted()
 		{
-			IModule module = new TestableModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<IGeneric>().To<ObjectWithGenericMethod>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
-
 				IGeneric obj = kernel.Get<IGeneric>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxyTargetAccessor)));

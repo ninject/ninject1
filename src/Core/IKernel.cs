@@ -18,7 +18,7 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
@@ -157,10 +157,16 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Modules
 		/// <summary>
-		/// Loads the specified module, adding its bindings into the kernel.
+		/// Loads the specified modules into the kernel.
 		/// </summary>
-		/// <param name="module">The module to load.</param>
-		void Load(IModule module);
+		/// <param name="modules">The modules to load.</param>
+		void Load(params IModule[] modules);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Loads the specified modules into the kernel.
+		/// </summary>
+		/// <param name="modules">The modules to load.</param>
+		void Load(IEnumerable<IModule> modules);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Scopes

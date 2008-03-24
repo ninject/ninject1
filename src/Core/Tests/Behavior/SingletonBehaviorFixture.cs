@@ -52,7 +52,7 @@ namespace Ninject.Core.Tests.Behavior
 		[Test]
 		public void LazyActivationCausesSingletonInstancesToBeLazilyActivated()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithSingletonBehavior>().ToSelf();
 			});
@@ -78,7 +78,7 @@ namespace Ninject.Core.Tests.Behavior
 		[Test]
 		public void EagerActivationCausesSingletonInstancesToBeImmediatelyActivated()
 		{
-			IModule module = new TestableModule(m =>
+			IModule module = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithSingletonBehavior>().ToSelf();
 			});
