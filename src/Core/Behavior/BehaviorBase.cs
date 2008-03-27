@@ -93,19 +93,14 @@ namespace Ninject.Core.Behavior
 		/// Creates a new instance of the type via the kernel's <see cref="IActivator"/>.
 		/// </summary>
 		/// <param name="context">The context in which the instance should be created.</param>
-		/// <param name="existing">The existing object, if applicable.</param>
-		protected virtual object CreateInstance(IContext context, object existing)
+		/// <param name="instance">The existing instance, if applicable.</param>
+		protected virtual void CreateInstance(IContext context, ref object instance)
 		{
-			IActivator activator = Kernel.GetComponent<IActivator>();
-			object instance = existing;
-
 			lock (this)
 			{
 				// Ask the activator to create an instance of the appropriate type.
-				activator.Create(context, ref instance);
+				Kernel.GetComponent<IActivator>().Create(context, ref instance);
 			}
-
-			return instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

@@ -80,8 +80,6 @@
     <Compile Include="Mocks\RequestsPrivatePropertyInjection.cs" />
     <Compile Include="ParametersFixture.cs" />
     <Compile Include="TrackingFixture.cs" />
-    <Compile Include="Mocks\CircularConstructorMockA.cs" />
-    <Compile Include="Mocks\CircularConstructorMockB.cs" />
     <Compile Include="Mocks\ContextAwareMock.cs" />
     <Compile Include="Mocks\CircularPropertyMockA.cs" />
     <Compile Include="Mocks\CircularPropertyMockB.cs" />

@@ -109,7 +109,6 @@ namespace Ninject.Core.Tests.Activation
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		[Ignore("Circular references are broken")]
 		public void CanInjectCircularReferencesIntoFields()
 		{
 			IModule module = new InlineModule(m =>

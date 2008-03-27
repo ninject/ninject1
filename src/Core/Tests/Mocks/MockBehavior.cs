@@ -39,7 +39,8 @@ namespace Ninject.Core.Tests.Mocks
 		{
 			if (_reference == null)
 			{
-				object instance = CreateInstance(context, null);
+				object instance = null;
+				CreateInstance(context, ref instance);
 				_reference = new InstanceWithContext(instance, context);
 			}
 

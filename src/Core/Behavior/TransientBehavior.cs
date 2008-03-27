@@ -49,7 +49,11 @@ namespace Ninject.Core.Behavior
 		public override object Resolve(IContext context)
 		{
 			Ensure.NotDisposed(this);
-			return CreateInstance(context, null);
+
+			object instance = null;
+			CreateInstance(context, ref instance);
+
+			return instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

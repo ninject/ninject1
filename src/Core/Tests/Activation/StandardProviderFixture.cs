@@ -68,28 +68,6 @@ namespace Ninject.Core.Tests.Activation
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
-		[Test, ExpectedException(typeof(ActivationException))]
-		[Ignore("Circular references are broken")]
-		public void CircularReferencesInConstructorsThrowsException()
-		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<CircularConstructorMockA>().ToSelf();
-				m.Bind<CircularConstructorMockB>().ToSelf();
-			});
-
-			using (IKernel kernel = new StandardKernel(module))
-			{
-				CircularConstructorMockA mockA = kernel.Get<CircularConstructorMockA>();
-				CircularConstructorMockB mockB = kernel.Get<CircularConstructorMockB>();
-
-				Assert.That(mockA, Is.Not.Null);
-				Assert.That(mockB, Is.Not.Null);
-				Assert.That(mockA.MockB, Is.SameAs(mockB));
-				Assert.That(mockB.MockA, Is.SameAs(mockA));
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
 		[Test]
 		public void InlineArgumentsAllowHybridInjectionOfMissingConstructorArguments()
 		{

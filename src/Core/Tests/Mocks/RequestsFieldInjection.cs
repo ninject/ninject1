@@ -25,12 +25,7 @@ namespace Ninject.Core.Tests.Mocks
 	public class RequestsFieldInjection : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
-		[Inject] public SimpleObject _child;
-		/*----------------------------------------------------------------------------------------*/
-		public SimpleObject Child
-		{
-			get { return _child; }
-		}
+		[Inject] public SimpleObject Child;
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

@@ -25,12 +25,7 @@ namespace Ninject.Core.Tests.Mocks
 	public class RequestsKernelViaFieldInjection : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
-		[Inject] public IKernel _kernel;
-		/*----------------------------------------------------------------------------------------*/
-		public IKernel Kernel
-		{
-			get { return _kernel; }
-		}
+		[Inject] public IKernel Kernel;
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

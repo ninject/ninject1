@@ -88,8 +88,11 @@ namespace Ninject.Core.Behavior
 
 			if (!map.ContainsKey(context.Binding))
 			{
-				object instance = CreateInstance(context, null);
+				object instance = null;
+				
+				CreateInstance(context, ref instance);
 				map.Add(context.Binding, instance);
+
 				_references.Add(new InstanceWithContext(instance, context));
 			}
 

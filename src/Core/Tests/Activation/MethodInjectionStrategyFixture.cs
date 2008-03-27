@@ -111,7 +111,6 @@ namespace Ninject.Core.Tests.Activation
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		[Ignore("Circular references are broken")]
 		public void CanInjectCircularReferencesIntoMethods()
 		{
 			IModule module = new InlineModule(m =>

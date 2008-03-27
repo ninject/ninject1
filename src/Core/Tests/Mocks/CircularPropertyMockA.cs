@@ -22,6 +22,7 @@ using System;
 
 namespace Ninject.Core.Tests.Mocks
 {
+	[Singleton]
 	public class CircularPropertyMockA
 	{
 		/*----------------------------------------------------------------------------------------*/

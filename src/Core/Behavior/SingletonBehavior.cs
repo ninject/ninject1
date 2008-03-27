@@ -30,16 +30,20 @@ namespace Ninject.Core.Behavior
 	public class SingletonBehavior : BehaviorBase
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Fields
+		private object _instance;
+		private IContext _context;
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets the instance associated with the behavior.
+		/// Gets or sets the instance associated with the behavior.
 		/// </summary>
-		public object Instance { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets or sets the context in which the singleton instance was activated.
-		/// </summary>
-		public IContext Context { get; private set; }
+		public object Instance
+		{
+			get { return _instance; }
+			set { _instance = value; }
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -51,14 +55,14 @@ namespace Ninject.Core.Behavior
 		{
 			if (disposing && !IsDisposed)
 			{
-				if (Instance != null)
+				if (_instance != null)
 				{
-					DestroyInstance(Context, Instance);
-					DisposeMember(Context);
+					DestroyInstance(_context, _instance);
+					DisposeMember(_context);
 				}
 
-				Instance = null;
-				Context = null;
+				_instance = null;
+				_context = null;
 			}
 
 			base.Dispose(disposing);
@@ -87,14 +91,14 @@ namespace Ninject.Core.Behavior
 
 			lock (this)
 			{
-				if (Instance == null)
+				if (_instance == null)
 				{
-					Instance = CreateInstance(context, null);
-					Context = context;
+					CreateInstance(context, ref _instance);
+					_context = context;
 				}
 			}
 
-			return Instance;
+			return _instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
