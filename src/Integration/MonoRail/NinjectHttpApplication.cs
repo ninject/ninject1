@@ -36,29 +36,50 @@ namespace Ninject.Integration.MonoRail
 	public abstract class NinjectHttpApplication : HttpApplication, IServiceProviderEx
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Fields
+		private static IKernel _kernel;
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the kernel associated with the application.
 		/// </summary>
-		public IKernel Kernel { get; protected set; }
+		public IKernel Kernel
+		{
+			get { return _kernel; }
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
+		#region Public Methods: Event Handlers
 		/// <summary>
-		/// Executes custom initialization code after all event handler modules have been added.
+		/// Executed when the application's AppDomain is loaded. Creates the <see cref="IKernel"/>
+		/// and requests injections for the application itself.
 		/// </summary>
-		public override void Init()
+		public void Application_OnStart()
 		{
-			base.Init();
-
-			Kernel = CreateKernel();
-			Kernel.Load(new MonoRailModule());
+			_kernel = CreateKernel();
+			_kernel.Load(new MonoRailModule());
 
 			ServiceProviderLocator.Instance.AddLocatorStrategy(new NinjectAccessorStrategy());
 
-			Kernel.Inject(this);
+			_kernel.Inject(this);
+
+			OnApplicationStarted();
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Executed when the application's AppDomain is unloaded. Disposes of the kernel.
+		/// </summary>
+		public void Application_OnEnd()
+		{
+			OnApplicationEnded();
+
+			if (_kernel != null)
+				_kernel.Dispose();
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
 		/// <summary>
 		/// Activates an instance of the service with the specified type.
 		/// </summary>
@@ -92,6 +113,20 @@ namespace Ninject.Integration.MonoRail
 		/// </summary>
 		/// <returns>The kernel.</returns>
 		protected abstract IKernel CreateKernel();
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Executed when the application's AppDomain is loaded, after creating the kernel.
+		/// </summary>
+		protected virtual void OnApplicationStarted()
+		{
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Executed when the application's AppDomain is unloaded, before disposing of the kernel.
+		/// </summary>
+		protected virtual void OnApplicationEnded()
+		{
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
