@@ -63,9 +63,9 @@ namespace Ninject.Core.Binding
 		IDictionary<string, object> InlineArguments { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets any options defined for the binding.
+		/// Gets or sets a value indicating whether the binding was implicitly created by the kernel.
 		/// </summary>
-		BindingOptions Options { get; set; }
+		bool IsImplicit { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the binding is conditional (that is, whether it has

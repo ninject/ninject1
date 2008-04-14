@@ -647,7 +647,7 @@ namespace Ninject.Core
 			IBinding binding = CreateBinding(service);
 
 			binding.Provider = new StandardProvider(service);
-			binding.Options = BindingOptions.Implicit;
+			binding.IsImplicit = true;
 
 			return binding;
 		}

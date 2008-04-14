@@ -18,26 +18,22 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
+
 #endregion
 
-namespace Ninject.Core.Binding
+namespace Ninject.Core.Tests.Mocks
 {
-	/// <summary>
-	/// Defines additional information about a binding.
-	/// </summary>
-	[Flags]
-	public enum BindingOptions
+	[Service(Provider = typeof(ServiceAttributeObjectProvider))]
+	public class ObjectWithProviderBindingServiceAttribute
 	{
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the binding is a normal binding, registered by a module.
-		/// </summary>
-		Normal = 0x00,
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the binding was implicitly defined by the kernel during activation.
-		/// </summary>
-		Implicit = 0x01,
-		/*----------------------------------------------------------------------------------------*/
+	}
+
+	public class ServiceAttributeObjectProvider : SimpleProvider<ObjectWithProviderBindingServiceAttribute>
+	{
+		protected override ObjectWithProviderBindingServiceAttribute CreateInstance(IContext context)
+		{
+			return new ObjectWithProviderBindingServiceAttribute();
+		}
 	}
 }

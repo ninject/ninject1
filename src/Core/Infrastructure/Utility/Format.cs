@@ -179,7 +179,7 @@ namespace Ninject.Core.Infrastructure
 				else
 					sw.Write("conditional ");
 
-				if ((binding.Options & BindingOptions.Implicit) > 0)
+				if (binding.IsImplicit)
 					sw.Write("implicit ");
 
 				if (binding.Provider == null)

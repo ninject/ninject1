@@ -61,7 +61,11 @@
     <Compile Include="Behavior\TransientBehaviorFixture.cs" />
     <Compile Include="BenchmarkFixture.cs" />
     <Compile Include="Activation\GenericProviderFixture.cs" />
+    <Compile Include="AutoModuleFixture.cs" />
     <Compile Include="Injection\InjectorFactoryFixtureBase.cs" />
+    <Compile Include="Mocks\ObjectWithProviderBindingServiceAttribute.cs" />
+    <Compile Include="Mocks\ObjectWithServiceBindingServiceAttribute.cs" />
+    <Compile Include="Mocks\ObjectWithSelfBindingServiceAttribute.cs" />
     <Compile Include="Mocks\DummyProxyFactory.cs" />
     <Compile Include="Mocks\FlagAttribute.cs" />
     <Compile Include="Mocks\ObjectWithGenericMethod.cs" />

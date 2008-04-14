@@ -34,9 +34,9 @@ namespace Ninject.Conditions.Builders
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private IConditionBuilder<TRoot, TPrevious> _last;
-		private Converter<TRoot, TSubject> _directConverter;
-		private Converter<TPrevious, TSubject> _converter;
+		private readonly IConditionBuilder<TRoot, TPrevious> _last;
+		private readonly Converter<TRoot, TSubject> _directConverter;
+		private readonly Converter<TPrevious, TSubject> _converter;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
