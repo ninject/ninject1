@@ -1,0 +1,7 @@
+Contributors to Ninject include:
+
+Nate Kohari <nkohari@gmail.com>
+Project Founder and Benevolent Ninja Master for Life
+
+Ivan Porto Carrero <ivan@flanders.co.nz>
+NLog Integration Extension
