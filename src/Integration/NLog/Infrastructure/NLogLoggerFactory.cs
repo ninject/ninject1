@@ -20,6 +20,8 @@
 #region Usings
 using System;
 using Ninject.Core.Logging;
+using NLog;
+
 #endregion
 
 namespace Ninject.Integration.NLog.Infrastructure
@@ -36,7 +38,7 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// <returns>The newly-created logger.</returns>
 		protected override ILogger CreateLogger(Type type)
 		{
-			return new NLogLogger(type);
+		    return new NLogLogger(type);
 		}
 	}
 }

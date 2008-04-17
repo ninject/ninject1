@@ -39,7 +39,7 @@ namespace Ninject.Integration.NLog.Infrastructure
 		public NLogLogger(Type type)
 			: base(type)
 		{
-			_nlogLogger = new LogFactory().GetCurrentClassLogger(type);
+		    _nlogLogger = LogManager.GetLogger(type.FullName);
 		}
 
 		/// <summary>
