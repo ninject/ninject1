@@ -34,7 +34,7 @@ namespace Ninject.Core.Behavior
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Static Fields
-		private static readonly LocalDataStoreSlot ThreadSlot = Thread.AllocateNamedDataSlot("Ninject.OnePerThreadBehavior");
+		[ThreadStatic] private static Dictionary<IBinding, object> _map;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
@@ -84,19 +84,21 @@ namespace Ninject.Core.Behavior
 		{
 			Ensure.NotDisposed(this);
 
-			Dictionary<IBinding, object> map = GetInstanceMap();
+			// If the service hasn't been activated yet on this thread, create a new instance map.
+			if (_map == null)
+				_map = new Dictionary<IBinding, object>();
 
-			if (!map.ContainsKey(context.Binding))
+			if (!_map.ContainsKey(context.Binding))
 			{
 				object instance = null;
 				
 				CreateInstance(context, ref instance);
-				map.Add(context.Binding, instance);
+				_map.Add(context.Binding, instance);
 
 				_references.Add(new InstanceWithContext(instance, context));
 			}
 
-			return map[context.Binding];
+			return _map[context.Binding];
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -106,21 +108,6 @@ namespace Ninject.Core.Behavior
 		/// <param name="instance">The instance to release.</param>
 		public override void Release(IContext context, object instance)
 		{
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		private static Dictionary<IBinding, object> GetInstanceMap()
-		{
-			Dictionary<IBinding, object> map = Thread.GetData(ThreadSlot) as Dictionary<IBinding, object>;
-
-			if (map != null)
-				return map;
-
-			map = new Dictionary<IBinding, object>();
-			Thread.SetData(ThreadSlot, map);
-
-			return map;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
