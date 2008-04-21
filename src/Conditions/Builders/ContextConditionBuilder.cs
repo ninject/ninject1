@@ -65,14 +65,6 @@ namespace Ninject.Conditions.Builders
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Continues the conditional chain, examining the time the context was created.
-		/// </summary>
-		public DateTimeConditionBuilder<TRoot, IContext> Time
-		{
-			get { return new DateTimeConditionBuilder<TRoot, IContext>(this, ctx => ctx.Time); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Continues the conditional chain, examining the service currently being activated within
 		/// the context.
 		/// </summary>

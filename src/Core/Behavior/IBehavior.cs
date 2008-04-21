@@ -45,6 +45,17 @@ namespace Ninject.Core.Behavior
 		bool SupportsEagerActivation { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets a value indicating whether the kernel should track instances created by the
+		/// behavior for deterministic disposal.
+		/// </summary>
+		/// <remarks>
+		/// If <see langword="true"/>, the kernel will keep a reference to each instance of
+		/// the associated type that is activated. When the kernel is disposed, the instances
+		/// will be released.
+		/// </remarks>
+		bool ShouldTrackInstances { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Resolves an instance of the type based on the rules of the behavior.
 		/// </summary>
 		/// <param name="context">The context in which the instance is being activated.</param>

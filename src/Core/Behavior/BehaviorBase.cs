@@ -44,18 +44,18 @@ namespace Ninject.Core.Behavior
 		/// activated if the <c>UseEagerActivation</c> option is set for the kernel. If
 		/// <see langword="false"/>, all instances of the type will be lazily activated.
 		/// </remarks>
-		public bool SupportsEagerActivation { get; private set; }
-		#endregion
+		public bool SupportsEagerActivation { get; protected set; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="BehaviorBase"/> class.
+		/// Gets a value indicating whether the kernel should track instances created by the
+		/// behavior for deterministic disposal.
 		/// </summary>
-		/// <param name="supportsEagerActivation">A value indicating whether the behavior supports eager activation.</param>
-		protected BehaviorBase(bool supportsEagerActivation)
-		{
-			SupportsEagerActivation = supportsEagerActivation;
-		}
+		/// <remarks>
+		/// If <see langword="true"/>, the kernel will keep a reference to each instance of
+		/// the associated type that is activated. When the kernel is disposed, the instances
+		/// will be released.
+		/// </remarks>
+		public bool ShouldTrackInstances { get; protected set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal

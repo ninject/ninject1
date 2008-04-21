@@ -78,11 +78,6 @@ namespace Ninject.Core.Activation
 		public Type[] GenericArguments { get; protected set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the time that the context was created.
-		/// </summary>
-		public DateTime Time { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Gets or sets the transient parameters for the context, if any are defined.
 		/// </summary>
 		public IParameterCollection Parameters { get; set; }
@@ -167,8 +162,6 @@ namespace Ninject.Core.Activation
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			Ensure.ArgumentNotNull(service, "service");
 
-			Time = DateTime.Now;
-
 			Kernel = kernel;
 			Level = 0;
 
@@ -189,8 +182,6 @@ namespace Ninject.Core.Activation
 		{
 			Ensure.ArgumentNotNull(parentContext, "parentContext");
 			Ensure.ArgumentNotNull(service, "service");
-
-			Time = DateTime.Now;
 
 			ParentContext = parentContext;
 			Kernel = parentContext.Kernel;

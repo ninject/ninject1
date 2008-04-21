@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Reflection;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Injection
@@ -56,18 +57,19 @@ namespace Ninject.Core.Injection
 		/// <returns>The value stored in the property.</returns>
 		public object Get(object target)
 		{
+			object result = null;
+
 			try
 			{
-				return _getMethod.Invoke(target, new object[0]);
+				result = _getMethod.Invoke(target, new object[0]);
 			}
 			catch (TargetInvocationException ex)
 			{
 				// If an exception occurs inside the called member, unwrap it and re-throw.
-				if (ex.InnerException != null)
-					throw ex.InnerException;
-				else
-					throw;
+				ExceptionThrower.RethrowPreservingStackTrace(ex.InnerException ?? ex);
 			}
+
+			return result;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -84,10 +86,7 @@ namespace Ninject.Core.Injection
 			catch (TargetInvocationException ex)
 			{
 				// If an exception occurs inside the called member, unwrap it and re-throw.
-				if (ex.InnerException != null)
-					throw ex.InnerException;
-				else
-					throw;
+				ExceptionThrower.RethrowPreservingStackTrace(ex.InnerException ?? ex);
 			}
 		}
 		#endregion

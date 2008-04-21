@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Reflection;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Injection
@@ -50,18 +51,19 @@ namespace Ninject.Core.Injection
 		/// <returns>The return value of the method.</returns>
 		public object Invoke(object target, params object[] arguments)
 		{
+			object result = null;
+
 			try
 			{
-				return Member.Invoke(target, arguments);
+				result = Member.Invoke(target, arguments);
 			}
 			catch (TargetInvocationException ex)
 			{
 				// If an exception occurs inside the called member, unwrap it and re-throw.
-				if (ex.InnerException != null)
-					throw ex.InnerException;
-				else
-					throw;
+				ExceptionThrower.RethrowPreservingStackTrace(ex.InnerException ?? ex);
 			}
+
+			return result;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

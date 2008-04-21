@@ -18,38 +18,32 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation;
-using Ninject.Core.Behavior;
-using Ninject.Core.Infrastructure;
+using System.Collections;
+using System.Globalization;
+using System.Reflection;
+using Ninject.Core.Properties;
 #endregion
 
-namespace Ninject.Core.Tests.Mocks
+namespace Ninject.Core.Infrastructure
 {
-	public class MockBehavior : BehaviorBase
+	/// <summary>
+	/// Provides utility functions for throwing exceptions.
+	/// </summary>
+	internal static class ExceptionThrower
 	{
 		/*----------------------------------------------------------------------------------------*/
-		private InstanceWithContext _reference;
-		/*----------------------------------------------------------------------------------------*/
-		public MockBehavior()
+		/// <summary>
+		/// Re-throws the specified exception, preserving its internal stack trace.
+		/// </summary>
+		/// <param name="ex">The exception to re-throw.</param>
+		public static void RethrowPreservingStackTrace(Exception ex)
 		{
-			SupportsEagerActivation = true;
-			ShouldTrackInstances = true;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		public override object Resolve(IContext context)
-		{
-			if (_reference == null)
-			{
-				object instance = null;
-				CreateInstance(context, ref instance);
-				_reference = new InstanceWithContext(instance, context);
-			}
+			FieldInfo stackTraceField = typeof(Exception).GetField("_remoteStackTraceString",
+				BindingFlags.Instance | BindingFlags.NonPublic);
 
-			return _reference.Instance;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		public override void Release(IContext context, object instance)
-		{
+			stackTraceField.SetValue(ex, ex.StackTrace);
+
+			throw ex;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

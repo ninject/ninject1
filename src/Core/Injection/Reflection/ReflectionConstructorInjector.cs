@@ -22,6 +22,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using Ninject.Core.Infrastructure;
 using Ninject.Core.Properties;
 #endregion
 
@@ -53,7 +54,7 @@ namespace Ninject.Core.Injection
 		/// <returns>A new instance of the type associated with the injector.</returns>
 		public object Invoke(params object[] arguments)
 		{
-			object instance;
+			object instance = null;
 
 			try
 			{
@@ -63,10 +64,7 @@ namespace Ninject.Core.Injection
 			catch (TargetInvocationException ex)
 			{
 				// If an exception occurs inside the called member, unwrap it and re-throw.
-				if (ex.InnerException != null)
-					throw ex.InnerException;
-				else 
-					throw;
+				ExceptionThrower.RethrowPreservingStackTrace(ex.InnerException ?? ex);
 			}
 			catch (Exception ex)
 			{

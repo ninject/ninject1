@@ -789,7 +789,8 @@ namespace Ninject.Core
 			object instance = context.Plan.Behavior.Resolve(context);
 
 			// Register the contextualized instance with the tracker.
-			GetComponent<ITracker>().Track(instance, context);
+			if (context.Plan.Behavior.ShouldTrackInstances)
+				GetComponent<ITracker>().Track(instance, context);
 
 			// If there is an activation scope defined, register the instance with it as well.
       if (_scopes.Count > 0)

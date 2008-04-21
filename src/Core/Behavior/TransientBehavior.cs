@@ -35,8 +35,9 @@ namespace Ninject.Core.Behavior
 		/// Initializes a new instance of the <see cref="TransientBehavior"/> class.
 		/// </summary>
 		public TransientBehavior()
-			: base(false)
 		{
+			SupportsEagerActivation = false;
+			ShouldTrackInstances = false;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

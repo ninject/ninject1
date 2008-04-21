@@ -74,8 +74,9 @@ namespace Ninject.Core.Behavior
 		/// Initializes a new instance of the <see cref="SingletonBehavior"/> class.
 		/// </summary>
 		public SingletonBehavior()
-			: base(true)
 		{
+			SupportsEagerActivation = true;
+			ShouldTrackInstances = true;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

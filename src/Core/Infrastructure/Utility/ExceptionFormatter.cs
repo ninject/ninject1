@@ -35,7 +35,7 @@ namespace Ninject.Core.Infrastructure
 		#region MultipleDefaultBindingsRegistered
 		public static string MultipleDefaultBindingsRegistered(Type service, IList<IBinding> bindings)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.WriteLine("Error registering service {0}: Multiple default bindings declared for service.", Format.Type(service));
 				sw.WriteLine("Found {0} default binding{1}:", bindings.Count, (bindings.Count == 1 ? "" : "s"));
@@ -58,7 +58,7 @@ namespace Ninject.Core.Infrastructure
 		#region IncompleteBindingsRegistered
 		public static string IncompleteBindingsRegistered(Type service, List<IBinding> bindings)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.Write("Error registering service {0}: One or more bindings definitions were incomplete. ", Format.Type(service));
 				sw.Write("Assign providers to these definitions before the module is loaded.");
@@ -82,7 +82,7 @@ namespace Ninject.Core.Infrastructure
 		#region InvalidProviderType
 		public static string InvalidProviderType(IBinding binding, Type providerType)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.WriteLine("Error registering {0}: the supplied provider type {1} does not implement IProvider.", binding.Service, providerType);
 				sw.WriteLine("Using {0}", Format.Binding(binding));
@@ -98,7 +98,7 @@ namespace Ninject.Core.Infrastructure
 		#region ProviderIncompatibleWithService
 		public static string ProviderIncompatibleWithService(IContext context, Type implementation)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.WriteLine(
 					"Error activating {0}: the {1} returned an instance of type {2}, which is not compatible with the requested service.",
@@ -122,7 +122,7 @@ namespace Ninject.Core.Infrastructure
 		#region GenericArgumentsIncompatibleWithTypeDefinition
 		public static string GenericArgumentsIncompatibleWithTypeDefinition(IContext context, Type prototype)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.WriteLine(
 					"Error activating {0}: the generic type arguments of the service are incompatible with the open generic type {1} declared in the binding.",
@@ -145,7 +145,7 @@ namespace Ninject.Core.Infrastructure
 		#region CouldNotResolveBindingForType
 		public static string CouldNotResolveBindingForType(Type type, IContext context)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.Write("Error activating {0}: ", Format.Type(context.Service));
 				sw.WriteLine("no matching bindings are available, and the type is not self-bindable (or implicit binding is disabled).");
@@ -161,7 +161,7 @@ namespace Ninject.Core.Infrastructure
 		#region MultipleConditionalBindingsMatch
 		public static string MultipleConditionalBindingsMatch(IContext context, IList<IBinding> bindings)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.Write("Error activating {0}: ", Format.Type(context.Service));
 				sw.WriteLine("multiple conditional bindings match the context, and no default binding is available.");
@@ -189,7 +189,7 @@ namespace Ninject.Core.Infrastructure
 		#region NoConstructorsAvailable
 		public static string NoConstructorsAvailable(IContext context)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.Write("Error activating {0}: the implementation type {1} must either ",
 					Format.Type(context.Binding.Service),
@@ -212,7 +212,7 @@ namespace Ninject.Core.Infrastructure
 		#region MultipleInjectionConstructorsNotSupported
 		public static string MultipleInjectionConstructorsNotSupported(IBinding binding)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.Write("Error while registering {0}", Format.Binding(binding));
 
@@ -233,7 +233,7 @@ namespace Ninject.Core.Infrastructure
 		#region ProviderCouldNotCreateInstance
 		public static string ProviderCouldNotCreateInstance(IContext context)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.Write("Error activating {0}: {1} could not create instance of instance type {2}",
 					Format.Type(context.Binding.Service),
@@ -256,7 +256,7 @@ namespace Ninject.Core.Infrastructure
 		#region CannotConvertConstantValue
 		public static string CannotConvertConstantValue(IContext context, Type constantType)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.Write("Error activating {0}: Could not convert constant value of type {1} to requested type {2}",
 					Format.Type(context.Binding.Service),
@@ -281,7 +281,7 @@ namespace Ninject.Core.Infrastructure
 		{
 			Ensure.ArgumentNotNull(context, "context");
 
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.Write("Error activating {0}: Circular dependencies detected between constructors. ", Format.Type(context.Service));
 				sw.WriteLine("Consider using property injection and implementing IInitializable instead.");
@@ -305,7 +305,7 @@ namespace Ninject.Core.Infrastructure
 			Ensure.ArgumentNotNull(target, "target");
 			Ensure.ArgumentNotNull(context, "context");
 
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				sw.WriteLine("Error activating {0}: Invalid inline argument specified for constructor parameter '{1}' of type {2}.",
 					Format.Type(context.Service),
@@ -332,13 +332,13 @@ namespace Ninject.Core.Infrastructure
 		#region NoProxyFactoryAvailable
 		public static string NoProxyFactoryAvailable(IContext context)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
-				sw.Write("Error activating {0}: the implementation type {1} requests static interceptors, or dynamic interceptors have been defined. " +
-				         "In order to provide interception, you must connect an IProxyFactory component to the kernel.",
+				sw.WriteLine("Error activating {0}: the implementation type {1} requests static interceptors, or dynamic interceptors have been defined." +
 					Format.Type(context.Binding.Service),
 					Format.Type(context.Plan.Type));
 
+				sw.WriteLine("In order to provide interception, you must connect an IProxyFactory component to the kernel.");
 				sw.WriteLine("Using {0}", Format.Binding(context.Binding));
 
 				if (context.Binding.HasDebugInfo)

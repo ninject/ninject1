@@ -72,11 +72,6 @@ namespace Ninject.Core.Activation
 		Type[] GenericArguments { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the time that the context was created.
-		/// </summary>
-		DateTime Time { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Gets or sets the transient parameters for the context, if any are defined.
 		/// </summary>
 		IParameterCollection Parameters { get; set; }

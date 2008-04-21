@@ -69,8 +69,9 @@ namespace Ninject.Core.Behavior
 		/// Initializes a new instance of the <see cref="OnePerThreadBehavior"/> class.
 		/// </summary>
 		public OnePerThreadBehavior()
-			: base(true)
 		{
+			SupportsEagerActivation = true;
+			ShouldTrackInstances = true;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

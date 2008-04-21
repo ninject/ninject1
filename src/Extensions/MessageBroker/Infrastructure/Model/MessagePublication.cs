@@ -30,15 +30,12 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 	public class MessagePublication : DisposableObject, IMessagePublication
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Static Fields
-		private static MethodInfo BROADCAST_METHOD = typeof(IMessageChannel).GetMethod("Broadcast");
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private IMessageChannel _channel;
 		private object _publisher;
 		private EventInfo _evt;
 		private Delegate _interceptDelegate;
+		private MethodInfo _broadcastMethod;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -108,7 +105,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		#region Private Methods
 		private void Connect()
 		{
-			_interceptDelegate = Delegate.CreateDelegate(_evt.EventHandlerType, _channel, BROADCAST_METHOD);
+			_interceptDelegate = Delegate.CreateDelegate(_evt.EventHandlerType, _channel, GetBroadcastMethod());
 			_evt.AddEventHandler(_publisher, _interceptDelegate);
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -116,6 +113,18 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		{
 			_evt.RemoveEventHandler(_publisher, _interceptDelegate);
 			_interceptDelegate = null;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		private MethodInfo GetBroadcastMethod()
+		{
+			if (_broadcastMethod != null)
+				return _broadcastMethod;
+
+			// We have to look this up via the concrete type of the channel because Mono doesn't
+			// support calling ldftn with interface methods.
+			_broadcastMethod = _channel.GetType().GetMethod("Broadcast", new Type[] { typeof(object), typeof(object) });
+
+			return _broadcastMethod;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

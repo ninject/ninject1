@@ -18,7 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -36,7 +35,7 @@ namespace Ninject.Core.Infrastructure
 			Ensure.ArgumentNotNull(context, "context");
 			IContext current = context;
 
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				do
 				{
@@ -51,7 +50,7 @@ namespace Ninject.Core.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		public static string Context(IContext context)
 		{
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				if (context.IsRoot)
 				{
@@ -89,7 +88,7 @@ namespace Ninject.Core.Infrastructure
 		{
 			Ensure.ArgumentNotNull(context, "context");
 
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				switch (context.Member.MemberType)
 				{
@@ -127,7 +126,7 @@ namespace Ninject.Core.Infrastructure
 
 			if (type.IsGenericType)
 			{
-				StringBuilder sb = new StringBuilder();
+				var sb = new StringBuilder();
 
 				sb.Append(type.Name.Substring(0, type.Name.LastIndexOf('`')));
 				sb.Append("<");
@@ -172,7 +171,7 @@ namespace Ninject.Core.Infrastructure
 		{
 			Ensure.ArgumentNotNull(binding, "binding");
 
-			using (StringWriter sw = new StringWriter())
+			using (var sw = new StringWriter())
 			{
 				if (binding.IsDefault)
 					sw.Write("default ");
