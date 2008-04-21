@@ -614,7 +614,12 @@ namespace Ninject.Core
 					List<IBinding> candidates = _bindings[service];
 
 					if (Options.GenerateLogMessages)
-						_logger.Debug("{0} candidate binding(s) available for service {1}", candidates.Count, Format.Type(service));
+					{
+						_logger.Debug("{0} candidate binding{1} available for service {2}",
+							candidates.Count,
+							(candidates.Count == 1 ? "" : "s"),
+							Format.Type(service));
+					}
 
 					List<IBinding> matches = new List<IBinding>();
 					IBinding defaultBinding = null;
