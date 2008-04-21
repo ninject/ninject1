@@ -151,7 +151,7 @@ namespace Ninject.Core.Activation
 		/*----------------------------------------------------------------------------------------*/
 		private static object GetValueFromTransientParameter(IContext context, ITarget target)
 		{
-			ConstructorArgumentParameter parameter = context.Parameters.GetOne<ConstructorArgumentParameter>(target.Name);
+			var parameter = context.Parameters.GetOne<ConstructorArgumentParameter>(target.Name);
 			return (parameter == null) ? null : parameter.Value;
 		}
 		#endregion

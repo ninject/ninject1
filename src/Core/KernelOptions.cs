@@ -55,9 +55,21 @@ namespace Ninject.Core
 		/// </summary>
 		/// <remarks>
 		/// This adds information to the error message that is displayed if there is a problem during
-		/// binding or activation at the expense of additional overhead.
+		/// binding or activation at the expense of additional overhead. This typically should be
+		/// turned off in production environments.
 		/// </remarks>
 		public bool GenerateDebugInfo { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets a value indicating whether the kernel and its components should generate
+		/// trace messages and send them to the logging system.
+		/// </summary>
+		/// <remarks>
+		/// This adds information to the error message that is displayed if there is a problem during
+		/// binding or activation at the expense of additional overhead. This typically should be
+		/// turned off in production environments.
+		/// </remarks>
+		public bool GenerateLogMessages { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether non-public members should be injected by the

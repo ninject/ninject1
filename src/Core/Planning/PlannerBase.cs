@@ -116,16 +116,22 @@ namespace Ninject.Core.Planning
 
 			lock (Plans)
 			{
-				Logger.Debug("Activation plan for type {0} requested by {1}",
-					Format.Type(type), Format.Binding(binding));
+				if (Kernel.Options.GenerateLogMessages)
+				{
+					Logger.Debug("Activation plan for type {0} requested by {1}",
+						Format.Type(type), Format.Binding(binding));
+				}
 
 				if (Plans.ContainsKey(type))
 				{
-					Logger.Debug("Using already-generated plan from cache");
+					if (Kernel.Options.GenerateLogMessages)
+						Logger.Debug("Using already-generated plan from cache");
+
 					return Plans[type];
 				}
 
-				Logger.Debug("Type has not been analyzed, building activation plan");
+				if (Kernel.Options.GenerateLogMessages)
+					Logger.Debug("Type has not been analyzed, building activation plan");
 
 				IActivationPlan plan = CreateEmptyPlan(type);
 				Plans.Add(type, plan);
@@ -148,7 +154,8 @@ namespace Ninject.Core.Planning
 						break;
 				}
 
-				Logger.Debug("Activation plan for {0} built successfully", Format.Type(type));
+				if (Kernel.Options.GenerateLogMessages)
+					Logger.Debug("Activation plan for {0} built successfully", Format.Type(type));
 
 				return plan;
 			}
@@ -167,12 +174,16 @@ namespace Ninject.Core.Planning
 
 			lock (Plans)
 			{
-				Logger.Debug("Releasing activation plan for type {0}", Format.Type(type));
+				if (Kernel.Options.GenerateLogMessages)
+					Logger.Debug("Releasing activation plan for type {0}", Format.Type(type));
 
 				if (!Plans.ContainsKey(type))
 				{
-					Logger.Debug("Activation plan for {0} has not been created or was already released, ignoring",
-						Format.Type(type));
+					if (Kernel.Options.GenerateLogMessages)
+					{
+						Logger.Debug("Activation plan for {0} has not been created or was already released, ignoring",
+							Format.Type(type));
+					}
 
 					return;
 				}
@@ -199,7 +210,8 @@ namespace Ninject.Core.Planning
 
 				Plans.Remove(type);
 
-				Logger.Debug("Finished releasing activation plan for type {0}", Format.Type(type));
+				if (Kernel.Options.GenerateLogMessages)
+					Logger.Debug("Finished releasing activation plan for type {0}", Format.Type(type));
 			}
 		}
 		#endregion

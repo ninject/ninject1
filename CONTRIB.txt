@@ -5,3 +5,6 @@ Project Founder and Benevolent Ninja Master for Life
 
 Ivan Porto Carrero <ivan@flanders.co.nz>
 NLog Integration Extension
+
+Ian Davis <ian.f.davis@gmail.com>
+Various patches and suggestions
