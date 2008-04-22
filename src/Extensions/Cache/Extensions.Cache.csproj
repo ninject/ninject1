@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
-      <Link>GlobalAssemblyInfo.cs</Link>
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CacheAttribute.cs" />
     <Compile Include="Infrastructure\CacheInterceptor.cs" />
@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Ninject.snk">
-      <Link>Ninject.snk</Link>
+      <Link>Properties\Ninject.snk</Link>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

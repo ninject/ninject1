@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
-      <Link>GlobalAssemblyInfo.cs</Link>
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="MessageBrokerModule.cs" />
     <Compile Include="Infrastructure\StandardMessageBroker.cs" />
@@ -83,7 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Ninject.snk">
-      <Link>Ninject.snk</Link>
+      <Link>Properties\Ninject.snk</Link>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

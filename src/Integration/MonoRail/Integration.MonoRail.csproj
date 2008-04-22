@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
-      <Link>GlobalAssemblyInfo.cs</Link>
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Infrastructure\NinjectHelperFactory.cs" />
     <Compile Include="Infrastructure\NinjectViewComponentFactory.cs" />
@@ -71,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Ninject.snk">
-      <Link>Ninject.snk</Link>
+      <Link>Properties\Ninject.snk</Link>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
