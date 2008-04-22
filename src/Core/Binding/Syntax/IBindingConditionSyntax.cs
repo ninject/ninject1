@@ -18,12 +18,8 @@
 #endregion
 #region Using Directives
 using System;
-using System.Globalization;
 using Ninject.Core.Activation;
-using Ninject.Core.Behavior;
 using Ninject.Core.Binding.Syntax;
-using Ninject.Core.Infrastructure;
-using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core.Binding.Syntax

@@ -18,12 +18,8 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core.Parameters

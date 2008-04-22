@@ -18,10 +18,8 @@
 #endregion
 #region Using Directives
 using System;
-using System.Globalization;
 using Ninject.Core.Behavior;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core
@@ -50,10 +48,7 @@ namespace Ninject.Core
 			Ensure.ArgumentNotNull(type, "type");
 
 			if (!typeof(IBehavior).IsAssignableFrom(type))
-			{
-				throw new NotSupportedException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_InvalidCustomBehavior, type));
-			}
+				throw new NotSupportedException(ExceptionFormatter.InvalidCustomBehavior(type));
 
 			Type = type;
 		}

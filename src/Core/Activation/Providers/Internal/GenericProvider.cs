@@ -18,9 +18,7 @@
 #endregion
 #region Using Directives
 using System;
-using System.Globalization;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core.Activation
@@ -42,10 +40,7 @@ namespace Ninject.Core.Activation
 			: base(prototype)
 		{
 			if (!CanSupportType(prototype))
-			{
-				throw new NotSupportedException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_GenericProviderOnlySupportsGenericTypeDefinitions, prototype));
-			}
+				throw new NotSupportedException(ExceptionFormatter.GenericProviderDoesNotSupportType(prototype));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

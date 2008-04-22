@@ -352,5 +352,68 @@ namespace Ninject.Core.Infrastructure
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region StandardProviderDoesNotSupportType
+		public static string StandardProviderDoesNotSupportType(Type prototype)
+		{
+			return String.Format("The StandardProvider is not compatible with the type {0} because it is an abstract type or an interface.", prototype);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region GenericProviderDoesNotSupportType 
+		public static string GenericProviderDoesNotSupportType(Type prototype)
+		{
+			return String.Format("The GenericProvider is not compatible with the type {0} because it is not a generic type definition.", prototype);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region InvalidCustomBehavior
+		public static string InvalidCustomBehavior(Type type)
+		{
+			return String.Format("The type {0} cannot be used as a custom behavior type because it does not implement the IBehavior interface.", type);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region CannotCreateInstanceOfType
+		public static string CannotCreateInstanceOfType(Type type, Exception exception)
+		{
+			return String.Format("Cannot create instance of type {0}: {1}", type, exception.Message);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region KernelHasNoSuchComponent
+		public static string KernelHasNoSuchComponent(Type type)
+		{
+			return String.Format("No component with the type {0} has been added to the kernel.", type);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region KernelMissingRequiredComponent
+		public static string KernelMissingRequiredComponent(Type type)
+		{
+			return String.Format("The kernel is missing an implementation of the required component {0}.", type);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region KernelMissingLoggerFactory
+		public static string KernelMissingLoggerFactory()
+		{
+			return "The EnableLogMessages option is on, but the kernel is missing an implementation of ILoggerFactory.";
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region ArgumentCannotBeNullOrEmptyString
+		public static string ArgumentCannotBeNullOrEmptyString(string name)
+		{
+			return String.Format("The argument '{0}' cannot be null or an empty string.", name);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region ArgumentCannotBeNullOrEmptyCollection
+		public static string ArgumentCannotBeNullOrEmptyCollection(string name)
+		{
+			return String.Format("The argument '{0}' cannot be null or an empty collection.", name);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

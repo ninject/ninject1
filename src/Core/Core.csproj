@@ -39,6 +39,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -54,12 +55,20 @@
     <Compile Include="Activation\Providers\ProviderBase.cs" />
     <Compile Include="Activation\Providers\InjectionProviderBase.cs" />
     <Compile Include="Activation\Strategies\ContextAwareStrategy.cs" />
+    <Compile Include="Attributes\Behavior\OnePerRequestAttribute.cs" />
     <Compile Include="Attributes\ServiceAttribute.cs" />
+    <Compile Include="Behavior\OnePerRequestBehavior.cs" />
     <Compile Include="Binding\Syntax\IBindingBehaviorOrArgumentSyntax.cs" />
     <Compile Include="Activation\Strategies\ProxyStrategy.cs" />
     <Compile Include="Attributes\DoNotInterceptAttribute.cs" />
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
     <Compile Include="Infrastructure\Utility\ExceptionThrower.cs" />
+    <Compile Include="Logging\Null\NullLogger.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Logging\Null\NullLoggerFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Modules\AutoModule.cs" />
     <Compile Include="Modules\InlineModule.cs" />
     <Compile Include="Planning\Directives\ProxyDirective.cs" />
@@ -92,8 +101,6 @@
     <Compile Include="Logging\Formatters\StandardMessageFormatter.cs" />
     <Compile Include="Logging\Formatters\IMessageFormatter.cs" />
     <Compile Include="Logging\LoggerFactoryBase.cs" />
-    <Compile Include="Logging\Null\NullLoggerFactory.cs" />
-    <Compile Include="Logging\Null\NullLogger.cs" />
     <Compile Include="Interfaces\IStartable.cs" />
     <Compile Include="Activation\Providers\Internal\FactoryMethodProviders.cs" />
     <Compile Include="Activation\Providers\Internal\GenericProvider.cs" />
@@ -241,23 +248,11 @@
     <Compile Include="Planning\Directives\Base\IDirective.cs" />
     <Compile Include="IKernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Infrastructure\Utility\AttributeReader.cs" />
     <Compile Include="Infrastructure\Utility\ExceptionFormatter.cs" />
     <Compile Include="Infrastructure\Utility\Ensure.cs" />
     <Compile Include="Tracking\StandardTracker.cs" />
     <Compile Include="Tracking\ITracker.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Ninject.snk">

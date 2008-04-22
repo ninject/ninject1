@@ -18,12 +18,8 @@
 #endregion
 #region Using Directives
 using System;
-using System.Globalization;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core.Injection
@@ -68,8 +64,7 @@ namespace Ninject.Core.Injection
 			}
 			catch (Exception ex)
 			{
-				throw new ActivationException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_CannotCreateInstanceOfType, Member.ReflectedType, ex.Message), ex);
+				throw new ActivationException(ExceptionFormatter.CannotCreateInstanceOfType(Member.ReflectedType, ex), ex);
 			}
 
 			return instance;

@@ -18,10 +18,8 @@
 #endregion
 #region Using Directives
 using System;
-using System.Globalization;
 using System.Runtime.Remoting;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core.Activation

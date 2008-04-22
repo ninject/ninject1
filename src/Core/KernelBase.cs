@@ -19,8 +19,6 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Globalization;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
@@ -28,7 +26,6 @@ using Ninject.Core.Injection;
 using Ninject.Core.Logging;
 using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
-using Ninject.Core.Properties;
 using Ninject.Core.Resolution;
 using Ninject.Core.Tracking;
 #endregion
@@ -42,23 +39,11 @@ namespace Ninject.Core
 	public abstract class KernelBase : DisposableObject, IKernel
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Constants
-		private static readonly Type[] RequiredComponents = new Type[]
-			{
-				typeof(IPlanner),
-				typeof(IActivator),
-				typeof(ITracker),
-				typeof(IInjectorFactory),
-				typeof(IResolverFactory),
-				typeof(ILoggerFactory)
-			};
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private readonly Dictionary<Type, IKernelComponent> _components = new Dictionary<Type, IKernelComponent>();
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly Stack<IScope> _scopes = new Stack<IScope>();
-		private readonly ILogger _logger = NullLogger.Instance;
+		private readonly ILogger _logger;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -127,8 +112,8 @@ namespace Ninject.Core
 			InitializeComponents();
 			ValidateComponents();
 
-			ILoggerFactory loggerFactory = GetComponent<ILoggerFactory>();
-			_logger = loggerFactory.GetLogger(GetType());
+			if (Options.GenerateLogMessages)
+				_logger = GetComponent<ILoggerFactory>().GetLogger(GetType());
 
 			LoadModules(modules);
 
@@ -278,7 +263,7 @@ namespace Ninject.Core
 		/// <returns>An instance of the requested type.</returns>
 		public T Get<T>(IContext context)
 		{
-			return (T) ResolveInstance(typeof(T), context, false);
+			return (T)ResolveInstance(typeof(T), context, false);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -477,14 +462,14 @@ namespace Ninject.Core
 		/// </summary>
 		protected virtual void ValidateComponents()
 		{
-			foreach (Type type in RequiredComponents)
-			{
-				if (!HasComponent(type))
-				{
-					throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-						Resources.Ex_KernelMissingRequiredComponent, type));
-				}
-			}
+			Guard.Against(!HasComponent<IPlanner>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(IPlanner)));
+			Guard.Against(!HasComponent<IActivator>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(IActivator)));
+			Guard.Against(!HasComponent<ITracker>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(ITracker)));
+			Guard.Against(!HasComponent<IInjectorFactory>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(IInjectorFactory)));
+			Guard.Against(!HasComponent<IResolverFactory>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(IResolverFactory)));
+
+			if (Options.GenerateLogMessages)
+				Guard.Against(!HasComponent<ILoggerFactory>(), ExceptionFormatter.KernelMissingLoggerFactory());
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -872,10 +857,7 @@ namespace Ninject.Core
 			lock (_components)
 			{
 				if (!_components.ContainsKey(type))
-				{
-					throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-						Resources.Ex_NoSuchComponent, type));
-				}
+					throw new InvalidOperationException(ExceptionFormatter.KernelHasNoSuchComponent(type));
 
 				if (Options.GenerateLogMessages)
 					_logger.Debug("Disconnecting component {0}", Format.Type(type));
@@ -903,10 +885,7 @@ namespace Ninject.Core
 				IKernelComponent component;
 
 				if (!_components.TryGetValue(type, out component))
-				{
-					throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
-						Resources.Ex_NoSuchComponent, type));
-				}
+					throw new InvalidOperationException(ExceptionFormatter.KernelHasNoSuchComponent(type));
 
 				return component;
 			}
@@ -957,9 +936,12 @@ namespace Ninject.Core
 		private void DisposeComponent<T>()
 			where T : IKernelComponent
 		{
-			T component = GetComponent<T>();
-			Disconnect<T>();
-			DisposeMember(component);
+			if (HasComponent<T>())
+			{
+				T component = GetComponent<T>();
+				Disconnect<T>();
+				DisposeMember(component);
+			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

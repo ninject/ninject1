@@ -18,29 +18,26 @@
 #endregion
 #region Using Directives
 using System;
-using System.Reflection;
+using Ninject.Core.Behavior;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Infrastructure
+namespace Ninject.Core
 {
 	/// <summary>
-	/// Provides utility functions for throwing exceptions.
+	/// Specifies that only one instance of the decorated type should be created per thread.
 	/// </summary>
-	internal static class ExceptionThrower
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+	public sealed class OnePerRequestAttribute : BehaviorAttribute
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Re-throws the specified exception, preserving its internal stack trace.
+		/// Creates an instance of the behavior associated with the attribute.
 		/// </summary>
-		/// <param name="ex">The exception to re-throw.</param>
-		public static void RethrowPreservingStackTrace(Exception ex)
+		/// <returns>The instance of the behavior that will manage the decorated type.</returns>
+		public override IBehavior CreateBehavior()
 		{
-			FieldInfo stackTraceField = typeof(Exception).GetField("_remoteStackTraceString",
-				BindingFlags.Instance | BindingFlags.NonPublic);
-
-			stackTraceField.SetValue(ex, ex.StackTrace);
-
-			throw ex;
+			return new OnePerRequestBehavior();
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

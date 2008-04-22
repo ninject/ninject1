@@ -19,8 +19,6 @@
 #region Using Directives
 using System;
 using System.Collections;
-using System.Globalization;
-using Ninject.Core.Properties;
 #endregion
 
 namespace Ninject.Core.Infrastructure
@@ -51,10 +49,7 @@ namespace Ninject.Core.Infrastructure
 		public static void ArgumentNotNullOrEmptyString(string value, string name)
 		{
 			if (String.IsNullOrEmpty(value))
-			{
-				throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_ArgumentCannotBeNullOrEmptyString, name));
-			}
+				throw new ArgumentException(ExceptionFormatter.ArgumentCannotBeNullOrEmptyString(name));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -66,10 +61,7 @@ namespace Ninject.Core.Infrastructure
 		public static void ArgumentNotNullOrEmptyCollection(ICollection value, string name)
 		{
 			if (ReferenceEquals(value, null) || (value.Count == 0))
-			{
-				throw new ArgumentException(String.Format(CultureInfo.CurrentCulture,
-					Resources.Ex_ArgumentCannotBeNullOrEmptyCollection, name));
-			}
+				throw new ArgumentException(ExceptionFormatter.ArgumentCannotBeNullOrEmptyCollection(name));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
