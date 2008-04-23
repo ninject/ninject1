@@ -93,7 +93,7 @@ namespace Ninject.Core.Behavior
 					_context = context;
 
 					if (HttpContext.Current != null)
-						HttpContext.Current.ApplicationInstance.EndRequest += (sender, evt) => DestroyInstanceIfExists;
+						HttpContext.Current.ApplicationInstance.EndRequest += (sender, evt) => DestroyInstanceIfExists();
 				}
 			}
 
