@@ -148,6 +148,44 @@ namespace Ninject.Core.Binding
 			Binding.Condition = new PredicateCondition<IContext>(predicate);
 			return this;
 		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.ForMembersOf<T>()
+		{
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.DeclaringType == typeof(T));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.ForMembersOf(Type type)
+		{
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.DeclaringType == type);
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereMemberHas<T>()
+		{
+			Binding.Condition = new PredicateCondition<IContext>(ctx => AttributeReader.Has<T>(ctx.Member));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereMemberHas(Type attribute)
+		{
+			Guard.Against(!typeof(Attribute).IsAssignableFrom(attribute), "The type {0} is not a valid Attribute.", Format.Type(attribute));
+			Binding.Condition = new PredicateCondition<IContext>(ctx => AttributeReader.Has(attribute, ctx.Member));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereTargetHas<T>()
+		{
+			Binding.Condition = new PredicateCondition<IContext>(ctx => AttributeReader.Has<T>(ctx.Target));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereTargetHas(Type attribute)
+		{
+			Guard.Against(!typeof(Attribute).IsAssignableFrom(attribute), "The type {0} is not a valid Attribute.", Format.Type(attribute));
+			Binding.Condition = new PredicateCondition<IContext>(ctx => AttributeReader.Has(attribute, ctx.Target));
+			return this;
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingBehaviorSyntax Members
