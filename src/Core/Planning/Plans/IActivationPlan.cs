@@ -42,7 +42,7 @@ namespace Ninject.Core.Planning
 		/// <summary>
 		/// Gets the collection of directives associated with the plan.
 		/// </summary>
-		DirectiveCollection Directives { get; }
+		IDirectiveCollection Directives { get; }
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

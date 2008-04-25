@@ -53,7 +53,7 @@ namespace Ninject.Core.Planning.Strategies
 
 			foreach (MethodInfo method in candidates)
 			{
-				InterceptAttribute[] attributes = AttributeReader.GetAll<InterceptAttribute>(method);
+				InterceptAttribute[] attributes = method.GetAllAttributes<InterceptAttribute>();
 
 				if (attributes.Length > 0)
 				{
@@ -79,14 +79,14 @@ namespace Ninject.Core.Planning.Strategies
 		protected virtual void RegisterClassInterceptors(IBinding binding, Type type, IActivationPlan plan,
 			ICollection<MethodInfo> candidates)
 		{
-			InterceptAttribute[] attributes = AttributeReader.GetAll<InterceptAttribute>(type);
+			InterceptAttribute[] attributes = type.GetAllAttributes<InterceptAttribute>();
 
 			if (attributes.Length == 0)
 				return;
 
 			foreach (MethodInfo method in candidates)
 			{
-				if (!AttributeReader.Has<DoNotInterceptAttribute>(method))
+				if (!method.HasAttribute<DoNotInterceptAttribute>())
 					RegisterMethodInterceptors(binding, type, plan, method, attributes);
 			}
 

@@ -65,7 +65,7 @@ namespace Ninject.Core.Planning.Strategies
 			{
 				foreach (ConstructorInfo candidate in candidates)
 				{
-					if (AttributeReader.Has(Kernel.Options.InjectAttributeType, candidate))
+					if (candidate.HasAttribute(Kernel.Options.InjectAttributeType))
 					{
 						// Only a single injection constructor is allowed, so fail if we find more than one.
 						if (injectionConstructor != null)
@@ -89,10 +89,10 @@ namespace Ninject.Core.Planning.Strategies
 		/*----------------------------------------------------------------------------------------*/
 		private ConstructorInjectionDirective CreateDirective(IBinding binding, ConstructorInfo constructor)
 		{
-			IResolverFactory resolverFactory = Kernel.GetComponent<IResolverFactory>();
+			var resolverFactory = Kernel.GetComponent<IResolverFactory>();
 
 			// Create a new directive that will hold the injection information.
-			ConstructorInjectionDirective directive = new ConstructorInjectionDirective(constructor);
+			var directive = new ConstructorInjectionDirective(constructor);
 
 			foreach (ParameterInfo parameter in constructor.GetParameters())
 			{
@@ -100,7 +100,7 @@ namespace Ninject.Core.Planning.Strategies
 				IResolver resolver = resolverFactory.Create(binding, target);
 
 				// Determine if the dependency is optional.
-				bool optional = AttributeReader.Has(Kernel.Options.OptionalAttributeType, parameter);
+				bool optional = parameter.HasAttribute(Kernel.Options.OptionalAttributeType);
 
 				// Add the mapping between the injection point and the dependency resolver.
 				directive.Arguments.Add(new Argument(target, resolver, optional));

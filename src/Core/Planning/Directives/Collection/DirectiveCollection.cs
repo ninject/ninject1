@@ -18,48 +18,41 @@
 #endregion
 #region Using Directives
 using System;
-using System.Reflection;
-using Ninject.Core.Planning.Targets;
-using Ninject.Core.Resolution;
+using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning.Directives;
 #endregion
 
-namespace Ninject.Core.Infrastructure
+namespace Ninject.Core.Planning
 {
 	/// <summary>
-	/// A lightweight method reference that uses internal metadata tokens instead of the full
-	/// <see cref="MethodBase"/> to reduce memory requirements.
+	/// A collection of binding directives, stored in an activation plan.
 	/// </summary>
-	public class MethodReference
+	[Serializable]
+	public class DirectiveCollection : TypedCollection<object, IDirective>, IDirectiveCollection
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private readonly RuntimeMethodHandle _methodHandle;
-		private readonly RuntimeTypeHandle _typeHandle;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Properties
 		/// <summary>
-		/// Gets the method that the lightweight reference refers to.
+		/// Gets the key for the specified item.
 		/// </summary>
-		public MethodBase Value
+		/// <param name="item">The item.</param>
+		/// <returns>The key for the item.</returns>
+		protected override object GetKeyForItem(IDirective item)
 		{
-			get { return MethodBase.GetMethodFromHandle(_methodHandle, _typeHandle); }
+			return item.DirectiveKey;
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MethodReference"/> class.
+		/// Called when an item is added to the collection when an item with the same key already
+		/// exists in the collection, organized under the same type.
 		/// </summary>
-		/// <param name="method">The method that the lightweight reference should refer to.</param>
-		public MethodReference(MethodBase method)
+		/// <param name="type">The type the items are organized under.</param>
+		/// <param name="key">The key the items share.</param>
+		/// <param name="newItem">The new item that was added.</param>
+		/// <param name="existingItem">The item that already existed in the collection.</param>
+		protected override void OnKeyCollision(Type type, object key, IDirective newItem, IDirective existingItem)
 		{
-			Ensure.ArgumentNotNull(method, "method");
-
-			_methodHandle = method.MethodHandle;
-			_typeHandle = method.DeclaringType.TypeHandle;
+			// Do nothing; allow the item to override the existing directive.
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

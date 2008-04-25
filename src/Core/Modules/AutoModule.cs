@@ -73,7 +73,7 @@ namespace Ninject.Core
 		{
 			foreach (Type type in ModuleAssembly.GetTypes())
 			{
-				var attribute = AttributeReader.GetOne<ServiceAttribute>(type);
+				var attribute = type.GetOneAttribute<ServiceAttribute>();
 
 				// Ignore types that aren't decorated with a ServiceAttribute.
 				if (attribute == null)

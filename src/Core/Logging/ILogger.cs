@@ -34,6 +34,31 @@ namespace Ninject.Core.Logging
 		Type Type { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets a value indicating whether messages with Debug severity should be logged.
+		/// </summary>
+		bool IsDebugEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Info severity should be logged.
+		/// </summary>
+		bool IsInfoEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Warn severity should be logged.
+		/// </summary>
+		bool IsWarnEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Error severity should be logged.
+		/// </summary>
+		bool IsErrorEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Fatal severity should be logged.
+		/// </summary>
+		bool IsFatalEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Logs the specified message with Debug severity.
 		/// </summary>
 		/// <param name="format">The message or format template.</param>

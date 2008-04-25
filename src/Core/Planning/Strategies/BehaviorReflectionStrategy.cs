@@ -51,7 +51,7 @@ namespace Ninject.Core.Planning.Strategies
 			else
 			{
 				IBehavior behavior;
-				BehaviorAttribute attribute = AttributeReader.GetOne<BehaviorAttribute>(type);
+				var attribute = type.GetOneAttribute<BehaviorAttribute>();
 
 				if (attribute != null)
 				{

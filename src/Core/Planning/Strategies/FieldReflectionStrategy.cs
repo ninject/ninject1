@@ -58,16 +58,14 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="member">The member to create a directive for.</param>
 		protected override void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, FieldInfo member)
 		{
-			IResolverFactory resolverFactory = Kernel.GetComponent<IResolverFactory>();
-
 			// Create a new directive that will hold the injection information.
-			FieldInjectionDirective directive = new FieldInjectionDirective(member);
+			var directive = new FieldInjectionDirective(member);
 
 			ITarget target = new FieldTarget(member);
-			IResolver resolver = resolverFactory.Create(binding, target);
+			IResolver resolver = Kernel.GetComponent<IResolverFactory>().Create(binding, target);
 
 			// Determine if the dependency is optional.
-			bool optional = AttributeReader.Has(Kernel.Options.OptionalAttributeType, member);
+			bool optional = member.HasAttribute(Kernel.Options.OptionalAttributeType);
 
 			// Create an argument representing the field and add it to the directive.
 			directive.Argument = new Argument(target, resolver, optional);

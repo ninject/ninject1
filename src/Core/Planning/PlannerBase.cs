@@ -116,7 +116,7 @@ namespace Ninject.Core.Planning
 
 			lock (Plans)
 			{
-				if (Kernel.Options.GenerateLogMessages)
+				if (Logger.IsDebugEnabled)
 				{
 					Logger.Debug("Activation plan for type {0} requested by {1}",
 						Format.Type(type), Format.Binding(binding));
@@ -124,13 +124,13 @@ namespace Ninject.Core.Planning
 
 				if (Plans.ContainsKey(type))
 				{
-					if (Kernel.Options.GenerateLogMessages)
+					if (Logger.IsDebugEnabled)
 						Logger.Debug("Using already-generated plan from cache");
 
 					return Plans[type];
 				}
 
-				if (Kernel.Options.GenerateLogMessages)
+				if (Logger.IsDebugEnabled)
 					Logger.Debug("Type has not been analyzed, building activation plan");
 
 				IActivationPlan plan = CreateEmptyPlan(type);
@@ -154,7 +154,7 @@ namespace Ninject.Core.Planning
 						break;
 				}
 
-				if (Kernel.Options.GenerateLogMessages)
+				if (Logger.IsDebugEnabled)
 					Logger.Debug("Activation plan for {0} built successfully", Format.Type(type));
 
 				return plan;
@@ -174,12 +174,12 @@ namespace Ninject.Core.Planning
 
 			lock (Plans)
 			{
-				if (Kernel.Options.GenerateLogMessages)
+				if (Logger.IsDebugEnabled)
 					Logger.Debug("Releasing activation plan for type {0}", Format.Type(type));
 
 				if (!Plans.ContainsKey(type))
 				{
-					if (Kernel.Options.GenerateLogMessages)
+					if (Logger.IsDebugEnabled)
 					{
 						Logger.Debug("Activation plan for {0} has not been created or was already released, ignoring",
 							Format.Type(type));
@@ -210,7 +210,7 @@ namespace Ninject.Core.Planning
 
 				Plans.Remove(type);
 
-				if (Kernel.Options.GenerateLogMessages)
+				if (Logger.IsDebugEnabled)
 					Logger.Debug("Finished releasing activation plan for type {0}", Format.Type(type));
 			}
 		}

@@ -19,39 +19,33 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Parameters
+namespace Ninject.Core.Tracking
 {
 	/// <summary>
-	/// A collection that organizes parameters by type.
+	/// Describes the method by which the kernel will track instances for deterministic disposal.
 	/// </summary>
-	public class ParameterCollection : TypedCollection<string, IParameter>, IParameterCollection
+	public enum InstanceTrackingMode
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the key for the specified item.
+		/// Indicates that only instances of services whose behaviors with a <c>ShouldTrackInstances</c>
+		/// equal to <see langword="true"/> should be tracked.
 		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <returns>The key for the item.</returns>
-		protected override string GetKeyForItem(IParameter item)
-		{
-			return item.Name;
-		}
+		Default,
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Called when an item is added to the collection when an item with the same key already
-		/// exists in the collection, organized under the same type.
+		/// Indicates that all instances should be tracked, regardless of what their behavior says.
 		/// </summary>
-		/// <param name="type">The type the items are organized under.</param>
-		/// <param name="key">The key the items share.</param>
-		/// <param name="newItem">The new item that was added.</param>
-		/// <param name="existingItem">The item that already existed in the collection.</param>
-		protected override void OnKeyCollision(Type type, string key, IParameter newItem, IParameter existingItem)
-		{
-			throw new InvalidOperationException(ExceptionFormatter.ParameterWithSameNameAlreadyDefined(newItem));
-		}
+		TrackEverything,
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Indicates that no instances should be tracked, regardless of what their behavior says.
+		/// </summary>
+		TrackNothing,
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

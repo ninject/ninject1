@@ -64,7 +64,7 @@ namespace Ninject.Core.Injection
 			}
 			catch (Exception ex)
 			{
-				throw new ActivationException(ExceptionFormatter.CannotCreateInstanceOfType(Member.ReflectedType, ex), ex);
+				throw new ActivationException(ExceptionFormatter.CouldNotCreateInstanceOfType(Member.ReflectedType, ex), ex);
 			}
 
 			return instance;

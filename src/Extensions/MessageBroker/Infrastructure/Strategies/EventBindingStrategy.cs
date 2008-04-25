@@ -43,7 +43,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/// </returns>
 		public override StrategyResult AfterInitialize(IContext context, ref object instance)
 		{
-			IMessageBroker messageBroker = Kernel.GetComponent<IMessageBroker>();
+			var messageBroker = Kernel.GetComponent<IMessageBroker>();
 
 			IList<PublicationDirective> publications = context.Plan.Directives.GetAll<PublicationDirective>();
 
@@ -74,7 +74,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/// </returns>
 		public override StrategyResult BeforeDestroy(IContext context, ref object instance)
 		{
-			IMessageBroker messageBroker = Kernel.GetComponent<IMessageBroker>();
+			var messageBroker = Kernel.GetComponent<IMessageBroker>();
 
 			IList<PublicationDirective> publications = context.Plan.Directives.GetAll<PublicationDirective>();
 

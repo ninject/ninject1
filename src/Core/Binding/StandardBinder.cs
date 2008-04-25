@@ -163,27 +163,31 @@ namespace Ninject.Core.Binding
 		/*----------------------------------------------------------------------------------------*/
 		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereMemberHas<T>()
 		{
-			Binding.Condition = new PredicateCondition<IContext>(ctx => AttributeReader.Has<T>(ctx.Member));
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.HasAttribute<T>());
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereMemberHas(Type attribute)
 		{
-			Guard.Against(!typeof(Attribute).IsAssignableFrom(attribute), "The type {0} is not a valid Attribute.", Format.Type(attribute));
-			Binding.Condition = new PredicateCondition<IContext>(ctx => AttributeReader.Has(attribute, ctx.Member));
+			if (!typeof(Attribute).IsAssignableFrom(attribute))
+				throw new NotSupportedException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, attribute));
+
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.HasAttribute(attribute));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereTargetHas<T>()
 		{
-			Binding.Condition = new PredicateCondition<IContext>(ctx => AttributeReader.Has<T>(ctx.Target));
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Target.HasAttribute<T>());
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereTargetHas(Type attribute)
 		{
-			Guard.Against(!typeof(Attribute).IsAssignableFrom(attribute), "The type {0} is not a valid Attribute.", Format.Type(attribute));
-			Binding.Condition = new PredicateCondition<IContext>(ctx => AttributeReader.Has(attribute, ctx.Target));
+			if (!typeof(Attribute).IsAssignableFrom(attribute))
+				throw new NotSupportedException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, attribute));
+
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Target.HasAttribute(attribute));
 			return this;
 		}
 		#endregion
@@ -192,6 +196,7 @@ namespace Ninject.Core.Binding
 		IBindingInlineArgumentSyntax IBindingBehaviorSyntax.Using<T>()
 		{
 			IBehavior behavior = new T();
+
 			behavior.Kernel = Binding.Kernel;
 			Binding.Behavior = behavior;
 

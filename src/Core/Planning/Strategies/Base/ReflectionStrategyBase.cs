@@ -61,7 +61,7 @@ namespace Ninject.Core.Planning.Strategies
 
 			foreach (TMember member in members)
 			{
-				if (AttributeReader.Has(Kernel.Options.InjectAttributeType, member))
+				if (member.HasAttribute(Kernel.Options.InjectAttributeType))
 					AddInjectionDirective(binding, type, plan, member);
 			}
 

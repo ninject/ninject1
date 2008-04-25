@@ -49,7 +49,7 @@ namespace Ninject.Core.Activation.Strategies
 
 			if (directives.Count > 0)
 			{
-				IInjectorFactory injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
+				var injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
 
 				foreach (PropertyInjectionDirective directive in directives)
 				{
@@ -81,7 +81,7 @@ namespace Ninject.Core.Activation.Strategies
 		/*----------------------------------------------------------------------------------------*/
 		private static object GetValueFromTransientParameter(IContext context, ITarget target)
 		{
-			PropertyValueParameter parameter = context.Parameters.GetOne<PropertyValueParameter>(target.Name);
+			var parameter = context.Parameters.GetOne<PropertyValueParameter>(target.Name);
 			return (parameter == null) ? null : parameter.Value;
 		}
 		/*----------------------------------------------------------------------------------------*/

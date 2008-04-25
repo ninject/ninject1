@@ -69,7 +69,7 @@ namespace Ninject.Core.Activation
 		/// <returns>The instance of the type.</returns>
 		protected virtual object CallInjectionConstructor(IContext context)
 		{
-			ConstructorInjectionDirective directive = context.Plan.Directives.GetOne<ConstructorInjectionDirective>();
+			var directive = context.Plan.Directives.GetOne<ConstructorInjectionDirective>();
 
 			if (directive == null)
 				throw new ActivationException(ExceptionFormatter.NoConstructorsAvailable(context));
@@ -78,8 +78,7 @@ namespace Ninject.Core.Activation
 			object[] arguments = ResolveConstructorArguments(context, directive);
 
 			// Get an injector that can call the injection constructor.
-			IInjectorFactory injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
-			IConstructorInjector injector = injectorFactory.GetInjector(directive.Member);
+			IConstructorInjector injector = context.Kernel.GetComponent<IInjectorFactory>().GetInjector(directive.Member);
 
 			// Call the constructor and return the created object.
 			return injector.Invoke(arguments);

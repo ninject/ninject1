@@ -176,7 +176,7 @@ namespace Ninject.Core
 		/// <returns>A binder that can be used to build the binding definition.</returns>
 		protected virtual TBinder DoBind(Type type)
 		{
-			if (Kernel.Options.GenerateLogMessages)
+			if (Logger.IsDebugEnabled)
 				Logger.Debug("Declaring binding for service {0}", Format.Type(type));
 
 			IBinding binding = Kernel.CreateBinding(type);

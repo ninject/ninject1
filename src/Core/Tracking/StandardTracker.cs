@@ -81,7 +81,11 @@ namespace Ninject.Core.Tracking
 		{
 			lock (_contextCache)
 			{
-				if (Kernel.Options.GenerateLogMessages)
+				// Make sure that we should be tracking the instance.
+				if (!ShouldTrack(context))
+					return;
+
+				if (Logger.IsDebugEnabled)
 					Logger.Debug("Starting to track instance resulting from {0}", Format.Context(context));
 
 				var reference = new WeakReference(instance);
@@ -107,13 +111,13 @@ namespace Ninject.Core.Tracking
 				// Release the instance by using its activation context.
 				IContext context = _contextCache[reference];
 
-				if (Kernel.Options.GenerateLogMessages)
+				if (Logger.IsDebugEnabled)
 					Logger.Debug("Releasing tracked instance resulting from {0}", Format.Context(context));
 
 				DoRelease(context, instance);
 				_contextCache.Remove(reference);
 
-				if (Kernel.Options.GenerateLogMessages)
+				if (Logger.IsDebugEnabled)
 					Logger.Debug("Instance released, no longer tracked");
 
 				return true;
@@ -122,6 +126,21 @@ namespace Ninject.Core.Tracking
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Private Methods
+		private bool ShouldTrack(IContext context)
+		{
+			switch (Kernel.Options.InstanceTrackingMode)
+			{
+				case InstanceTrackingMode.TrackEverything:
+					return true;
+
+				case InstanceTrackingMode.TrackNothing:
+					return false;
+
+				default:
+					return context.Plan.Behavior.ShouldTrackInstances;
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
 		private static void DoRelease(IContext context, object instance)
 		{
 			// Release the instance via the behavior it was activated with.

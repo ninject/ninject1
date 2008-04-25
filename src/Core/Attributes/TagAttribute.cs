@@ -62,7 +62,7 @@ namespace Ninject.Core
 			if (source == null)
 				return null;
 
-			TagAttribute attribute = AttributeReader.GetOne<TagAttribute>(source);
+			var attribute = source.GetOneAttribute<TagAttribute>();
 			return (attribute == null) ? null : attribute.Tag;
 		}
 		#endregion

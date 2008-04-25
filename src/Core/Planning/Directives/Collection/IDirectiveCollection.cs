@@ -20,14 +20,15 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning.Directives;
 #endregion
 
-namespace Ninject.Core.Parameters
+namespace Ninject.Core.Planning
 {
 	/// <summary>
-	/// A collection of transient parameters used during injection.
+	/// A collection of binding directives, stored in an activation plan.
 	/// </summary>
-	public interface IParameterCollection : ITypedCollection<string, IParameter>
+	public interface IDirectiveCollection : ITypedCollection<object, IDirective>
 	{
 	}
 }

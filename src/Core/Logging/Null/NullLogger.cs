@@ -44,6 +44,46 @@ namespace Ninject.Core.Logging
 		{
 			get { return typeof(NullLogger); }
 		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Debug severity should be logged.
+		/// </summary>
+		public bool IsDebugEnabled
+		{
+			get { return false; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Info severity should be logged.
+		/// </summary>
+		public bool IsInfoEnabled
+		{
+			get { return false; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Warn severity should be logged.
+		/// </summary>
+		public bool IsWarnEnabled
+		{
+			get { return false; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Error severity should be logged.
+		/// </summary>
+		public bool IsErrorEnabled
+		{
+			get { return false; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Fatal severity should be logged.
+		/// </summary>
+		public bool IsFatalEnabled
+		{
+			get { return false; }
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

@@ -33,6 +33,46 @@ namespace Ninject.Integration.NLog.Infrastructure
 		private readonly Logger _nlogLogger;
 
 		/// <summary>
+		/// Gets a value indicating whether messages with Debug severity should be logged.
+		/// </summary>
+		public override bool IsDebugEnabled
+		{
+			get { return _nlogLogger.IsDebugEnabled; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether messages with Info severity should be logged.
+		/// </summary>
+		public override bool IsInfoEnabled
+		{
+			get { return _nlogLogger.IsInfoEnabled; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether messages with Warn severity should be logged.
+		/// </summary>
+		public override bool IsWarnEnabled
+		{
+			get { return _nlogLogger.IsWarnEnabled; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether messages with Error severity should be logged.
+		/// </summary>
+		public override bool IsErrorEnabled
+		{
+			get { return _nlogLogger.IsErrorEnabled; }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether messages with Fatal severity should be logged.
+		/// </summary>
+		public override bool IsFatalEnabled
+		{
+			get { return _nlogLogger.IsFatalEnabled; }
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="NLogLogger"/> class.
 		/// </summary>
 		/// <param name="type">The type to associate with the logger.</param>

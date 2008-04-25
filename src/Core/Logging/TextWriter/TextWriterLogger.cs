@@ -36,6 +36,48 @@ namespace Ninject.Core.Logging
 		private readonly IMessageFormatter _formatter;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Properties
+		/// <summary>
+		/// Gets a value indicating whether messages with Debug severity should be logged.
+		/// </summary>
+		public override bool IsDebugEnabled
+		{
+			get { return true; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Info severity should be logged.
+		/// </summary>
+		public override bool IsInfoEnabled
+		{
+			get { return true; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Warn severity should be logged.
+		/// </summary>
+		public override bool IsWarnEnabled
+		{
+			get { return true; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Error severity should be logged.
+		/// </summary>
+		public override bool IsErrorEnabled
+		{
+			get { return true; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Fatal severity should be logged.
+		/// </summary>
+		public override bool IsFatalEnabled
+		{
+			get { return true; }
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
 		/// <summary>
 		/// Releases all resources currently held by the object.

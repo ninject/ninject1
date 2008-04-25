@@ -18,16 +18,16 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Parameters
+namespace System.Runtime.CompilerServices
 {
 	/// <summary>
-	/// A collection of transient parameters used during injection.
+	/// Indicates that the decorated method is an extension method. This is here so we can avoid
+	/// a dependency on System.Core, and continue to target .NET 2.0.
 	/// </summary>
-	public interface IParameterCollection : ITypedCollection<string, IParameter>
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	internal class ExtensionAttribute : Attribute
 	{
 	}
 }

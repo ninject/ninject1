@@ -177,32 +177,37 @@ namespace Ninject.Core.Parameters
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IParameterCollection Implementation
-		void IParameterCollection.Add<T>(T parameter)
+		void ITypedCollection<string, IParameter>.Add<T>(T parameter)
 		{
 			_collection.Add(parameter);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		void IParameterCollection.AddRange<T>(IEnumerable<T> parameters)
+		void ITypedCollection<string, IParameter>.AddRange<T>(IEnumerable<T> parameters)
 		{
 			_collection.AddRange(parameters);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		bool IParameterCollection.Has<T>(string name)
+		bool ITypedCollection<string, IParameter>.Has<T>(string name)
 		{
 			return _collection.Has<T>(name);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		bool IParameterCollection.HasOneOrMore<T>()
+		bool ITypedCollection<string, IParameter>.HasOneOrMore<T>()
 		{
 			return _collection.HasOneOrMore<T>();
 		}
 		/*----------------------------------------------------------------------------------------*/
-		T IParameterCollection.GetOne<T>(string name)
+		T ITypedCollection<string, IParameter>.GetOne<T>()
+		{
+			return _collection.GetOne<T>();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		T ITypedCollection<string, IParameter>.GetOne<T>(string name)
 		{
 			return _collection.GetOne<T>(name);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		ICollection<T> IParameterCollection.GetAll<T>()
+		IList<T> ITypedCollection<string, IParameter>.GetAll<T>()
 		{
 			return _collection.GetAll<T>();
 		}

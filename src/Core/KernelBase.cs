@@ -39,11 +39,21 @@ namespace Ninject.Core
 	public abstract class KernelBase : DisposableObject, IKernel
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Constants
+		private static readonly Type[] RequiredComponents = new Type[] {
+			typeof(IPlanner),
+			typeof(IActivator),
+			typeof(ITracker),
+			typeof(IInjectorFactory),
+			typeof(IResolverFactory),
+			typeof(ILoggerFactory)
+		};
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private readonly Dictionary<Type, IKernelComponent> _components = new Dictionary<Type, IKernelComponent>();
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly Stack<IScope> _scopes = new Stack<IScope>();
-		private readonly ILogger _logger;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -57,6 +67,11 @@ namespace Ninject.Core
 		/// Gets an object containing configuration information about the kernel.
 		/// </summary>
 		public KernelOptions Options { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the logger associated with the kernel.
+		/// </summary>
+		protected ILogger Logger { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -68,8 +83,8 @@ namespace Ninject.Core
 		{
 			if (disposing && !IsDisposed)
 			{
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Disposing of kernel");
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Disposing of kernel");
 
 				// Dispose the tracker, which will release all of the existing instances.
 				DisposeComponent<ITracker>();
@@ -106,14 +121,17 @@ namespace Ninject.Core
 		{
 			Ensure.ArgumentNotNull(options, "options");
 
+			// Ensure that at least a null logger is connected by default.
+			Logger = NullLogger.Instance;
+
 			Options = options;
 			Configuration = configuration;
 
 			InitializeComponents();
 			ValidateComponents();
 
-			if (Options.GenerateLogMessages)
-				_logger = GetComponent<ILoggerFactory>().GetLogger(GetType());
+			// If the user has connected a real logger factory, get a real logger.
+			Logger = GetComponent<ILoggerFactory>().GetLogger(GetType());
 
 			LoadModules(modules);
 
@@ -423,37 +441,37 @@ namespace Ninject.Core
 			// Allow modules a chance to prepare.
 			foreach (IModule module in modules)
 			{
-				if (Options.GenerateLogMessages)
-          _logger.Debug("Preparing module {0} for connection", module.Name);
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Preparing module {0} for connection", module.Name);
 
 				module.BeforeLoad();
 
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Finished preparing module {0}", module.Name);
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Finished preparing module {0}", module.Name);
 			}
 
 			// Load each module into the kernel.
 			foreach (IModule module in modules)
 			{
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Loading module {0}", module.Name);
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Loading module {0}", module.Name);
 
 				module.Load();
 
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Finished loading module {0}", module.Name);
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Finished loading module {0}", module.Name);
 			}
 
 			// Allow modules a chance to clean up.
 			foreach (IModule module in modules)
 			{
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Cleaning up module {0}", module.Name);
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Cleaning up module {0}", module.Name);
 
 				module.AfterLoad();
 
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Finished cleaning up module {0}", module.Name);
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Finished cleaning up module {0}", module.Name);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -462,14 +480,11 @@ namespace Ninject.Core
 		/// </summary>
 		protected virtual void ValidateComponents()
 		{
-			Guard.Against(!HasComponent<IPlanner>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(IPlanner)));
-			Guard.Against(!HasComponent<IActivator>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(IActivator)));
-			Guard.Against(!HasComponent<ITracker>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(ITracker)));
-			Guard.Against(!HasComponent<IInjectorFactory>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(IInjectorFactory)));
-			Guard.Against(!HasComponent<IResolverFactory>(), ExceptionFormatter.KernelMissingRequiredComponent(typeof(IResolverFactory)));
-
-			if (Options.GenerateLogMessages)
-				Guard.Against(!HasComponent<ILoggerFactory>(), ExceptionFormatter.KernelMissingLoggerFactory());
+			foreach (Type componentType in RequiredComponents)
+			{
+				if (!HasComponent(componentType))
+					throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(componentType));
+			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -482,9 +497,9 @@ namespace Ninject.Core
 				Type service = pair.Key;
 				List<IBinding> bindings = pair.Value;
 
-				if (Options.GenerateLogMessages)
+				if (Logger.IsDebugEnabled)
 				{
-					_logger.Debug("Validating {0} binding{1} for service {2}",
+					Logger.Debug("Validating {0} binding{1} for service {2}",
 						bindings.Count, (bindings.Count == 1 ? "" : "s"), Format.Type(service));
 				}
 
@@ -503,8 +518,8 @@ namespace Ninject.Core
 					throw new NotSupportedException(ExceptionFormatter.MultipleDefaultBindingsRegistered(service, defaultBindings));
 			}
 
-			if (Options.GenerateLogMessages)
-				_logger.Debug("Validation complete. All registered bindings are valid.");
+			if (Logger.IsDebugEnabled)
+				Logger.Debug("Validation complete. All registered bindings are valid.");
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -514,16 +529,16 @@ namespace Ninject.Core
 		{
 			if (!Options.UseEagerActivation)
 			{
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Skipping eager activation of services, since it is disabled via options.");
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Skipping eager activation of services, since it is disabled via options.");
 
 				return;
 			}
 
 			foreach (Type service in _bindings.Keys)
 			{
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Eagerly activating service {0}", service.Name);
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Eagerly activating service {0}", service.Name);
 
 				// Create a new root context.
 				IContext context = CreateRootContext(service, null);
@@ -532,8 +547,8 @@ namespace Ninject.Core
 				ResolveInstance(service, context, true);
 			}
 
-			if (Options.GenerateLogMessages)
-				_logger.Debug("Eager activation complete.");
+			if (Logger.IsDebugEnabled)
+				Logger.Debug("Eager activation complete.");
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -550,8 +565,8 @@ namespace Ninject.Core
 			// Associate the binding with the service.
 			lock (_bindings)
 			{
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Adding new binding for service {0}", Format.Type(binding.Service));
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Adding new binding for service {0}", Format.Type(binding.Service));
 
 				_bindings.Add(binding.Service, binding);
 			}
@@ -567,8 +582,8 @@ namespace Ninject.Core
 		{
 			Ensure.NotDisposed(this);
 
-			if (Options.GenerateLogMessages)
-				_logger.Debug("Resolving binding for {0}", Format.Context(context));
+			if (Logger.IsDebugEnabled)
+				Logger.Debug("Resolving binding for {0}", Format.Context(context));
 
 			IBinding binding;
 
@@ -579,14 +594,14 @@ namespace Ninject.Core
 				{
 					if (!Options.ImplicitSelfBinding || !StandardProvider.CanSupportType(service))
 					{
-						if (Options.GenerateLogMessages)
-							_logger.Debug("No binding exists for service {0}, and type is not self-bindable", Format.Type(service));
+						if (Logger.IsDebugEnabled)
+							Logger.Debug("No binding exists for service {0}, and type is not self-bindable", Format.Type(service));
 
 						return null;
 					}
 
-					if (Options.GenerateLogMessages)
-						_logger.Debug("No binding exists for service {0}, creating implicit self-binding", Format.Type(service));
+					if (Logger.IsDebugEnabled)
+						Logger.Debug("No binding exists for service {0}, creating implicit self-binding", Format.Type(service));
 
 					// Create a new implicit self-binding for the service type.
 					binding = CreateSelfBinding(service);
@@ -598,9 +613,9 @@ namespace Ninject.Core
 				{
 					List<IBinding> candidates = _bindings[service];
 
-					if (Options.GenerateLogMessages)
+					if (Logger.IsDebugEnabled)
 					{
-						_logger.Debug("{0} candidate binding{1} available for service {2}",
+						Logger.Debug("{0} candidate binding{1} available for service {2}",
 							candidates.Count,
 							(candidates.Count == 1 ? "" : "s"),
 							Format.Type(service));
@@ -617,9 +632,9 @@ namespace Ninject.Core
 							matches.Add(candidate);
 					}
 
-					if (Options.GenerateLogMessages)
+					if (Logger.IsDebugEnabled)
 					{
-						_logger.Debug("{0} default binding and {1} conditional binding{2} match the current context",
+						Logger.Debug("{0} default binding and {1} conditional binding{2} match the current context",
 							(defaultBinding == null ? "No" : "One"),
 							matches.Count,
 							(matches.Count == 1 ? "" : "s"));
@@ -627,16 +642,16 @@ namespace Ninject.Core
 
 					if (matches.Count == 0)
 					{
-						if (Options.GenerateLogMessages)
-							_logger.Debug("No conditional bindings matched, falling back on default binding.");
+						if (Logger.IsDebugEnabled)
+							Logger.Debug("No conditional bindings matched, falling back on default binding.");
 
 						// If we didn't find a default binding, this will intentionally cause the method to return null.
 						binding = defaultBinding;
 					}
 					else if (matches.Count == 1)
 					{
-						if (Options.GenerateLogMessages)
-							_logger.Debug("Using the single matching conditional binding");
+						if (Logger.IsDebugEnabled)
+							Logger.Debug("Using the single matching conditional binding");
 
 						binding = matches[0];
 					}
@@ -644,8 +659,8 @@ namespace Ninject.Core
 					{
 						if (defaultBinding != null)
 						{
-							if (Options.GenerateLogMessages)
-								_logger.Debug("Multiple conditional bindings matched, falling back on default binding");
+							if (Logger.IsDebugEnabled)
+								Logger.Debug("Multiple conditional bindings matched, falling back on default binding");
 
 							binding = defaultBinding;
 						}
@@ -658,8 +673,8 @@ namespace Ninject.Core
 				}
 			}
 
-			if (Options.GenerateLogMessages && (binding != null))
-				_logger.Debug("Selected {0} for service {1}", Format.Binding(binding), Format.Type(service));
+			if ((binding != null) && Logger.IsDebugEnabled)
+				Logger.Debug("Selected {0} for service {1}", Format.Binding(binding), Format.Type(service));
 
 			return binding;
 		}
@@ -694,9 +709,9 @@ namespace Ninject.Core
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);
 
-			if (Options.GenerateLogMessages)
+			if (Logger.IsDebugEnabled)
 			{
-				_logger.Debug("Resolving instance for {0}{1}",
+				Logger.Debug("Resolving instance for {0}{1}",
 					Format.Context(context), (isEagerActivation ? " (eager activation)" : ""));
 			}
 
@@ -713,9 +728,9 @@ namespace Ninject.Core
 					{
 						Type genericTypeDefinition = service.GetGenericTypeDefinition();
 
-						if (Options.GenerateLogMessages)
+						if (Logger.IsDebugEnabled)
 						{
-							_logger.Debug("Couldn't find binding for actual service type {0}, trying for generic type definition {1}",
+							Logger.Debug("Couldn't find binding for actual service type {0}, trying for generic type definition {1}",
 								Format.Type(service), Format.Type(genericTypeDefinition));
 						}
 
@@ -726,8 +741,8 @@ namespace Ninject.Core
 					{
 						if (context.IsOptional)
 						{
-							if (Options.GenerateLogMessages)
-								_logger.Debug("No bindings were found for the service {0}, ignoring since the request was optional", Format.Type(service));
+							if (Logger.IsDebugEnabled)
+								Logger.Debug("No bindings were found for the service {0}, ignoring since the request was optional", Format.Type(service));
 
 							return null;
 						}
@@ -754,8 +769,8 @@ namespace Ninject.Core
 					throw new ActivationException(ExceptionFormatter.ProviderIncompatibleWithService(context, type));
 			}
 
-			if (Options.GenerateLogMessages)
-				_logger.Debug("Will create instance of type {0} for service {1}", Format.Type(type), Format.Type(service));
+			if (Logger.IsDebugEnabled)
+				Logger.Debug("Will create instance of type {0} for service {1}", Format.Type(type), Format.Type(service));
 
 			// Ask the planner to resolve or build the activation plan for the type, and add it to the context.
 			context.Plan = GetComponent<IPlanner>().GetPlan(context.Binding, type);
@@ -764,8 +779,8 @@ namespace Ninject.Core
 			// plan's behavior doesn't support eager activation, don't actually resolve an instance.
 			if (isEagerActivation && !context.Plan.Behavior.SupportsEagerActivation)
 			{
-				if (Options.GenerateLogMessages)
-					_logger.Debug("This is an eager activation request and the plan's behavior does not support it. Not actually activating an instance.");
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("This is an eager activation request and the plan's behavior does not support it. Not actually activating an instance.");
 
 				return null;
 			}
@@ -774,15 +789,14 @@ namespace Ninject.Core
 			object instance = context.Plan.Behavior.Resolve(context);
 
 			// Register the contextualized instance with the tracker.
-			if (context.Plan.Behavior.ShouldTrackInstances)
-				GetComponent<ITracker>().Track(instance, context);
+			GetComponent<ITracker>().Track(instance, context);
 
 			// If there is an activation scope defined, register the instance with it as well.
       if (_scopes.Count > 0)
 				_scopes.Peek().Register(instance);
 
-			if (Options.GenerateLogMessages)
-				_logger.Debug("Instance of service {0} resolved successfully", Format.Type(service));
+			if (Logger.IsDebugEnabled)
+				Logger.Debug("Instance of service {0} resolved successfully", Format.Type(service));
 
 			return instance;
 		}
@@ -831,8 +845,8 @@ namespace Ninject.Core
 
 			lock (_components)
 			{
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Connecting component {0} with instance of {1}", Format.Type(type), Format.Type(component.GetType()));
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Connecting component {0} with instance of {1}", Format.Type(type), Format.Type(component.GetType()));
 
 				// Remove the component if it's already been connected.
 				if (_components.ContainsKey(type))
@@ -841,8 +855,8 @@ namespace Ninject.Core
 				component.Connect(this);
 				_components.Add(type, component);
 
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Component {0} connected", Format.Type(type));
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Component {0} connected", Format.Type(type));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -859,15 +873,15 @@ namespace Ninject.Core
 				if (!_components.ContainsKey(type))
 					throw new InvalidOperationException(ExceptionFormatter.KernelHasNoSuchComponent(type));
 
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Disconnecting component {0}", Format.Type(type));
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Disconnecting component {0}", Format.Type(type));
 
 				IKernelComponent component = _components[type];
 				_components.Remove(type);
 				component.Disconnect();
 
-				if (Options.GenerateLogMessages)
-					_logger.Debug("Disconnected component {0}", Format.Type(type));
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Disconnected component {0}", Format.Type(type));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

@@ -31,7 +31,49 @@ namespace Ninject.Integration.Log4net.Infrastructure
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private readonly ILog _log4net;
+		private readonly ILog _log4netLogger;
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Properties
+		/// <summary>
+		/// Gets a value indicating whether messages with Debug severity should be logged.
+		/// </summary>
+		public override bool IsDebugEnabled
+		{
+			get { return _log4netLogger.IsDebugEnabled; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Info severity should be logged.
+		/// </summary>
+		public override bool IsInfoEnabled
+		{
+			get { return _log4netLogger.IsInfoEnabled; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Warn severity should be logged.
+		/// </summary>
+		public override bool IsWarnEnabled
+		{
+			get { return _log4netLogger.IsWarnEnabled; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Error severity should be logged.
+		/// </summary>
+		public override bool IsErrorEnabled
+		{
+			get { return _log4netLogger.IsErrorEnabled; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Fatal severity should be logged.
+		/// </summary>
+		public override bool IsFatalEnabled
+		{
+			get { return _log4netLogger.IsFatalEnabled; }
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -42,7 +84,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		public Log4netLogger(Type type)
 			: base(type)
 		{
-			_log4net = LogManager.GetLogger(type);
+			_log4netLogger = LogManager.GetLogger(type);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -54,7 +96,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Debug(string format, params object[] args)
 		{
-			_log4net.DebugFormat(format, args);
+			_log4netLogger.DebugFormat(format, args);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -65,7 +107,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Debug(Exception exception, string format, params object[] args)
 		{
-			_log4net.Debug(String.Format(format, args), exception);
+			_log4netLogger.Debug(String.Format(format, args), exception);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -75,7 +117,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Info(string format, params object[] args)
 		{
-			_log4net.InfoFormat(format, args);
+			_log4netLogger.InfoFormat(format, args);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -86,7 +128,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Info(Exception exception, string format, params object[] args)
 		{
-			_log4net.Info(String.Format(format, args), exception);
+			_log4netLogger.Info(String.Format(format, args), exception);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -96,7 +138,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Warn(string format, params object[] args)
 		{
-			_log4net.WarnFormat(format, args);
+			_log4netLogger.WarnFormat(format, args);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -107,7 +149,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Warn(Exception exception, string format, params object[] args)
 		{
-			_log4net.Warn(String.Format(format, args), exception);
+			_log4netLogger.Warn(String.Format(format, args), exception);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -117,7 +159,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Error(string format, params object[] args)
 		{
-			_log4net.ErrorFormat(format, args);
+			_log4netLogger.ErrorFormat(format, args);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -128,7 +170,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Error(Exception exception, string format, params object[] args)
 		{
-			_log4net.Error(String.Format(format, args), exception);
+			_log4netLogger.Error(String.Format(format, args), exception);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -138,7 +180,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Fatal(string format, params object[] args)
 		{
-			_log4net.FatalFormat(format, args);
+			_log4netLogger.FatalFormat(format, args);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -149,7 +191,7 @@ namespace Ninject.Integration.Log4net.Infrastructure
 		/// <param name="args">Any arguments required for the format template.</param>
 		public override void Fatal(Exception exception, string format, params object[] args)
 		{
-			_log4net.Fatal(String.Format(format, args), exception);
+			_log4netLogger.Fatal(String.Format(format, args), exception);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

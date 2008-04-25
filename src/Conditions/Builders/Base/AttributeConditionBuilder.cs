@@ -100,7 +100,7 @@ namespace Ninject.Conditions.Builders
 		public TerminatingCondition<TRoot, TSubject> HasMatchingAttribute<T>(T attribute)
 			where T : Attribute
 		{
-			return Terminate(s => AttributeReader.HasMatch(s, attribute));
+			return Terminate(s => s.HasMatchingAttribute(attribute));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

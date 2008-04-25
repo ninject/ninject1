@@ -71,7 +71,9 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void TrackerTracksEachInstanceOfTransientServiceSeparately()
 		{
-			using (IKernel kernel = new StandardKernel())
+			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
+
+			using (IKernel kernel = new StandardKernel(options))
 			{
 				var obj1 = kernel.Get<ObjectWithTransientBehavior>();
 				var obj2 = kernel.Get<ObjectWithTransientBehavior>();
@@ -99,10 +101,12 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void AllTrackedInstancesAreReleasedWhenKernelIsDisposed()
 		{
+			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
+
 			DisposableMock obj1;
 			DisposableMock obj2;
 
-			using (IKernel kernel = new StandardKernel())
+			using (IKernel kernel = new StandardKernel(options))
 			{
 				obj1 = kernel.Get<DisposableMock>();
 				obj2 = kernel.Get<DisposableMock>();
@@ -119,10 +123,12 @@ namespace Ninject.Core.Tests
 		[Test]
 		public void DisposingActivationScopeReleasesAllInstancesCreatedTherein()
 		{
+			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
+
 			DisposableMock obj1;
 			DisposableMock obj2;
 
-			using (IKernel kernel = new StandardKernel())
+			using (IKernel kernel = new StandardKernel(options))
 			{
 				obj1 = kernel.Get<DisposableMock>();
 

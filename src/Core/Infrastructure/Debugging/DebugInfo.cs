@@ -34,7 +34,7 @@ namespace Ninject.Core.Infrastructure
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constants
-		private static string[] IGNORE_NAMESPACES = new string[] { "Ninject.Core" };
+		private static readonly string[] IgnoreNamespaces = new string[] { "Ninject.Core" };
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -139,9 +139,9 @@ namespace Ninject.Core.Infrastructure
 		#region Private Methods
 		private static bool ShouldIgnoreType(Type type)
 		{
-			foreach (string ignoreNamespace in IGNORE_NAMESPACES)
+			foreach (string ignoreNs in IgnoreNamespaces)
 			{
-				if (type.Namespace.Equals(ignoreNamespace))
+				if (type.Namespace.Equals(ignoreNs))
 					return true;
 			}
 

@@ -18,7 +18,9 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
+using Ninject.Core.Tracking;
 #endregion
 
 namespace Ninject.Core
@@ -61,17 +63,6 @@ namespace Ninject.Core
 		public bool GenerateDebugInfo { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets a value indicating whether the kernel and its components should generate
-		/// trace messages and send them to the logging system.
-		/// </summary>
-		/// <remarks>
-		/// This adds information to the error message that is displayed if there is a problem during
-		/// binding or activation at the expense of additional overhead. This typically should be
-		/// turned off in production environments.
-		/// </remarks>
-		public bool GenerateLogMessages { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Gets or sets a value indicating whether non-public members should be injected by the
 		/// kernel during activation.
 		/// </summary>
@@ -105,6 +96,19 @@ namespace Ninject.Core
 		/// activation strategy does not correct the incompatibility (via a proxy, for example).
 		/// </remarks>
 		public bool IgnoreProviderCompatibility { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the mode by which the kernel will track instances. <see cref="WeakReference"/>s
+		/// will be held for each tracked instance, and when the kernel is disposed, all tracked
+		/// instances whose references are still alive will be released by passing them to the
+		/// <c>Release()</c> method on the kernel.
+		/// </summary>
+		/// <remarks>
+		/// By default, the kernel will use <c>InstanceTrackingMode.Default</c>, which means that only
+		/// instances of services whose behaviors are marked as <c>ShouldTrackInstances</c> will
+		/// be tracked.
+		/// </remarks>
+		public InstanceTrackingMode InstanceTrackingMode { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the built-in behavior that should be used for services registered without

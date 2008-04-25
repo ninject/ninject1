@@ -35,7 +35,6 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 	public class EventReflectionStrategy : PlanningStrategyBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
 		/// <summary>
 		/// Executed to build the activation plan.
 		/// </summary>
@@ -48,56 +47,31 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		public override StrategyResult Build(IBinding binding, Type type, IActivationPlan plan)
 		{
 			EventInfo[] events = type.GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
 			foreach (EventInfo evt in events)
 			{
-				PublishAttribute[] attributes = AttributeReader.GetAll<PublishAttribute>(evt);
+				PublishAttribute[] attributes = evt.GetAllAttributes<PublishAttribute>();
+
 				foreach (PublishAttribute attribute in attributes)
-					plan.Directives.Add(CreatePublicationDirective(attribute.Channel, evt));
+					plan.Directives.Add(new PublicationDirective(attribute.Channel, evt));
 			}
 
 			MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+			var injectorFactory = Kernel.GetComponent<IInjectorFactory>();
+
 			foreach (MethodInfo method in methods)
 			{
-				SubscribeAttribute[] attributes = AttributeReader.GetAll<SubscribeAttribute>(method);
+				SubscribeAttribute[] attributes = method.GetAllAttributes<SubscribeAttribute>();
+
 				foreach (SubscribeAttribute attribute in attributes)
-					plan.Directives.Add(CreateSubscriptionDirective(attribute.Channel, method, attribute.Thread));
+				{
+					IMethodInjector injector = injectorFactory.GetInjector(method);
+					plan.Directives.Add(new SubscriptionDirective(attribute.Channel, injector, attribute.Thread));
+				}
 			}
 
 			return StrategyResult.Proceed;
 		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		/// <summary>
-		/// Creates a new directive representing a message publication.
-		/// </summary>
-		/// <param name="channel">The channel to publish to.</param>
-		/// <param name="evt">The event to publish.</param>
-		/// <returns>
-		/// A <see cref="PublicationDirective"/> representing the publication.
-		/// </returns>
-		private PublicationDirective CreatePublicationDirective(string channel, EventInfo evt)
-		{
-			return new PublicationDirective(channel, evt);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a new directive representing a message subscription.
-		/// </summary>
-		/// <param name="channel">The channel to subscribe to.</param>
-		/// <param name="method">The method that will receive messages from the channel.</param>
-		/// <param name="thread">The thread on which the message should be delivered.</param>
-		/// <returns>
-		/// A <see cref="SubscriptionDirective"/> representing the publication.
-		/// </returns>
-		private SubscriptionDirective CreateSubscriptionDirective(string channel, MethodInfo method, DeliveryThread thread)
-		{
-			IInjectorFactory injectorFactory = Kernel.GetComponent<IInjectorFactory>();
-			IMethodInjector injector = injectorFactory.GetInjector(method);
-
-			return new SubscriptionDirective(channel, injector, thread);
-		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

@@ -45,7 +45,7 @@ namespace Ninject.Core.Planning
 		/// <summary>
 		/// Gets the collection of directives associated with the plan.
 		/// </summary>
-		public DirectiveCollection Directives { get; private set; }
+		public IDirectiveCollection Directives { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal

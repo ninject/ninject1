@@ -34,6 +34,31 @@ namespace Ninject.Core.Logging
 		/// Gets the type associated with the logger.
 		/// </summary>
 		public Type Type { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Debug severity should be logged.
+		/// </summary>
+		public abstract bool IsDebugEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Info severity should be logged.
+		/// </summary>
+		public abstract bool IsInfoEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Warn severity should be logged.
+		/// </summary>
+		public abstract bool IsWarnEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Error severity should be logged.
+		/// </summary>
+		public abstract bool IsErrorEnabled { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether messages with Fatal severity should be logged.
+		/// </summary>
+		public abstract bool IsFatalEnabled { get; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

@@ -46,7 +46,7 @@ namespace Ninject.Core.Activation.Strategies
 
 			if (directives.Count > 0)
 			{
-				IInjectorFactory injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
+				var injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
 
 				foreach (MethodInjectionDirective directive in directives)
 				{

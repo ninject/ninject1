@@ -21,6 +21,7 @@ using System;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Tests.Mocks;
+using Ninject.Core.Tracking;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 #endregion
@@ -34,7 +35,9 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void DisposableObjectIsDisposedWhenReleased()
 		{
-			using (IKernel kernel = new StandardKernel())
+			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
+
+			using (IKernel kernel = new StandardKernel(options))
 			{
 				DisposableMock mock = kernel.Get<DisposableMock>();
 				Assert.That(mock, Is.Not.Null);
@@ -69,7 +72,9 @@ namespace Ninject.Core.Tests.Activation
 		[Test]
 		public void StartableObjectIsStoppedWhenReleased()
 		{
-			using (IKernel kernel = new StandardKernel())
+			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
+
+			using (IKernel kernel = new StandardKernel(options))
 			{
 				StartableMock mock = kernel.Get<StartableMock>();
 				Assert.That(mock, Is.Not.Null);
