@@ -151,13 +151,13 @@ namespace Ninject.Core.Binding
 		/*----------------------------------------------------------------------------------------*/
 		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.ForMembersOf<T>()
 		{
-			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.DeclaringType == typeof(T));
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.ReflectedType == typeof(T));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.ForMembersOf(Type type)
 		{
-			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.DeclaringType == type);
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.ReflectedType == type);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
