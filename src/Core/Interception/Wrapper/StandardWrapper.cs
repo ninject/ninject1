@@ -88,8 +88,8 @@ namespace Ninject.Core.Interception
 		/// <returns>An executable invocation representing the specified request.</returns>
 		public virtual IInvocation CreateInvocation(IRequest request)
 		{
-			IInterceptorRegistry interceptorRegistry = Kernel.GetComponent<IInterceptorRegistry>();
-			IInjectorFactory injectorFactory = Kernel.GetComponent<IInjectorFactory>();
+			var interceptorRegistry = Kernel.GetComponent<IInterceptorRegistry>();
+			var injectorFactory = Kernel.GetComponent<IInjectorFactory>();
 
 			IEnumerable<IInterceptor> interceptors = interceptorRegistry.GetInterceptors(request);
 			IMethodInjector injector = injectorFactory.GetInjector(request.Method);

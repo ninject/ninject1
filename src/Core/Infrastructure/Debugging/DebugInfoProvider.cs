@@ -52,7 +52,10 @@ namespace Ninject.Core.Infrastructure
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
+			{
+				DisposeMember(DebugInfo);
 				DebugInfo = null;
+			}
 
 			base.Dispose(disposing);
 		}
