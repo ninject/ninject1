@@ -28,7 +28,7 @@ namespace Ninject.Core
 	/// Indicates that the decorated method should not be intercepted by interceptors defined
 	/// at the class level.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
 	public sealed class DoNotInterceptAttribute : Attribute
 	{
 	}

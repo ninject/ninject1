@@ -45,10 +45,11 @@ namespace Ninject.Extensions.Cache.Infrastructure
 		/// Gets the stored value for the specified request.
 		/// </summary>
 		/// <param name="request">The request.</param>
+		/// <param name="timeout">The maximum age of a valid cache entry, or <see langword="null"/> if infinite.</param>
 		/// <returns>The stored value, or <see langword="null"/> if there is no value cached.</returns>
-		public object Get(IRequest request)
+		public object Get(IRequest request, TimeSpan? timeout)
 		{
-			return GetValue(KeyGenerator.Generate(request));
+			return GetValue(KeyGenerator.Generate(request), timeout);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -72,8 +73,9 @@ namespace Ninject.Extensions.Cache.Infrastructure
 		/// Gets the value with the specified key.
 		/// </summary>
 		/// <param name="key">The key.</param>
+		/// <param name="timeout">The maximum age of a valid cache entry, or <see langword="null"/> if infinite.</param>
 		/// <returns>The associated value, or <see langword="null"/> if there is no value stored with the specified key.</returns>
-		protected abstract object GetValue(object key);
+		protected abstract object GetValue(object key, TimeSpan? timeout);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Sets the value for the specified key.

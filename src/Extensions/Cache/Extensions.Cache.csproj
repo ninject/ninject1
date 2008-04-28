@@ -47,6 +47,7 @@
     <Compile Include="Infrastructure\CacheInterceptor.cs" />
     <Compile Include="CacheModule.cs" />
     <Compile Include="Infrastructure\CacheBase.cs" />
+    <Compile Include="Infrastructure\CacheEntry.cs" />
     <Compile Include="Infrastructure\MemoryCache.cs" />
     <Compile Include="Infrastructure\StandardKeyGenerator.cs" />
     <Compile Include="Infrastructure\IKeyGenerator.cs" />

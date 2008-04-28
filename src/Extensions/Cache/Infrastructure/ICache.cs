@@ -36,8 +36,9 @@ namespace Ninject.Extensions.Cache.Infrastructure
 		/// Gets the stored value for the specified request.
 		/// </summary>
 		/// <param name="request">The request.</param>
+		/// <param name="timeout">The maximum age of a valid cache entry, or <see langword="null"/> if infinite.</param>
 		/// <returns>The stored value, or <see langword="null"/> if there is no value cached.</returns>
-		object Get(IRequest request);
+		object Get(IRequest request, TimeSpan? timeout);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Stores the specified value as the cached value for the specified request.

@@ -67,6 +67,7 @@
     <Compile Include="Infrastructure\Structures\ITypedCollection.cs" />
     <Compile Include="Infrastructure\Structures\TypedCollection.cs" />
     <Compile Include="Infrastructure\Utility\ExceptionThrower.cs" />
+    <Compile Include="Interception\InterceptorFactoryMethod.cs" />
     <Compile Include="Logging\Null\NullLogger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -86,7 +87,7 @@
     <Compile Include="Interception\Wrapper\StandardWrapper.cs" />
     <Compile Include="Interception\Registry\InterceptorRegistration.cs" />
     <Compile Include="Interfaces\IContextAware.cs" />
-    <Compile Include="Attributes\InterceptAttribute.cs" />
+    <Compile Include="Infrastructure\Attributes\InterceptAttribute.cs" />
     <Compile Include="Infrastructure\Utility\ReflectionDictionaryBuilder.cs" />
     <Compile Include="Infrastructure\InstanceWithContext.cs" />
     <Compile Include="Infrastructure\WeakReferenceComparer.cs" />

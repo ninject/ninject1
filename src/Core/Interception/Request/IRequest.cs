@@ -32,6 +32,11 @@ namespace Ninject.Core.Interception
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets the kernel that created the target instance.
+		/// </summary>
+		IKernel Kernel { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the context in which the target instance was activated.
 		/// </summary>
 		IContext Context { get; }

@@ -105,10 +105,10 @@ namespace Ninject.Core.Planning.Strategies
 		protected virtual void RegisterMethodInterceptors(IBinding binding, Type type, IActivationPlan plan,
 			MethodInfo method, ICollection<InterceptAttribute> attributes)
 		{
-			IInterceptorRegistry registry = Kernel.GetComponent<IInterceptorRegistry>();
+			var registry = Kernel.GetComponent<IInterceptorRegistry>();
 
 			foreach (InterceptAttribute attribute in attributes)
-				registry.RegisterStatic(attribute.Type, attribute.Order, method);
+				registry.RegisterStatic(attribute.CreateInterceptor, attribute.Order, method);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -118,12 +118,12 @@ namespace Ninject.Core.Planning.Strategies
 		/// <returns>The candidate methods.</returns>
 		protected virtual ICollection<MethodInfo> GetCandidateMethods(Type type)
 		{
-			List<MethodInfo> candidates = new List<MethodInfo>();
-			MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+			var candidates = new List<MethodInfo>();
+			MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
 			foreach (MethodInfo method in methods)
 			{
-				if (method.DeclaringType != typeof(object))
+				if (method.DeclaringType != typeof(object) && !method.IsPrivate && !method.IsFinal)
 					candidates.Add(method);
 			}
 

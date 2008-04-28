@@ -28,9 +28,9 @@ namespace Ninject.Integration.DynamicProxy2.Tests.Mocks
 	public class CountAttribute : InterceptAttribute
 	{
 		/*----------------------------------------------------------------------------------------*/
-		public CountAttribute()
-			: base(typeof(CountInterceptor))
+		public override IInterceptor CreateInterceptor(IRequest request)
 		{
+			return request.Kernel.Get<CountInterceptor>();
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Ninject.Core;
 using Ninject.Extensions.Cache.Tests.Mocks;
 using Ninject.Integration.LinFu;
@@ -150,6 +151,38 @@ namespace Ninject.Extensions.Cache.Tests
 				result = obj2.Multiply(2, 3);
 				Assert.That(result, Is.EqualTo(6));
 				Assert.That(CacheMock.MultiplyCount, Is.EqualTo(2));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void TimeoutControlsCachedValue()
+		{
+			IModule testModule = new InlineModule(m =>
+			{
+				m.Bind<CacheMockWithTimeout>().ToSelf();
+			});
+
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
+			{
+				var obj = kernel.Get<CacheMockWithTimeout>();
+
+				CacheMockWithTimeout.ResetCounts();
+
+				int result;
+
+				result = obj.Multiply(2, 3);
+				Assert.That(result, Is.EqualTo(6));
+				Assert.That(CacheMockWithTimeout.MultiplyCount, Is.EqualTo(1));
+
+				result = obj.Multiply(2, 3);
+				Assert.That(result, Is.EqualTo(6));
+				Assert.That(CacheMockWithTimeout.MultiplyCount, Is.EqualTo(1));
+
+				Thread.Sleep(500);
+
+				result = obj.Multiply(2, 3);
+				Assert.That(result, Is.EqualTo(6));
+				Assert.That(CacheMockWithTimeout.MultiplyCount, Is.EqualTo(2));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

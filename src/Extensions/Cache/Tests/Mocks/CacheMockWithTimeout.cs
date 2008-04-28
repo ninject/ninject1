@@ -21,57 +21,47 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Ninject.Core;
-using Ninject.Core.Infrastructure;
-using Ninject.Core.Interception;
-using Ninject.Extensions.Cache.Infrastructure;
+using NUnit.Framework;
 #endregion
 
-namespace Ninject.Extensions.Cache.Infrastructure
+namespace Ninject.Extensions.Cache.Tests.Mocks
 {
-	/// <summary>
-	/// An interceptor that blocks invocation of a method if there is a cached value.
-	/// </summary>
-	public class CacheInterceptor : IInterceptor
+	[Cache(TimeoutMs = 500)]
+	public class CacheMockWithTimeout
 	{
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// The cache to store values in.
-		/// </summary>
-		public ICache Cache { get; set; }
+		public static int GetValueCount { get; set; }
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets or sets the maximum amount of time that values will be cached.
-		/// </summary>
-		public TimeSpan? Timeout { get; set; }
+		public static int MultiplyCount { get; set; }
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CacheInterceptor"/> class.
-		/// </summary>
-		/// <param name="cache">The cache.</param>
-		[Inject]
-		public CacheInterceptor(ICache cache)
+		public static int ConvertCount { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		public static void ResetCounts()
 		{
-			Ensure.ArgumentNotNull(cache, "cache");
-			Cache = cache;
+			GetValueCount = 0;
+			MultiplyCount = 0;
+			ConvertCount = 0;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Intercepts the specified invocation.
-		/// </summary>
-		/// <param name="invocation">The invocation to intercept.</param>
-		public void Intercept(IInvocation invocation)
+		public virtual int GetValue()
 		{
-			object value = Cache.Get(invocation.Request, Timeout);
+			GetValueCount++;
 
-			if (value != null)
-			{
-				invocation.ReturnValue = value;
-			}
-			else 
-			{
-				invocation.Proceed();
-				Cache.Set(invocation.Request, invocation.ReturnValue);
-			}
+			return 42;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		public virtual int Multiply(int x, int y)
+		{
+			MultiplyCount++;
+
+			return x * y;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		public virtual string Convert(object obj)
+		{
+			ConvertCount++;
+
+			return obj.ToString();
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

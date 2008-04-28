@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Ninject.Core;
+using Ninject.Core.Interception;
 using Ninject.Extensions.Cache.Infrastructure;
 #endregion
 
@@ -34,11 +35,23 @@ namespace Ninject.Extensions.Cache
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CacheAttribute"/> class.
+		/// Gets or sets the maximum amount of time values will be cached, in milliseconds.
 		/// </summary>
-		public CacheAttribute()
-			: base(typeof(CacheInterceptor))
+		public int TimeoutMs { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates the interceptor.
+		/// </summary>
+		/// <param name="request">The request that is being intercepted.</param>
+		/// <returns></returns>
+		public override IInterceptor CreateInterceptor(IRequest request)
 		{
+			var interceptor = request.Kernel.Get<CacheInterceptor>();
+
+			if (TimeoutMs != 0)
+				interceptor.Timeout = TimeSpan.FromMilliseconds(TimeoutMs);
+
+			return interceptor;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

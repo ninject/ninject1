@@ -21,68 +21,47 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Ninject.Core;
-using Ninject.Core.Infrastructure;
 using Ninject.Core.Interception;
 #endregion
 
 namespace Ninject.Extensions.Cache.Infrastructure
 {
 	/// <summary>
-	/// A simple cache that stores values in memory in a dictionary.
+	/// Holds a result from a cached method call.
 	/// </summary>
-	[Singleton]
-	public class MemoryCache : CacheBase
+	public class CacheEntry
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private readonly Dictionary<object, CacheEntry> _items = new Dictionary<object, CacheEntry>();
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
 		/// <summary>
-		/// Clears all stored values from the cache.
+		/// Gets or sets the time the method was originally invoked.
 		/// </summary>
-		public override void Clear()
-		{
-			_items.Clear();
-		}
-		#endregion
+		public DateTime Timestamp { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods
 		/// <summary>
-		/// Gets the value with the specified key.
+		/// Gets or sets the value.
 		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="timeout">The maximum age of a valid cache entry, or <see langword="null"/> if infinite.</param>
-		/// <returns>The associated value, or <see langword="null"/> if there is no value stored with the specified key.</returns>
-		protected override object GetValue(object key, TimeSpan? timeout)
+		public object Value { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CacheEntry"/> class.
+		/// </summary>
+		/// <param name="timestamp">The timestamp.</param>
+		/// <param name="value">The value.</param>
+		public CacheEntry(DateTime timestamp, object value)
 		{
-			if (!_items.ContainsKey(key))
-				return null;
-
-			CacheEntry entry = _items[key];
-
-			if (timeout.HasValue && entry.HasExpired(timeout.Value))
-			{
-				_items.Remove(key);
-				return null;
-			}
-			else
-			{
-				return entry.Value;
-			}
+			Timestamp = timestamp;
+			Value = value;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Sets the value for the specified key.
+		/// Determines whether the entry has expired.
 		/// </summary>
-		/// <param name="key">The key.</param>
-		/// <param name="value">The value to store.</param>
-		protected override void SetValue(object key, object value)
+		/// <param name="timeout">The maximumm amount of time entries are allowed to remain in the cache.</param>
+		/// <returns><see langword="True"/> if the specified timeout has expired, otherwise <see langword="false"/>.</returns>
+		public bool HasExpired(TimeSpan timeout)
 		{
-			_items[key] = new CacheEntry(DateTime.Now, value);
+			return (DateTime.Now - Timestamp) > timeout;
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

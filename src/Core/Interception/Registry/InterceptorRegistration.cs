@@ -33,9 +33,9 @@ namespace Ninject.Core.Interception
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets the type of interceptor that should be invoked.
+		/// Gets the method that should be called to create the interceptor.
 		/// </summary>
-		public Type InterceptorType { get; private set; }
+		public InterceptorFactoryMethod FactoryMethod { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the condition that should be evaluated, if this registration is dynamic.
@@ -53,24 +53,24 @@ namespace Ninject.Core.Interception
 		/// <summary>
 		/// Initializes a new instance of the <see cref="InterceptorRegistration"/> class.
 		/// </summary>
-		/// <param name="interceptorType">The type of interceptor that should be invoked.</param>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
 		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		public InterceptorRegistration(Type interceptorType, int order)
+		public InterceptorRegistration(InterceptorFactoryMethod factoryMethod, int order)
 		{
-			Ensure.ArgumentNotNull(interceptorType, "interceptorType");
-			
-			InterceptorType = interceptorType;
+			Ensure.ArgumentNotNull(factoryMethod, "factoryMethod");
+
+			FactoryMethod = factoryMethod;
 			Order = order;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Initializes a new instance of the <see cref="InterceptorRegistration"/> class.
 		/// </summary>
-		/// <param name="interceptorType">The type of interceptor that should be invoked.</param>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor..</param>
 		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
 		/// <param name="condition">The condition that should be evaluated.</param>
-		public InterceptorRegistration(Type interceptorType, int order, ICondition<IRequest> condition)
-			: this(interceptorType, order)
+		public InterceptorRegistration(InterceptorFactoryMethod factoryMethod, int order, ICondition<IRequest> condition)
+			: this(factoryMethod, order)
 		{
 			Ensure.ArgumentNotNull(condition, "condition");
 			Condition = condition;

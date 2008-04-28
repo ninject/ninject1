@@ -33,39 +33,38 @@ namespace Ninject.Core.Interception
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
+		/// Gets the kernel that created the target instance.
+		/// </summary>
+		public IKernel Kernel { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the context in which the target instance was activated.
 		/// </summary>
-		/// <value></value>
 		public IContext Context { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the target instance.
 		/// </summary>
-		/// <value></value>
 		public object Target { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the method that will be called on the target instance.
 		/// </summary>
-		/// <value></value>
 		public MethodInfo Method { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the arguments to the method.
 		/// </summary>
-		/// <value></value>
 		public object[] Arguments { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the generic type arguments for the method.
 		/// </summary>
-		/// <value></value>
 		public Type[] GenericArguments { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the request has generic arguments.
 		/// </summary>
-		/// <value></value>
 		public bool HasGenericArguments
 		{
 			get { return (GenericArguments != null) && (GenericArguments.Length > 0); }
@@ -87,6 +86,7 @@ namespace Ninject.Core.Interception
 			Ensure.ArgumentNotNull(method, "method");
 			Ensure.ArgumentNotNull(arguments, "arguments");
 
+			Kernel = context.Kernel;
 			Context = context;
 			Target = target;
 			Method = method;

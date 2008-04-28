@@ -53,26 +53,55 @@ namespace Ninject.Core.Interception
 		/// <summary>
 		/// Registers a static interceptor, which affects only a single method.
 		/// </summary>
-		/// <param name="interceptorType">The type of interceptor to register.</param>
+		/// <param name="type">The type of interceptor that will be created.</param>
 		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
 		/// <param name="method">The method that should be intercepted.</param>
-		public void RegisterStatic(Type interceptorType, int order, MethodInfo method)
+		public void RegisterStatic(Type type, int order, MethodInfo method)
 		{
 			RuntimeMethodHandle handle = GetMethodHandle(method);
-			_staticInterceptors.Add(handle, new InterceptorRegistration(interceptorType, order));
+			InterceptorFactoryMethod factoryMethod = r => r.Kernel.Get(type) as IInterceptor;
+
+			_staticInterceptors.Add(handle, new InterceptorRegistration(factoryMethod, order));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Registers a static interceptor, which affects only a single method.
+		/// </summary>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="method">The method that should be intercepted.</param>
+		public void RegisterStatic(InterceptorFactoryMethod factoryMethod, int order, MethodInfo method)
+		{
+			RuntimeMethodHandle handle = GetMethodHandle(method);
+			_staticInterceptors.Add(handle, new InterceptorRegistration(factoryMethod, order));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Registers a dynamic interceptor, whose conditions are tested when a request is
 		/// received, to determine whether they affect the current request.
 		/// </summary>
-		/// <param name="interceptorType">The type of interceptor to register.</param>
+		/// <param name="type">The type of interceptor that will be created.</param>
 		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
 		/// <param name="condition">The condition that will be evaluated.</param>
-		public void RegisterDynamic(Type interceptorType, int order, ICondition<IRequest> condition)
+		public void RegisterDynamic(Type type, int order, ICondition<IRequest> condition)
+		{
+			InterceptorFactoryMethod factoryMethod = r => r.Kernel.Get(type) as IInterceptor;
+
+			_cache.Clear();
+			_dynamicInterceptors.Add(new InterceptorRegistration(factoryMethod, order, condition));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Registers a dynamic interceptor, whose conditions are tested when a request is
+		/// received, to determine whether they affect the current request.
+		/// </summary>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="condition">The condition that will be evaluated.</param>
+		public void RegisterDynamic(InterceptorFactoryMethod factoryMethod, int order, ICondition<IRequest> condition)
 		{
 			_cache.Clear();
-			_dynamicInterceptors.Add(new InterceptorRegistration(interceptorType, order, condition));
+			_dynamicInterceptors.Add(new InterceptorRegistration(factoryMethod, order, condition));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -87,20 +116,20 @@ namespace Ninject.Core.Interception
 			if (_cache.ContainsKey(handle))
 				return _cache[handle];
 
-			List<InterceptorRegistration> matches = new List<InterceptorRegistration>();
+			var matches = new List<InterceptorRegistration>();
 
 			// If there are static interceptors defined, add them.
 			if (_staticInterceptors.ContainsKey(handle))
         matches.AddRange(_staticInterceptors[handle]);
 
 			// Test each defined dynamic interceptor and add those that match.
-			matches.AddRange(_dynamicInterceptors.FindAll(r => r.Condition.Matches(request)));
+			matches.AddRange(_dynamicInterceptors.FindAll(reg => reg.Condition.Matches(request)));
 
 			// Sort the matches by their registered order.
 			matches.Sort();
 
-			// Extract the interceptor types from the registrations and activate them.
-			List<IInterceptor> interceptors = matches.ConvertAll(r => Kernel.Get(r.InterceptorType) as IInterceptor);
+			// Extract the factory methods from the registrations and call them to create the interceptors.
+			List<IInterceptor> interceptors = matches.ConvertAll(reg => reg.FactoryMethod(request));
       
 			// If there are no dynamic interceptors defined, we can safely cache the results.
 			// Otherwise, we have to evaluate and re-activate the interceptors each time.

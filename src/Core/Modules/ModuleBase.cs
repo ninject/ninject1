@@ -62,10 +62,7 @@ namespace Ninject.Core
 			get
 			{
 				if (_logger == null)
-				{
-					ILoggerFactory loggerFactory = Kernel.GetComponent<ILoggerFactory>();
-					_logger = loggerFactory.GetLogger(GetType());
-				}
+					_logger = Kernel.GetComponent<ILoggerFactory>().GetLogger(GetType());
 
 				return _logger;
 			}
@@ -80,7 +77,11 @@ namespace Ninject.Core
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
+			{
+				DisposeMember(_logger);
+				_logger = null;
 				Kernel = null;
+			}
 
 			base.Dispose(disposing);
 		}
@@ -139,11 +140,31 @@ namespace Ninject.Core
 		/// <summary>
 		/// Declares a dynamic interception definition.
 		/// </summary>
+		/// <typeparam name="T">The type of interceptor to attach.</typeparam>
+		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
+		public void Intercept<T>(Predicate<IRequest> predicate)
+		{
+			RegisterInterceptor(typeof(T), 0, new PredicateCondition<IRequest>(predicate));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
 		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
 		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
 		public void Intercept<T>(int order, ICondition<IRequest> condition)
 		{
 			RegisterInterceptor(typeof(T), order, condition);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
+		public void Intercept<T>(int order, Predicate<IRequest> predicate)
+		{
+			RegisterInterceptor(typeof(T), order, new PredicateCondition<IRequest>(predicate));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -160,11 +181,74 @@ namespace Ninject.Core
 		/// Declares a dynamic interception definition.
 		/// </summary>
 		/// <param name="type">The type of interceptor to attach.</param>
+		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
+		public void Intercept(Type type, Predicate<IRequest> predicate)
+		{
+			RegisterInterceptor(type, 0, new PredicateCondition<IRequest>(predicate));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="type">The type of interceptor to attach.</param>
 		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
 		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
 		public void Intercept(Type type, int order, ICondition<IRequest> condition)
 		{
 			RegisterInterceptor(type, order, condition);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="type">The type of interceptor to attach.</param>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
+		public void Intercept(Type type, int order, Predicate<IRequest> predicate)
+		{
+			RegisterInterceptor(type, order, new PredicateCondition<IRequest>(predicate));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		public void Intercept(ICondition<IRequest> condition, InterceptorFactoryMethod factoryMethod)
+		{
+			RegisterInterceptor(factoryMethod, 0, condition);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		public void Intercept(Predicate<IRequest> predicate, InterceptorFactoryMethod factoryMethod)
+		{
+			RegisterInterceptor(factoryMethod, 0, new PredicateCondition<IRequest>(predicate));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		public void Intercept(int order, ICondition<IRequest> condition, InterceptorFactoryMethod factoryMethod)
+		{
+			RegisterInterceptor(factoryMethod, order, condition);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Declares a dynamic interception definition.
+		/// </summary>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		public void Intercept(int order, Predicate<IRequest> predicate, InterceptorFactoryMethod factoryMethod)
+		{
+			RegisterInterceptor(factoryMethod, order, new PredicateCondition<IRequest>(predicate));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -199,6 +283,18 @@ namespace Ninject.Core
 		protected virtual void RegisterInterceptor(Type type, int order, ICondition<IRequest> condition)
 		{
 			Kernel.GetComponent<IInterceptorRegistry>().RegisterDynamic(type, order, condition);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Registers a dynamic interceptor.
+		/// </summary>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
+		protected virtual void RegisterInterceptor(InterceptorFactoryMethod factoryMethod, int order,
+			ICondition<IRequest> condition)
+		{
+			Kernel.GetComponent<IInterceptorRegistry>().RegisterDynamic(factoryMethod, order, condition);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

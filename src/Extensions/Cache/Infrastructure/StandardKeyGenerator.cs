@@ -18,9 +18,7 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.Text;
-using Ninject.Core;
 using Ninject.Core.Interception;
 #endregion
 
@@ -40,7 +38,7 @@ namespace Ninject.Extensions.Cache.Infrastructure
 		/// <returns>The generated key.</returns>
 		public object Generate(IRequest request)
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 
 			sb.Append(request.Target.GetHashCode());
 			sb.Append(">");

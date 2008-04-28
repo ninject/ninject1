@@ -21,19 +21,36 @@ namespace Ninject.Core.Interception
 		/// <summary>
 		/// Registers a static interceptor, which affects only a single method.
 		/// </summary>
-		/// <param name="interceptorType">The type of interceptor to register.</param>
+		/// <param name="type">The type of interceptor that will be created.</param>
 		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
 		/// <param name="method">The method that should be intercepted.</param>
-		void RegisterStatic(Type interceptorType, int order, MethodInfo method);
+		void RegisterStatic(Type type, int order, MethodInfo method);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Registers a static interceptor, which affects only a single method.
+		/// </summary>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="method">The method that should be intercepted.</param>
+		void RegisterStatic(InterceptorFactoryMethod factoryMethod, int order, MethodInfo method);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Registers a dynamic interceptor, whose conditions are tested when a request is
 		/// received, to determine whether they affect the current request.
 		/// </summary>
-		/// <param name="interceptorType">The type of interceptor to register.</param>
+		/// <param name="type">The type of interceptor that will be created.</param>
 		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
 		/// <param name="condition">The condition that will be evaluated.</param>
-		void RegisterDynamic(Type interceptorType, int order, ICondition<IRequest> condition);
+		void RegisterDynamic(Type type, int order, ICondition<IRequest> condition);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Registers a dynamic interceptor, whose conditions are tested when a request is
+		/// received, to determine whether they affect the current request.
+		/// </summary>
+		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
+		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
+		/// <param name="condition">The condition that will be evaluated.</param>
+		void RegisterDynamic(InterceptorFactoryMethod factoryMethod, int order, ICondition<IRequest> condition);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the interceptors that should be invoked for the specified request.

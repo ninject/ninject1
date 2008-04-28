@@ -45,6 +45,7 @@
     </Compile>
     <Compile Include="CacheFixture.cs" />
     <Compile Include="Mocks\CacheMock.cs" />
+    <Compile Include="Mocks\CacheMockWithTimeout.cs" />
     <Compile Include="Mocks\SimpleObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

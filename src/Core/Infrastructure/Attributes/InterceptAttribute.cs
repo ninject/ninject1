@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Interception;
 #endregion
 
 namespace Ninject.Core
@@ -27,13 +28,8 @@ namespace Ninject.Core
 	/// A baseline definition of an attribute that indicates one or more methods should be intercepted.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-	public class InterceptAttribute : Attribute
+	public abstract class InterceptAttribute : Attribute
 	{
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the type of interceptor that will be created.
-		/// </summary>
-		public Type Type { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the interceptor's order number. Interceptors are invoked in ascending order.
@@ -41,14 +37,11 @@ namespace Ninject.Core
 		public int Order { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Initializes a new instance of the <see cref="InterceptAttribute"/> class.
+		/// Creates the interceptor associated with the attribute.
 		/// </summary>
-		/// <param name="type">The type of interceptor that will be created.</param>
-		public InterceptAttribute(Type type)
-		{
-			Ensure.ArgumentNotNull(type, "type");
-			Type = type;
-		}
+		/// <param name="request">The request that is being intercepted.</param>
+		/// <returns>The interceptor.</returns>
+		public abstract IInterceptor CreateInterceptor(IRequest request);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

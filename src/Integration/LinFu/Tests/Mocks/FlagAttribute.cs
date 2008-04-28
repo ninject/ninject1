@@ -28,9 +28,9 @@ namespace Ninject.Integration.LinFu.Tests.Mocks
 	public class FlagAttribute : InterceptAttribute
 	{
 		/*----------------------------------------------------------------------------------------*/
-		public FlagAttribute()
-			: base(typeof(FlagInterceptor))
+		public override IInterceptor CreateInterceptor(IRequest request)
 		{
+			return request.Kernel.Get<FlagInterceptor>();
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

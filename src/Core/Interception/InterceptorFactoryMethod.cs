@@ -20,23 +20,10 @@
 using System;
 #endregion
 
-namespace Ninject.Core.Tests.Mocks
+namespace Ninject.Core.Interception
 {
-	[Count(Order = 0)]
-	public class ObjectWithOrderedInterceptors
-	{
-		[Flag(Order = 1)]
-		public void Foo()
-		{
-		}
-
-		public void Bar()
-		{
-		}
-
-		[DoNotIntercept]
-		public void Baz()
-		{
-		}
-	}
+	/// <summary>
+	/// A callback that creates an interceptor.
+	/// </summary>
+	public delegate IInterceptor InterceptorFactoryMethod(IRequest request);
 }
