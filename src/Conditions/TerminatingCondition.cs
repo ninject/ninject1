@@ -34,9 +34,9 @@ namespace Ninject.Conditions.Builders
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private IConditionBuilder<TRoot, TSubject> _previous;
-		private Predicate<TRoot> _directPredicate;
-		private Predicate<TSubject> _predicate;
+		private readonly IConditionBuilder<TRoot, TSubject> _previous;
+		private readonly Predicate<TRoot> _directPredicate;
+		private readonly Predicate<TSubject> _predicate;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

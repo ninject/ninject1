@@ -31,46 +31,29 @@ namespace Ninject.Conditions.Composites
 	public abstract class BinaryOperation<T> : ConditionBase<T>
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private ICondition<T> _lhs;
-		private ICondition<T> _rhs;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Properties
 		/// <summary>
 		/// The base condition representing the left-hand side of the composite condition.
 		/// </summary>
-		public ICondition<T> LHS
-		{
-			get { return _lhs; }
-			set { _lhs = value; }
-		}
+		public ICondition<T> LHS { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// The base condition representing the right-hand side of the composite condition.
 		/// </summary>
-		public ICondition<T> RHS
-		{
-			get { return _rhs; }
-			set { _rhs = value; }
-		}
-		#endregion
+		public ICondition<T> RHS { get; set; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
 		/// Creates a new BinaryCondition.
 		/// </summary>
 		/// <param name="lhs">The left-hand side of the composite condition.</param>
 		/// <param name="rhs">The right-hand side of the composite condition.</param>
-		public BinaryOperation(ICondition<T> lhs, ICondition<T> rhs)
+		protected BinaryOperation(ICondition<T> lhs, ICondition<T> rhs)
 		{
 			Ensure.ArgumentNotNull(lhs, "lhs");
 			Ensure.ArgumentNotNull(rhs, "rhs");
 
-			_lhs = lhs;
-			_rhs = rhs;
+			LHS = lhs;
+			RHS = rhs;
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

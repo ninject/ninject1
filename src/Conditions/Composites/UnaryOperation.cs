@@ -31,32 +31,20 @@ namespace Ninject.Conditions.Composites
 	public abstract class UnaryOperation<T> : ConditionBase<T>
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private ICondition<T> _baseCondition;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Properties
 		/// <summary>
 		/// The composite condition's base condition.
 		/// </summary>
-		public ICondition<T> BaseCondition
-		{
-			get { return _baseCondition; }
-			set { _baseCondition = value; }
-		}
-		#endregion
+		public ICondition<T> BaseCondition { get; set; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
 		/// Creates a new UnaryOperation.
 		/// </summary>
 		/// <param name="baseCondition">The base condition.</param>
-		public UnaryOperation(ICondition<T> baseCondition)
+		protected UnaryOperation(ICondition<T> baseCondition)
 		{
 			Ensure.ArgumentNotNull(baseCondition, "baseCondition");
-			_baseCondition = baseCondition;
+			BaseCondition = baseCondition;
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
