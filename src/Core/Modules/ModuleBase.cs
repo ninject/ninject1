@@ -62,7 +62,7 @@ namespace Ninject.Core
 			get
 			{
 				if (_logger == null)
-					_logger = Kernel.GetComponent<ILoggerFactory>().GetLogger(GetType());
+					_logger = Kernel.Components.LoggerFactory.GetLogger(GetType());
 
 				return _logger;
 			}
@@ -282,7 +282,7 @@ namespace Ninject.Core
 		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
 		protected virtual void RegisterInterceptor(Type type, int order, ICondition<IRequest> condition)
 		{
-			Kernel.GetComponent<IInterceptorRegistry>().RegisterDynamic(type, order, condition);
+			Kernel.Components.InterceptorRegistry.RegisterDynamic(type, order, condition);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -294,7 +294,7 @@ namespace Ninject.Core
 		protected virtual void RegisterInterceptor(InterceptorFactoryMethod factoryMethod, int order,
 			ICondition<IRequest> condition)
 		{
-			Kernel.GetComponent<IInterceptorRegistry>().RegisterDynamic(factoryMethod, order, condition);
+			Kernel.Components.InterceptorRegistry.RegisterDynamic(factoryMethod, order, condition);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

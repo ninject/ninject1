@@ -38,7 +38,7 @@ namespace Ninject.Integration.Log4net
 		/// </summary>
 		public override void BeforeLoad()
 		{
-			Kernel.Connect<ILoggerFactory>(new Log4netLoggerFactory());
+			Kernel.Components.Connect<ILoggerFactory>(new Log4netLoggerFactory());
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

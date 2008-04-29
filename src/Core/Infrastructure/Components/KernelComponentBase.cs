@@ -30,6 +30,10 @@ namespace Ninject.Core.Infrastructure
 	public class KernelComponentBase : DisposableObject, IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Fields
+		private ILogger _logger;
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the kernel associated with the component.
@@ -39,7 +43,16 @@ namespace Ninject.Core.Infrastructure
 		/// <summary>
 		/// Gets the logger associated with the component.
 		/// </summary>
-		public ILogger Logger { get; private set; }
+		public ILogger Logger
+		{
+			get 
+			{
+				if (_logger == null)
+					_logger = Kernel.Components.LoggerFactory.GetLogger(GetType());
+
+				return _logger;
+			}
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the component is connected to its environment.
@@ -90,7 +103,11 @@ namespace Ninject.Core.Infrastructure
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
+			{
+				DisposeMember(_logger);
 				Kernel = null;
+				_logger = null;
+			}
 
 			base.Dispose(disposing);
 		}
@@ -104,12 +121,7 @@ namespace Ninject.Core.Infrastructure
 		public void Connect(IKernel kernel)
 		{
 			Ensure.NotDisposed(this);
-
 			Kernel = kernel;
-
-			if (Kernel.HasComponent<ILoggerFactory>())
-        Logger = Kernel.GetComponent<ILoggerFactory>().GetLogger(GetType());
-
 			OnConnected(new EventArgs());
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -119,11 +131,8 @@ namespace Ninject.Core.Infrastructure
 		public void Disconnect()
 		{
 			Ensure.NotDisposed(this);
-
 			OnDisconnected(new EventArgs());
-
 			Kernel = null;
-			Logger = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

@@ -57,13 +57,11 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="member">The member to create a directive for.</param>
 		protected override void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, PropertyInfo member)
 		{
-			var resolverFactory = Kernel.GetComponent<IResolverFactory>();
-
 			// Create a new directive that will hold the injection information.
 			var directive = new PropertyInjectionDirective(member);
 
 			ITarget target = new PropertyTarget(member);
-			IResolver resolver = resolverFactory.Create(binding, target);
+			IResolver resolver = Kernel.Components.ResolverFactory.Create(binding, target);
 
 			// Determine if the dependency is optional.
 			bool optional = member.HasAttribute(Kernel.Options.OptionalAttributeType);

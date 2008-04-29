@@ -49,7 +49,7 @@ namespace Ninject.Core.Activation.Strategies
 
 			if (directives.Count > 0)
 			{
-				var injectorFactory = context.Kernel.GetComponent<IInjectorFactory>();
+				IInjectorFactory injectorFactory = context.Kernel.Components.InjectorFactory;
 
 				foreach (PropertyInjectionDirective directive in directives)
 				{

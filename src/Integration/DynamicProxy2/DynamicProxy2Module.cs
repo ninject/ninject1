@@ -37,7 +37,7 @@ namespace Ninject.Integration.DynamicProxy2
 		/// </summary>
 		public override void BeforeLoad()
 		{
-			Kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
+			Kernel.Components.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

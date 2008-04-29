@@ -62,6 +62,8 @@
     <Compile Include="Activation\Strategies\ProxyStrategy.cs" />
     <Compile Include="Attributes\DoNotInterceptAttribute.cs" />
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
+    <Compile Include="Infrastructure\Components\IComponentContainer.cs" />
+    <Compile Include="Infrastructure\Components\StandardComponentContainer.cs" />
     <Compile Include="Infrastructure\Extensions\AttributeExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionAttribute.cs" />
     <Compile Include="Infrastructure\Structures\ITypedCollection.cs" />

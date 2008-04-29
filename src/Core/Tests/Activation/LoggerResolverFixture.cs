@@ -38,7 +38,7 @@ namespace Ninject.Core.Tests.Activation
 
 			// The test will not pass with just the StandardKernel, because the NullLoggerFactory
 			// returns the same instance of NullLogger to use as a flyweight.
-			kernel.Connect<ILoggerFactory>(new ConsoleLoggerFactory());
+			kernel.Components.Connect<ILoggerFactory>(new ConsoleLoggerFactory());
 
 			return kernel;
 		}

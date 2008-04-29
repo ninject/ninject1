@@ -48,7 +48,7 @@ namespace Ninject.Core.Tests.Interception
 
 			using (IKernel kernel = new StandardKernel(module))
 			{
-				kernel.Connect<IProxyFactory>(new DummyProxyFactory());
+				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 
@@ -61,7 +61,7 @@ namespace Ninject.Core.Tests.Interception
 					new object[0]
 				);
 
-				ICollection<IInterceptor> interceptors = kernel.GetComponent<IInterceptorRegistry>().GetInterceptors(request);
+				ICollection<IInterceptor> interceptors = kernel.Components.InterceptorRegistry.GetInterceptors(request);
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();
 				enumerator.MoveNext();
@@ -81,7 +81,7 @@ namespace Ninject.Core.Tests.Interception
 
 			using (IKernel kernel = new StandardKernel(module))
 			{
-				kernel.Connect<IProxyFactory>(new DummyProxyFactory());
+				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
 				ObjectWithClassInterceptor obj = kernel.Get<ObjectWithClassInterceptor>();
 
@@ -94,7 +94,9 @@ namespace Ninject.Core.Tests.Interception
 					new object[0]
 				);
 
-				ICollection<IInterceptor> interceptors1 = kernel.GetComponent<IInterceptorRegistry>().GetInterceptors(request1);
+				IInterceptorRegistry registry = kernel.Components.InterceptorRegistry;
+
+				ICollection<IInterceptor> interceptors1 = registry.GetInterceptors(request1);
 				Assert.That(interceptors1.Count, Is.EqualTo(1));
 
 				IContext context2 = new StandardContext(kernel, typeof(ObjectWithClassInterceptor));
@@ -106,7 +108,7 @@ namespace Ninject.Core.Tests.Interception
 					new object[0]
 				);
 
-				ICollection<IInterceptor> interceptors2 = kernel.GetComponent<IInterceptorRegistry>().GetInterceptors(request2);
+				ICollection<IInterceptor> interceptors2 = registry.GetInterceptors(request2);
 				Assert.That(interceptors2.Count, Is.EqualTo(1));
 			}
 		}
@@ -121,7 +123,7 @@ namespace Ninject.Core.Tests.Interception
 
 			using (IKernel kernel = new StandardKernel(module))
 			{
-				kernel.Connect<IProxyFactory>(new DummyProxyFactory());
+				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
 				ObjectWithClassInterceptor obj = kernel.Get<ObjectWithClassInterceptor>();
 
@@ -134,7 +136,7 @@ namespace Ninject.Core.Tests.Interception
 					new object[0]
 				);
 
-				ICollection<IInterceptor> interceptors = kernel.GetComponent<IInterceptorRegistry>().GetInterceptors(request);
+				ICollection<IInterceptor> interceptors = kernel.Components.InterceptorRegistry.GetInterceptors(request);
 				Assert.That(interceptors.Count, Is.EqualTo(0));
 			}
 		}
@@ -149,14 +151,11 @@ namespace Ninject.Core.Tests.Interception
 
 			using (IKernel kernel = new StandardKernel(module))
 			{
-				kernel.Connect<IProxyFactory>(new DummyProxyFactory());
+				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				IInterceptorRegistry registry = kernel.GetComponent<IInterceptorRegistry>();
+				IInterceptorRegistry registry = kernel.Components.InterceptorRegistry;
 
-				ICondition<IRequest> condition = new PredicateCondition<IRequest>(
-					ctx => ctx.Method.Name.Equals("Bar")
-				);
-
+				ICondition<IRequest> condition = new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Bar"));
 				registry.RegisterDynamic(typeof(FlagInterceptor), 0, condition);
 
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
@@ -170,7 +169,7 @@ namespace Ninject.Core.Tests.Interception
 					new object[0]
 				);
 
-				ICollection<IInterceptor> interceptors = kernel.GetComponent<IInterceptorRegistry>().GetInterceptors(request);
+				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();
 				enumerator.MoveNext();
@@ -190,13 +189,11 @@ namespace Ninject.Core.Tests.Interception
 
 			using (IKernel kernel = new StandardKernel(module))
 			{
-				kernel.Connect<IProxyFactory>(new DummyProxyFactory());
+				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				IInterceptorRegistry registry = kernel.GetComponent<IInterceptorRegistry>();
+				IInterceptorRegistry registry = kernel.Components.InterceptorRegistry;
 
-				ICondition<IRequest> condition = new PredicateCondition<IRequest>(
-					ctx => ctx.Method.Name.Equals("Foo")
-				);
+				ICondition<IRequest> condition = new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Foo"));
 
 				// The CountAttribute set on ObjectWithMethodInterceptor defaults to order 0, so we'll use -1
 				// to put the FlagInterceptor before the CountInterceptor.
@@ -213,7 +210,7 @@ namespace Ninject.Core.Tests.Interception
 					new object[0]
 				);
 
-				ICollection<IInterceptor> interceptors = kernel.GetComponent<IInterceptorRegistry>().GetInterceptors(request);
+				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
 				Assert.That(interceptors.Count, Is.EqualTo(2));
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();

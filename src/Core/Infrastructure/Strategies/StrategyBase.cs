@@ -32,6 +32,10 @@ namespace Ninject.Core.Infrastructure
 		where TOwner : class, IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Fields
+		private ILogger _logger;
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the kernel associated with the strategy.
@@ -46,7 +50,16 @@ namespace Ninject.Core.Infrastructure
 		/// <summary>
 		/// Gets the logger associated with the strategy.
 		/// </summary>
-		public ILogger Logger { get; private set; }
+		public ILogger Logger
+		{
+			get
+			{
+				if (_logger == null)
+					_logger = Kernel.Components.LoggerFactory.GetLogger(GetType());
+
+				return _logger;
+			}
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a value indicating whether the strategy has been connected to its environment.
@@ -101,8 +114,11 @@ namespace Ninject.Core.Infrastructure
 				if (IsConnected)
 					Disconnect();
 
+				DisposeMember(_logger);
+
 				Kernel = null;
 				Owner = null;
+				_logger = null;
 			}
 
 			base.Dispose(disposing);
@@ -122,9 +138,6 @@ namespace Ninject.Core.Infrastructure
 			Kernel = kernel;
 			Owner = owner;
 
-			if (Kernel.HasComponent<ILoggerFactory>())
-				Logger = Kernel.GetComponent<ILoggerFactory>().GetLogger(GetType());
-
 			OnConnected(new EventArgs());
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -139,7 +152,6 @@ namespace Ninject.Core.Infrastructure
 
 			Kernel = null;
 			Owner = null;
-			Logger = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

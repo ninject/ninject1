@@ -43,15 +43,13 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsAreProxied()
 		{
-			IModule module = new InlineModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
-
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxy)));
@@ -61,15 +59,13 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsCanBeReleased()
 		{
-			IModule module = new InlineModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
-
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 				Assert.That(obj, Is.Not.Null);
 
@@ -80,15 +76,13 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringMethodInterceptorsAreIntercepted()
 		{
-			IModule module = new InlineModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
-
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxy)));
@@ -105,15 +99,13 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void SelfBoundTypesDeclaringInterceptorsOnGenericMethodsAreIntercepted()
 		{
-			IModule module = new InlineModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<ObjectWithGenericMethod>().ToSelf();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
-
 				ObjectWithGenericMethod obj = kernel.Get<ObjectWithGenericMethod>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxy)));
@@ -130,15 +122,13 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsAreProxied()
 		{
-			IModule module = new InlineModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
-
 				IFoo obj = kernel.Get<IFoo>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxy)));
@@ -148,15 +138,13 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsCanBeReleased()
 		{
-			IModule module = new InlineModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
-
 				IFoo obj = kernel.Get<IFoo>();
 				Assert.That(obj, Is.Not.Null);
 
@@ -167,15 +155,13 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringMethodInterceptorsAreIntercepted()
 		{
-			IModule module = new InlineModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<IFoo>().To<ObjectWithMethodInterceptor>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
-
 				IFoo obj = kernel.Get<IFoo>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxy)));
@@ -191,15 +177,13 @@ namespace Ninject.Integration.LinFu.Tests
 		[Test]
 		public void ServiceBoundTypesDeclaringInterceptorsOnGenericMethodsAreIntercepted()
 		{
-			IModule module = new InlineModule(m =>
+			IModule testModule = new InlineModule(m =>
 			{
 				m.Bind<IGeneric>().To<ObjectWithGenericMethod>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (IKernel kernel = new StandardKernel(new LinFuModule(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
-
 				IGeneric obj = kernel.Get<IGeneric>();
 				Assert.That(obj, Is.Not.Null);
 				Assert.That(obj, Is.InstanceOfType(typeof(IProxy)));

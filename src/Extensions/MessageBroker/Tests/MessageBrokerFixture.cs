@@ -150,7 +150,7 @@ namespace Ninject.Extensions.MessageBroker.Tests
 
 				Assert.That(sub.LastMessage, Is.Null);
 
-				IMessageBroker messageBroker = kernel.GetComponent<IMessageBroker>();
+				var messageBroker = kernel.Components.Get<IMessageBroker>();
 				messageBroker.DisableChannel("message://PublisherMock/MessageReceived");
 				Assert.That(pub.HasListeners);
 
@@ -172,7 +172,7 @@ namespace Ninject.Extensions.MessageBroker.Tests
 
 				Assert.That(sub.LastMessage, Is.Null);
 
-				IMessageBroker messageBroker = kernel.GetComponent<IMessageBroker>();
+				var messageBroker = kernel.Components.Get<IMessageBroker>();
 				messageBroker.CloseChannel("message://PublisherMock/MessageReceived");
 				Assert.That(pub.HasListeners, Is.False);
 

@@ -43,10 +43,10 @@ namespace Ninject.Core.Activation.Strategies
 		{
 			if (ShouldProxy(context, instance))
 			{
-				if (!Kernel.HasComponent<IProxyFactory>())
+				if (Kernel.Components.ProxyFactory == null)
 					throw new InvalidOperationException(ExceptionFormatter.NoProxyFactoryAvailable(context));
 
-				instance = Kernel.GetComponent<IProxyFactory>().Wrap(context, instance);
+				instance = Kernel.Components.ProxyFactory.Wrap(context, instance);
 			}
 
 			return StrategyResult.Proceed;
@@ -62,8 +62,8 @@ namespace Ninject.Core.Activation.Strategies
 		/// </returns>
 		public override StrategyResult BeforeDestroy(IContext context, ref object instance)
 		{
-			if (Kernel.HasComponent<IProxyFactory>())
-				instance = Kernel.GetComponent<IProxyFactory>().Unwrap(context, instance);
+			if (Kernel.Components.ProxyFactory != null)
+				instance = Kernel.Components.ProxyFactory.Unwrap(context, instance);
 
 			return StrategyResult.Proceed;
 		}
@@ -76,10 +76,11 @@ namespace Ninject.Core.Activation.Strategies
 		/// <returns><see langword="True"/> if the instance should be proxied, otherwise <see langword="false"/>.</returns>
 		protected virtual bool ShouldProxy(IContext context, object instance)
 		{
+			IInterceptorRegistry registry = Kernel.Components.InterceptorRegistry;
+
 			// If dynamic interceptors have been defined, all types will be proxied, regardless
 			// of whether or not they request interceptors.
-			// TODO: Maybe this decision should actually evaluate the type?
-			if (Kernel.GetComponent<IInterceptorRegistry>().HasDynamicInterceptors)
+			if (registry != null && registry.HasDynamicInterceptors)
 				return true;
       
 			// Otherwise, check the type's activation plan.

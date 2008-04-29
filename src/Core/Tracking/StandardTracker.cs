@@ -54,16 +54,7 @@ namespace Ninject.Core.Tracking
 		{
 			if (disposing && !IsDisposed)
 			{
-				foreach (KeyValuePair<WeakReference, IContext> entry in _contextCache)
-				{
-					WeakReference reference = entry.Key;
-					IContext context = entry.Value;
-
-					if (reference.IsAlive)
-						DoRelease(context, reference.Target);
-				}
-
-				_contextCache.Clear();
+				ReleaseAll();
 				_contextCache = null;
 			}
 
@@ -121,6 +112,26 @@ namespace Ninject.Core.Tracking
 					Logger.Debug("Instance released, no longer tracked");
 
 				return true;
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases all of the instances that are currently being tracked.
+		/// </summary>
+		public void ReleaseAll()
+		{
+			lock (_contextCache)
+			{
+				foreach (KeyValuePair<WeakReference, IContext> entry in _contextCache)
+				{
+					WeakReference reference = entry.Key;
+					IContext context = entry.Value;
+
+					if (reference.IsAlive)
+						DoRelease(context, reference.Target);
+				}
+
+				_contextCache.Clear();
 			}
 		}
 		#endregion

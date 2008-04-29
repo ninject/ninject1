@@ -105,7 +105,7 @@ namespace Ninject.Core.Planning.Strategies
 		protected virtual void RegisterMethodInterceptors(IBinding binding, Type type, IActivationPlan plan,
 			MethodInfo method, ICollection<InterceptAttribute> attributes)
 		{
-			var registry = Kernel.GetComponent<IInterceptorRegistry>();
+			IInterceptorRegistry registry = Kernel.Components.InterceptorRegistry;
 
 			foreach (InterceptAttribute attribute in attributes)
 				registry.RegisterStatic(attribute.CreateInterceptor, attribute.Order, method);

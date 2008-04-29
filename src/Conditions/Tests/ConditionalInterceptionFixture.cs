@@ -44,7 +44,7 @@ namespace Ninject.Conditions.Tests.Binding
 
 			using (IKernel kernel = new StandardKernel(module))
 			{
-				kernel.Connect<IProxyFactory>(new DummyProxyFactory());
+				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 
@@ -57,7 +57,7 @@ namespace Ninject.Conditions.Tests.Binding
 					new object[0]
 				);
 
-				ICollection<IInterceptor> interceptors = kernel.GetComponent<IInterceptorRegistry>().GetInterceptors(request);
+				ICollection<IInterceptor> interceptors = kernel.Components.InterceptorRegistry.GetInterceptors(request);
 				Assert.That(interceptors.Count, Is.EqualTo(2));
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();
@@ -84,7 +84,7 @@ namespace Ninject.Conditions.Tests.Binding
 
 			using (IKernel kernel = new StandardKernel(module))
 			{
-				kernel.Connect<IProxyFactory>(new DummyProxyFactory());
+				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
 				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
 
@@ -97,7 +97,7 @@ namespace Ninject.Conditions.Tests.Binding
 					new object[] { argument }
 				);
 
-				ICollection<IInterceptor> interceptors = kernel.GetComponent<IInterceptorRegistry>().GetInterceptors(request);
+				ICollection<IInterceptor> interceptors = kernel.Components.InterceptorRegistry.GetInterceptors(request);
 				Assert.That(interceptors.Count, Is.EqualTo(2));
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();

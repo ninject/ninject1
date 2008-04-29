@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Core.Binding;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Tests.Mocks
@@ -37,9 +38,10 @@ namespace Ninject.Core.Tests.Mocks
 			return new StandardBinding(this, service);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		protected override void InitializeComponents()
+		protected override IComponentContainer InitializeComponents()
 		{
-			// Don't connect any components, to trigger a failure.
+			// Return an empty container, to trigger an error.
+			return new StandardComponentContainer(this);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

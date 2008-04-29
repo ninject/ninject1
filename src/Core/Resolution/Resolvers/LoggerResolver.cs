@@ -56,7 +56,7 @@ namespace Ninject.Core.Resolution.Resolvers
 			Ensure.ArgumentNotNull(innerContext, "innerContext");
 			Ensure.NotDisposed(this);
 
-			ILoggerFactory loggerFactory = innerContext.Kernel.GetComponent<ILoggerFactory>();
+			ILoggerFactory loggerFactory = innerContext.Kernel.Components.LoggerFactory;
 			return loggerFactory.GetLogger(outerContext.Plan.Type);
 		}
 		#endregion

@@ -36,6 +36,11 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
+		/// Gets the kernel's component container.
+		/// </summary>
+		IComponentContainer Components { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the name of the configuration that the kernel is currently using. This
 		/// value can be referred to in conditions to alter bindings.
 		/// </summary>
@@ -181,64 +186,6 @@ namespace Ninject.Core
 		/// Ends the previous scope.
 		/// </summary>
 		void EndScope();
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Methods: Kernel Components
-		/// <summary>
-		/// Connects a component to the kernel. If a component with the specified service is
-		/// already connected, it will be disconnected first.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <param name="component">The instance of the component.</param>
-		void Connect<T>(T component) where T : IKernelComponent;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Connects a component to the kernel. If a component with the specified service is
-		/// already connected, it will be disconnected first.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <param name="component">The instance of the component.</param>
-		void Connect(Type type, IKernelComponent component);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Disconnects a component from the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		void Disconnect<T>() where T : IKernelComponent;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Disconnects a component from the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		void Disconnect(Type type);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves a component from the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <returns>The instance of the component.</returns>
-		T GetComponent<T>() where T : IKernelComponent;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves a component from the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <returns>The instance of the component.</returns>
-		IKernelComponent GetComponent(Type type);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Determines whether a component with the specified service type has been added to the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
-		bool HasComponent<T>() where T : IKernelComponent;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Determines whether a component with the specified service type has been added to the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
-		bool HasComponent(Type type);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

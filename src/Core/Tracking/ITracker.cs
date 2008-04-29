@@ -50,5 +50,10 @@ namespace Ninject.Core.Tracking
 		/// <returns><see langword="True"/> if the instance was being tracked, otherwise <see langword="false"/>.</returns>
 		bool Release(object instance);
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases all of the instances that are currently being tracked.
+		/// </summary>
+		void ReleaseAll();
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

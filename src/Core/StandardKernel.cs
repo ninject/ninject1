@@ -95,15 +95,19 @@ namespace Ninject.Core
 		/// <summary>
 		/// Connects all kernel components. Called during initialization of the kernel.
 		/// </summary>
-		protected override void InitializeComponents()
+		protected override IComponentContainer InitializeComponents()
 		{
-			Connect<ILoggerFactory>(new NullLoggerFactory());
-			Connect<IActivator>(new StandardActivator());
-			Connect<IPlanner>(new StandardPlanner());
-			Connect<ITracker>(new StandardTracker());
-			Connect<IResolverFactory>(new StandardResolverFactory());
-			Connect<IInjectorFactory>(new DynamicInjectorFactory());
-			Connect<IInterceptorRegistry>(new StandardInterceptorRegistry());
+			var components = new StandardComponentContainer(this);
+
+			components.Connect<ILoggerFactory>(new NullLoggerFactory());
+			components.Connect<IActivator>(new StandardActivator());
+			components.Connect<IPlanner>(new StandardPlanner());
+			components.Connect<ITracker>(new StandardTracker());
+			components.Connect<IResolverFactory>(new StandardResolverFactory());
+			components.Connect<IInjectorFactory>(new DynamicInjectorFactory());
+			components.Connect<IInterceptorRegistry>(new StandardInterceptorRegistry());
+
+			return components;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

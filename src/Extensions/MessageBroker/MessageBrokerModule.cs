@@ -61,7 +61,7 @@ namespace Ninject.Extensions.MessageBroker
 		/// </summary>
 		public override void BeforeLoad()
 		{
-			Kernel.Connect<IMessageBroker>(_messageBroker);
+			Kernel.Components.Connect<IMessageBroker>(_messageBroker);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

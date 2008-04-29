@@ -37,7 +37,7 @@ namespace Ninject.Integration.NLog
 		/// </summary>
 		public override void BeforeLoad()
 		{
-			Kernel.Connect<ILoggerFactory>(new NLogLoggerFactory());
+			Kernel.Components.Connect<ILoggerFactory>(new NLogLoggerFactory());
 		}
 
 		/// <summary>

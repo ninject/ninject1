@@ -37,7 +37,7 @@ namespace Ninject.Integration.LinFu
 		/// </summary>
 		public override void BeforeLoad()
 		{
-			Kernel.Connect<IProxyFactory>(new LinFuProxyFactory());
+			Kernel.Components.Connect<IProxyFactory>(new LinFuProxyFactory());
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

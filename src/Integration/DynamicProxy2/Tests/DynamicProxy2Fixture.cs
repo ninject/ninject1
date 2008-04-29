@@ -156,7 +156,7 @@ namespace Ninject.Integration.DynamicProxy2.Tests
 
 			using (IKernel kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
 			{
-				kernel.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
+				kernel.Components.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
 
 				IFoo obj = kernel.Get<IFoo>();
 				Assert.That(obj, Is.Not.Null);

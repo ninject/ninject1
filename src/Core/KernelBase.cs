@@ -39,24 +39,17 @@ namespace Ninject.Core
 	public abstract class KernelBase : DisposableObject, IKernel
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Constants
-		private static readonly Type[] RequiredComponents = new Type[] {
-			typeof(IPlanner),
-			typeof(IActivator),
-			typeof(ITracker),
-			typeof(IInjectorFactory),
-			typeof(IResolverFactory),
-			typeof(ILoggerFactory)
-		};
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private readonly Dictionary<Type, IKernelComponent> _components = new Dictionary<Type, IKernelComponent>();
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly Stack<IScope> _scopes = new Stack<IScope>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
+		/// <summary>
+		/// Gets the kernel's component container.
+		/// </summary>
+		public IComponentContainer Components { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the name of the configuration that the kernel is currently using. This
 		/// value can be referred to in conditions to alter bindings.
@@ -86,24 +79,17 @@ namespace Ninject.Core
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Disposing of kernel");
 
-				// Dispose the tracker, which will release all of the existing instances.
-				DisposeComponent<ITracker>();
+				// Release all currently-tracked instances.
+				Components.Tracker.ReleaseAll();
 
 				// Release all of the registered bindings.
 				foreach (List<IBinding> bindings in _bindings.Values)
 					DisposeCollection(bindings);
 
-				// Dispose of the standard components in a particular order.
-				DisposeComponent<IPlanner>();
-				DisposeComponent<IActivator>();
-				DisposeComponent<IInjectorFactory>();
-				DisposeComponent<ILoggerFactory>();
-
-				// Dispose of any remaining components.
-				DisposeDictionary(_components);
-
-				_components.Clear();
 				_bindings.Clear();
+
+				// Dispose of the component container.
+				DisposeMember(Components);
 			}
 
 			base.Dispose(disposing);
@@ -127,11 +113,11 @@ namespace Ninject.Core
 			Options = options;
 			Configuration = configuration;
 
-			InitializeComponents();
-			ValidateComponents();
+			Components = InitializeComponents();
+			Components.Validate();
 
 			// If the user has connected a real logger factory, get a real logger.
-			Logger = GetComponent<ILoggerFactory>().GetLogger(GetType());
+			Logger = Components.LoggerFactory.GetLogger(GetType());
 
 			LoadModules(modules);
 
@@ -338,97 +324,16 @@ namespace Ninject.Core
 			Ensure.ArgumentNotNull(instance, "instance");
 			Ensure.NotDisposed(this);
 
-			return GetComponent<ITracker>().Release(instance);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods: Kernel Components
-		/// <summary>
-		/// Connects a component to the kernel. If a component with the specified service is
-		/// already connected, it will be disconnected first.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <param name="component">The instance of the component.</param>
-		public void Connect<T>(T component)
-			where T : IKernelComponent
-		{
-			DoConnect(typeof(T), component);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Connects a component to the kernel. If a component with the specified service is
-		/// already connected, it will be disconnected first.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <param name="component">The instance of the component.</param>
-		public void Connect(Type type, IKernelComponent component)
-		{
-			DoConnect(type, component);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Disconnects a component from the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		public void Disconnect<T>()
-			where T : IKernelComponent
-		{
-			DoDisconnect(typeof(T));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Disconnects a component from the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		public void Disconnect(Type type)
-		{
-			DoDisconnect(type);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves a component from the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <returns>The instance of the component.</returns>
-		public T GetComponent<T>()
-			where T : IKernelComponent
-		{
-			return (T) DoGetComponent(typeof(T));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves a component from the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <returns>The instance of the component.</returns>
-		public IKernelComponent GetComponent(Type type)
-		{
-			return DoGetComponent(type);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Determines whether a component with the specified service type has been added to the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
-		public bool HasComponent<T>()
-			where T : IKernelComponent
-		{
-			return DoHasComponent(typeof(T));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Determines whether a component with the specified service type has been added to the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
-		public bool HasComponent(Type type)
-		{
-			return DoHasComponent(type);
+			return Components.Tracker.Release(instance);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods: Initialization
+		/// <summary>
+		/// Connects all kernel components. Called during initialization of the kernel.
+		/// </summary>
+		protected abstract IComponentContainer InitializeComponents();
+		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Loads the specified modules into the kernel.
 		/// </summary>
@@ -472,18 +377,6 @@ namespace Ninject.Core
 
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Finished cleaning up module {0}", module.Name);
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Ensure all required components exist.
-		/// </summary>
-		protected virtual void ValidateComponents()
-		{
-			foreach (Type componentType in RequiredComponents)
-			{
-				if (!HasComponent(componentType))
-					throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(componentType));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -773,7 +666,7 @@ namespace Ninject.Core
 				Logger.Debug("Will create instance of type {0} for service {1}", Format.Type(type), Format.Type(service));
 
 			// Ask the planner to resolve or build the activation plan for the type, and add it to the context.
-			context.Plan = GetComponent<IPlanner>().GetPlan(context.Binding, type);
+			context.Plan = Components.Planner.GetPlan(context.Binding, type);
 
 			// Now that we have an activation plan, if this is an eager activation request, and the
 			// plan's behavior doesn't support eager activation, don't actually resolve an instance.
@@ -789,7 +682,7 @@ namespace Ninject.Core
 			object instance = context.Plan.Behavior.Resolve(context);
 
 			// Register the contextualized instance with the tracker.
-			GetComponent<ITracker>().Track(instance, context);
+			Components.Tracker.Track(instance, context);
 
 			// If there is an activation scope defined, register the instance with it as well.
       if (_scopes.Count > 0)
@@ -816,108 +709,13 @@ namespace Ninject.Core
 				throw new ActivationException(ExceptionFormatter.CouldNotResolveBindingForType(type, context));
 
 			// Generate the activation plan for the instance.
-			context.Plan = GetComponent<IPlanner>().GetPlan(context.Binding, type);
+			context.Plan = Components.Planner.GetPlan(context.Binding, type);
 
 			// Activate the instance.
-      GetComponent<IActivator>().Create(context, ref instance);
+      Components.Activator.Create(context, ref instance);
 
 			// Register the contextualized instance with the tracker.
-			GetComponent<ITracker>().Track(instance, context);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods: Kernel Components
-		/// <summary>
-		/// Connects all kernel components. Called during initialization of the kernel.
-		/// </summary>
-		protected abstract void InitializeComponents();
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Connects a component to the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <param name="component">The instance of the component.</param>
-		protected virtual void DoConnect(Type type, IKernelComponent component)
-		{
-			Ensure.ArgumentNotNull(type, "type");
-			Ensure.ArgumentNotNull(component, "member");
-			Ensure.NotDisposed(this);
-
-			lock (_components)
-			{
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Connecting component {0} with instance of {1}", Format.Type(type), Format.Type(component.GetType()));
-
-				// Remove the component if it's already been connected.
-				if (_components.ContainsKey(type))
-					DoDisconnect(type);
-
-				component.Connect(this);
-				_components.Add(type, component);
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Component {0} connected", Format.Type(type));
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Disconnects a component from the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		protected virtual void DoDisconnect(Type type)
-		{
-			Ensure.NotDisposed(this);
-
-			lock (_components)
-			{
-				if (!_components.ContainsKey(type))
-					throw new InvalidOperationException(ExceptionFormatter.KernelHasNoSuchComponent(type));
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Disconnecting component {0}", Format.Type(type));
-
-				IKernelComponent component = _components[type];
-				_components.Remove(type);
-				component.Disconnect();
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Disconnected component {0}", Format.Type(type));
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves a component from the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <returns>The instance of the component.</returns>
-		protected virtual IKernelComponent DoGetComponent(Type type)
-		{
-			Ensure.NotDisposed(this);
-
-			lock (_components)
-			{
-				IKernelComponent component;
-
-				if (!_components.TryGetValue(type, out component))
-					throw new InvalidOperationException(ExceptionFormatter.KernelHasNoSuchComponent(type));
-
-				return component;
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Determines whether a component with the specified service type has been added to the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
-		protected virtual bool DoHasComponent(Type type)
-		{
-			Ensure.NotDisposed(this);
-
-			lock (_components)
-			{
-				return _components.ContainsKey(type);
-			}
+			Components.Tracker.Track(instance, context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -943,19 +741,6 @@ namespace Ninject.Core
 				context.Parameters = parameters;
 
 			return context;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		private void DisposeComponent<T>()
-			where T : IKernelComponent
-		{
-			if (HasComponent<T>())
-			{
-				T component = GetComponent<T>();
-				Disconnect<T>();
-				DisposeMember(component);
-			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

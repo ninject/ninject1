@@ -78,7 +78,8 @@ namespace Ninject.Core.Activation
 			object[] arguments = ResolveConstructorArguments(context, directive);
 
 			// Get an injector that can call the injection constructor.
-			IConstructorInjector injector = context.Kernel.GetComponent<IInjectorFactory>().GetInjector(directive.Member);
+			IInjectorFactory injectorFactory = context.Kernel.Components.InjectorFactory;
+			IConstructorInjector injector = injectorFactory.GetInjector(directive.Member);
 
 			// Call the constructor and return the created object.
 			return injector.Invoke(arguments);

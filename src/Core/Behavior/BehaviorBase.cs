@@ -99,7 +99,7 @@ namespace Ninject.Core.Behavior
 			lock (this)
 			{
 				// Ask the activator to create an instance of the appropriate type.
-				Kernel.GetComponent<IActivator>().Create(context, ref instance);
+				Kernel.Components.Activator.Create(context, ref instance);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -111,7 +111,7 @@ namespace Ninject.Core.Behavior
 		protected virtual void DestroyInstance(IContext context, object instance)
 		{
 			if (instance != null)
-				Kernel.GetComponent<IActivator>().Destroy(context, ref instance);
+				Kernel.Components.Activator.Destroy(context, ref instance);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -121,7 +121,7 @@ namespace Ninject.Core.Behavior
 		protected virtual void DestroyInstance(InstanceWithContext contextualized)
 		{
 			object instance = contextualized.Instance;
-			Kernel.GetComponent<IActivator>().Destroy(contextualized.Context, ref instance);
+			Kernel.Components.Activator.Destroy(contextualized.Context, ref instance);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

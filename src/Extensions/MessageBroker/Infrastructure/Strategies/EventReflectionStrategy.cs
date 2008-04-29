@@ -57,7 +57,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 			}
 
 			MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-			var injectorFactory = Kernel.GetComponent<IInjectorFactory>();
+			IInjectorFactory injectorFactory = Kernel.Components.InjectorFactory;
 
 			foreach (MethodInfo method in methods)
 			{

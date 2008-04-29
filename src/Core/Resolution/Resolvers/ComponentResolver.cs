@@ -56,7 +56,7 @@ namespace Ninject.Core.Resolution.Resolvers
 			Ensure.ArgumentNotNull(innerContext, "innerContext");
 			Ensure.NotDisposed(this);
 
-			return innerContext.Kernel.GetComponent(Target.Type);
+			return innerContext.Kernel.Components.Get(Target.Type);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
