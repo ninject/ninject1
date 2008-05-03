@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
@@ -25,7 +26,7 @@ using Ninject.Core.Planning.Targets;
 using Ninject.Core.Parameters;
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Creation.Providers
 {
 	/// <summary>
 	/// A baseline definition of a provider that calls an injection constructor to create instances.

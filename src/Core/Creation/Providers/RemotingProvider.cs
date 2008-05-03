@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,33 +18,35 @@
 #endregion
 #region Using Directives
 using System;
+using System.Runtime.Remoting;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Creation.Providers
 {
 	/// <summary>
-	/// The default provider for the kernel. Creates instances of types by calling a constructor
-	/// via a constructor injector created by the kernel injection system, resolving and injecting
-	/// constructor arguments as necessary.
+	/// A provider that binds a service to a remoting channel.
 	/// </summary>
-	public class StandardProvider : InjectionProviderBase
+	public class RemotingProvider : ProviderBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
+		private readonly string _uri;
+		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Initializes a new instance of the <see cref="StandardProvider"/> class.
+		/// Initializes a new instance of the <see cref="RemotingProvider"/> class.
 		/// </summary>
-		/// <param name="prototype">The type of instances that the provider should create.</param>
-		public StandardProvider(Type prototype)
+		/// <param name="prototype">The type of instances that the provider will create.</param>
+		/// <param name="uri">The URI of the remoting channel to bind to.</param>
+		public RemotingProvider(Type prototype, string uri)
 			: base(prototype)
 		{
-			if (!CanSupportType(prototype))
-				throw new NotSupportedException(ExceptionFormatter.StandardProviderDoesNotSupportType(prototype));
+			Ensure.ArgumentNotNullOrEmptyString(uri, "uri");
+
+			_uri = uri;
+			RemotingConfiguration.RegisterWellKnownClientType(prototype, uri);
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
 		/// <summary>
 		/// Gets the concrete implementation type that will be instantiated for the provided context.
 		/// </summary>
@@ -52,24 +54,19 @@ namespace Ninject.Core.Activation
 		/// <returns>The concrete type that will be instantiated.</returns>
 		public override Type GetImplementationType(IContext context)
 		{
-			Ensure.ArgumentNotNull(context, "context");
-			Ensure.NotDisposed(this);
-
 			return Prototype;
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Static Methods
 		/// <summary>
-		/// Determines whether the provider can create instances of the specified type.
+		/// Creates instances of types by calling a constructor via a lightweight dynamic method,
+		/// resolving and injecting constructor arguments as necessary.
 		/// </summary>
-		/// <param name="type">The type in question.</param>
-		/// <returns><see langword="True"/> if instances can be created, otherwise <see langword="false"/>.</returns>
-		public static bool CanSupportType(Type type)
+		/// <param name="context">The context in which the activation is occurring.</param>
+		/// <returns>The instance of the type.</returns>
+		public override object Create(IContext context)
 		{
-			return (!type.IsInterface && !type.IsAbstract);
+			return RemotingServices.Connect(Prototype, _uri);
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

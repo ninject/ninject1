@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
+using Ninject.Core.Creation;
+using Ninject.Core.Creation.Providers;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Logging;
@@ -38,6 +40,19 @@ namespace Ninject.Core
 	/// </summary>
 	public abstract class KernelBase : DisposableObject, IKernel
 	{
+		/*----------------------------------------------------------------------------------------*/
+		#region Static Fields
+		private static readonly Type[] RequiredComponents = new Type[] {
+			typeof(IPlanner),
+			typeof(IActivator),
+			typeof(ITracker),
+			typeof(IBindingFactory),
+			typeof(IProviderFactory),
+			typeof(IInjectorFactory),
+			typeof(IResolverFactory),
+			typeof(ILoggerFactory)
+		};
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
@@ -114,7 +129,7 @@ namespace Ninject.Core
 			Configuration = configuration;
 
 			Components = InitializeComponents();
-			Components.Validate();
+			ValidateComponents();
 
 			// If the user has connected a real logger factory, get a real logger.
 			Logger = Components.LoggerFactory.GetLogger(GetType());
@@ -127,13 +142,6 @@ namespace Ninject.Core
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods: Bindings
-		/// <summary>
-		/// Creates a new binding for the specified service type.
-		/// </summary>
-		/// <param name="service">The service type to bind from.</param>
-		/// <returns>The new binding.</returns>
-		public abstract IBinding CreateBinding(Type service);
-		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Registers a new binding with the kernel.
 		/// </summary>
@@ -183,6 +191,16 @@ namespace Ninject.Core
 		public IBinding GetBinding(Type type, IContext context)
 		{
 			return ResolveBinding(type, context);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a collection of all bindings registered for the specified type.
+		/// </summary>
+		/// <param name="type">The type in question.</param>
+		/// <returns>The collection of bindings, or <see langword="null"/> if none have been registered.</returns>
+		public ICollection<IBinding> GetAllBindings(Type type)
+		{
+			return _bindings.ContainsKey(type) ? _bindings[type] : null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -333,6 +351,22 @@ namespace Ninject.Core
 		/// Connects all kernel components. Called during initialization of the kernel.
 		/// </summary>
 		protected abstract IComponentContainer InitializeComponents();
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Called during kernel initialization to ensure that all required components are available.
+		/// If components are missing, an exception is thrown.
+		/// </summary>
+		protected virtual void ValidateComponents()
+		{
+			if (Components == null)
+				throw new InvalidOperationException(ExceptionFormatter.KernelHasNoComponentContainer());
+
+			foreach (Type component in RequiredComponents)
+			{
+				if (!Components.Has(component))
+					throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(component));
+			}
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Loads the specified modules into the kernel.
@@ -497,7 +531,7 @@ namespace Ninject.Core
 						Logger.Debug("No binding exists for service {0}, creating implicit self-binding", Format.Type(service));
 
 					// Create a new implicit self-binding for the service type.
-					binding = CreateSelfBinding(service);
+					binding = CreateImplicitSelfBinding(service);
 
 					// Associate the binding with the service.
 					DoAddBinding(binding);
@@ -577,9 +611,9 @@ namespace Ninject.Core
 		/// </summary>
 		/// <param name="service">The service type to self-bind.</param>
 		/// <returns>The new binding.</returns>
-		protected virtual IBinding CreateSelfBinding(Type service)
+		protected virtual IBinding CreateImplicitSelfBinding(Type service)
 		{
-			IBinding binding = CreateBinding(service);
+			IBinding binding = Components.BindingFactory.Create(service);
 
 			binding.Provider = new StandardProvider(service);
 			binding.IsImplicit = true;

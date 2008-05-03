@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,11 +31,6 @@ namespace Ninject.Core.Tests.Mocks
 		public InvalidKernel(params IModule[] modules)
 			: base(KernelOptions.Default, null, modules)
 		{
-		}
-		/*----------------------------------------------------------------------------------------*/
-		public override IBinding CreateBinding(Type service)
-		{
-			return new StandardBinding(this, service);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		protected override IComponentContainer InitializeComponents()

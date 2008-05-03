@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -117,13 +117,6 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Bindings
 		/// <summary>
-		/// Creates a new binding for the specified service type.
-		/// </summary>
-		/// <param name="service">The service type to bind from.</param>
-		/// <returns>The new binding.</returns>
-		IBinding CreateBinding(Type service);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Registers a binding with the kernel.
 		/// </summary>
 		/// <param name="binding">The binding to register.</param>
@@ -158,6 +151,13 @@ namespace Ninject.Core
 		/// <param name="context">The context in which to resolve the binding.</param>
 		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
 		IBinding GetBinding(Type type, IContext context);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a collection of all bindings registered for the specified type.
+		/// </summary>
+		/// <param name="type">The type in question.</param>
+		/// <returns>The collection of bindings, or <see langword="null"/> if none have been registered.</returns>
+		ICollection<IBinding> GetAllBindings(Type type);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Modules

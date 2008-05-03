@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,11 +37,10 @@ namespace Ninject.Core.Resolution.Plugins
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Returns a value indicating whether this factory can create a resolver for the specified
-		/// injection target.
+		/// Returns a value indicating whether the plugin can create a resolver for the specified target.
 		/// </summary>
-		/// <param name="target">The injection target in question.</param>
-		/// <returns><see langword="True"/> if the factory can create resolvers, otherwise, <see langword="false"/>.</returns>
+		/// <param name="target">The target in question.</param>
+		/// <returns><see langword="True"/> if the plugin can create a resolver for the target, otherwise, <see langword="false"/>.</returns>
 		public bool Matches(ITarget target)
 		{
 			return typeof(IKernelComponent).IsAssignableFrom(target.Type);

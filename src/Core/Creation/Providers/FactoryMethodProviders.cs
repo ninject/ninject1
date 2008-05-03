@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 // Based on the work of Michael Hart <michael.hart.au@gmail.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,10 +19,11 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Creation.Providers
 {
 	#region Zero arguments
 	/// <summary>

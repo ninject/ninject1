@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,11 +18,8 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Logging;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Resolution.Plugins;
 using Ninject.Core.Resolution.Resolvers;
@@ -33,28 +30,9 @@ namespace Ninject.Core.Resolution
 	/// <summary>
 	/// A baseline definition of a <see cref="IResolverFactory"/>.
 	/// </summary>
-	public abstract class ResolverFactoryBase : KernelComponentBase, IResolverFactory
+	public abstract class ResolverFactoryBase : PluggableFactoryComponentBase<ITarget, IResolverFactoryPlugin>, IResolverFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Properties
-		/// <summary>
-		/// Gets a collection of plug-in factories that can contribute to the creation of specialized
-		/// resolvers.
-		/// </summary>
-		public IList<IResolverFactoryPlugin> Plugins { get; protected set; }
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ResolverFactoryBase"/> class.
-		/// </summary>
-		protected ResolverFactoryBase()
-		{
-			Plugins = new List<IResolverFactoryPlugin>();
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
 		/// <summary>
 		/// Creates a dependency resolver for the specified binding and target.
 		/// </summary>
@@ -63,17 +41,9 @@ namespace Ninject.Core.Resolution
 		/// <returns>The newly-created dependency resolver.</returns>
 		public IResolver Create(IBinding binding, ITarget target)
 		{
-			// If any of the plug-in factories match the target, use the resolver they create.
-			foreach (IResolverFactoryPlugin plugin in Plugins)
-			{
-				if (plugin.Matches(target))
-					return plugin.Create(binding, target);
-			}
-
-			// If none of the plugins matched, fall back on the StandardResolver.
-			return new StandardResolver(target);
+			IResolverFactoryPlugin plugin = FindPlugin(target);
+			return (plugin != null) ? plugin.Create(binding, target) : new StandardResolver(target);
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

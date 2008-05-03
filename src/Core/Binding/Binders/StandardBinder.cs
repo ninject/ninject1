@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ using System.Collections;
 using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
 using Ninject.Core.Binding.Syntax;
+using Ninject.Core.Creation;
+using Ninject.Core.Creation.Providers;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -47,19 +49,19 @@ namespace Ninject.Core.Binding
 		#region IBindingTargetSyntax Members
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToSelf()
 		{
-			Binding.Provider = CreateProvider(Binding.Service);
+			Binding.Provider = Binding.Kernel.Components.ProviderFactory.Create(Binding.Service);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.To<T>()
 		{
-			Binding.Provider = CreateProvider(typeof(T));
+			Binding.Provider = Binding.Kernel.Components.ProviderFactory.Create(typeof(T));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.To(Type type)
 		{
-			Binding.Provider = CreateProvider(type);
+			Binding.Provider = Binding.Kernel.Components.ProviderFactory.Create(type);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/

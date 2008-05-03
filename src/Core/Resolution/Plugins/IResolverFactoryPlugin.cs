@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,9 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core.Binding;
-using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Targets;
-using Ninject.Core.Resolution.Resolvers;
 #endregion
 
 namespace Ninject.Core.Resolution.Plugins
@@ -30,16 +28,8 @@ namespace Ninject.Core.Resolution.Plugins
 	/// A factory that can be plugged into a <see cref="IResolverFactory"/> to conditionally
 	/// create a specific type of <see cref="IResolver"/>.
 	/// </summary>
-	public interface IResolverFactoryPlugin
+	public interface IResolverFactoryPlugin : ICondition<ITarget>
 	{
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Returns a value indicating whether this factory can create a resolver for the specified
-		/// injection target.
-		/// </summary>
-		/// <param name="target">The injection target in question.</param>
-		/// <returns><see langword="True"/> if the factory can create resolvers, otherwise, <see langword="false"/>.</returns>
-		bool Matches(ITarget target);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a dependency resolver for the specified binding and target.

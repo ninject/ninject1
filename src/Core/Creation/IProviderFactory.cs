@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,20 +18,23 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Binding
+namespace Ninject.Core.Creation
 {
 	/// <summary>
-	/// Configures type bindings.
+	/// Creates <see cref="IProvider"/>s that can in turn create types for the kernel.
 	/// </summary>
-	public interface IBinder : IDisposable
+	public interface IProviderFactory : IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the binding that the binder should manipulate.
+		/// Creates a provider for the specified type.
 		/// </summary>
-		IBinding Binding { get; }
+		/// <param name="type">The type to create a provider for.</param>
+		/// <returns>The provider.</returns>
+		IProvider Create(Type type);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

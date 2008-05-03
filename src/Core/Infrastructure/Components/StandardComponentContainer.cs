@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Core.Activation;
+using Ninject.Core.Binding;
+using Ninject.Core.Creation;
 using Ninject.Core.Injection;
 using Ninject.Core.Interception;
 using Ninject.Core.Logging;
@@ -60,6 +62,16 @@ namespace Ninject.Core.Infrastructure
 		/// Gets the tracker.
 		/// </summary>
 		public ITracker Tracker { get; protected set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the binding factory.
+		/// </summary>
+		public IBindingFactory BindingFactory { get; protected set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the provider factory.
+		/// </summary>
+		public IProviderFactory ProviderFactory { get; protected set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the injector factory.
@@ -128,31 +140,6 @@ namespace Ninject.Core.Infrastructure
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
-		/// <summary>
-		/// Called during kernel initialization to ensure that all required components are available.
-		/// If components are missing, an exception is thrown.
-		/// </summary>
-		public void Validate()
-		{
-			if (Planner == null)
-				throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(typeof(IPlanner)));
-
-			if (Activator == null)
-				throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(typeof(IActivator)));
-
-			if (Tracker == null)
-				throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(typeof(ITracker)));
-
-			if (InjectorFactory == null)
-				throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(typeof(IInjectorFactory)));
-
-			if (ResolverFactory == null)
-				throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(typeof(IResolverFactory)));
-
-			if (LoggerFactory == null)
-				throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(typeof(ILoggerFactory)));
-		}
-		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Connects a component to the kernel. If a component with the specified service is
 		/// already connected, it will be disconnected first.
@@ -325,42 +312,30 @@ namespace Ninject.Core.Infrastructure
 		#region Private Methods
 		private void SetShortcutIfStandardComponent(Type type, IKernelComponent component)
 		{
-			if (type == typeof(IPlanner))
-				Planner = component as IPlanner;
-			else if (type == typeof(IActivator))
-				Activator = component as IActivator;
-			else if (type == typeof(ITracker))
-				Tracker = component as ITracker;
-			else if (type == typeof(IInjectorFactory))
-				InjectorFactory = component as IInjectorFactory;
-			else if (type == typeof(IResolverFactory))
-				ResolverFactory = component as IResolverFactory;
-			else if (type == typeof(ILoggerFactory))
-				LoggerFactory = component as ILoggerFactory;
-			else if (type == typeof(IInterceptorRegistry))
-				InterceptorRegistry = component as IInterceptorRegistry;
-			else if (type == typeof(IProxyFactory))
-				ProxyFactory = component as IProxyFactory;
+			if (type == typeof(IPlanner)) Planner = component as IPlanner;
+			else if (type == typeof(IActivator)) Activator = component as IActivator;
+			else if (type == typeof(ITracker)) Tracker = component as ITracker;
+			else if (type == typeof(IBindingFactory)) BindingFactory = component as IBindingFactory;
+			else if (type == typeof(IProviderFactory)) ProviderFactory = component as IProviderFactory;
+			else if (type == typeof(IInjectorFactory)) InjectorFactory = component as IInjectorFactory;
+			else if (type == typeof(IResolverFactory)) ResolverFactory = component as IResolverFactory;
+			else if (type == typeof(ILoggerFactory)) LoggerFactory = component as ILoggerFactory;
+			else if (type == typeof(IInterceptorRegistry)) InterceptorRegistry = component as IInterceptorRegistry;
+			else if (type == typeof(IProxyFactory)) ProxyFactory = component as IProxyFactory;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		private void ClearShortcutIfStandardComponent(Type type)
 		{
-			if (type == typeof(IPlanner))
-				Planner = null;
-			else if (type == typeof(IActivator))
-				Activator = null;
-			else if (type == typeof(ITracker))
-				Tracker = null;
-			else if (type == typeof(IInjectorFactory))
-				InjectorFactory = null;
-			else if (type == typeof(IResolverFactory))
-				ResolverFactory = null;
-			else if (type == typeof(ILoggerFactory))
-				LoggerFactory = null;
-			else if (type == typeof(IInterceptorRegistry))
-				InterceptorRegistry = null;
-			else if (type == typeof(IProxyFactory))
-				ProxyFactory = null;
+			if (type == typeof(IPlanner)) Planner = null;
+			else if (type == typeof(IActivator)) Activator = null;
+			else if (type == typeof(ITracker)) Tracker = null;
+			else if (type == typeof(IBindingFactory)) BindingFactory = null;
+			else if (type == typeof(IProviderFactory)) ProviderFactory = null;
+			else if (type == typeof(IInjectorFactory)) InjectorFactory = null;
+			else if (type == typeof(IResolverFactory)) ResolverFactory = null;
+			else if (type == typeof(ILoggerFactory)) LoggerFactory = null;
+			else if (type == typeof(IInterceptorRegistry)) InterceptorRegistry = null;
+			else if (type == typeof(IProxyFactory)) ProxyFactory = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

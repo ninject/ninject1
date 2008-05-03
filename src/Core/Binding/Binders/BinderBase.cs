@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,23 +19,35 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Resolution.Resolvers
+namespace Ninject.Core.Binding
 {
 	/// <summary>
-	/// Defines a means to resolve a dependency.
+	/// The baseline definition of a binder, which builds up information about a binding.
 	/// </summary>
-	public interface IResolver
+	public abstract class BinderBase : DisposableObject, IBinder
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Properties
 		/// <summary>
-		/// Resolves the associated dependency.
+		/// Gets the binding that the binder should manipulate.
 		/// </summary>
-		/// <param name="outerContext">The context in which the dependency was requested.</param>
-		/// <param name="innerContext">The context in which the dependency should be resolved.</param>
-		/// <returns>An object that satisfies the dependency.</returns>
-		object Resolve(IContext outerContext, IContext innerContext);
+		public IBinding Binding { get; protected set; }
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BinderBase"/> class.
+		/// </summary>
+		/// <param name="binding">The binding that the binder should manipulate.</param>
+		protected BinderBase(IBinding binding)
+		{
+			Ensure.ArgumentNotNull(binding, "binding");
+			Binding = binding;
+		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

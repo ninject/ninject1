@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,59 +18,63 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Creation.Providers
 {
 	/// <summary>
-	/// A simple version of a provider that manually creates instances of types. This can be
-	/// used in cases where injection is not desired.
+	/// A baseline definition of a provider.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public abstract class SimpleProvider<T> : ProviderBase
+	public abstract class ProviderBase : DisposableObject, IProvider
 	{
+		/*----------------------------------------------------------------------------------------*/
+		#region Properties
+		/// <summary>
+		/// Gets the prototype of the provider. This is almost always the type that is returned,
+		/// except in the case of generic argument inference.
+		/// </summary>
+		public Type Prototype { get; private set; }
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SimpleProvider{T}"/> class.
+		/// Initializes a new instance of the <see cref="ProviderBase"/> class.
 		/// </summary>
-		protected SimpleProvider()
-			: base(typeof(T))
+		/// <param name="prototype">The prototype that the provider will use to create instances.</param>
+		protected ProviderBase(Type prototype)
 		{
+			Ensure.ArgumentNotNull(prototype, "prototype");
+			Prototype = prototype;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
+		/// Determines whether the provider is compatible with the specified context.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		/// <returns><see langword="True"/> if the provider is compatible, otherwise <see langword="false"/>.</returns>
+		public virtual bool IsCompatibleWith(IContext context)
+		{
+			return context.Service.IsAssignableFrom(Prototype);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the concrete implementation type that will be instantiated for the provided context.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
 		/// <returns>The concrete type that will be instantiated.</returns>
-		public override Type GetImplementationType(IContext context)
-		{
-			return typeof(T);
-		}
+		public abstract Type GetImplementationType(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new instance of the type.
+		/// Creates instances of types by calling a constructor via a lightweight dynamic method,
+		/// resolving and injecting constructor arguments as necessary.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
 		/// <returns>The instance of the type.</returns>
-		public override object Create(IContext context)
-		{
-			Ensure.ArgumentNotNull(context, "context");
-			return CreateInstance(context);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods
-		/// <summary>
-		/// Creates a new instance of the type.
-		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <returns>The instance of the type.</returns>
-		protected abstract T CreateInstance(IContext context);
+		public abstract object Create(IContext context);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

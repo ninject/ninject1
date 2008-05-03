@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -127,6 +127,13 @@ namespace Ninject.Core.Infrastructure
 		public static string GenericProviderDoesNotSupportType(Type prototype)
 		{
 			return String.Format("The GenericProvider is not compatible with the type {0} because it is not a generic type definition.", prototype);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region KernelHasNoComponentContainer
+		public static string KernelHasNoComponentContainer()
+		{
+			return String.Format("The kernel has no component container. Please return a valid IComponentContainer from the call to InitializeComponents().");
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

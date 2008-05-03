@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 using System;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
+using Ninject.Core.Creation;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Interception;
@@ -79,18 +80,6 @@ namespace Ninject.Core
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
-		/// <summary>
-		/// Creates a new binding for the specified service type.
-		/// </summary>
-		/// <param name="service">The service type to bind from.</param>
-		/// <returns>The new binding.</returns>
-		public override IBinding CreateBinding(Type service)
-		{
-			return new StandardBinding(this, service);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
 		/// <summary>
 		/// Connects all kernel components. Called during initialization of the kernel.
@@ -103,6 +92,8 @@ namespace Ninject.Core
 			components.Connect<IActivator>(new StandardActivator());
 			components.Connect<IPlanner>(new StandardPlanner());
 			components.Connect<ITracker>(new StandardTracker());
+			components.Connect<IBindingFactory>(new StandardBindingFactory());
+			components.Connect<IProviderFactory>(new StandardProviderFactory());
 			components.Connect<IResolverFactory>(new StandardResolverFactory());
 			components.Connect<IInjectorFactory>(new DynamicInjectorFactory());
 			components.Connect<IInterceptorRegistry>(new StandardInterceptorRegistry());

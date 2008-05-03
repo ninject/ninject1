@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Creation
 {
 	/// <summary>
 	/// An object that creates instances of a type.

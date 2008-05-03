@@ -1,7 +1,7 @@
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
-// Copyright (c) 2007, Enkari, Ltd.
+// Copyright (c) 2007-2008, Enkari, Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
+using Ninject.Core.Binding;
+using Ninject.Core.Creation;
 using Ninject.Core.Injection;
 using Ninject.Core.Interception;
 using Ninject.Core.Logging;
@@ -58,6 +60,16 @@ namespace Ninject.Core.Infrastructure
 		ITracker Tracker { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets the binding factory.
+		/// </summary>
+		IBindingFactory BindingFactory { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the provider factory.
+		/// </summary>
+		IProviderFactory ProviderFactory { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the injector factory.
 		/// </summary>
 		IInjectorFactory InjectorFactory { get; }
@@ -84,12 +96,6 @@ namespace Ninject.Core.Infrastructure
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods
-		/// <summary>
-		/// Called during kernel initialization to ensure that all required components are available.
-		/// If components are missing, an exception is thrown.
-		/// </summary>
-		void Validate();
-		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Connects a component to the kernel. If a component with the specified service is
 		/// already connected, it will be disconnected first.
