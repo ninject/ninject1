@@ -74,7 +74,6 @@
     <Compile Include="Infrastructure\Components\StandardComponentContainer.cs" />
     <Compile Include="Infrastructure\Extensions\AttributeExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionAttribute.cs" />
-    <Compile Include="Infrastructure\Structures\ITypedCollection.cs" />
     <Compile Include="Infrastructure\Structures\TypedCollection.cs" />
     <Compile Include="Infrastructure\Utility\ExceptionThrower.cs" />
     <Compile Include="Interception\InterceptorFactoryMethod.cs" />

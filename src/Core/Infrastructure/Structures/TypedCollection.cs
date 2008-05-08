@@ -28,7 +28,7 @@ namespace Ninject.Core.Infrastructure
 	/// A collection that organizes items by type.
 	/// </summary>
 	[Serializable]
-	public abstract class TypedCollection<TKey, TBase> : ITypedCollection<TKey, TBase>
+	public abstract class TypedCollection<TKey, TBase>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields

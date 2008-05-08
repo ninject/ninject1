@@ -29,12 +29,12 @@ namespace Ninject.Core.Infrastructure
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets an object containing debugging information for the binding.
+		/// Gets or sets the debugging information for the object.
 		/// </summary>
 		DebugInfo DebugInfo { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets a value indicating whether the binding has debugging information.
+		/// Gets a value indicating whether the object has debugging information.
 		/// </summary>
 		bool HasDebugInfo { get; }
 		/*----------------------------------------------------------------------------------------*/

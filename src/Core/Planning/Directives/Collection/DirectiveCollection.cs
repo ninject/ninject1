@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Directives;
 #endregion
@@ -31,6 +32,7 @@ namespace Ninject.Core.Planning
 	public class DirectiveCollection : TypedCollection<object, IDirective>, IDirectiveCollection
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
 		/// <summary>
 		/// Gets the key for the specified item.
 		/// </summary>
@@ -53,6 +55,44 @@ namespace Ninject.Core.Planning
 		{
 			// Do nothing; allow the item to override the existing directive.
 		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region IDirectiveCollection Implementation
+		void IDirectiveCollection.Add<T>(T item)
+		{
+			Add(item);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		void IDirectiveCollection.AddRange<T>(IEnumerable<T> items)
+		{
+			AddRange(items);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		bool IDirectiveCollection.Has<T>(object key)
+		{
+			return Has<T>(key);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		bool IDirectiveCollection.HasOneOrMore<T>()
+		{
+			return HasOneOrMore<T>();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		T IDirectiveCollection.GetOne<T>()
+		{
+			return GetOne<T>();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		T IDirectiveCollection.GetOne<T>(object key)
+		{
+			return GetOne<T>(key);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IList<T> IDirectiveCollection.GetAll<T>()
+		{
+			return GetAll<T>();
+		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

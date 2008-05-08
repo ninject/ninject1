@@ -30,6 +30,7 @@ namespace Ninject.Core.Parameters
 	public class ParameterCollection : TypedCollection<string, IParameter>, IParameterCollection
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
 		/// <summary>
 		/// Gets the key for the specified item.
 		/// </summary>
@@ -52,6 +53,44 @@ namespace Ninject.Core.Parameters
 		{
 			throw new InvalidOperationException(ExceptionFormatter.ParameterWithSameNameAlreadyDefined(newItem));
 		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region IParameterCollection Implementation
+		void IParameterCollection.Add<T>(T item)
+		{
+			Add(item);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		void IParameterCollection.AddRange<T>(IEnumerable<T> items)
+		{
+			AddRange(items);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		bool IParameterCollection.Has<T>(string key)
+		{
+			return Has<T>(key);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		bool IParameterCollection.HasOneOrMore<T>()
+		{
+			return HasOneOrMore<T>();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		T IParameterCollection.GetOne<T>()
+		{
+			return GetOne<T>();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		T IParameterCollection.GetOne<T>(string key)
+		{
+			return GetOne<T>(key);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IList<T> IParameterCollection.GetAll<T>()
+		{
+			return GetAll<T>();
+		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
