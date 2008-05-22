@@ -38,7 +38,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.MessageBroker", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.NLog", "src\Integration\NLog\Integration.NLog.csproj", "{3BDACDF8-ADCB-42FD-AB5F-E7E54A674D93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "src\UnitTests\UnitTests.csproj", "{D8064AA7-4F53-4E95-AF41-E033E0258489}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "src\Tests\Tests.csproj", "{D8064AA7-4F53-4E95-AF41-E033E0258489}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
