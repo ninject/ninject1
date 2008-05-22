@@ -8,8 +8,8 @@
     <ProjectGuid>{D8064AA7-4F53-4E95-AF41-E033E0258489}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ninject.UnitTests</RootNamespace>
-    <AssemblyName>Ninject.UnitTests</AssemblyName>
+    <RootNamespace>Ninject.Tests</RootNamespace>
+    <AssemblyName>Ninject.Tests</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
