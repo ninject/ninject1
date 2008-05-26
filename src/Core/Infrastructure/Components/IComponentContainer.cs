@@ -32,8 +32,7 @@ using Ninject.Core.Tracking;
 namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// A container that manages components for a <see cref="IKernel"/>. Contains "shortcut"
-	/// properties for fast access to standard components.
+	/// A container that manages components for an <see cref="IKernel"/>.
 	/// </summary>
 	public interface IComponentContainer : IDisposableEx
 	{
@@ -43,56 +42,6 @@ namespace Ninject.Core.Infrastructure
 		/// Gets the kernel whose components are managed by the container.
 		/// </summary>
 		IKernel Kernel { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the planner.
-		/// </summary>
-		IPlanner Planner { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the activator.
-		/// </summary>
-		IActivator Activator { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the tracker.
-		/// </summary>
-		ITracker Tracker { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the binding factory.
-		/// </summary>
-		IBindingFactory BindingFactory { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the provider factory.
-		/// </summary>
-		IProviderFactory ProviderFactory { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the injector factory.
-		/// </summary>
-		IInjectorFactory InjectorFactory { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the resolver factory.
-		/// </summary>
-		IResolverFactory ResolverFactory { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the logger factory.
-		/// </summary>
-		ILoggerFactory LoggerFactory { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the interceptor registry.
-		/// </summary>
-		IInterceptorRegistry InterceptorRegistry { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the proxy factory.
-		/// </summary>
-		IProxyFactory ProxyFactory { get; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods

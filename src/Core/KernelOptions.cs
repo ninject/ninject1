@@ -74,6 +74,18 @@ namespace Ninject.Core
 		public bool InjectNonPublicMembers { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets a value indicating whether Ninject should automatically inject all
+		/// targets for which a binding exists, whether or not their members are decorated with
+		/// an injection attribute.
+		/// </summary>
+		/// <remarks>
+		/// If <see langword="true"/>, the kernel will automatically inject all targets for which
+		/// a matching binding exists. If <see langword="false"/>, the kernel will only consider
+		/// targets whose members are decorated with an injection attribute.
+		/// </remarks>
+		public bool UseAutoWiring { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets or sets a value indicating whether types with restricted instantation (i.e.
 		/// singletons, one-per-threads, etc.) should be eagerly activated.
 		/// </summary>
@@ -83,6 +95,19 @@ namespace Ninject.Core
 		/// will be lazily activated the first time they are requested.
 		/// </remarks>
 		public bool UseEagerActivation { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets a value indicating whether instances should be created and values be
+		/// injected via reflection rather than dynamic delegates created via lightweight code
+		/// generation.
+		/// </summary>
+		/// <remarks>
+		/// If <see langword="true"/>, the kernel will use reflection to create and inject
+		/// instances. If <see langword="false"/>, the kernel will use lightweight code generation
+		/// instead. Reflection may be faster in situations with a large amount of singletons
+		/// and very few transient services.
+		/// </remarks>
+		public bool UseReflectionBasedInjection { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether the kernel should throw an exception if a
@@ -146,6 +171,8 @@ namespace Ninject.Core
 		{
 			ImplicitSelfBinding = true;
 			InjectNonPublicMembers = false;
+			UseAutoWiring = false;
+			UseReflectionBasedInjection = false;
 			UseEagerActivation = false;
 			IgnoreProviderCompatibility = false;
 			DefaultBehaviorType = typeof(TransientBehavior);

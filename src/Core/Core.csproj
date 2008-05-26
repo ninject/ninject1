@@ -38,17 +38,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Activation\ActivatorBase.cs" />
-    <Compile Include="Activation\Context\ContextBase.cs" />
     <Compile Include="Activation\Context\StandardContext.cs" />
+    <Compile Include="Activation\Context\StandardContextFactory.cs" />
+    <Compile Include="Activation\Context\IContextFactory.cs" />
     <Compile Include="Activation\Context\IContext.cs" />
     <Compile Include="Binding\StandardBindingFactory.cs" />
     <Compile Include="Binding\IBindingFactory.cs" />
@@ -72,11 +71,14 @@
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
     <Compile Include="Infrastructure\Components\IComponentContainer.cs" />
     <Compile Include="Infrastructure\Components\StandardComponentContainer.cs" />
-    <Compile Include="Infrastructure\Extensions\AttributeExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\ExtensionsForICustomAttributeProvider.cs" />
+    <Compile Include="Infrastructure\Extensions\ExtensionsForMethodBase.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionAttribute.cs" />
     <Compile Include="Infrastructure\Structures\TypedCollection.cs" />
     <Compile Include="Infrastructure\Utility\ExceptionThrower.cs" />
     <Compile Include="Interception\InterceptorFactoryMethod.cs" />
+    <Compile Include="Interception\Request\StandardRequestFactory.cs" />
+    <Compile Include="Interception\Request\IRequestFactory.cs" />
     <Compile Include="Logging\Null\NullLogger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -87,9 +89,20 @@
     <Compile Include="Modules\InlineModule.cs" />
     <Compile Include="Planning\Directives\Collection\IDirectiveCollection.cs" />
     <Compile Include="Planning\Directives\ProxyDirective.cs" />
+    <Compile Include="Planning\Heuristics\Field\StandardFieldHeuristic.cs" />
+    <Compile Include="Planning\Heuristics\Field\IFieldHeuristic.cs" />
+    <Compile Include="Planning\Heuristics\IMemberHeuristic.cs" />
+    <Compile Include="Planning\Heuristics\Method\IMethodHeuristic.cs" />
+    <Compile Include="Planning\Heuristics\Method\StandardMethodHeuristic.cs" />
+    <Compile Include="Planning\Heuristics\Property\IPropertyHeuristic.cs" />
+    <Compile Include="Planning\Heuristics\Constructor\StandardConstructorHeuristic.cs" />
+    <Compile Include="Planning\Heuristics\Constructor\IConstructorHeuristic.cs" />
+    <Compile Include="Planning\Heuristics\Property\StandardPropertyHeuristic.cs" />
     <Compile Include="Tracking\InstanceTrackingMode.cs" />
-    <Compile Include="Tracking\IScope.cs" />
-    <Compile Include="Tracking\StandardScope.cs" />
+    <Compile Include="Tracking\Scope\StandardScopeFactory.cs" />
+    <Compile Include="Tracking\Scope\IScopeFactory.cs" />
+    <Compile Include="Tracking\Scope\IScope.cs" />
+    <Compile Include="Tracking\Scope\StandardScope.cs" />
     <Compile Include="Interception\Request\StandardRequest.cs" />
     <Compile Include="Interception\Request\IRequest.cs" />
     <Compile Include="Interception\Wrapper\IWrapper.cs" />

@@ -53,10 +53,12 @@ namespace Ninject.Tests.Interception
 					context,
 					obj,
 					typeof(ObjectWithMethodInterceptor).GetMethod("Foo"),
-					new object[0]
+					new object[0],
+					Type.EmptyTypes
 				);
 
-				ICollection<IInterceptor> interceptors = kernel.Components.InterceptorRegistry.GetInterceptors(request);
+				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();
 				enumerator.MoveNext();
@@ -86,10 +88,11 @@ namespace Ninject.Tests.Interception
 					context1,
 					obj,
 					typeof(ObjectWithClassInterceptor).GetMethod("Foo"),
-					new object[0]
+					new object[0],
+					Type.EmptyTypes
 				);
 
-				IInterceptorRegistry registry = kernel.Components.InterceptorRegistry;
+				var registry = kernel.Components.Get<IInterceptorRegistry>();
 
 				ICollection<IInterceptor> interceptors1 = registry.GetInterceptors(request1);
 				Assert.That(interceptors1.Count, Is.EqualTo(1));
@@ -100,7 +103,8 @@ namespace Ninject.Tests.Interception
 					context2,
 					obj,
 					typeof(ObjectWithClassInterceptor).GetMethod("Bar"),
-					new object[0]
+					new object[0],
+					Type.EmptyTypes
 				);
 
 				ICollection<IInterceptor> interceptors2 = registry.GetInterceptors(request2);
@@ -128,10 +132,13 @@ namespace Ninject.Tests.Interception
 					context,
 					obj,
 					typeof(ObjectWithClassInterceptor).GetMethod("Baz"),
-					new object[0]
+					new object[0],
+					Type.EmptyTypes
 				);
 
-				ICollection<IInterceptor> interceptors = kernel.Components.InterceptorRegistry.GetInterceptors(request);
+				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
+
 				Assert.That(interceptors.Count, Is.EqualTo(0));
 			}
 		}
@@ -148,7 +155,7 @@ namespace Ninject.Tests.Interception
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				IInterceptorRegistry registry = kernel.Components.InterceptorRegistry;
+				var registry = kernel.Components.Get<IInterceptorRegistry>();
 
 				ICondition<IRequest> condition = new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Bar"));
 				registry.RegisterDynamic(typeof(FlagInterceptor), 0, condition);
@@ -161,7 +168,8 @@ namespace Ninject.Tests.Interception
 					context,
 					obj,
 					typeof(ObjectWithMethodInterceptor).GetMethod("Bar"),
-					new object[0]
+					new object[0],
+					Type.EmptyTypes
 				);
 
 				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
@@ -186,7 +194,7 @@ namespace Ninject.Tests.Interception
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				IInterceptorRegistry registry = kernel.Components.InterceptorRegistry;
+				var registry = kernel.Components.Get<IInterceptorRegistry>();
 
 				ICondition<IRequest> condition = new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Foo"));
 
@@ -202,7 +210,8 @@ namespace Ninject.Tests.Interception
 					context,
 					obj,
 					typeof(ObjectWithMethodInterceptor).GetMethod("Foo"),
-					new object[0]
+					new object[0],
+					Type.EmptyTypes
 				);
 
 				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);

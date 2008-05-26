@@ -18,6 +18,8 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -93,6 +95,24 @@ namespace Ninject.Conditions.Builders
 		public TerminatingCondition<TRoot, TSubject> EqualTo(TSubject value)
 		{
 			return Terminate(s => value.Equals(s));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that determines whether the subject is equivalent
+		/// to the specified value, using the specified equality comparer.
+		/// </summary>
+		public TerminatingCondition<TRoot, TSubject> EqualTo(TSubject value, IEqualityComparer comparer)
+		{
+			return Terminate(s => comparer.Equals(value, s));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that determines whether the subject is equivalent
+		/// to the specified value, using the specified equality comparer.
+		/// </summary>
+		public TerminatingCondition<TRoot, TSubject> EqualTo(TSubject value, IEqualityComparer<TSubject> comparer)
+		{
+			return Terminate(s => comparer.Equals(value, s));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

@@ -47,56 +47,6 @@ namespace Ninject.Core.Infrastructure
 		/// Gets the kernel whose components are managed by the container.
 		/// </summary>
 		public IKernel Kernel { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the planner.
-		/// </summary>
-		public IPlanner Planner { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the activator.
-		/// </summary>
-		public IActivator Activator { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the tracker.
-		/// </summary>
-		public ITracker Tracker { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the binding factory.
-		/// </summary>
-		public IBindingFactory BindingFactory { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the provider factory.
-		/// </summary>
-		public IProviderFactory ProviderFactory { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the injector factory.
-		/// </summary>
-		public IInjectorFactory InjectorFactory { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the resolver factory.
-		/// </summary>
-		public IResolverFactory ResolverFactory { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the logger factory.
-		/// </summary>
-		public ILoggerFactory LoggerFactory { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the interceptor registry.
-		/// </summary>
-		public IInterceptorRegistry InterceptorRegistry { get; protected set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the proxy factory.
-		/// </summary>
-		public IProxyFactory ProxyFactory { get; protected set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -245,8 +195,6 @@ namespace Ninject.Core.Infrastructure
 
 				component.Connect(Kernel);
 				_components.Add(type, component);
-
-				SetShortcutIfStandardComponent(type, component);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -265,8 +213,6 @@ namespace Ninject.Core.Infrastructure
 
 				IKernelComponent component = _components[type];
 				_components.Remove(type);
-
-				ClearShortcutIfStandardComponent(type);
 
 				component.Disconnect();
 				component.Dispose();
@@ -306,36 +252,6 @@ namespace Ninject.Core.Infrastructure
 			{
 				return _components.ContainsKey(type);
 			}
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		private void SetShortcutIfStandardComponent(Type type, IKernelComponent component)
-		{
-			if (type == typeof(IPlanner)) Planner = component as IPlanner;
-			else if (type == typeof(IActivator)) Activator = component as IActivator;
-			else if (type == typeof(ITracker)) Tracker = component as ITracker;
-			else if (type == typeof(IBindingFactory)) BindingFactory = component as IBindingFactory;
-			else if (type == typeof(IProviderFactory)) ProviderFactory = component as IProviderFactory;
-			else if (type == typeof(IInjectorFactory)) InjectorFactory = component as IInjectorFactory;
-			else if (type == typeof(IResolverFactory)) ResolverFactory = component as IResolverFactory;
-			else if (type == typeof(ILoggerFactory)) LoggerFactory = component as ILoggerFactory;
-			else if (type == typeof(IInterceptorRegistry)) InterceptorRegistry = component as IInterceptorRegistry;
-			else if (type == typeof(IProxyFactory)) ProxyFactory = component as IProxyFactory;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private void ClearShortcutIfStandardComponent(Type type)
-		{
-			if (type == typeof(IPlanner)) Planner = null;
-			else if (type == typeof(IActivator)) Activator = null;
-			else if (type == typeof(ITracker)) Tracker = null;
-			else if (type == typeof(IBindingFactory)) BindingFactory = null;
-			else if (type == typeof(IProviderFactory)) ProviderFactory = null;
-			else if (type == typeof(IInjectorFactory)) InjectorFactory = null;
-			else if (type == typeof(IResolverFactory)) ResolverFactory = null;
-			else if (type == typeof(ILoggerFactory)) LoggerFactory = null;
-			else if (type == typeof(IInterceptorRegistry)) InterceptorRegistry = null;
-			else if (type == typeof(IProxyFactory)) ProxyFactory = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

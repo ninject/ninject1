@@ -62,7 +62,7 @@ namespace Ninject.Core
 			get
 			{
 				if (_logger == null)
-					_logger = Kernel.Components.LoggerFactory.GetLogger(GetType());
+					_logger = Kernel.Components.Get<ILoggerFactory>().GetLogger(GetType());
 
 				return _logger;
 			}
@@ -263,7 +263,7 @@ namespace Ninject.Core
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Declaring binding for service {0}", Format.Type(type));
 
-			IBinding binding = Kernel.Components.BindingFactory.Create(type);
+			IBinding binding = Kernel.Components.Get<IBindingFactory>().Create(type);
 
 			if (Kernel.Options.GenerateDebugInfo)
 				binding.DebugInfo = DebugInfo.FromStackTrace();
@@ -282,7 +282,7 @@ namespace Ninject.Core
 		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
 		protected virtual void RegisterInterceptor(Type type, int order, ICondition<IRequest> condition)
 		{
-			Kernel.Components.InterceptorRegistry.RegisterDynamic(type, order, condition);
+			Kernel.Components.Get<IInterceptorRegistry>().RegisterDynamic(type, order, condition);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -294,7 +294,7 @@ namespace Ninject.Core
 		protected virtual void RegisterInterceptor(InterceptorFactoryMethod factoryMethod, int order,
 			ICondition<IRequest> condition)
 		{
-			Kernel.Components.InterceptorRegistry.RegisterDynamic(factoryMethod, order, condition);
+			Kernel.Components.Get<IInterceptorRegistry>().RegisterDynamic(factoryMethod, order, condition);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

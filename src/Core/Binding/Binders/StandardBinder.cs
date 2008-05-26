@@ -49,19 +49,19 @@ namespace Ninject.Core.Binding
 		#region IBindingTargetSyntax Members
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToSelf()
 		{
-			Binding.Provider = Binding.Kernel.Components.ProviderFactory.Create(Binding.Service);
+			Binding.Provider = Binding.Kernel.Components.Get<IProviderFactory>().Create(Binding.Service);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.To<T>()
 		{
-			Binding.Provider = Binding.Kernel.Components.ProviderFactory.Create(typeof(T));
+			Binding.Provider = Binding.Kernel.Components.Get<IProviderFactory>().Create(typeof(T));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.To(Type type)
 		{
-			Binding.Provider = Binding.Kernel.Components.ProviderFactory.Create(type);
+			Binding.Provider = Binding.Kernel.Components.Get<IProviderFactory>().Create(type);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/

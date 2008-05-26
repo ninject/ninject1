@@ -158,6 +158,14 @@ namespace Ninject.Core
 		/// <param name="type">The type in question.</param>
 		/// <returns>The collection of bindings, or <see langword="null"/> if none have been registered.</returns>
 		ICollection<IBinding> GetAllBindings(Type type);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a value indicating whether one or more bindings are registered on the kernel
+		/// for the specified type.
+		/// </summary>
+		/// <param name="type">The type in question.</param>
+		/// <returns><see langword="True"/> if the type has one or more bindings, otherwise <see langword="false"/>.</returns>
+		bool HasBinding(Type type);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Modules

@@ -24,6 +24,7 @@ using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
+using Ninject.Core.Planning.Heuristics;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Resolution;
 using Ninject.Core.Resolution.Resolvers;
@@ -34,7 +35,7 @@ namespace Ninject.Core.Planning.Strategies
 	/// <summary>
 	/// Examines the implementation type via reflection to determine if any properties request injection.
 	/// </summary>
-	public class PropertyReflectionStrategy : ReflectionStrategyBase<PropertyInfo>
+	public class PropertyReflectionStrategy : ReflectionStrategyBase<PropertyInfo, IPropertyHeuristic>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -43,7 +44,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="binding">The binding that points at the type being inspected.</param>
 		/// <param name="type">The type to collect the members from.</param>
 		/// <param name="flags">The <see cref="BindingFlags"/> that describe the scope of the search.</param>
-		protected override IEnumerable<PropertyInfo> GetMembers(IBinding binding, Type type, BindingFlags flags)
+		protected override IList<PropertyInfo> GetCandidates(IBinding binding, Type type, BindingFlags flags)
 		{
 			return type.GetProperties(flags);
 		}
@@ -61,7 +62,7 @@ namespace Ninject.Core.Planning.Strategies
 			var directive = new PropertyInjectionDirective(member);
 
 			ITarget target = new PropertyTarget(member);
-			IResolver resolver = Kernel.Components.ResolverFactory.Create(binding, target);
+			IResolver resolver = Kernel.Components.Get<IResolverFactory>().Create(binding, target);
 
 			// Determine if the dependency is optional.
 			bool optional = member.HasAttribute(Kernel.Options.OptionalAttributeType);

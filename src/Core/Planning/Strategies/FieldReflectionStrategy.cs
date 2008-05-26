@@ -24,6 +24,7 @@ using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
+using Ninject.Core.Planning.Heuristics;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Resolution;
 using Ninject.Core.Resolution.Resolvers;
@@ -34,7 +35,7 @@ namespace Ninject.Core.Planning.Strategies
 	/// <summary>
 	/// Examines the implementation type via reflection to determine if any fields request injection.
 	/// </summary>
-	public class FieldReflectionStrategy : ReflectionStrategyBase<FieldInfo>
+	public class FieldReflectionStrategy : ReflectionStrategyBase<FieldInfo, IFieldHeuristic>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -44,7 +45,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="type">The type to collect the members from.</param>
 		/// <param name="flags">The <see cref="BindingFlags"/> that describe the scope of the search.</param>
 		/// <returns>An array of members that the strategy should examine.</returns>
-		protected override IEnumerable<FieldInfo> GetMembers(IBinding binding, Type type, BindingFlags flags)
+		protected override IList<FieldInfo> GetCandidates(IBinding binding, Type type, BindingFlags flags)
 		{
 			return type.GetFields(flags);
 		}
@@ -62,7 +63,7 @@ namespace Ninject.Core.Planning.Strategies
 			var directive = new FieldInjectionDirective(member);
 
 			ITarget target = new FieldTarget(member);
-			IResolver resolver = Kernel.Components.ResolverFactory.Create(binding, target);
+			IResolver resolver = Kernel.Components.Get<IResolverFactory>().Create(binding, target);
 
 			// Determine if the dependency is optional.
 			bool optional = member.HasAttribute(Kernel.Options.OptionalAttributeType);

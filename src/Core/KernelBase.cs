@@ -25,9 +25,11 @@ using Ninject.Core.Creation;
 using Ninject.Core.Creation.Providers;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
+using Ninject.Core.Interception;
 using Ninject.Core.Logging;
 using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
+using Ninject.Core.Planning.Heuristics;
 using Ninject.Core.Resolution;
 using Ninject.Core.Tracking;
 #endregion
@@ -50,7 +52,15 @@ namespace Ninject.Core
 			typeof(IProviderFactory),
 			typeof(IInjectorFactory),
 			typeof(IResolverFactory),
-			typeof(ILoggerFactory)
+			typeof(IContextFactory),
+			typeof(IScopeFactory),
+			typeof(IRequestFactory),
+			typeof(ILoggerFactory),
+			typeof(IInterceptorRegistry),
+			typeof(IConstructorHeuristic),
+			typeof(IPropertyHeuristic),
+			typeof(IMethodHeuristic),
+			typeof(IFieldHeuristic)
 		};
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -95,7 +105,7 @@ namespace Ninject.Core
 					Logger.Debug("Disposing of kernel");
 
 				// Release all currently-tracked instances.
-				Components.Tracker.ReleaseAll();
+				Components.Get<ITracker>().ReleaseAll();
 
 				// Release all of the registered bindings.
 				foreach (List<IBinding> bindings in _bindings.Values)
@@ -132,7 +142,7 @@ namespace Ninject.Core
 			ValidateComponents();
 
 			// If the user has connected a real logger factory, get a real logger.
-			Logger = Components.LoggerFactory.GetLogger(GetType());
+			Logger = Components.Get<ILoggerFactory>().GetLogger(GetType());
 
 			LoadModules(modules);
 
@@ -202,6 +212,17 @@ namespace Ninject.Core
 		{
 			return _bindings.ContainsKey(type) ? _bindings[type] : null;
 		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a value indicating whether one or more bindings are registered on the kernel
+		/// for the specified type.
+		/// </summary>
+		/// <param name="type">The type in question.</param>
+		/// <returns><see langword="True"/> if the type has one or more bindings, otherwise <see langword="false"/>.</returns>
+		public bool HasBinding(Type type)
+		{
+			return _bindings.ContainsKey(type);
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods: Modules
@@ -238,7 +259,7 @@ namespace Ninject.Core
 		/// <returns>The newly-created scope.</returns>
 		public IScope BeginScope()
 		{
-			IScope scope = new StandardScope(this);
+			IScope scope = Components.Get<IScopeFactory>().Create();
 			_scopes.Push(scope);
 
 			return scope;
@@ -342,7 +363,7 @@ namespace Ninject.Core
 			Ensure.ArgumentNotNull(instance, "instance");
 			Ensure.NotDisposed(this);
 
-			return Components.Tracker.Release(instance);
+			return Components.Get<ITracker>().Release(instance);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -613,7 +634,7 @@ namespace Ninject.Core
 		/// <returns>The new binding.</returns>
 		protected virtual IBinding CreateImplicitSelfBinding(Type service)
 		{
-			IBinding binding = Components.BindingFactory.Create(service);
+			IBinding binding = Components.Get<IBindingFactory>().Create(service);
 
 			binding.Provider = new StandardProvider(service);
 			binding.IsImplicit = true;
@@ -700,7 +721,7 @@ namespace Ninject.Core
 				Logger.Debug("Will create instance of type {0} for service {1}", Format.Type(type), Format.Type(service));
 
 			// Ask the planner to resolve or build the activation plan for the type, and add it to the context.
-			context.Plan = Components.Planner.GetPlan(context.Binding, type);
+			context.Plan = Components.Get<IPlanner>().GetPlan(context.Binding, type);
 
 			// Now that we have an activation plan, if this is an eager activation request, and the
 			// plan's behavior doesn't support eager activation, don't actually resolve an instance.
@@ -716,7 +737,7 @@ namespace Ninject.Core
 			object instance = context.Plan.Behavior.Resolve(context);
 
 			// Register the contextualized instance with the tracker.
-			Components.Tracker.Track(instance, context);
+			Components.Get<ITracker>().Track(instance, context);
 
 			// If there is an activation scope defined, register the instance with it as well.
       if (_scopes.Count > 0)
@@ -743,13 +764,13 @@ namespace Ninject.Core
 				throw new ActivationException(ExceptionFormatter.CouldNotResolveBindingForType(type, context));
 
 			// Generate the activation plan for the instance.
-			context.Plan = Components.Planner.GetPlan(context.Binding, type);
+			context.Plan = Components.Get<IPlanner>().GetPlan(context.Binding, type);
 
 			// Activate the instance.
-      Components.Activator.Create(context, ref instance);
+      Components.Get<IActivator>().Create(context, ref instance);
 
 			// Register the contextualized instance with the tracker.
-			Components.Tracker.Track(instance, context);
+			Components.Get<ITracker>().Track(instance, context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -764,7 +785,7 @@ namespace Ninject.Core
 		{
 			Ensure.NotDisposed(this);
 
-			IContext context = new StandardContext(this, service);
+			IContext context = Components.Get<IContextFactory>().Create(service);
 
 			// Inject debug information into the context, if applicable.
 			if (Options.GenerateDebugInfo)

@@ -58,9 +58,17 @@
     <Compile Include="Conditions\ConditionalBindingFixture.cs" />
     <Compile Include="Conditions\ConditionalInterceptionFixture.cs" />
     <Compile Include="Conditions\ContextVariablesFixture.cs" />
+    <Compile Include="Extensions\AutoWiring\AutoWiringConstructorHeuristicFixture.cs" />
+    <Compile Include="Extensions\AutoWiring\AutoWiringPropertyHeuristicFixture.cs" />
+    <Compile Include="Extensions\AutoWiring\AutoWiringFieldHeuristicFixture.cs" />
+    <Compile Include="Extensions\AutoWiring\AutoWiringMethodHeuristicFixture.cs" />
     <Compile Include="Extensions\Cache\CacheFixture.cs" />
     <Compile Include="Extensions\MessageBroker\MessageBrokerFixture.cs" />
     <Compile Include="Integration\DynamicProxy2\DynamicProxy2Fixture.cs" />
+    <Compile Include="Mocks\PocoForFieldAutoWiring.cs" />
+    <Compile Include="Mocks\PocoForMethodAutoWiring.cs" />
+    <Compile Include="Mocks\PocoForPropertyAutoWiring.cs" />
+    <Compile Include="Mocks\PocoForConstructorAutoWiring.cs" />
     <Compile Include="Mocks\IFoo.cs" />
     <Compile Include="Integration\LinFu\LinFuFixture.cs" />
     <Compile Include="Mocks\IGenericMethod.cs" />
@@ -185,6 +193,10 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensions\AutoWiring\Extensions.AutoWiring.csproj">
+      <Project>{9D7B121D-BF64-4074-B941-F39C3826E1F8}</Project>
+      <Name>Extensions.AutoWiring</Name>
     </ProjectReference>
     <ProjectReference Include="..\Extensions\Cache\Extensions.Cache.csproj">
       <Project>{BA11E656-071A-4C58-AF4C-82DB1843EEDC}</Project>

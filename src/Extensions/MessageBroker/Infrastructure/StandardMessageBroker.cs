@@ -64,8 +64,8 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		{
 			base.OnConnected(args);
 
-			Kernel.Components.Planner.Strategies.Append(new EventReflectionStrategy());
-			Kernel.Components.Activator.Strategies.Append(new EventBindingStrategy());
+			Kernel.Components.Get<IPlanner>().Strategies.Append(new EventReflectionStrategy());
+			Kernel.Components.Get<IActivator>().Strategies.Append(new EventBindingStrategy());
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -74,8 +74,8 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/// <param name="args">The event arguments.</param>
 		protected override void OnDisconnected(EventArgs args)
 		{
-			Kernel.Components.Planner.Strategies.RemoveAll<EventReflectionStrategy>();
-			Kernel.Components.Activator.Strategies.RemoveAll<EventBindingStrategy>();
+			Kernel.Components.Get<IPlanner>().Strategies.RemoveAll<EventReflectionStrategy>();
+			Kernel.Components.Get<IActivator>().Strategies.RemoveAll<EventBindingStrategy>();
 
 			base.OnDisconnected(args);
 		}

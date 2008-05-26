@@ -115,15 +115,5 @@ namespace Ninject.Core.Activation
 		/// </remarks>
 		bool IsOptional { get; set; }
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a child context using this context as its parent.
-		/// </summary>
-		/// <param name="instance">The instance receiving the injection.</param>
-		/// <param name="member">The member that the child context will be injecting.</param>
-		/// <param name="target">The target that is being injected.</param>
-		/// <param name="optional"><see langword="True"/> if the child context's resolution is optional, otherwise, <see langword="false"/>.</param>
-		/// <returns>The child context.</returns>
-		IContext CreateChild(object instance, MemberInfo member, ITarget target, bool optional);
-		/*----------------------------------------------------------------------------------------*/
 	}
 }

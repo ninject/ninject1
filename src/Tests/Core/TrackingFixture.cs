@@ -76,7 +76,8 @@ namespace Ninject.Tests
 				Assert.That(obj1, Is.Not.Null);
 				Assert.That(obj2, Is.Not.Null);
 
-				Assert.That(kernel.Components.Tracker.ReferenceCount, Is.EqualTo(2));
+				var tracker = kernel.Components.Get<ITracker>();
+				Assert.That(tracker.ReferenceCount, Is.EqualTo(2));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -90,7 +91,8 @@ namespace Ninject.Tests
 				Assert.That(obj1, Is.Not.Null);
 				Assert.That(obj2, Is.Not.Null);
 
-				Assert.That(kernel.Components.Tracker.ReferenceCount, Is.EqualTo(1));
+				var tracker = kernel.Components.Get<ITracker>();
+				Assert.That(tracker.ReferenceCount, Is.EqualTo(1));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -109,7 +111,9 @@ namespace Ninject.Tests
 
 				Assert.That(obj1, Is.Not.Null);
 				Assert.That(obj2, Is.Not.Null);
-				Assert.That(kernel.Components.Tracker.ReferenceCount, Is.EqualTo(2));
+
+				var tracker = kernel.Components.Get<ITracker>();
+				Assert.That(tracker.ReferenceCount, Is.EqualTo(2));
 			}
 
 			Assert.That(obj1.Disposed, Is.True);
@@ -126,22 +130,24 @@ namespace Ninject.Tests
 
 			using (IKernel kernel = new StandardKernel(options))
 			{
+				var tracker = kernel.Components.Get<ITracker>();
+
 				obj1 = kernel.Get<DisposableMock>();
 
 				Assert.That(obj1, Is.Not.Null);
-				Assert.That(kernel.Components.Tracker.ReferenceCount, Is.EqualTo(1));
+				Assert.That(tracker.ReferenceCount, Is.EqualTo(1));
 
 				using (kernel.BeginScope())
 				{
 					obj2 = kernel.Get<DisposableMock>();
 
 					Assert.That(obj2, Is.Not.Null);
-					Assert.That(kernel.Components.Tracker.ReferenceCount, Is.EqualTo(2));
+					Assert.That(tracker.ReferenceCount, Is.EqualTo(2));
 				}
 
 				Assert.That(obj1.Disposed, Is.False);
 				Assert.That(obj2.Disposed, Is.True);
-				Assert.That(kernel.Components.Tracker.ReferenceCount, Is.EqualTo(1));
+				Assert.That(tracker.ReferenceCount, Is.EqualTo(1));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

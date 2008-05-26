@@ -43,10 +43,10 @@ namespace Ninject.Core.Activation.Strategies
 		{
 			if (ShouldProxy(context, instance))
 			{
-				if (Kernel.Components.ProxyFactory == null)
+				if (!Kernel.Components.Has<IProxyFactory>())
 					throw new InvalidOperationException(ExceptionFormatter.NoProxyFactoryAvailable(context));
 
-				instance = Kernel.Components.ProxyFactory.Wrap(context, instance);
+				instance = Kernel.Components.Get<IProxyFactory>().Wrap(context, instance);
 			}
 
 			return StrategyResult.Proceed;
@@ -62,8 +62,8 @@ namespace Ninject.Core.Activation.Strategies
 		/// </returns>
 		public override StrategyResult BeforeDestroy(IContext context, ref object instance)
 		{
-			if (Kernel.Components.ProxyFactory != null)
-				instance = Kernel.Components.ProxyFactory.Unwrap(context, instance);
+			if (Kernel.Components.Has<IProxyFactory>())
+				instance = Kernel.Components.Get<IProxyFactory>().Unwrap(context, instance);
 
 			return StrategyResult.Proceed;
 		}
@@ -76,7 +76,7 @@ namespace Ninject.Core.Activation.Strategies
 		/// <returns><see langword="True"/> if the instance should be proxied, otherwise <see langword="false"/>.</returns>
 		protected virtual bool ShouldProxy(IContext context, object instance)
 		{
-			IInterceptorRegistry registry = Kernel.Components.InterceptorRegistry;
+			var registry = Kernel.Components.Get<IInterceptorRegistry>();
 
 			// If dynamic interceptors have been defined, all types will be proxied, regardless
 			// of whether or not they request interceptors.

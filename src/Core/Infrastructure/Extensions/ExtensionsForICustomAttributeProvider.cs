@@ -24,10 +24,9 @@ using System.Reflection;
 namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// A collection of extension methods that simplify reading custom attributes from objects
-	/// that implement <see cref="ICustomAttributeProvider"/>.
+	/// Extension methods that enhance <see cref="ICustomAttributeProvider"/>.
 	/// </summary>
-	public static class AttributeExtensions
+	public static class ExtensionsForICustomAttributeProvider
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

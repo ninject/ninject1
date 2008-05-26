@@ -47,14 +47,14 @@ namespace Ninject.Core.Activation.Strategies
 
 			if (directives.Count > 0)
 			{
-				IInjectorFactory injectorFactory = context.Kernel.Components.InjectorFactory;
+				var contextFactory = context.Kernel.Components.Get<IContextFactory>();
+				var injectorFactory = context.Kernel.Components.Get<IInjectorFactory>();
 
 				foreach (FieldInjectionDirective directive in directives)
 				{
-					FieldInfo field = directive.Member;
-
 					// Create a new context in which the field's value will be activated.
-					IContext injectionContext = context.CreateChild(instance, field, directive.Target, directive.Argument.Optional);
+					IContext injectionContext = contextFactory.CreateChild(context, instance,
+						directive.Member, directive.Target, directive.Argument.Optional);
 
 					// Resolve the value to inject into the field.
 					object value = directive.Argument.Resolver.Resolve(context, injectionContext);

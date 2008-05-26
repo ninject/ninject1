@@ -37,15 +37,15 @@ namespace Ninject.Tests
 		{
 			using (IKernel kernel = new StandardKernel())
 			{
-				IActivator activator = kernel.Components.Activator;
+				var activator = kernel.Components.Get<IActivator>();
 				Assert.That(activator, Is.Not.Null);
 				Assert.That(activator.IsConnected);
 
-				IPlanner planner = kernel.Components.Planner;
+				var planner = kernel.Components.Get<IPlanner>();
 				Assert.That(planner, Is.Not.Null);
 				Assert.That(planner.IsConnected);
 
-				IInjectorFactory injectorFactory = kernel.Components.InjectorFactory;
+				var injectorFactory = kernel.Components.Get<IInjectorFactory>();
 				Assert.That(injectorFactory, Is.Not.Null);
 				Assert.That(injectorFactory.IsConnected);
 			}

@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.NLog", "src\Int
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "src\Tests\Tests.csproj", "{D8064AA7-4F53-4E95-AF41-E033E0258489}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.AutoWiring", "src\Extensions\AutoWiring\Extensions.AutoWiring.csproj", "{9D7B121D-BF64-4074-B941-F39C3826E1F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,10 @@ Global
 		{D8064AA7-4F53-4E95-AF41-E033E0258489}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8064AA7-4F53-4E95-AF41-E033E0258489}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8064AA7-4F53-4E95-AF41-E033E0258489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D7B121D-BF64-4074-B941-F39C3826E1F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D7B121D-BF64-4074-B941-F39C3826E1F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D7B121D-BF64-4074-B941-F39C3826E1F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D7B121D-BF64-4074-B941-F39C3826E1F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,5 +119,6 @@ Global
 		{C46075DB-A0FB-466B-BA76-C093227FA9C7} = {6FEE6E27-F567-4C31-A716-1EF9A552860D}
 		{BA11E656-071A-4C58-AF4C-82DB1843EEDC} = {7F2F1683-1C5A-42E9-98E6-0F00DB2E469C}
 		{4E0B835D-4DBE-4211-8E6A-678C36B1837B} = {7F2F1683-1C5A-42E9-98E6-0F00DB2E469C}
+		{9D7B121D-BF64-4074-B941-F39C3826E1F8} = {7F2F1683-1C5A-42E9-98E6-0F00DB2E469C}
 	EndGlobalSection
 EndGlobal

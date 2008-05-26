@@ -65,7 +65,8 @@ namespace Ninject.Tests.Behavior
 				IBinding binding = kernel.GetBinding<ObjectWithSingletonBehavior>(new StandardContext(kernel, typeof(ObjectWithSingletonBehavior)));
 				Assert.That(binding, Is.Not.Null);
 
-				IActivationPlan plan = kernel.Components.Planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
+				var planner = kernel.Components.Get<IPlanner>();
+				IActivationPlan plan = planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
 
 				SingletonBehavior behavior = plan.Behavior as SingletonBehavior;
 				Assert.That(behavior, Is.Not.Null);
@@ -90,7 +91,8 @@ namespace Ninject.Tests.Behavior
 				IBinding binding = kernel.GetBinding<ObjectWithSingletonBehavior>(new StandardContext(kernel, typeof(ObjectWithSingletonBehavior)));
 				Assert.That(binding, Is.Not.Null);
 
-				IActivationPlan plan = kernel.Components.Planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
+				var planner = kernel.Components.Get<IPlanner>();
+				IActivationPlan plan = planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
 
 				SingletonBehavior behavior = plan.Behavior as SingletonBehavior;
 				Assert.That(behavior, Is.Not.Null);

@@ -49,12 +49,11 @@ namespace Ninject.Core.Activation.Strategies
 
 			if (directives.Count > 0)
 			{
-				IInjectorFactory injectorFactory = context.Kernel.Components.InjectorFactory;
+				var contextFactory = context.Kernel.Components.Get<IContextFactory>();
+				var injectorFactory = context.Kernel.Components.Get<IInjectorFactory>();
 
 				foreach (PropertyInjectionDirective directive in directives)
 				{
-					PropertyInfo property = directive.Member;
-
 					// First, check the context for a transient value for the property.
 					object value = GetValueFromTransientParameter(context, directive.Target);
 
@@ -62,7 +61,8 @@ namespace Ninject.Core.Activation.Strategies
 					if (value == null)
 					{
 						// Create a new context in which the property's value will be activated.
-						IContext injectionContext = context.CreateChild(instance, property, directive.Target, directive.Argument.Optional);
+						IContext injectionContext = contextFactory.CreateChild(context, instance,
+							directive.Member, directive.Target, directive.Argument.Optional);
 
 						// Resolve the value to inject into the property.
 						value = directive.Argument.Resolver.Resolve(context, injectionContext);

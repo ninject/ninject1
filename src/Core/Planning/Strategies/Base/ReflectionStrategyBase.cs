@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning.Heuristics;
 #endregion
 
 namespace Ninject.Core.Planning.Strategies
@@ -30,8 +31,9 @@ namespace Ninject.Core.Planning.Strategies
 	/// Examines the implementation type via reflection to determine if a specific type of
 	/// member requests injection.
 	/// </summary>
-	public abstract class ReflectionStrategyBase<TMember> : PlanningStrategyBase
-		where TMember : ICustomAttributeProvider
+	public abstract class ReflectionStrategyBase<TMember, THeuristic> : PlanningStrategyBase
+		where TMember : MemberInfo
+		where THeuristic : IMemberHeuristic<TMember>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
@@ -46,23 +48,26 @@ namespace Ninject.Core.Planning.Strategies
 		/// </returns>
 		public override StrategyResult Build(IBinding binding, Type type, IActivationPlan plan)
 		{
-			IEnumerable<TMember> members;
+			IList<TMember> candidates;
 
 			if (Kernel.Options.InjectNonPublicMembers)
 			{
 				// If non-public members should be included, we have to scan the type hierarchy recursively.
-				members = GetMembersRecursive(binding, type);
+				candidates = GetCandidatesRecursive(binding, type);
 			}
 			else 
 			{
 				BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-				members = GetMembers(binding, type, flags);
+				candidates = GetCandidates(binding, type, flags);
 			}
 
-			foreach (TMember member in members)
+			var heuristic = Kernel.Components.Get<THeuristic>();
+
+			foreach (TMember candidate in candidates)
 			{
-				if (member.HasAttribute(Kernel.Options.InjectAttributeType))
-					AddInjectionDirective(binding, type, plan, member);
+				// Determine which of the candidate members should be injected, and add directives for them.
+				if (heuristic.ShouldInject(binding, type, plan, candidate))
+					AddInjectionDirective(binding, type, plan, candidate);
 			}
 
 			return StrategyResult.Proceed;
@@ -77,7 +82,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="type">The type to collect the members from.</param>
 		/// <param name="flags">The <see cref="BindingFlags"/> that describe the scope of the search.</param>
 		/// <returns>A collection of members.</returns>
-		protected abstract IEnumerable<TMember> GetMembers(IBinding binding, Type type, BindingFlags flags);
+		protected abstract IList<TMember> GetCandidates(IBinding binding, Type type, BindingFlags flags);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Adds an injection directive related to the specified member to the specified activation plan.
@@ -97,7 +102,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="binding">The binding that points at the type being inspected.</param>
 		/// <param name="type">The lowest type in the hierarchy to collect the members from.</param>
 		/// <returns>A collection of members.</returns>
-		private IEnumerable<TMember> GetMembersRecursive(IBinding binding, Type type)
+		private IList<TMember> GetCandidatesRecursive(IBinding binding, Type type)
 		{
 			BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 			Type current = type;
@@ -106,7 +111,7 @@ namespace Ninject.Core.Planning.Strategies
 
 			while ((current != null) && (current != typeof(object)))
 			{
-				members.AddRange(GetMembers(binding, current, flags));
+				members.AddRange(GetCandidates(binding, current, flags));
 				current = current.BaseType;
 			}
 

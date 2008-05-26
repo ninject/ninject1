@@ -18,11 +18,13 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
+using Ninject.Core.Planning.Heuristics;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Resolution;
 using Ninject.Core.Resolution.Resolvers;
@@ -54,33 +56,12 @@ namespace Ninject.Core.Planning.Strategies
 
 			// Get the list of candidate constructors.
 			ConstructorInfo[] candidates = type.GetConstructors(flags);
-			ConstructorInfo injectionConstructor = null;
 
-			if (candidates.Length == 1)
-			{
-				// If there was only a single constructor defined for the type, try to use it.
-				injectionConstructor = candidates[0];
-			}
-			else
-			{
-				foreach (ConstructorInfo candidate in candidates)
-				{
-					if (candidate.HasAttribute(Kernel.Options.InjectAttributeType))
-					{
-						// Only a single injection constructor is allowed, so fail if we find more than one.
-						if (injectionConstructor != null)
-							throw new NotSupportedException(ExceptionFormatter.MultipleInjectionConstructorsNotSupported(binding));
+			// Use the constructor heuristic to select which constructor should be used.
+			var heuristic = Kernel.Components.Get<IConstructorHeuristic>();
+			ConstructorInfo injectionConstructor = heuristic.Select(binding, type, plan, candidates);
 
-						injectionConstructor = candidate;
-					}
-				}
-
-				// If no constructors were marked for injection, try to use the default one.
-				if (injectionConstructor == null)
-					injectionConstructor = type.GetConstructor(Type.EmptyTypes);
-			}
-
-			// If we've found an injection constructor, create an injection directive for it.
+			// If an injection constructor was found, create an injection directive for it.
 			if (injectionConstructor != null)
 				plan.Directives.Add(CreateDirective(binding, injectionConstructor));
 
@@ -89,7 +70,7 @@ namespace Ninject.Core.Planning.Strategies
 		/*----------------------------------------------------------------------------------------*/
 		private ConstructorInjectionDirective CreateDirective(IBinding binding, ConstructorInfo constructor)
 		{
-			IResolverFactory resolverFactory = Kernel.Components.ResolverFactory;
+			var resolverFactory = Kernel.Components.Get<IResolverFactory>();
 
 			// Create a new directive that will hold the injection information.
 			var directive = new ConstructorInjectionDirective(constructor);

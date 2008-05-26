@@ -46,7 +46,7 @@ namespace Ninject.Core.Activation.Strategies
 
 			if (directives.Count > 0)
 			{
-				IInjectorFactory injectorFactory = context.Kernel.Components.InjectorFactory;
+				var injectorFactory = context.Kernel.Components.Get<IInjectorFactory>();
 
 				foreach (MethodInjectionDirective directive in directives)
 				{
@@ -66,13 +66,15 @@ namespace Ninject.Core.Activation.Strategies
 		/*----------------------------------------------------------------------------------------*/
 		private static object[] ResolveArguments(IContext context, MethodInjectionDirective directive, object instance)
 		{
-			object[] arguments = new object[directive.Arguments.Count];
+			var contextFactory = context.Kernel.Components.Get<IContextFactory>();
+			var arguments = new object[directive.Arguments.Count];
 
 			int index = 0;
 			foreach (Argument argument in directive.Arguments)
 			{
 				// Create a new context in which the parameter's value will be activated.
-				IContext injectionContext = context.CreateChild(instance, directive.Member, argument.Target, argument.Optional);
+				IContext injectionContext = contextFactory.CreateChild(context, instance,
+					directive.Member, argument.Target, argument.Optional);
 
 				// Resolve the value to inject for the parameter.
 				arguments[index] = argument.Resolver.Resolve(context, injectionContext);

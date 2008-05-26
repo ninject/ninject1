@@ -24,6 +24,7 @@ using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
+using Ninject.Core.Planning.Heuristics;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Resolution;
 using Ninject.Core.Resolution.Resolvers;
@@ -34,7 +35,7 @@ namespace Ninject.Core.Planning.Strategies
 	/// <summary>
 	/// Examines the implementation type via reflection to determine if any methods request injection.
 	/// </summary>
-	public class MethodReflectionStrategy : ReflectionStrategyBase<MethodInfo>
+	public class MethodReflectionStrategy : ReflectionStrategyBase<MethodInfo, IMethodHeuristic>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -44,7 +45,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="type">The type to collect the members from.</param>
 		/// <param name="flags">The <see cref="BindingFlags"/> that describe the scope of the search.</param>
 		/// <returns></returns>
-		protected override IEnumerable<MethodInfo> GetMembers(IBinding binding, Type type, BindingFlags flags)
+		protected override IList<MethodInfo> GetCandidates(IBinding binding, Type type, BindingFlags flags)
 		{
 			return type.GetMethods(flags);
 		}
@@ -58,7 +59,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="member">The member to create a directive for.</param>
 		protected override void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, MethodInfo member)
 		{
-			IResolverFactory resolverFactory = Kernel.Components.ResolverFactory;
+			var resolverFactory = Kernel.Components.Get<IResolverFactory>();
 
 			// Create a new directive that will hold the injection information.
 			var directive = new MethodInjectionDirective(member);

@@ -67,13 +67,10 @@ namespace Ninject.Integration.DynamicProxy2.Infrastructure
 		#region Private Methods
 		private IRequest CreateRequest(IInvocation castleInvocation)
 		{
-			return new StandardRequest(
-				Context,
-				Instance,
-				castleInvocation.GetConcreteMethod(),
-				castleInvocation.Arguments,
-				castleInvocation.GenericArguments
-			);
+			var requestFactory = Kernel.Components.Get<IRequestFactory>();
+
+			return requestFactory.Create(Context, Instance, castleInvocation.GetConcreteMethod(),
+				castleInvocation.Arguments, castleInvocation.GenericArguments);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

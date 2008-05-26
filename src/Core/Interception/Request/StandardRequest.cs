@@ -79,7 +79,8 @@ namespace Ninject.Core.Interception
 		/// <param name="target">The target instance.</param>
 		/// <param name="method">The method that will be called on the target instance.</param>
 		/// <param name="arguments">The arguments to the method.</param>
-		public StandardRequest(IContext context, object target, MethodInfo method, object[] arguments)
+		/// <param name="genericArguments">The generic type arguments for the method.</param>
+		public StandardRequest(IContext context, object target, MethodInfo method, object[] arguments, Type[] genericArguments)
 		{
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.ArgumentNotNull(target, "target");
@@ -91,19 +92,6 @@ namespace Ninject.Core.Interception
 			Target = target;
 			Method = method;
 			Arguments = arguments;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Initializes a new instance of the <see cref="StandardRequest"/> class.
-		/// </summary>
-		/// <param name="context">The context in which the target instance was activated.</param>
-		/// <param name="target">The target instance.</param>
-		/// <param name="method">The method that will be called on the target instance.</param>
-		/// <param name="arguments">The arguments to the method.</param>
-		/// <param name="genericArguments">The generic type arguments for the method.</param>
-		public StandardRequest(IContext context, object target, MethodInfo method, object[] arguments, Type[] genericArguments)
-			: this(context, target, method, arguments)
-		{
 			GenericArguments = genericArguments;
 		}
 		#endregion
