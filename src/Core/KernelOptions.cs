@@ -74,18 +74,6 @@ namespace Ninject.Core
 		public bool InjectNonPublicMembers { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets a value indicating whether Ninject should automatically inject all
-		/// targets for which a binding exists, whether or not their members are decorated with
-		/// an injection attribute.
-		/// </summary>
-		/// <remarks>
-		/// If <see langword="true"/>, the kernel will automatically inject all targets for which
-		/// a matching binding exists. If <see langword="false"/>, the kernel will only consider
-		/// targets whose members are decorated with an injection attribute.
-		/// </remarks>
-		public bool UseAutoWiring { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Gets or sets a value indicating whether types with restricted instantation (i.e.
 		/// singletons, one-per-threads, etc.) should be eagerly activated.
 		/// </summary>
@@ -171,7 +159,6 @@ namespace Ninject.Core
 		{
 			ImplicitSelfBinding = true;
 			InjectNonPublicMembers = false;
-			UseAutoWiring = false;
 			UseReflectionBasedInjection = false;
 			UseEagerActivation = false;
 			IgnoreProviderCompatibility = false;
