@@ -18,10 +18,7 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Planning.Directives;
 #endregion
 
 namespace Ninject.Core.Activation.Strategies
@@ -43,7 +40,7 @@ namespace Ninject.Core.Activation.Strategies
 		/// </returns>
 		public override StrategyResult AfterDestroy(IContext context, ref object instance)
 		{
-			IDisposable disposable = instance as IDisposable;
+			var disposable = instance as IDisposable;
 
 			if (disposable != null)
 				disposable.Dispose();

@@ -1,3 +1,5 @@
+#if !NO_WEB
+
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -42,3 +44,5 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
+
+#endif //!NO_WEB

@@ -92,11 +92,13 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
+#if !NO_REMOTING
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToRemotingChannel(string uri)
 		{
 			Binding.Provider = new RemotingProvider(Binding.Service, uri);
 			return this;
 		}
+#endif
 		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToFactoryMethod<R>(Func<R> method)
 		{

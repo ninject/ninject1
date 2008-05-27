@@ -1,3 +1,5 @@
+#if !NO_LCG
+
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -20,7 +22,6 @@
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Injection
@@ -74,3 +75,5 @@ namespace Ninject.Core.Injection
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
+
+#endif //!NO_LCG

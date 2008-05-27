@@ -36,7 +36,7 @@ namespace Ninject.Core.Infrastructure
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private LinkedList<TStrategy> _items = new LinkedList<TStrategy>();
+		private List<TStrategy> _items = new List<TStrategy>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -101,7 +101,7 @@ namespace Ninject.Core.Infrastructure
 			Ensure.NotDisposed(this);
 
 			ConnectItem(item);
-			_items.AddFirst(item);
+			_items.Insert(0, item);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -114,7 +114,7 @@ namespace Ninject.Core.Infrastructure
 			Ensure.NotDisposed(this);
 
 			ConnectItem(item);
-			_items.AddLast(item);
+			_items.Add(item);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

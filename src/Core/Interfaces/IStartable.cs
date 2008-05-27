@@ -18,7 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-
 #endregion
 
 namespace Ninject.Core

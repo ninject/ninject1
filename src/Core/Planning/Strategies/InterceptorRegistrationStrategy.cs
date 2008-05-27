@@ -22,11 +22,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Injection;
 using Ninject.Core.Interception;
 using Ninject.Core.Planning.Directives;
-using Ninject.Core.Planning.Targets;
-using Ninject.Core.Resolution;
 #endregion
 
 namespace Ninject.Core.Planning.Strategies

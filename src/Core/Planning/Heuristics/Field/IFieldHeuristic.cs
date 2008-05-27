@@ -18,10 +18,7 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using Ninject.Core.Binding;
-using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Planning.Heuristics

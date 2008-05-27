@@ -18,12 +18,7 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.Remoting;
-using Ninject.Core;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Planning.Directives;
 #endregion
 
 namespace Ninject.Core.Activation.Strategies
@@ -45,7 +40,7 @@ namespace Ninject.Core.Activation.Strategies
 		/// </returns>
 		public override StrategyResult AfterInitialize(IContext context, ref object instance)
 		{
-			IStartable startable = instance as IStartable;
+			var startable = instance as IStartable;
 
 			if (startable != null)
 				startable.Start();
@@ -63,7 +58,7 @@ namespace Ninject.Core.Activation.Strategies
 		/// </returns>
 		public override StrategyResult BeforeDestroy(IContext context, ref object instance)
 		{
-			IStartable startable = instance as IStartable;
+			var startable = instance as IStartable;
 
 			if (startable != null)
 				startable.Stop();

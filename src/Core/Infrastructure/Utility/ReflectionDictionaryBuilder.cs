@@ -21,9 +21,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Ninject.Core.Activation;
-using Ninject.Core.Planning.Targets;
-using Ninject.Core.Resolution;
 #endregion
 
 namespace Ninject.Core.Infrastructure

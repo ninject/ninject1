@@ -20,8 +20,6 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Core.Activation;
-using Ninject.Core.Binding;
-using Ninject.Core.Creation;
 using Ninject.Core.Injection;
 using Ninject.Core.Interception;
 using Ninject.Core.Logging;

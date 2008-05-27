@@ -73,7 +73,14 @@
     <Compile Include="Infrastructure\Components\StandardComponentContainer.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionsForMethodBase.cs" />
-    <Compile Include="Infrastructure\Extensions\ExtensionAttribute.cs" />
+    <Compile Include="Infrastructure\FrameworkPatches\ExtensionAttribute.cs" />
+    <Compile Include="Infrastructure\FrameworkPatches\ExtensionsForSilverlightList.cs" />
+    <Compile Include="Infrastructure\FrameworkPatches\NonSerializedAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Infrastructure\FrameworkPatches\SerializableAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Infrastructure\Structures\TypedCollection.cs" />
     <Compile Include="Infrastructure\Utility\ExceptionThrower.cs" />
     <Compile Include="Interception\InterceptorFactoryMethod.cs" />

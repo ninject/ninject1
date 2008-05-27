@@ -18,10 +18,7 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using Ninject.Core.Activation;
-using Ninject.Core.Planning.Targets;
-using Ninject.Core.Resolution;
 #endregion
 
 namespace Ninject.Core.Infrastructure

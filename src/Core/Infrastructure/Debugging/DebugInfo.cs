@@ -18,7 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -96,6 +95,7 @@ namespace Ninject.Core.Infrastructure
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Static Methods
+#if !NO_STACKTRACE
 		/// <summary>
 		/// Creates a new <see cref="DebugInfo"/> object by seeking through the current
 		/// <see cref="StackTrace"/> for the first method outside the provided type(s).
@@ -103,7 +103,7 @@ namespace Ninject.Core.Infrastructure
 		/// <returns>The new <see cref="DebugInfo"/> object.</returns>
 		public static DebugInfo FromStackTrace()
 		{
-			StackTrace trace = new StackTrace(1, true);
+			var trace = new StackTrace(1, true);
 
 			for (int index = 0; index < trace.FrameCount; index++)
 			{
@@ -113,7 +113,7 @@ namespace Ninject.Core.Infrastructure
 
 				if (!ShouldIgnoreType(type))
 				{
-					DebugInfo info = new DebugInfo();
+					var info = new DebugInfo();
 
 					info.Method = method;
 					info.Type = type;
@@ -134,6 +134,7 @@ namespace Ninject.Core.Infrastructure
 
 			return null;
 		}
+#endif //!NO_STACKTRACE
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Private Methods

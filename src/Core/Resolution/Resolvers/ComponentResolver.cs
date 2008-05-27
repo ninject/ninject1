@@ -20,7 +20,6 @@
 using System;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Logging;
 using Ninject.Core.Planning.Targets;
 #endregion
 

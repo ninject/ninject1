@@ -1,3 +1,4 @@
+#if SILVERLIGHT
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -16,18 +17,16 @@
 // limitations under the License.
 //
 #endregion
-#region Using Directives
-using System;
-#endregion
 
-namespace Ninject.Core
+namespace System
 {
 	/// <summary>
-	/// Indicates that the decorated method should not be intercepted by interceptors defined
-	/// at the class level.
+	/// A replacement for the standard NotSerializedAttribute for platforms that don't support it.
+	/// Doesn't actually do anything, just stops compiler errors. :)
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-	public sealed class DoNotInterceptAttribute : Attribute
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Delegate, AllowMultiple = false, Inherited = false)]
+	internal class SerializableAttribute : Attribute
 	{
 	}
 }
+#endif

@@ -20,7 +20,6 @@
 using System;
 using System.Reflection;
 using Ninject.Core.Activation;
-using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Interception

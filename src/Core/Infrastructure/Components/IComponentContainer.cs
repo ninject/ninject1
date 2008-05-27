@@ -18,15 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation;
-using Ninject.Core.Binding;
-using Ninject.Core.Creation;
-using Ninject.Core.Injection;
-using Ninject.Core.Interception;
-using Ninject.Core.Logging;
-using Ninject.Core.Planning;
-using Ninject.Core.Resolution;
-using Ninject.Core.Tracking;
 #endregion
 
 namespace Ninject.Core.Infrastructure

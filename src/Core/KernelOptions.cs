@@ -18,7 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
 using Ninject.Core.Tracking;
 #endregion
@@ -51,6 +50,7 @@ namespace Ninject.Core
 		/// </remarks>
 		public bool ImplicitSelfBinding { get; set; }
 		/*----------------------------------------------------------------------------------------*/
+#if !NO_STACKTRACE
 		/// <summary>
 		/// Gets or sets a value indicating whether the kernel should generate debugging information
 		/// for bindings and activation contexts.
@@ -61,6 +61,7 @@ namespace Ninject.Core
 		/// turned off in production environments.
 		/// </remarks>
 		public bool GenerateDebugInfo { get; set; }
+#endif
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether non-public members should be injected by the
@@ -84,6 +85,7 @@ namespace Ninject.Core
 		/// </remarks>
 		public bool UseEagerActivation { get; set; }
 		/*----------------------------------------------------------------------------------------*/
+#if !NO_LCG
 		/// <summary>
 		/// Gets or sets a value indicating whether instances should be created and values be
 		/// injected via reflection rather than dynamic delegates created via lightweight code
@@ -96,6 +98,7 @@ namespace Ninject.Core
 		/// and very few transient services.
 		/// </remarks>
 		public bool UseReflectionBasedInjection { get; set; }
+#endif
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether the kernel should throw an exception if a
@@ -159,18 +162,24 @@ namespace Ninject.Core
 		{
 			ImplicitSelfBinding = true;
 			InjectNonPublicMembers = false;
+
+#if !NO_LCG
 			UseReflectionBasedInjection = false;
+#endif
+
 			UseEagerActivation = false;
 			IgnoreProviderCompatibility = false;
 			DefaultBehaviorType = typeof(TransientBehavior);
 			InjectAttributeType = typeof(InjectAttribute);
 			OptionalAttributeType = typeof(OptionalAttribute);
 
+#if !NO_STACKTRACE
 #if DEBUG
 			GenerateDebugInfo = true;
 #else
 			GenerateDebugInfo = false;
-#endif
+#endif //DEBUG
+#endif //!NO_STACKTRACE
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

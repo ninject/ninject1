@@ -1,3 +1,5 @@
+#if !NO_REMOTING
+
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -31,8 +33,11 @@ namespace Ninject.Core.Creation.Providers
 	public class RemotingProvider : ProviderBase
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Fields
 		private readonly string _uri;
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Constructors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RemotingProvider"/> class.
 		/// </summary>
@@ -46,7 +51,9 @@ namespace Ninject.Core.Creation.Providers
 			_uri = uri;
 			RemotingConfiguration.RegisterWellKnownClientType(prototype, uri);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
 		/// <summary>
 		/// Gets the concrete implementation type that will be instantiated for the provided context.
 		/// </summary>
@@ -67,6 +74,9 @@ namespace Ninject.Core.Creation.Providers
 		{
 			return RemotingServices.Connect(Prototype, _uri);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
+
+#endif //!NO_REMOTING

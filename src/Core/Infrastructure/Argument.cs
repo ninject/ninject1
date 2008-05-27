@@ -20,7 +20,6 @@
 using System;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Resolution;
-using Ninject.Core.Resolution.Resolvers;
 #endregion
 
 namespace Ninject.Core.Infrastructure

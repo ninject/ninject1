@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Parameters;

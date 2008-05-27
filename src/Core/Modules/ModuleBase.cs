@@ -22,7 +22,6 @@ using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Interception;
 using Ninject.Core.Logging;
-
 #endregion
 
 namespace Ninject.Core
@@ -265,8 +264,10 @@ namespace Ninject.Core
 
 			IBinding binding = Kernel.Components.Get<IBindingFactory>().Create(type);
 
+#if !NO_STACKTRACE
 			if (Kernel.Options.GenerateDebugInfo)
 				binding.DebugInfo = DebugInfo.FromStackTrace();
+#endif
 
 			// Register the binding in the kernel.
 			Kernel.AddBinding(binding);

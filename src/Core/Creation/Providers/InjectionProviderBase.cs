@@ -21,9 +21,9 @@ using System;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
+using Ninject.Core.Parameters;
 using Ninject.Core.Planning.Directives;
 using Ninject.Core.Planning.Targets;
-using Ninject.Core.Parameters;
 #endregion
 
 namespace Ninject.Core.Creation.Providers
@@ -134,6 +134,7 @@ namespace Ninject.Core.Creation.Providers
 
 			object value = context.Binding.InlineArguments[target.Name];
 
+#if !NO_CONVERT
 			// See if we can just inject the argument directly.
 			if (!target.Type.IsAssignableFrom(value.GetType()))
 			{
@@ -148,6 +149,7 @@ namespace Ninject.Core.Creation.Providers
 					throw new ActivationException(ExceptionFormatter.InvalidInlineArgument(target, value, context));
 				}
 			}
+#endif //!NETCF
 
 			return value;
 		}

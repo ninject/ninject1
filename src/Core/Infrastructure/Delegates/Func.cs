@@ -18,9 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 #endregion
 
 namespace Ninject.Core.Infrastructure

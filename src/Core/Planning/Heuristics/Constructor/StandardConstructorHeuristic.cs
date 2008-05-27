@@ -63,7 +63,7 @@ namespace Ninject.Core.Planning.Heuristics
 
 			// If no constructors were marked for injection, try to use the default one.
 			if (selectedConstructor == null)
-				selectedConstructor = type.GetConstructor(Type.EmptyTypes);
+				selectedConstructor = type.GetConstructor(new Type[0]);
 
 			return selectedConstructor;
 		}

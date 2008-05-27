@@ -20,7 +20,6 @@
 using System;
 using System.Reflection;
 using System.Text;
-using Ninject.Core.Injection;
 using Ninject.Core.Planning.Targets;
 #endregion
 

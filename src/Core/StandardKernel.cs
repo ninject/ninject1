@@ -101,10 +101,15 @@ namespace Ninject.Core
 			components.Connect<IRequestFactory>(new StandardRequestFactory());
 			components.Connect<IInterceptorRegistry>(new StandardInterceptorRegistry());
 
+#if NO_LCG
+			// If the target platform doesn't have DynamicMethod support, we can't use DynamicInjectorFactory.
+			components.Connect<IInjectorFactory>(new ReflectionInjectorFactory());
+#else
 			if (Options.UseReflectionBasedInjection)
 				components.Connect<IInjectorFactory>(new ReflectionInjectorFactory());
 			else
 				components.Connect<IInjectorFactory>(new DynamicInjectorFactory());
+#endif
 
 			components.Connect<IConstructorHeuristic>(new StandardConstructorHeuristic());
 			components.Connect<IPropertyHeuristic>(new StandardPropertyHeuristic());

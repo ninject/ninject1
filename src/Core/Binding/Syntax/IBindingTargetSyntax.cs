@@ -18,7 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Binding.Syntax;
 using Ninject.Core.Creation;
 using Ninject.Core.Infrastructure;
 #endregion
@@ -75,11 +74,13 @@ namespace Ninject.Core.Binding.Syntax
 		/// <param name="value">The constant value.</param>
 		IBindingConditionBehaviorOrArgumentSyntax ToConstant<T>(T value);
 		/*----------------------------------------------------------------------------------------*/
+#if !NO_REMOTING
 		/// <summary>
 		/// Indicates that the service should be bound to the remoting channel at the specified URI.
 		/// </summary>
 		/// <param name="uri">The URI to bind the service to.</param>
 		IBindingConditionBehaviorOrArgumentSyntax ToRemotingChannel(string uri);
+#endif
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to the specified factory method.

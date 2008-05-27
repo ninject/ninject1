@@ -20,7 +20,6 @@
 using System;
 using System.Reflection;
 using System.Text;
-using Ninject.Core.Injection;
 #endregion
 
 namespace Ninject.Core.Planning.Directives

@@ -17,61 +17,54 @@
   </target>
 
   <target name="build-all-platforms">
-    <if test="${framework::exists('net-3.5')}">
-      <call target="build-net35"/>
-    </if>
-    <if test="${not(framework::exists('net-3.5'))}">
-      <echo message="The .NET Framework 3.5 is not available. Skipping platform."/>
-    </if>
-    <if test="${framework::exists('net-2.0')}">
-      <call target="build-net20"/>
-    </if>
-    <if test="${not(framework::exists('net-2.0'))}">
-      <echo message="The .NET Framework 2.0 is not available. Skipping platform."/>
-    </if>
-    <if test="${framework::exists('netcf-2.0')}">
-      <call target="build-netcf20"/>
-    </if>
-    <if test="${not(framework::exists('netcf-2.0'))}">
-      <echo message="The .NET Compact Framework 2.0 is not available. Skipping platform."/>
-    </if>
-    <if test="${framework::exists('mono-2.0')}">
-      <call target="build-mono20"/>
-    </if>
-    <if test="${not(framework::exists('mono-2.0'))}">
-      <echo message="Mono 2.0 is not available. Skipping platform."/>
-    </if>
-    <if test="${framework::exists('silverlight-2.0')}">
-      <call target="build-silverlight20"/>
-    </if>
-    <if test="${not(framework::exists('silverlight-2.0'))}">
-      <echo message="Silverlight 2.0 is not available. Skipping platform."/>
-    </if>
-  </target>
+		<call target="build-net35"/>
+		<call target="build-netcf35"/>
+		<call target="build-mono20"/>
+		<call target="build-silverlight20"/>
+	</target>
 
-  <target name="build-net20">
-    <call target="config-platform-net20"/>
-    <call target="compile-all"/>
-  </target>
+	<target name="build-net35">
+		<if test="${framework::exists('net-3.5')}">
+			<echo message="Building for .NET Framework v2.0 (using v3.5 compiler)."/>
+			<call target="config-platform-net20"/>
+			<call target="compile-all"/>
+		</if>
+		<if test="${not(framework::exists('net-3.5'))}">
+			<echo message="The .NET Framework v3.5 compiler is required, even though Ninject is compatible with v2.0. Skipping platform."/>
+		</if>
+	</target>
 
-  <target name="build-net35">
-    <call target="config-platform-net35"/>
-    <call target="compile-all"/>
-  </target>
+	<target name="build-netcf35">
+		<if test="${framework::exists('netcf-2.0')}">
+			<echo message="Building for .NET Compact Framework v2.0."/>
+			<call target="config-platform-netcf20"/>
+			<call target="compile-all"/>
+		</if>
+		<if test="${not(framework::exists('netcf-2.0'))}">
+			<echo message=".NET Compact Framework v2.0 is not available. Skipping platform."/>
+		</if>
+	</target>
 
-  <target name="build-netcf20">
-    <call target="config-platform-netcf20"/>
-    <call target="compile-all"/>
-  </target>
-
-  <target name="build-mono20">
-    <call target="config-platform-mono20"/>
-    <call target="compile-all"/>
-  </target>
+	<target name="build-mono20">
+		<if test="${framework::exists('mono-2.0')}">
+			<echo message="Building for Mono v2.0."/>
+			<call target="config-platform-mono20"/>
+			<call target="compile-all"/>
+		</if>
+		<if test="${not(framework::exists('mono-2.0'))}">
+			<echo message="Mono v2.0 is not available. Skipping platform."/>
+		</if>
+	</target>
 
   <target name="build-silverlight20">
-    <call target="config-platform-silverlight20"/>
-    <call target="compile-all"/>
+		<if test="${framework::exists('silverlight-2.0')}">
+			<echo message="Building for Silverlight v2.0."/>
+			<call target="config-platform-silverlight20"/>
+			<call target="compile-all"/>
+		</if>
+		<if test="${not(framework::exists('silverlight-2.0'))}">
+			<echo message="Silverlight v2.0 is not available. Skipping platform."/>
+		</if>
   </target>
 
   <target name="config-build-debug">
@@ -89,22 +82,17 @@
   </target>
 
   <target name="config-platform-net20">
-    <property name="nant.settings.currentframework" value="net-2.0"/>
-    <property name="current.build.defines" value="${build.defines},NET,NET_20"/>
-    <property name="current.path.bin" value="${path.bin}/net-2.0/${current.build.config}"/>
-  </target>
-
-  <target name="config-platform-net35">
-    <property name="nant.settings.currentframework" value="net-3.5"/>
-    <property name="current.build.defines" value="${build.defines},NET,NET_35"/>
-    <property name="current.path.bin" value="${path.bin}/net-3.5/${current.build.config}"/>
-  </target>
+		<!-- The v3.5 compiler is used to take advantage of C# 3.0 features, but the code is compatible with v2.0 of the framework. -->
+		<property name="nant.settings.currentframework" value="net-3.5"/>
+		<property name="current.build.defines" value="${build.defines},NET,NET_20"/>
+		<property name="current.path.bin" value="${path.bin}/net-2.0/${current.build.config}"/>
+	</target>
 
   <target name="config-platform-netcf20">
-    <property name="nant.settings.currentframework" value="netcf-2.0"/>
-    <property name="current.build.defines" value="${build.defines},NETCF,NETCF_20"/>
-    <property name="current.path.bin" value="${path.bin}/netcf-2.0/${current.build.config}"/>
-  </target>
+		<property name="nant.settings.currentframework" value="netcf-2.0"/>
+		<property name="current.build.defines" value="${build.defines},NETCF,NETCF_20,NO_LCG,NO_WEB,NO_REMOTING,NO_STACKTRACE,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION"/>
+		<property name="current.path.bin" value="${path.bin}/netcf-2.0/${current.build.config}"/>
+	</target>
 
   <target name="config-platform-mono20">
     <property name="nant.settings.currentframework" value="mono-2.0"/>
@@ -114,8 +102,8 @@
 
   <target name="config-platform-silverlight20">
     <property name="nant.settings.currentframework" value="silverlight-2.0"/>
-    <property name="current.build.defines" value="${build.defines},SILVERLIGHT,SILVERLIGHT_20"/>
-    <property name="current.path.bin" value="${path.bin}/silverlight-2.0/${current.build.config}"/>
+    <property name="current.build.defines" value="${build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_REMOTING,NO_EXCEPTION_SERIALIZATION,NO_CONVERT,NO_PARTIAL_TRUST"/>
+		<property name="current.path.bin" value="${path.bin}/silverlight-2.0/${current.build.config}"/>
   </target>
 
   <target name="compile-all">
@@ -125,7 +113,6 @@
   <target name="compile-core">
     <mkdir dir="${current.path.bin}"/>
     <csc keyfile="${path::combine(path.src, 'Ninject.snk')}"
-         nostdlib="true"
          noconfig="true"
          warnaserror="true"
          target="library"
@@ -139,10 +126,13 @@
         <include name="**/*.cs"/>
       </sources>
       <references>
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Web.dll"/>
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Web.dll"/>
       </references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
     </csc>
   </target>
 

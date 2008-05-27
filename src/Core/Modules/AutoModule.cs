@@ -19,10 +19,7 @@
 #region Using Directives
 using System;
 using System.Reflection;
-using Ninject.Core.Binding;
-using Ninject.Core.Binding.Syntax;
 using Ninject.Core.Infrastructure;
-
 #endregion
 
 namespace Ninject.Core

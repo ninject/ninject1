@@ -18,7 +18,9 @@
 #endregion
 #region Using Directives
 using System;
+#if !NO_EXCEPTION_SERIALIZATION
 using System.Runtime.Serialization;
+#endif
 #endregion
 
 namespace Ninject.Core
@@ -56,6 +58,7 @@ namespace Ninject.Core
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
+#if !NO_EXCEPTION_SERIALIZATION
 		/// <summary>
 		/// Creates a new ActivationException.
 		/// </summary>
@@ -65,6 +68,7 @@ namespace Ninject.Core
 			: base(info, context)
 		{
 		}
+#endif
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

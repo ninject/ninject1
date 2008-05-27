@@ -1,3 +1,5 @@
+#if !NO_WEB
+
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -18,7 +20,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.Web;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
@@ -129,3 +130,5 @@ namespace Ninject.Core.Behavior
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
+
+#endif //!NO_WEB

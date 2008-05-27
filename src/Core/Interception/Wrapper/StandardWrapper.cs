@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
-using Ninject.Core.Interception;
 #endregion
 
 namespace Ninject.Core.Interception

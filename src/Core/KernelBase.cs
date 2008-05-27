@@ -787,9 +787,11 @@ namespace Ninject.Core
 
 			IContext context = Components.Get<IContextFactory>().Create(service);
 
+#if !NO_STACKTRACE
 			// Inject debug information into the context, if applicable.
 			if (Options.GenerateDebugInfo)
 				context.DebugInfo = DebugInfo.FromStackTrace();
+#endif
 
 			// Apply the transient parameters to the context, if applicable.
 			if (parameters != null)

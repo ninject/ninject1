@@ -19,7 +19,6 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Infrastructure

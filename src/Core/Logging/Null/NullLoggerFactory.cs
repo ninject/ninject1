@@ -19,7 +19,6 @@
 #region Using Directives
 using System;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Logging;
 #endregion
 
 namespace Ninject.Core.Logging
