@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Ninject" default="build-all">
+
+  <property name="path.base" value="."/>
+  <property name="path.bin" value="${path::combine(path.base, 'bin')}"/>
+  <property name="path.lib" value="${path::combine(path.base, 'lib')}"/>
+  <property name="path.dist" value="${path::combine(path.base, 'dist')}"/>
+  <property name="path.src" value="${path::combine(path.base, 'src')}"/>
+  
+  <property name="skip.tests" value="false" overwrite="false"/>
+  
+  <target name="build-all" depends="clean">
+    <call target="config-build-debug"/>
+    <call target="build-all-platforms"/>
+    <call target="config-build-release"/>
+    <call target="build-all-platforms"/>
+  </target>
+
+  <target name="build-all-platforms">
+    <if test="${framework::exists('net-3.5')}">
+      <call target="build-net35"/>
+    </if>
+    <if test="${not(framework::exists('net-3.5'))}">
+      <echo message="The .NET Framework 3.5 is not available. Skipping platform."/>
+    </if>
+    <if test="${framework::exists('net-2.0')}">
+      <call target="build-net20"/>
+    </if>
+    <if test="${not(framework::exists('net-2.0'))}">
+      <echo message="The .NET Framework 2.0 is not available. Skipping platform."/>
+    </if>
+    <if test="${framework::exists('netcf-2.0')}">
+      <call target="build-netcf20"/>
+    </if>
+    <if test="${not(framework::exists('netcf-2.0'))}">
+      <echo message="The .NET Compact Framework 2.0 is not available. Skipping platform."/>
+    </if>
+    <if test="${framework::exists('mono-2.0')}">
+      <call target="build-mono20"/>
+    </if>
+    <if test="${not(framework::exists('mono-2.0'))}">
+      <echo message="Mono 2.0 is not available. Skipping platform."/>
+    </if>
+    <if test="${framework::exists('silverlight-2.0')}">
+      <call target="build-silverlight20"/>
+    </if>
+    <if test="${not(framework::exists('silverlight-2.0'))}">
+      <echo message="Silverlight 2.0 is not available. Skipping platform."/>
+    </if>
+  </target>
+
+  <target name="build-net20">
+    <call target="config-platform-net20"/>
+    <call target="compile-all"/>
+  </target>
+
+  <target name="build-net35">
+    <call target="config-platform-net35"/>
+    <call target="compile-all"/>
+  </target>
+
+  <target name="build-netcf20">
+    <call target="config-platform-netcf20"/>
+    <call target="compile-all"/>
+  </target>
+
+  <target name="build-mono20">
+    <call target="config-platform-mono20"/>
+    <call target="compile-all"/>
+  </target>
+
+  <target name="build-silverlight20">
+    <call target="config-platform-silverlight20"/>
+    <call target="compile-all"/>
+  </target>
+
+  <target name="config-build-debug">
+    <property name="current.build.config" value="debug"/>
+    <property name="current.build.debug" value="true"/>
+    <property name="current.build.optimize" value="false"/>
+    <property name="build.defines" value="DEBUG,TRACE"/>
+  </target>
+
+  <target name="config-build-release">
+    <property name="current.build.config" value="release"/>
+    <property name="current.build.debug" value="false"/>
+    <property name="current.build.optimize" value="true"/>
+    <property name="build.defines" value="TRACE"/>
+  </target>
+
+  <target name="config-platform-net20">
+    <property name="nant.settings.currentframework" value="net-2.0"/>
+    <property name="current.build.defines" value="${build.defines},NET,NET_20"/>
+    <property name="current.path.bin" value="${path.bin}/net-2.0/${current.build.config}"/>
+  </target>
+
+  <target name="config-platform-net35">
+    <property name="nant.settings.currentframework" value="net-3.5"/>
+    <property name="current.build.defines" value="${build.defines},NET,NET_35"/>
+    <property name="current.path.bin" value="${path.bin}/net-3.5/${current.build.config}"/>
+  </target>
+
+  <target name="config-platform-netcf20">
+    <property name="nant.settings.currentframework" value="netcf-2.0"/>
+    <property name="current.build.defines" value="${build.defines},NETCF,NETCF_20"/>
+    <property name="current.path.bin" value="${path.bin}/netcf-2.0/${current.build.config}"/>
+  </target>
+
+  <target name="config-platform-mono20">
+    <property name="nant.settings.currentframework" value="mono-2.0"/>
+    <property name="current.build.defines" value="${build.defines},MONO,MONO_20"/>
+    <property name="current.path.bin" value="${path.bin}/mono-2.0/${current.build.config}"/>
+  </target>
+
+  <target name="config-platform-silverlight20">
+    <property name="nant.settings.currentframework" value="silverlight-2.0"/>
+    <property name="current.build.defines" value="${build.defines},SILVERLIGHT,SILVERLIGHT_20"/>
+    <property name="current.path.bin" value="${path.bin}/silverlight-2.0/${current.build.config}"/>
+  </target>
+
+  <target name="compile-all">
+    <call target="compile-core"/>
+  </target>
+
+  <target name="compile-core">
+    <mkdir dir="${current.path.bin}"/>
+    <csc keyfile="${path::combine(path.src, 'Ninject.snk')}"
+         nostdlib="true"
+         noconfig="true"
+         warnaserror="true"
+         target="library"
+         debug="${current.build.debug}"
+         optimize="${current.build.optimize}"
+         define="${current.build.defines}"
+         output="${current.path.bin}/Ninject.Core.dll"
+         doc="${current.path.bin}/Ninject.Core.xml">
+      <sources basedir="${path.src}/Core">
+        <include name="../GlobalAssemblyInfo.cs"/>
+        <include name="**/*.cs"/>
+      </sources>
+      <references>
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Web.dll"/>
+      </references>
+    </csc>
+  </target>
+
+  <target name="clean">
+    <delete dir="${path.bin}" if="${directory::exists(path.bin)}"/>
+    <delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
+    <mkdir dir="${path.bin}"/>
+    <mkdir dir="${path.dist}"/>
+  </target>
+
+  <target name="test">
+    
+  </target>
+
+</project>

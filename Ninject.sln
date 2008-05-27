@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A809484-1678-44D1-A6C8-A78E9F26DEB6}"
 	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
 		CONTRIB.txt = CONTRIB.txt
 		src\GlobalAssemblyInfo.cs = src\GlobalAssemblyInfo.cs
 		LICENSE.txt = LICENSE.txt
+		Ninject.build = Ninject.build
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{CC5EB6CB-9AA4-4046-B01A-5A0EFDB00644}"
