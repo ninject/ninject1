@@ -28,6 +28,5 @@ namespace Ninject.Core.Infrastructure
 	/// <param name="target">The object on which to call the associated method.</param>
 	/// <param name="arguments">A collection of arguments to pass to the associated method.</param>
 	/// <returns>The return value of the method.</returns>
-	[Serializable]
 	public delegate object Invoker(object target, params object[] arguments);
 }

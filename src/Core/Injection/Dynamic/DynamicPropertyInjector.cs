@@ -30,13 +30,12 @@ namespace Ninject.Core.Injection
 	/// A property injector that uses dynamically-generated <see cref="Getter"/> and <see cref="Setter"/>
 	/// methods for invocation.
 	/// </summary>
-	[Serializable]
 	public class DynamicPropertyInjector : InjectorBase<PropertyInfo>, IPropertyInjector
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		[NonSerialized] private Getter _getter;
-		[NonSerialized] private Setter _setter;
+		private Getter _getter;
+		private Setter _setter;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

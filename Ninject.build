@@ -14,19 +14,31 @@
     <delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
   </target>
 
-  <target name="init" depends="clean">
-    <mkdir dir="${path.bin}"/>
-    <mkdir dir="${path.dist}"/>
-  </target>
+	<target name="init">
+		<mkdir dir="${path.bin}" if="${not(directory::exists(path.bin))}"/>
+		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
+	</target>
 
-  <target name="build-all" depends="init">
-    <call target="config-build-debug"/>
-    <call target="build-all-platforms"/>
-    <call target="config-build-release"/>
-    <call target="build-all-platforms"/>
-  </target>
+	<target name="rebuild" depends="clean init">
+		<call target="build-all"/>
+	</target>
 
-  <target name="build-all-platforms" depends="init">
+	<target name="build-all" depends="init">
+		<call target="build-debug"/>
+		<call target="build-release"/>
+	</target>
+
+	<target name="build-debug" depends="init">
+		<call target="config-build-debug"/>
+		<call target="build-all-platforms"/>
+	</target>
+
+	<target name="build-release" depends="init">
+		<call target="config-build-release"/>
+		<call target="build-all-platforms"/>
+	</target>
+
+	<target name="build-all-platforms">
 		<call target="build-net20"/>
 		<call target="build-netcf20"/>
 		<!--<call target="build-mono20"/>-->
@@ -80,7 +92,9 @@
 			<echo message="Building for Silverlight v2.0."/>
 			<call target="config-platform-silverlight20"/>
       <call target="compile-core"/>
-    </if>
+			<call target="compile-conditions"/>
+			<call target="compile-extensions"/>
+		</if>
 		<if test="${not(framework::exists('silverlight-2.0'))}">
 			<echo message="Silverlight v2.0 is not available. Skipping platform."/>
 		</if>

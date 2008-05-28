@@ -30,13 +30,12 @@ namespace Ninject.Core.Injection
 	/// A field injector that uses dynamically-generated <see cref="Getter"/> and <see cref="Setter"/>
 	/// methods for invocation.
 	/// </summary>
-	[Serializable]
 	public class DynamicFieldInjector : InjectorBase<FieldInfo>, IFieldInjector
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		[NonSerialized] private Getter _getter;
-		[NonSerialized] private Setter _setter;
+		private Getter _getter;
+		private Setter _setter;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

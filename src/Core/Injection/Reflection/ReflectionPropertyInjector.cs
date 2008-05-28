@@ -27,7 +27,6 @@ namespace Ninject.Core.Injection
 	/// <summary>
 	/// A property injector that uses reflection for invocation.
 	/// </summary>
-	[Serializable]
 	public class ReflectionPropertyInjector : InjectorBase<PropertyInfo>, IPropertyInjector
 	{
 		/*----------------------------------------------------------------------------------------*/

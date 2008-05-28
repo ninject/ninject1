@@ -25,7 +25,6 @@ namespace Ninject.Core.Infrastructure
 	/// <summary>
 	/// The baseline definition of an object that can have related debugging information.
 	/// </summary>
-	[Serializable]
 	public abstract class DebugInfoProvider : DisposableObject, IDebugInfoProvider
 	{
 		/*----------------------------------------------------------------------------------------*/

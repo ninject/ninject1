@@ -26,7 +26,6 @@ namespace Ninject.Core.Injection
 	/// <summary>
 	/// A field injector that uses reflection for invocation.
 	/// </summary>
-	[Serializable]
 	public class ReflectionFieldInjector : InjectorBase<FieldInfo>, IFieldInjector
 	{
 		/*----------------------------------------------------------------------------------------*/

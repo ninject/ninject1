@@ -62,14 +62,7 @@ namespace Ninject.Conditions.Builders
 			get { return new StringConditionBuilder<TRoot, Assembly>(this, a => a.FullName); }
 		}
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Continues the condition chain by examining the assembly's location.
-		/// </summary>
-		public StringConditionBuilder<TRoot, Assembly> Location
-		{
-			get { return new StringConditionBuilder<TRoot, Assembly>(this, a => a.Location); }
-		}
-		/*----------------------------------------------------------------------------------------*/
+#if !NETCF && !SILVERLIGHT
 		/// <summary>
 		/// Creates a terminating condition that determines whether the assembly was loaded from
 		/// the GAC.
@@ -87,6 +80,17 @@ namespace Ninject.Conditions.Builders
 		{
 			get { return Terminate(a => a.ReflectionOnly); }
 		}
+#endif
+#if !NETCF
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Continues the condition chain by examining the assembly's location.
+		/// </summary>
+		public StringConditionBuilder<TRoot, Assembly> Location
+		{
+			get { return new StringConditionBuilder<TRoot, Assembly>(this, a => a.Location); }
+		}
+#endif
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

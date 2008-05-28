@@ -39,11 +39,13 @@ namespace Ninject.Extensions.MessageBroker
 		/// </summary>
 		Background,
 		/*----------------------------------------------------------------------------------------*/
+#if !SILVERLIGHT
 		/// <summary>
 		/// Indicates that the message should be delivered on the thread that owns the user interface,
 		/// or the current thread if no synchronization context exists.
 		/// </summary>
 		UserInterface,
+#endif
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

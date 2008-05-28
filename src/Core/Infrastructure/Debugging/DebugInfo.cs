@@ -28,7 +28,6 @@ namespace Ninject.Core.Infrastructure
 	/// <summary>
 	/// An object containing debugging information used in error messages.
 	/// </summary>
-	[Serializable]
 	public class DebugInfo : DisposableObject
 	{
 		/*----------------------------------------------------------------------------------------*/

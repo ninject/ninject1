@@ -28,7 +28,6 @@ namespace Ninject.Core.Planning.Directives
 	/// <summary>
 	/// A directive that describes a field injection.
 	/// </summary>
-	[Serializable]
 	public class FieldInjectionDirective : SingleInjectionDirective<FieldInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/

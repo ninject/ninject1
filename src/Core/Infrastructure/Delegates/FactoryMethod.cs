@@ -27,6 +27,5 @@ namespace Ninject.Core.Infrastructure
 	/// </summary>
 	/// <param name="arguments">A collection of arguments to pass to the constructor.</param>
 	/// <returns>An instance of the associated type.</returns>
-	[Serializable]
 	public delegate object FactoryMethod(params object[] arguments);
 }

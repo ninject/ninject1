@@ -27,7 +27,6 @@ namespace Ninject.Core
 	/// <summary>
 	/// Contains configuration information about a <see cref="IKernel"/>.
 	/// </summary>
-	[Serializable]
 	public class KernelOptions
 	{
 		/*----------------------------------------------------------------------------------------*/

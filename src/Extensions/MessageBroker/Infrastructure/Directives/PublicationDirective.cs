@@ -29,7 +29,6 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 	/// <summary>
 	/// A directive that describes a message publication.
 	/// </summary>
-	[Serializable]
 	public class PublicationDirective : DirectiveBase
 	{
 		/*----------------------------------------------------------------------------------------*/

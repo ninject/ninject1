@@ -30,12 +30,11 @@ namespace Ninject.Core.Injection
 	/// A constructor injector that uses a dynamically-generated <see cref="FactoryMethod"/>
 	/// for invocation.
 	/// </summary>
-	[Serializable]
 	public class DynamicConstructorInjector : InjectorBase<ConstructorInfo>, IConstructorInjector
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		[NonSerialized] private FactoryMethod _factoryMethod;
+		private FactoryMethod _factoryMethod;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

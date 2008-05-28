@@ -25,7 +25,6 @@ namespace Ninject.Core.Planning.Directives
 	/// <summary>
 	/// A directive that indicates that instances of the type should be wrapped in proxies.
 	/// </summary>
-	[Serializable]
 	public class ProxyDirective : DirectiveBase
 	{
 		/*----------------------------------------------------------------------------------------*/

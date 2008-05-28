@@ -27,7 +27,6 @@ namespace Ninject.Core.Planning.Directives
 	/// <summary>
 	/// A directive that describes a constructor call.
 	/// </summary>
-	[Serializable]
 	public class ConstructorInjectionDirective : MultipleInjectionDirective<ConstructorInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/

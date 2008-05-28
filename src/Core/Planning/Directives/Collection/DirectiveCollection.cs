@@ -28,7 +28,6 @@ namespace Ninject.Core.Planning
 	/// <summary>
 	/// A collection of binding directives, stored in an activation plan.
 	/// </summary>
-	[Serializable]
 	public class DirectiveCollection : TypedCollection<object, IDirective>, IDirectiveCollection
 	{
 		/*----------------------------------------------------------------------------------------*/

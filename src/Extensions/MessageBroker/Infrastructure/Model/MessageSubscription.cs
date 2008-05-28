@@ -36,8 +36,10 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		private IMessageChannel _channel;
 		private object _subscriber;
 		private IMethodInjector _injector;
-		private DeliveryThread _deliveryThread;
-		private SynchronizationContext _syncContext;
+		private readonly DeliveryThread _deliveryThread;
+#if !SILVERLIGHT
+		private readonly SynchronizationContext _syncContext;
+#endif
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -111,8 +113,10 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 			_injector = injector;
 			_deliveryThread = deliveryThread;
 
+#if !SILVERLIGHT
 			if (deliveryThread == DeliveryThread.UserInterface)
 				_syncContext = SynchronizationContext.Current;
+#endif
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -132,9 +136,11 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 					DeliverViaBackgroundThread(sender, args);
 					break;
 
+#if !SILVERLIGHT
 				case DeliveryThread.UserInterface:
 					DeliverViaSynchronizationContext(sender, args);
 					break;
+#endif
 
 				default:
 					DeliverMessage(sender, args);
@@ -157,6 +163,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
+#if !SILVERLIGHT
 		private void DeliverViaSynchronizationContext(object sender, object args)
 		{
 			if (_syncContext != null)
@@ -164,6 +171,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 			else
 				DeliverMessage(sender, args);
 		}
+#endif
 		/*----------------------------------------------------------------------------------------*/
 		private void DeliverViaBackgroundThread(object sender, object args)
 		{

@@ -28,6 +28,5 @@ namespace Ninject.Core.Infrastructure
 	/// </summary>
 	/// <param name="target">The object to get the value from.</param>
 	/// <param name="value">The value to store in the associated field or property.</param>
-	[Serializable]
 	public delegate void Setter(object target, object value);
 }

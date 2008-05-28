@@ -27,7 +27,6 @@ namespace Ninject.Core.Planning.Directives
 	/// Represents a baseline definition of a directive. This type can be extended to create
 	/// custom directives.
 	/// </summary>
-	[Serializable]
 	public abstract class DirectiveBase : DisposableObject, IDirective
 	{
 		/*----------------------------------------------------------------------------------------*/

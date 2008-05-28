@@ -31,7 +31,6 @@ namespace Ninject.Core.Planning.Directives
 	/// </summary>
 	/// <typeparam name="TMember">The type of member that will be injected.</typeparam>
 	/// <seealso cref="MultipleInjectionDirective{TMember}"/>
-	[Serializable]
 	public abstract class SingleInjectionDirective<TMember> : InjectionDirectiveBase<TMember>
 		where TMember : MemberInfo
 	{

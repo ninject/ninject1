@@ -27,7 +27,6 @@ namespace Ninject.Core.Injection
 	/// <summary>
 	/// A method injector that uses reflection for invocation.
 	/// </summary>
-	[Serializable]
 	public class ReflectionMethodInjector : InjectorBase<MethodInfo>, IMethodInjector
 	{
 		/*----------------------------------------------------------------------------------------*/

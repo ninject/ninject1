@@ -27,7 +27,6 @@ namespace Ninject.Core.Planning.Directives
 	/// <summary>
 	/// A directive that describes a method injection.
 	/// </summary>
-	[Serializable]
 	public class MethodInjectionDirective : MultipleInjectionDirective<MethodInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/

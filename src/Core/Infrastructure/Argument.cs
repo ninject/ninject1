@@ -27,7 +27,6 @@ namespace Ninject.Core.Infrastructure
 	/// <summary>
 	/// Describes a dependency that should be resolved to inject a value into a created instance.
 	/// </summary>
-	[Serializable]
 	public class Argument : DisposableObject
 	{
 		/*----------------------------------------------------------------------------------------*/

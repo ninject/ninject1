@@ -27,7 +27,6 @@ namespace Ninject.Core.Injection
 	/// <summary>
 	/// A constructor injector that uses reflection for invocation.
 	/// </summary>
-	[Serializable]
 	public class ReflectionConstructorInjector : InjectorBase<ConstructorInfo>, IConstructorInjector
 	{
 		/*----------------------------------------------------------------------------------------*/

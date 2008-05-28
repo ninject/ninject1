@@ -29,12 +29,11 @@ namespace Ninject.Core.Injection
 	/// <summary>
 	/// A method injector that uses a dynamically-generated <see cref="Invoker"/> for invocation.
 	/// </summary>
-	[Serializable]
 	public class DynamicMethodInjector : InjectorBase<MethodInfo>, IMethodInjector
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		[NonSerialized] private Invoker _invoker;
+		private Invoker _invoker;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

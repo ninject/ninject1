@@ -27,7 +27,6 @@ namespace Ninject.Core.Planning
 	/// <summary>
 	/// The stock implementation of an activation plan.
 	/// </summary>
-	[Serializable]
 	public class StandardActivationPlan : DisposableObject, IActivationPlan
 	{
 		/*----------------------------------------------------------------------------------------*/

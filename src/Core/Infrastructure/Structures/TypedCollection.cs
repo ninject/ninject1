@@ -26,7 +26,6 @@ namespace Ninject.Core.Infrastructure
 	/// <summary>
 	/// A collection that organizes items by type.
 	/// </summary>
-	[Serializable]
 	public abstract class TypedCollection<TKey, TBase>
 	{
 		/*----------------------------------------------------------------------------------------*/

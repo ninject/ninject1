@@ -28,7 +28,6 @@ namespace Ninject.Core.Injection
 	/// A baseline definition of an injector. This type can be extended to create custom injectors.
 	/// </summary>
 	/// <typeparam name="TMember"></typeparam>
-	[Serializable]
 	public abstract class InjectorBase<TMember> : DisposableObject, IInjector<TMember>
 		where TMember : MemberInfo
 	{

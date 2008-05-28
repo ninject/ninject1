@@ -28,7 +28,6 @@ namespace Ninject.Core.Planning.Directives
 	/// <summary>
 	/// A directive that describes a property injection.
 	/// </summary>
-	[Serializable]
 	public class PropertyInjectionDirective : SingleInjectionDirective<PropertyInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/

@@ -28,6 +28,5 @@ namespace Ninject.Core.Infrastructure
 	/// </summary>
 	/// <param name="target">The object to get the value from.</param>
 	/// <returns>The value stored in the associated field or property.</returns>
-	[Serializable]
 	public delegate object Getter(object target);
 }

@@ -28,7 +28,9 @@ namespace Ninject.Core
 	/// <summary>
 	/// Represents errors that occur during the activation of an instance.
 	/// </summary>
+#if !SILVERLIGHT
 	[Serializable]
+#endif
 	public class ActivationException : Exception
 	{
 		/*----------------------------------------------------------------------------------------*/

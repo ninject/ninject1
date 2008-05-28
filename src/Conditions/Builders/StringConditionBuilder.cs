@@ -92,6 +92,7 @@ namespace Ninject.Conditions.Builders
 			return Terminate(s => s.EndsWith(value));
 		}
 		/*----------------------------------------------------------------------------------------*/
+#if !NETCF
 		/// <summary>
 		/// Creates a terminating condition that determines whether the string contains the
 		/// specified value.
@@ -102,6 +103,7 @@ namespace Ninject.Conditions.Builders
 		{
 			return Terminate(s => s.Contains(value));
 		}
+#endif
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

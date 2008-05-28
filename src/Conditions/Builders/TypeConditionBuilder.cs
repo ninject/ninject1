@@ -120,15 +120,6 @@ namespace Ninject.Conditions.Builders
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a terminating condition that determines whether the type is nested within
-		/// another type.
-		/// </summary>
-		public TerminatingCondition<TRoot, Type> IsNested
-		{
-			get { return Terminate(t => t.IsNested); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Creates a terminating condition that determines whether the type is a primitive type.
 		/// </summary>
 		public TerminatingCondition<TRoot, Type> IsPrimitive
