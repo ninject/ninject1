@@ -80,8 +80,6 @@
 			<echo message="Building for Silverlight v2.0."/>
 			<call target="config-platform-silverlight20"/>
       <call target="compile-core"/>
-      <call target="compile-conditions"/>
-      <call target="compile-extensions"/>
     </if>
 		<if test="${not(framework::exists('silverlight-2.0'))}">
 			<echo message="Silverlight v2.0 is not available. Skipping platform."/>
