@@ -18,10 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Ninject.Core;
 using Ninject.Core.Logging;
