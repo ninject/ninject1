@@ -30,7 +30,6 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 	/// <summary>
 	/// A directive that describes a message subscription.
 	/// </summary>
-	[Serializable]
 	public class SubscriptionDirective : DirectiveBase
 	{
 		/*----------------------------------------------------------------------------------------*/
