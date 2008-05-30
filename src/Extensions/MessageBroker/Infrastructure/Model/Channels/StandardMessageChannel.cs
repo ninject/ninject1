@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using Ninject.Core;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 #endregion
@@ -30,12 +31,10 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 	/// <summary>
 	/// A message channel that can receive events from publishers and transfer them to subscribers.
 	/// </summary>
-	public class MessageChannel : DisposableObject, IMessageChannel
+	public class StandardMessageChannel : DisposableObject, IMessageChannel
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private IMessageBroker _messageBroker;
-		private string _name;
 		private List<IMessagePublication> _publications;
 		private List<IMessageSubscription> _subscriptions;
 		private bool _isEnabled;
@@ -43,20 +42,14 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets the message broker that the channel is associated with.
+		/// Gets the kernel the channel is associated with.
 		/// </summary>
-		public IMessageBroker MessageBroker
-		{
-			get { return _messageBroker; }
-		}
+		public IKernel Kernel { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the name of the channel.
 		/// </summary>
-		public string Name
-		{
-			get { return _name; }
-		}
+		public string Name { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// A read-only collection of publishers that send their events to the channel.
@@ -134,8 +127,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 				DisposeCollection(_publications);
 				DisposeCollection(_subscriptions);
 
-				_messageBroker = null;
-				_name = null;
+				Name = null;
 				_publications = null;
 				_subscriptions = null;
 			}
@@ -146,17 +138,21 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Creates a new instance of the MessageChannel class.
+		/// Creates a new instance of the StandardMessageChannel class.
 		/// </summary>
-		/// <param name="messageBroker">The message broker that the channel is associated with.</param>
+		/// <param name="kernel">The kernel.</param>
 		/// <param name="name">The name of the channel.</param>
-		public MessageChannel(IMessageBroker messageBroker, string name)
+		public StandardMessageChannel(IKernel kernel, string name)
 		{
+			Ensure.ArgumentNotNull(kernel, "kernel");
+			Ensure.ArgumentNotNullOrEmptyString(name, "name");
+
 			_publications = new List<IMessagePublication>();
 			_subscriptions = new List<IMessageSubscription>();
 
-			_messageBroker = messageBroker;
-			_name = name;
+			Kernel = kernel;
+			Name = name;
+
 			_isEnabled = true;
 		}
 		#endregion
@@ -171,9 +167,11 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		{
 			Ensure.NotDisposed(this);
 
+			var factory = Kernel.Components.Get<IMessagePublicationFactory>();
+
 			lock (_publications)
 			{
-				_publications.Add(CreatePublication(publisher, evt));
+				_publications.Add(factory.Create(this, publisher, evt));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -222,9 +220,11 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		{
 			Ensure.NotDisposed(this);
 
+			var factory = Kernel.Components.Get<IMessageSubscriptionFactory>();
+
 			lock (_subscriptions)
 			{
-				_subscriptions.Add(CreateSubscription(subscriber, injector, thread));
+				_subscriptions.Add(factory.Create(this, subscriber, injector, thread));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -289,32 +289,6 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 				foreach (IMessageSubscription subscription in _subscriptions)
 					subscription.Deliver(sender, args);
 			}
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods
-		/// <summary>
-		/// Creates a new message publication for the channel.
-		/// </summary>
-		/// <param name="publisher">The publishing object.</param>
-		/// <param name="evt">The event that is being published.</param>
-		/// <returns>A new message publication.</returns>
-		protected virtual IMessagePublication CreatePublication(object publisher, EventInfo evt)
-		{
-			return new MessagePublication(this, publisher, evt);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a new message subscription for the channel.
-		/// </summary>
-		/// <param name="subscriber">The subscribing object.</param>
-		/// <param name="injector">An injector that will be triggered when messages are received on the channel.</param>
-		/// <param name="thread">The thread on which the message should be delivered.</param>
-		/// <returns>A new message subscription.</returns>
-		protected virtual IMessageSubscription CreateSubscription(object subscriber, IMethodInjector injector,
-			DeliveryThread thread)
-		{
-			return new MessageSubscription(this, subscriber, injector, thread);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

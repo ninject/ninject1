@@ -19,7 +19,6 @@
 #region Using Directives
 using System;
 using Ninject.Core;
-using Ninject.Core.Infrastructure;
 using Ninject.Extensions.MessageBroker.Infrastructure;
 #endregion
 
@@ -31,28 +30,26 @@ namespace Ninject.Extensions.MessageBroker
 	public class MessageBrokerModule : StandardModule
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private readonly IMessageBroker _messageBroker;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
+		#region Properties
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MessageBrokerModule"/> class.
+		/// Gets or sets the message broker.
 		/// </summary>
-		public MessageBrokerModule()
-			: this(new StandardMessageBroker())
-		{
-		}
+		public IMessageBroker MessageBroker { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MessageBrokerModule"/> class.
+		/// Gets or sets the channel factory.
 		/// </summary>
-		/// <param name="messageBroker">The message broker component to use.</param>
-		public MessageBrokerModule(IMessageBroker messageBroker)
-		{
-			Ensure.ArgumentNotNull(messageBroker, "messageBroker");
-			_messageBroker = messageBroker;
-		}
+		public IMessageChannelFactory ChannelFactory { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the publication factory.
+		/// </summary>
+		public IMessagePublicationFactory PublicationFactory { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the subscription factory.
+		/// </summary>
+		public IMessageSubscriptionFactory SubscriptionFactory { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
@@ -61,7 +58,10 @@ namespace Ninject.Extensions.MessageBroker
 		/// </summary>
 		public override void BeforeLoad()
 		{
-			Kernel.Components.Connect<IMessageBroker>(_messageBroker);
+			Kernel.Components.Connect<IMessageBroker>(MessageBroker ?? new StandardMessageBroker());
+			Kernel.Components.Connect<IMessageChannelFactory>(ChannelFactory ?? new StandardMessageChannelFactory());
+			Kernel.Components.Connect<IMessagePublicationFactory>(PublicationFactory ?? new StandardMessagePublicationFactory());
+			Kernel.Components.Connect<IMessageSubscriptionFactory>(SubscriptionFactory ?? new StandardMessageSubscriptionFactory());
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

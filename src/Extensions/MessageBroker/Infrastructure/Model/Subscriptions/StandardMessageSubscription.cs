@@ -27,9 +27,9 @@ using Ninject.Core.Injection;
 namespace Ninject.Extensions.MessageBroker.Infrastructure
 {
 	/// <summary>
-	/// A message subscription handled by a message broker.
+	/// The stock implementation of a <see cref="IMessageSubscription"/>.
 	/// </summary>
-	public class MessageSubscription : DisposableObject, IMessageSubscription
+	public class StandardMessageSubscription : DisposableObject, IMessageSubscription
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
@@ -88,24 +88,13 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="MessageSubscription"/> class.
-		/// </summary>
-		/// <param name="channel">The channel associated with the subscription.</param>
-		/// <param name="subscriber">The object that will receive the channel events.</param>
-		/// <param name="injector">The injector that will be triggered an event occurs.</param>
-		public MessageSubscription(IMessageChannel channel, object subscriber, IMethodInjector injector)
-			: this(channel, subscriber, injector, DeliveryThread.Current)
-		{
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Initializes a new instance of the <see cref="MessageSubscription"/> class.
+		/// Initializes a new instance of the <see cref="StandardMessageSubscription"/> class.
 		/// </summary>
 		/// <param name="channel">The channel associated with the subscription.</param>
 		/// <param name="subscriber">The object that will receive the channel events.</param>
 		/// <param name="injector">The injector that will be triggered an event occurs.</param>
 		/// <param name="deliveryThread">The thread context that should be used to deliver the message.</param>
-		public MessageSubscription(IMessageChannel channel, object subscriber, IMethodInjector injector,
+		public StandardMessageSubscription(IMessageChannel channel, object subscriber, IMethodInjector injector,
 			DeliveryThread deliveryThread)
 		{
 			_channel = channel;

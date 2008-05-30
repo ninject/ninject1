@@ -24,8 +24,7 @@ using Ninject.Core.Logging;
 namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// A baseline definition of a kernel component. This type may be extended to create custom
-	/// kernel component implementations.
+	/// An object that contributes functionality to a <see cref="IKernel"/>.
 	/// </summary>
 	public class KernelComponentBase : DisposableObject, IKernelComponent
 	{

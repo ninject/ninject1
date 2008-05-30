@@ -92,7 +92,10 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 			Ensure.NotDisposed(this);
 
 			if (!_channels.ContainsKey(name))
-				_channels.Add(name, new MessageChannel(this, name));
+			{
+				var factory = Kernel.Components.Get<IMessageChannelFactory>();
+				_channels.Add(name, factory.Create(name));
+			}
 
 			return _channels[name];
 		}

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="Ninject" default="build-all">
 
-  <property name="path.base" value="."/>
-  <property name="path.bin" value="${path.base}/bin"/>
-  <property name="path.lib" value="${path.base}/lib"/>
-  <property name="path.dist" value="${path.base}/dist"/>
-  <property name="path.src" value="${path.base}/src"/>
-  
-  <property name="skip.tests" value="false" overwrite="false"/>
+	<property name="path.base" value="."/>
+	<property name="path.bin" value="${path.base}/bin"/>
+	<property name="path.lib" value="${path.base}/lib"/>
+	<property name="path.dist" value="${path.base}/dist"/>
+	<property name="path.src" value="${path.base}/src"/>
+	
+	<property name="current.version" value="1.0" readonly="false" overwrite="false"/>
+	<property name="skip.tests" value="false" overwrite="false"/>
 
-  <target name="clean">
-    <delete dir="${path.bin}" if="${directory::exists(path.bin)}"/>
-    <delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
-  </target>
+	<target name="clean">
+		<delete dir="${path.bin}" if="${directory::exists(path.bin)}"/>
+		<delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
+	</target>
 
 	<target name="init">
 		<mkdir dir="${path.bin}" if="${not(directory::exists(path.bin))}"/>
@@ -49,12 +50,12 @@
 		<if test="${framework::exists('net-3.5')}">
 			<echo message="Building for .NET Framework v2.0 (using v3.5 compiler)."/>
 			<call target="config-platform-net20"/>
-      <call target="compile-core"/>
-      <call target="compile-conditions"/>
-      <call target="compile-extensions"/>
-      <call target="compile-frameworks"/>
-      <call target="compile-integrations"/>
-    </if>
+			<call target="compile-core"/>
+			<call target="compile-conditions"/>
+			<call target="compile-extensions"/>
+			<call target="compile-frameworks"/>
+			<call target="compile-integrations"/>
+		</if>
 		<if test="${not(framework::exists('net-3.5'))}">
 			<echo message="The .NET Framework v3.5 compiler is required, even though Ninject is compatible with v2.0. Skipping platform."/>
 		</if>
@@ -64,9 +65,9 @@
 		<if test="${framework::exists('netcf-2.0')}">
 			<echo message="Building for .NET Compact Framework v2.0."/>
 			<call target="config-platform-netcf20"/>
-      <call target="compile-core"/>
-      <call target="compile-conditions"/>
-    </if>
+			<call target="compile-core"/>
+			<call target="compile-conditions"/>
+		</if>
 		<if test="${not(framework::exists('netcf-2.0'))}">
 			<echo message=".NET Compact Framework v2.0 is not available. Skipping platform."/>
 		</if>
@@ -76,397 +77,407 @@
 		<if test="${framework::exists('mono-2.0')}">
 			<echo message="Building for Mono v2.0."/>
 			<call target="config-platform-mono20"/>
-      <call target="compile-core"/>
-      <call target="compile-conditions"/>
-      <call target="compile-extensions"/>
-      <call target="compile-frameworks"/>
-      <call target="compile-integrations"/>
-    </if>
+			<call target="compile-core"/>
+			<call target="compile-conditions"/>
+			<call target="compile-extensions"/>
+			<call target="compile-frameworks"/>
+			<call target="compile-integrations"/>
+		</if>
 		<if test="${not(framework::exists('mono-2.0'))}">
 			<echo message="Mono v2.0 is not available. Skipping platform."/>
 		</if>
 	</target>
 
-  <target name="build-silverlight20">
+	<target name="build-silverlight20">
 		<if test="${framework::exists('silverlight-2.0')}">
 			<echo message="Building for Silverlight v2.0."/>
 			<call target="config-platform-silverlight20"/>
-      <call target="compile-core"/>
+			<call target="compile-core"/>
 			<call target="compile-conditions"/>
 			<call target="compile-extensions"/>
 		</if>
 		<if test="${not(framework::exists('silverlight-2.0'))}">
 			<echo message="Silverlight v2.0 is not available. Skipping platform."/>
 		</if>
-  </target>
+	</target>
 
-  <target name="config-build-debug">
-    <property name="current.build.config" value="debug"/>
-    <property name="current.build.debug" value="true"/>
-    <property name="current.build.optimize" value="false"/>
-    <property name="build.defines" value="DEBUG,TRACE"/>
-  </target>
+	<target name="config-build-debug">
+		<property name="current.build.config" value="debug"/>
+		<property name="current.build.debug" value="true"/>
+		<property name="current.build.optimize" value="false"/>
+		<property name="build.defines" value="DEBUG,TRACE"/>
+	</target>
 
-  <target name="config-build-release">
-    <property name="current.build.config" value="release"/>
-    <property name="current.build.debug" value="false"/>
-    <property name="current.build.optimize" value="true"/>
-    <property name="build.defines" value="TRACE"/>
-  </target>
+	<target name="config-build-release">
+		<property name="current.build.config" value="release"/>
+		<property name="current.build.debug" value="false"/>
+		<property name="current.build.optimize" value="true"/>
+		<property name="build.defines" value="TRACE"/>
+	</target>
 
-  <target name="config-platform-net20">
+	<target name="config-platform-net20">
 		<!-- The v3.5 compiler is used to take advantage of C# 3.0 features, but the code is compatible with v2.0 of the framework. -->
 		<property name="nant.settings.currentframework" value="net-3.5"/>
 		<property name="current.build.defines" value="${build.defines},NET,NET_20"/>
 		<property name="current.path.bin" value="${path.bin}/net-2.0/${current.build.config}"/>
 	</target>
 
-  <target name="config-platform-netcf20">
+	<target name="config-platform-netcf20">
 		<property name="nant.settings.currentframework" value="netcf-2.0"/>
 		<property name="current.build.defines" value="${build.defines},NETCF,NETCF_20,NO_LCG,NO_WEB,NO_REMOTING,NO_STACKTRACE,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION"/>
 		<property name="current.path.bin" value="${path.bin}/netcf-2.0/${current.build.config}"/>
 	</target>
 
-  <target name="config-platform-mono20">
-    <property name="nant.settings.currentframework" value="mono-2.0"/>
-    <property name="current.build.defines" value="${build.defines},MONO,MONO_20"/>
-    <property name="current.path.bin" value="${path.bin}/mono-2.0/${current.build.config}"/>
-  </target>
+	<target name="config-platform-mono20">
+		<property name="nant.settings.currentframework" value="mono-2.0"/>
+		<property name="current.build.defines" value="${build.defines},MONO,MONO_20"/>
+		<property name="current.path.bin" value="${path.bin}/mono-2.0/${current.build.config}"/>
+	</target>
 
-  <target name="config-platform-silverlight20">
-    <property name="nant.settings.currentframework" value="silverlight-2.0"/>
-    <property name="current.build.defines" value="${build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION"/>
+	<target name="config-platform-silverlight20">
+		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
+		<property name="current.build.defines" value="${build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION"/>
 		<property name="current.path.bin" value="${path.bin}/silverlight-2.0/${current.build.config}"/>
-  </target>
+	</target>
 
-  <target name="compile-extensions">
-    <call target="compile-extension-autowiring"/>
-    <call target="compile-extension-cache"/>
-    <call target="compile-extension-messagebroker"/>
-  </target>
+	<target name="compile-extensions">
+		<call target="compile-extension-autowiring"/>
+		<call target="compile-extension-cache"/>
+		<call target="compile-extension-messagebroker"/>
+	</target>
 
-  <target name="compile-frameworks">
-    <call target="compile-framework-web"/>
-    <call target="compile-framework-winforms"/>
-  </target>
+	<target name="compile-frameworks">
+		<call target="compile-framework-web"/>
+		<call target="compile-framework-winforms"/>
+	</target>
 
-  <target name="compile-integrations">
-    <call target="compile-integration-ajaxpro"/>
-    <call target="compile-integration-dynamicproxy2"/>
-    <call target="compile-integration-linfu"/>
-    <call target="compile-integration-log4net"/>
-    <call target="compile-integration-monorail"/>
-    <call target="compile-integration-nlog"/>
-  </target>
+	<target name="compile-integrations">
+		<call target="compile-integration-ajaxpro"/>
+		<call target="compile-integration-dynamicproxy2"/>
+		<call target="compile-integration-linfu"/>
+		<call target="compile-integration-log4net"/>
+		<call target="compile-integration-monorail"/>
+		<call target="compile-integration-nlog"/>
+	</target>
 
-  <target name="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Core.dll"
          doc="${current.path.bin}/Ninject.Core.xml">
-      <sources basedir="${path.src}/Core">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Web.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Core">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Web.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-conditions" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-conditions" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Conditions.dll"
          doc="${current.path.bin}/Ninject.Conditions.xml">
-      <sources basedir="${path.src}/Conditions">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Conditions">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-extension-autowiring" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-extension-autowiring" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Extensions.AutoWiring.dll"
          doc="${current.path.bin}/Ninject.Extensions.AutoWiring.xml">
-      <sources basedir="${path.src}/Extensions/AutoWiring">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Extensions/AutoWiring">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-extension-cache" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-extension-cache" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Extensions.Cache.dll"
          doc="${current.path.bin}/Ninject.Extensions.Cache.xml">
-      <sources basedir="${path.src}/Extensions/Cache">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Extensions/Cache">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-extension-messagebroker" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-extension-messagebroker" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Extensions.MessageBroker.dll"
          doc="${current.path.bin}/Ninject.Extensions.MessageBroker.xml">
-      <sources basedir="${path.src}/Extensions/MessageBroker">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Extensions/MessageBroker">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-framework-web" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-framework-web" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Framework.Web.dll"
          doc="${current.path.bin}/Ninject.Framework.Web.xml">
-      <sources basedir="${path.src}/Framework/Web">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Web.dll"/>
-        <include name="System.Web.Services.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Framework/Web">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Web.dll"/>
+				<include name="System.Web.Services.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-framework-winforms" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-framework-winforms" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Framework.WinForms.dll"
          doc="${current.path.bin}/Ninject.Framework.WinForms.xml">
-      <sources basedir="${path.src}/Framework/WinForms">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Windows.Forms.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Framework/WinForms">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Windows.Forms.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-integration-ajaxpro" depends="compile-core compile-framework-web">
-    <mkdir dir="${current.path.bin}"/>
-    <copy todir="${current.path.bin}">
-      <fileset basedir="${path.lib}">
-        <include name="AjaxPro.2.dll"/>
-      </fileset>
-    </copy>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-integration-ajaxpro" depends="compile-core compile-framework-web">
+		<mkdir dir="${current.path.bin}"/>
+		<copy todir="${current.path.bin}">
+			<fileset basedir="${path.lib}">
+				<include name="AjaxPro.2.dll"/>
+			</fileset>
+		</copy>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Integration.AjaxPro.dll"
          doc="${current.path.bin}/Ninject.Integration.AjaxPro.xml">
-      <sources basedir="${path.src}/Integration/AjaxPro">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Web.dll"/>
-        <include name="AjaxPro.2.dll"/>
-        <include name="Ninject.Core.dll"/>
-        <include name="Ninject.Framework.Web.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Integration/AjaxPro">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Web.dll"/>
+				<include name="AjaxPro.2.dll"/>
+				<include name="Ninject.Core.dll"/>
+				<include name="Ninject.Framework.Web.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-integration-dynamicproxy2" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <copy todir="${current.path.bin}">
-      <fileset basedir="${path.lib}">
-        <include name="Castle.Core.dll"/>
-        <include name="Castle.DynamicProxy2.dll"/>
-      </fileset>
-    </copy>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-integration-dynamicproxy2" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<copy todir="${current.path.bin}">
+			<fileset basedir="${path.lib}">
+				<include name="Castle.Core.dll"/>
+				<include name="Castle.DynamicProxy2.dll"/>
+			</fileset>
+		</copy>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Integration.DynamicProxy2.dll"
          doc="${current.path.bin}/Ninject.Integration.DynamicProxy2.xml">
-      <sources basedir="${path.src}/Integration/DynamicProxy2">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="Castle.Core.dll"/>
-        <include name="Castle.DynamicProxy2.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Integration/DynamicProxy2">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="Castle.Core.dll"/>
+				<include name="Castle.DynamicProxy2.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-integration-linfu" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <copy todir="${current.path.bin}">
-      <fileset basedir="${path.lib}">
-        <include name="LinFu.DynamicProxy.dll"/>
-      </fileset>
-    </copy>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-integration-linfu" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<copy todir="${current.path.bin}">
+			<fileset basedir="${path.lib}">
+				<include name="LinFu.DynamicProxy.dll"/>
+			</fileset>
+		</copy>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Integration.LinFu.dll"
          doc="${current.path.bin}/Ninject.Integration.LinFu.xml">
-      <sources basedir="${path.src}/Integration/LinFu">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="LinFu.DynamicProxy.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Integration/LinFu">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="LinFu.DynamicProxy.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-integration-log4net" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <copy todir="${current.path.bin}">
-      <fileset basedir="${path.lib}">
-        <include name="log4net.dll"/>
-      </fileset>
-    </copy>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-integration-log4net" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<copy todir="${current.path.bin}">
+			<fileset basedir="${path.lib}">
+				<include name="log4net.dll"/>
+			</fileset>
+		</copy>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Integration.Log4net.dll"
          doc="${current.path.bin}/Ninject.Integration.Log4net.xml">
-      <sources basedir="${path.src}/Integration/Log4net">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="log4net.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Integration/Log4net">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="log4net.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-integration-monorail" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <copy todir="${current.path.bin}">
-      <fileset basedir="${path.lib}">
-        <include name="Castle.Core.dll"/>
-        <include name="Castle.MonoRail.Framework.dll"/>
-      </fileset>
-    </copy>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-integration-monorail" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<copy todir="${current.path.bin}">
+			<fileset basedir="${path.lib}">
+				<include name="Castle.Core.dll"/>
+				<include name="Castle.MonoRail.Framework.dll"/>
+			</fileset>
+		</copy>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Integration.MonoRail.dll"
          doc="${current.path.bin}/Ninject.Integration.MonoRail.xml">
-      <sources basedir="${path.src}/Integration/MonoRail">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Web.dll"/>
-        <include name="Castle.Core.dll"/>
-        <include name="Castle.MonoRail.Framework.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Integration/MonoRail">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Web.dll"/>
+				<include name="Castle.Core.dll"/>
+				<include name="Castle.MonoRail.Framework.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="compile-integration-nlog" depends="compile-core">
-    <mkdir dir="${current.path.bin}"/>
-    <copy todir="${current.path.bin}">
-      <fileset basedir="${path.lib}">
-        <include name="NLog.dll"/>
-      </fileset>
-    </copy>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
+	<target name="compile-integration-nlog" depends="compile-core">
+		<mkdir dir="${current.path.bin}"/>
+		<copy todir="${current.path.bin}">
+			<fileset basedir="${path.lib}">
+				<include name="NLog.dll"/>
+			</fileset>
+		</copy>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${current.build.debug}" optimize="${current.build.optimize}" define="${current.build.defines}"
          output="${current.path.bin}/Ninject.Integration.NLog.dll"
          doc="${current.path.bin}/Ninject.Integration.NLog.xml">
-      <sources basedir="${path.src}/Integration/NLog">
-        <include name="${path.src}/GlobalAssemblyInfo.cs"/>
-        <include name="**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="NLog.dll"/>
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
+			<sources basedir="${path.src}/Integration/NLog">
+				<include name="${path.src}/GlobalAssemblyInfo.cs"/>
+				<include name="**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="NLog.dll"/>
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
 
-  <target name="test">
-    
-  </target>
+	<target name="test">
+
+	</target>
+
+	<target name="package">
+		<zip zipfile="${path.dist}\Ninject-${current.version}-${current.build.config}-${framework::get-target-framework()}.zip" ziplevel="9">
+			<fileset basedir="${current.path.bin}">
+				<include name="*.dll"/>
+				<include name="*.pdb"/>
+				<include name="*.xml"/>
+			</fileset>
+		</zip>
+	</target>
 
 </project>

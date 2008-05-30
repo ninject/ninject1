@@ -25,9 +25,9 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Extensions.MessageBroker.Infrastructure
 {
 	/// <summary>
-	/// A message publication handled by a message broker.
+	/// The stock definition of a <see cref="IMessagePublication"/>.
 	/// </summary>
-	public class MessagePublication : DisposableObject, IMessagePublication
+	public class StandardMessagePublication : DisposableObject, IMessagePublication
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
@@ -87,12 +87,12 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Creates a new instance of the MessagePublication class.
+		/// Creates a new instance of the StandardMessagePublication class.
 		/// </summary>
 		/// <param name="channel">The channel associated with the publication.</param>
 		/// <param name="publisher">The object that publishes events to the channel.</param>
 		/// <param name="evt">The event that will be published to the channel.</param>
-		public MessagePublication(IMessageChannel channel, object publisher, EventInfo evt)
+		public StandardMessagePublication(IMessageChannel channel, object publisher, EventInfo evt)
 		{
 			_channel = channel;
 			_publisher = publisher;

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using Ninject.Core;
 using Ninject.Core.Injection;
 #endregion
 
@@ -32,9 +33,9 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the message broker that the channel is related to.
+		/// Gets the kernel the channel is associated with.
 		/// </summary>
-		IMessageBroker MessageBroker { get; }
+		IKernel Kernel { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the name of the channel.

@@ -22,7 +22,6 @@ using Ninject.Core;
 using Ninject.Core.Activation;
 using Ninject.Conditions.Builders;
 using Ninject.Core.Interception;
-using Ninject.Core.Parameters;
 #endregion
 
 namespace Ninject.Conditions
