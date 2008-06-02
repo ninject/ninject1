@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Ninject.Core;
+using Ninject.Core.Infrastructure;
 using Ninject.Core.Interception;
 using Ninject.Extensions.Cache.Infrastructure;
 #endregion

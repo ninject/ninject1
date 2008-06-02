@@ -21,7 +21,7 @@ using System;
 using Ninject.Core.Interception;
 #endregion
 
-namespace Ninject.Core
+namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
 	/// A baseline definition of an attribute that indicates one or more methods should be intercepted.

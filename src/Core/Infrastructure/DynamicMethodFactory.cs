@@ -33,7 +33,7 @@ namespace Ninject.Core.Infrastructure
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Static Fields
-		private static ConstructorInfo TargetParameterCountExceptionConstructor =
+		private static readonly ConstructorInfo TargetParameterCountExceptionConstructor =
 			typeof(TargetParameterCountException).GetConstructor(Type.EmptyTypes);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -46,16 +46,11 @@ namespace Ninject.Core.Infrastructure
 		/// <returns>A dynamic invoker that can call the specified method.</returns>
 		public static Invoker CreateInvoker(MethodInfo method)
 		{
-			DynamicMethod callable = new DynamicMethod(
-				String.Empty,
-				typeof(object),
-				new Type[] {typeof(object), typeof(object[])},
-				typeof(DynamicMethodFactory), true);
+			DynamicMethod callable = CreateDynamicInvoker();
+			var info = new DelegateBuildInfo(method);
 
-			DelegateBuildInfo info = new DelegateBuildInfo(method);
 			ILGenerator il = callable.GetILGenerator();
 
-			EmitDefineLocals(info, il);
 			EmitCheckParameters(info, il, 1);
 			EmitLoadParameters(info, il, 1);
 
@@ -70,11 +65,9 @@ namespace Ninject.Core.Infrastructure
 			}
 			else
 			{
-				if (method.ReturnType.IsValueType)
+				if (info.ReturnType.IsValueType)
 					il.Emit(OpCodes.Box, method.ReturnType);
 			}
-
-			EmitCopyBackOutParameters(info, il, 1);
 
 			il.Emit(OpCodes.Ret);
 
@@ -89,26 +82,18 @@ namespace Ninject.Core.Infrastructure
 		/// <returns>A dynamic factory method that can call the specified constructor.</returns>
 		public static FactoryMethod CreateFactoryMethod(ConstructorInfo constructor)
 		{
-			DynamicMethod callable = new DynamicMethod(
-				String.Empty,
-				typeof(object),
-				new Type[] {typeof(object[])},
-				typeof(DynamicMethodFactory), true);
+			DynamicMethod callable = CreateDynamicFactoryMethod();
+			var info = new DelegateBuildInfo(constructor);
 
-			DelegateBuildInfo info = new DelegateBuildInfo(constructor);
 			Type returnType = constructor.ReflectedType;
 			ILGenerator il = callable.GetILGenerator();
 
-			EmitDefineLocals(info, il);
 			EmitCheckParameters(info, il, 0);
 			EmitLoadParameters(info, il, 0);
 
 			il.Emit(OpCodes.Newobj, constructor);
 
-			EmitCopyBackOutParameters(info, il, 0);
-
-			// TODO: Correct?
-			if (returnType.IsValueType)
+			if (info.ReturnType.IsValueType)
 				il.Emit(OpCodes.Box, returnType);
 
 			il.Emit(OpCodes.Ret);
@@ -124,16 +109,13 @@ namespace Ninject.Core.Infrastructure
 		/// <returns>A dynamic getter that can read from the specified field.</returns>
 		public static Getter CreateGetter(FieldInfo field)
 		{
-			DynamicMethod callable = new DynamicMethod(
-				String.Empty,
-				typeof(object),
-				new Type[] {typeof(object)},
-				typeof(DynamicMethodFactory), true);
+			DynamicMethod callable = CreateDynamicGetterMethod();
 
 			Type returnType = field.FieldType;
 			ILGenerator il = callable.GetILGenerator();
 
 			il.Emit(OpCodes.Ldarg_0);
+			EmitUnboxOrCast(il, field.DeclaringType);
 			il.Emit(OpCodes.Ldfld, field);
 
 			if (returnType.IsValueType)
@@ -152,17 +134,14 @@ namespace Ninject.Core.Infrastructure
 		/// <returns>A dynamic getter that can read from the specified property.</returns>
 		public static Getter CreateGetter(PropertyInfo property)
 		{
-			DynamicMethod callable = new DynamicMethod(
-				String.Empty,
-				typeof(object),
-				new Type[] {typeof(object)},
-				typeof(DynamicMethodFactory), true);
+			DynamicMethod callable = CreateDynamicGetterMethod();
 
 			Type returnType = property.PropertyType;
 			ILGenerator il = callable.GetILGenerator();
 			MethodInfo method = property.GetGetMethod();
 
 			il.Emit(OpCodes.Ldarg_0);
+			EmitUnboxOrCast(il, property.DeclaringType);
 
 			if (method.IsFinal)
 				il.Emit(OpCodes.Call, method);
@@ -185,11 +164,7 @@ namespace Ninject.Core.Infrastructure
 		/// <returns>A dynamic setter that can write to the specified field.</returns>
 		public static Setter CreateSetter(FieldInfo field)
 		{
-			DynamicMethod callable = new DynamicMethod(
-				String.Empty,
-				typeof(void),
-				new Type[] {typeof(object), typeof(object)},
-				typeof(DynamicMethodFactory), true);
+			DynamicMethod callable = CreateDynamicSetterMethod();
 
 			Type returnType = field.FieldType;
 			ILGenerator il = callable.GetILGenerator();
@@ -197,11 +172,13 @@ namespace Ninject.Core.Infrastructure
 			il.DeclareLocal(returnType);
 
 			il.Emit(OpCodes.Ldarg_1);
-			EmitBoxOrCast(il, returnType);
+			EmitUnboxOrCast(il, returnType);
 			il.Emit(OpCodes.Stloc_0);
 
 			il.Emit(OpCodes.Ldarg_0);
+			EmitUnboxOrCast(il, field.DeclaringType);
 			il.Emit(OpCodes.Ldloc_0);
+
 			il.Emit(OpCodes.Stfld, field);
 			il.Emit(OpCodes.Ret);
 
@@ -216,11 +193,7 @@ namespace Ninject.Core.Infrastructure
 		/// <returns>A dynamic setter that can write to the specified property.</returns>
 		public static Setter CreateSetter(PropertyInfo property)
 		{
-			DynamicMethod callable = new DynamicMethod(
-				String.Empty,
-				typeof(void),
-				new Type[] {typeof(object), typeof(object)},
-				typeof(DynamicMethodFactory), true);
+			DynamicMethod callable = CreateDynamicSetterMethod();
 
 			Type returnType = property.PropertyType;
 			ILGenerator il = callable.GetILGenerator();
@@ -229,10 +202,11 @@ namespace Ninject.Core.Infrastructure
 			il.DeclareLocal(returnType);
 
 			il.Emit(OpCodes.Ldarg_1);
-			EmitBoxOrCast(il, returnType);
+			EmitUnboxOrCast(il, returnType);
 			il.Emit(OpCodes.Stloc_0);
 
 			il.Emit(OpCodes.Ldarg_0);
+			EmitUnboxOrCast(il, property.DeclaringType);
 			il.Emit(OpCodes.Ldloc_0);
 
 			if (method.IsFinal)
@@ -246,18 +220,50 @@ namespace Ninject.Core.Infrastructure
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		private static void EmitDefineLocals(DelegateBuildInfo info, ILGenerator il)
+		#region Private Methods: DynamicMethod Creation
+		private static DynamicMethod CreateDynamicInvoker()
 		{
-			for (int index = 0; index < info.Parameters.Length; index++)
-				info.Locals[index] = il.DeclareLocal(info.ParameterTypes[index], true);
+#if !NO_SKIP_VISIBILITY
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object), typeof(object[]) }, true);
+#else
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object), typeof(object[]) });
+#endif
 		}
 		/*----------------------------------------------------------------------------------------*/
-		private static void EmitCheckParameters(DelegateBuildInfo info, ILGenerator il, int argIndex)
+		private static DynamicMethod CreateDynamicFactoryMethod()
+		{
+#if !NO_SKIP_VISIBILITY
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object[]) }, true);
+#else
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object[]) });
+#endif
+		}
+		/*----------------------------------------------------------------------------------------*/
+		private static DynamicMethod CreateDynamicGetterMethod()
+		{
+#if !NO_SKIP_VISIBILITY
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object) }, true);
+#else
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object) });
+#endif
+		}
+		/*----------------------------------------------------------------------------------------*/
+		private static DynamicMethod CreateDynamicSetterMethod()
+		{
+#if !NO_SKIP_VISIBILITY
+			return new DynamicMethod(String.Empty, typeof(void), new[] { typeof(object), typeof(object) }, true);
+#else
+			return new DynamicMethod(String.Empty, typeof(void), new[] { typeof(object), typeof(object) });
+#endif
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Private Methods: Utility
+		private static void EmitCheckParameters(DelegateBuildInfo info, ILGenerator il, int argumentArrayIndex)
 		{
 			Label beginLabel = il.DefineLabel();
 
-			EmitLoadArg(il, argIndex);
+			EmitLoadArg(il, argumentArrayIndex);
 			il.Emit(OpCodes.Ldlen);
 			EmitLoadInt(il, info.Parameters.Length);
 			il.Emit(OpCodes.Beq, beginLabel);
@@ -268,44 +274,20 @@ namespace Ninject.Core.Infrastructure
 			il.MarkLabel(beginLabel);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		private static void EmitLoadParameters(DelegateBuildInfo info, ILGenerator il, int argIndex)
+		private static void EmitLoadParameters(DelegateBuildInfo info, ILGenerator il, int argumentArrayIndex)
 		{
+			if (!info.Method.IsStatic && !(info.Method is ConstructorInfo))
+			{
+				il.Emit(OpCodes.Ldarg_0);
+				EmitUnboxOrCast(il, info.Method.DeclaringType);
+			}
+
 			for (int index = 0; index < info.Parameters.Length; index++)
 			{
-				EmitLoadArg(il, argIndex);
+				EmitLoadArg(il, argumentArrayIndex);
 				EmitLoadInt(il, index);
 				il.Emit(OpCodes.Ldelem_Ref);
-				EmitBoxOrCast(il, info.ParameterTypes[index]);
-				il.Emit(OpCodes.Stloc, info.Locals[index]);
-			}
-
-			if (!info.Method.IsStatic && !(info.Method is ConstructorInfo))
-				il.Emit(OpCodes.Ldarg_0);
-
-			for (int index = 0; index < info.Parameters.Length; index++)
-			{
-				if (info.Parameters[index].ParameterType.IsByRef)
-					il.Emit(OpCodes.Ldloca_S, info.Locals[index]);
-				else
-					il.Emit(OpCodes.Ldloc, info.Locals[index]);
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private static void EmitCopyBackOutParameters(DelegateBuildInfo info, ILGenerator il, int argIndex)
-		{
-			for (int index = 0; index < info.Parameters.Length; index++)
-			{
-				if (info.Parameters[index].ParameterType.IsByRef)
-				{
-					EmitLoadArg(il, argIndex);
-					EmitLoadInt(il, index);
-					il.Emit(OpCodes.Ldloc, info.Locals[index]);
-
-					if (info.Locals[index].LocalType.IsValueType)
-						il.Emit(OpCodes.Box, info.Locals[index].LocalType);
-
-					il.Emit(OpCodes.Stelem_Ref);
-				}
+				EmitUnboxOrCast(il, info.ParameterTypes[index]);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -322,7 +304,7 @@ namespace Ninject.Core.Infrastructure
 			return types;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		private static void EmitBoxOrCast(ILGenerator il, Type type)
+		private static void EmitUnboxOrCast(ILGenerator il, Type type)
 		{
 			if (type.IsValueType)
 				il.Emit(OpCodes.Unbox_Any, type);
@@ -403,16 +385,28 @@ namespace Ninject.Core.Infrastructure
 		private class DelegateBuildInfo
 		{
 			public MethodBase Method { get; private set; }
+			public Type ReturnType { get; private set; }
 			public ParameterInfo[] Parameters { get; private set; }
 			public Type[] ParameterTypes { get; private set; }
-			public LocalBuilder[] Locals { get; private set; }
 
-			public DelegateBuildInfo(MethodBase method)
+			public DelegateBuildInfo(ConstructorInfo ctor)
+			{
+				Method = ctor;
+				ReturnType = ctor.ReflectedType;
+				InitParameters();
+			}
+
+			public DelegateBuildInfo(MethodInfo method)
 			{
 				Method = method;
-				Parameters = method.GetParameters();
+				ReturnType = method.ReturnType;
+				InitParameters();
+			}
+
+			private void InitParameters()
+			{
+				Parameters = Method.GetParameters();
 				ParameterTypes = GetActualParameterTypes(Parameters);
-				Locals = new LocalBuilder[Parameters.Length];
 			}
 		}
 		#endregion

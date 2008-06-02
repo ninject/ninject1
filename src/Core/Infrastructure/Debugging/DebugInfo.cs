@@ -32,7 +32,7 @@ namespace Ninject.Core.Infrastructure
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constants
-		private static readonly string[] IgnoreNamespaces = new string[] { "Ninject.Core" };
+		private static readonly string CoreNamespace = "Ninject.Core";
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -102,21 +102,20 @@ namespace Ninject.Core.Infrastructure
 		/// <returns>The new <see cref="DebugInfo"/> object.</returns>
 		public static DebugInfo FromStackTrace()
 		{
-			var trace = new StackTrace(1, true);
+#if !NO_DEBUG_SYMBOLS
+			var trace = new StackTrace(true);
+#else
+			var trace = new StackTrace();
+#endif
 
-			for (int index = 0; index < trace.FrameCount; index++)
+			foreach (StackFrame frame in trace.GetFrames())
 			{
-				StackFrame frame = trace.GetFrame(index);
 				MethodBase method = frame.GetMethod();
 				Type type = method.DeclaringType;
 
 				if (!ShouldIgnoreType(type))
 				{
-					var info = new DebugInfo();
-
-					info.Method = method;
-					info.Type = type;
-
+					var info = new DebugInfo { Method = method, Type = type };
 					string path = frame.GetFileName();
 
 					if (path != null)
@@ -139,13 +138,7 @@ namespace Ninject.Core.Infrastructure
 		#region Private Methods
 		private static bool ShouldIgnoreType(Type type)
 		{
-			foreach (string ignoreNs in IgnoreNamespaces)
-			{
-				if (type.Namespace.Equals(ignoreNs))
-					return true;
-			}
-
-			return false;
+			return type.Namespace.StartsWith(CoreNamespace);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
