@@ -49,6 +49,7 @@
     <Compile Include="Activation\Context\StandardContextFactory.cs" />
     <Compile Include="Activation\Context\IContextFactory.cs" />
     <Compile Include="Activation\Context\IContext.cs" />
+    <Compile Include="Attributes\InterceptWithAttribute.cs" />
     <Compile Include="Binding\StandardBindingFactory.cs" />
     <Compile Include="Binding\IBindingFactory.cs" />
     <Compile Include="Infrastructure\Components\PluggableFactoryComponentBase.cs" />

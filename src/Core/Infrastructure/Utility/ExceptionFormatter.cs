@@ -229,6 +229,13 @@ namespace Ninject.Core.Infrastructure
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region InvalidInterceptor
+		public static string InvalidInterceptor(Type type)
+		{
+			return String.Format("The type {0} cannot be used as an interceptor because it does not implement the IInterceptor interface.", type);
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region InvalidProviderType
 		public static string InvalidProviderType(IBinding binding, Type providerType)
 		{

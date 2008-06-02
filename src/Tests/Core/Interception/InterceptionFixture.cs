@@ -113,6 +113,41 @@ namespace Ninject.Tests.Interception
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
+		public void StaticInterceptorsAreRegisteredFromInterceptWithAttributes()
+		{
+			IModule module = new InlineModule(m =>
+			{
+				m.Bind<ObjectWithInterceptWithAttribute>().ToSelf();
+			});
+
+			using (IKernel kernel = new StandardKernel(module))
+			{
+				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
+
+				var obj = kernel.Get<ObjectWithInterceptWithAttribute>();
+
+				IContext context = new StandardContext(kernel, typeof(ObjectWithInterceptWithAttribute));
+
+				IRequest request = new StandardRequest(
+					context,
+					obj,
+					typeof(ObjectWithInterceptWithAttribute).GetMethod("Foo"),
+					new object[0],
+					Type.EmptyTypes
+				);
+
+				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
+
+				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();
+				enumerator.MoveNext();
+
+				Assert.That(interceptors.Count, Is.EqualTo(1));
+				Assert.That(enumerator.Current, Is.InstanceOfType(typeof(CountInterceptor)));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
 		public void StaticInterceptorsNotRegisteredForMethodsDecoratedWithDoNotInterceptAttribute()
 		{
 			IModule module = new InlineModule(m =>

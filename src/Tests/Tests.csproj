@@ -65,6 +65,7 @@
     <Compile Include="Extensions\Cache\CacheFixture.cs" />
     <Compile Include="Extensions\MessageBroker\MessageBrokerFixture.cs" />
     <Compile Include="Integration\DynamicProxy2\DynamicProxy2Fixture.cs" />
+    <Compile Include="Mocks\ObjectWithInterceptWithAttribute.cs" />
     <Compile Include="Mocks\PocoForFieldAutoWiring.cs" />
     <Compile Include="Mocks\PocoForMethodAutoWiring.cs" />
     <Compile Include="Mocks\PocoForPropertyAutoWiring.cs" />
