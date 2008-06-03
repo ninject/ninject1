@@ -60,6 +60,14 @@ namespace Ninject.Core.Infrastructure
 		/// Gets or sets the line number of the file where the call occurred.
 		/// </summary>
 		public int LineNumber { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether the debug info contains file and line information.
+		/// </summary>
+		public bool HasFileInfo
+		{
+			get { return String.IsNullOrEmpty(FileName); }
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -89,7 +97,11 @@ namespace Ninject.Core.Infrastructure
 		public override string ToString()
 		{
 			Ensure.NotDisposed(this);
-			return String.Format("{0}.{1}() at {2}:{3}", Format.Type(Type), Method.Name, FileName, LineNumber);
+
+			if (HasFileInfo)
+				return String.Format("{0}.{1}() at {2}:{3}", Format.Type(Type), Method.Name, FileName, LineNumber);
+			else
+				return String.Format("{0}.{1}()", Format.Type(Type), Method.Name);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -116,6 +128,8 @@ namespace Ninject.Core.Infrastructure
 				if (!ShouldIgnoreType(type))
 				{
 					var info = new DebugInfo { Method = method, Type = type };
+
+#if !NO_DEBUG_SYMBOLS
 					string path = frame.GetFileName();
 
 					if (path != null)
@@ -125,6 +139,7 @@ namespace Ninject.Core.Infrastructure
 					}
 
 					info.LineNumber = frame.GetFileLineNumber();
+#endif
 
 					return info;
 				}
