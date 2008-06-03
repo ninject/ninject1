@@ -90,7 +90,6 @@ namespace Ninject.Conditions.Builders
 			return Terminate(s => s.IsDefined(typeof(T), true));
 		}
 		/*----------------------------------------------------------------------------------------*/
-#if !MONO // Compiler bug prevents this from working.
 		/// <summary>
 		/// Creates a terminating condition that determines whether the subject is decorated
 		/// with an attribute that matches the provided attribute.
@@ -103,7 +102,6 @@ namespace Ninject.Conditions.Builders
 		{
 			return Terminate(s => s.HasMatchingAttribute(attribute));
 		}
-#endif
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

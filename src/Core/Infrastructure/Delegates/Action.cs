@@ -1,3 +1,5 @@
+#if !NET_35
+
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -24,16 +26,11 @@ namespace Ninject.Core.Infrastructure
 {
 	/*----------------------------------------------------------------------------------------*/
 	/// <summary>
-	/// A procedure that accepts no arguments.
-	/// </summary>
-	public delegate void Proc();
-	/*----------------------------------------------------------------------------------------*/
-	/// <summary>
 	/// A procedure that accepts one arguments.
 	/// </summary>
 	/// <typeparam name="A0">The type of the first argument.</typeparam>
 	/// <param name="arg0">The first argument.</param>
-	public delegate void Proc<A0>(A0 arg0);
+	public delegate void Action<A0>(A0 arg0);
 	/*----------------------------------------------------------------------------------------*/
 	/// <summary>
 	/// A procedure that accepts one arguments.
@@ -42,7 +39,7 @@ namespace Ninject.Core.Infrastructure
 	/// <typeparam name="A1">The type of the second argument.</typeparam>
 	/// <param name="arg0">The first argument.</param>
 	/// <param name="arg1">The second argument.</param>
-	public delegate void Proc<A0, A1>(A0 arg0, A1 arg1);
+	public delegate void Action<A0, A1>(A0 arg0, A1 arg1);
 	/*----------------------------------------------------------------------------------------*/
 	/// <summary>
 	/// A procedure that accepts one arguments.
@@ -53,7 +50,7 @@ namespace Ninject.Core.Infrastructure
 	/// <param name="arg0">The first argument.</param>
 	/// <param name="arg1">The second argument.</param>
 	/// <param name="arg2">The third argument.</param>
-	public delegate void Proc<A0, A1, A2>(A0 arg0, A1 arg1, A2 arg2);
+	public delegate void Action<A0, A1, A2>(A0 arg0, A1 arg1, A2 arg2);
 	/*----------------------------------------------------------------------------------------*/
 	/// <summary>
 	/// A procedure that accepts one arguments.
@@ -66,6 +63,8 @@ namespace Ninject.Core.Infrastructure
 	/// <param name="arg1">The second argument.</param>
 	/// <param name="arg2">The third argument.</param>
 	/// <param name="arg3">The fourth argument.</param>
-	public delegate void Proc<A0, A1, A2, A3>(A0 arg0, A1 arg1, A2 arg2, A3 arg3);
+	public delegate void Action<A0, A1, A2, A3>(A0 arg0, A1 arg1, A2 arg2, A3 arg3);
 	/*----------------------------------------------------------------------------------------*/
 }
+
+#endif //NET_35

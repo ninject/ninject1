@@ -1,3 +1,5 @@
+#if !NET_35
+
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -64,3 +66,5 @@ namespace Ninject.Core.Infrastructure
 	public delegate R Func<A1, A2, A3, A4, R>(A1 arg1, A2 arg2, A3 arg3, A4 arg4);
 	/*----------------------------------------------------------------------------------------*/
 }
+
+#endif //NET_35

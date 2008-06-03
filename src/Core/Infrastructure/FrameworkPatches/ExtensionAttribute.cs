@@ -1,3 +1,5 @@
+#if !NET_35
+
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -31,3 +33,5 @@ namespace System.Runtime.CompilerServices
 	{
 	}
 }
+
+#endif //NET_35

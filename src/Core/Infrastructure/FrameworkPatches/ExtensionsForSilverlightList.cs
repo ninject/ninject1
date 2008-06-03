@@ -1,4 +1,5 @@
 #if SILVERLIGHT
+
 #region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
@@ -70,4 +71,5 @@ namespace System.Collections.Generic
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
+
 #endif

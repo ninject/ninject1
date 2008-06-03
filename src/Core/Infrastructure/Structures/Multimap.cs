@@ -143,7 +143,7 @@ namespace Ninject.Core.Infrastructure
 		/// Applies the specified action to each key/value pair of the multimap.
 		/// </summary>
 		/// <param name="action">The action to apply.</param>
-		public void ForEach(Proc<K, List<V>> action)
+		public void ForEach(Action<K, List<V>> action)
 		{
 			foreach (KeyValuePair<K, List<V>> pair in _items)
 				action(pair.Key, pair.Value);

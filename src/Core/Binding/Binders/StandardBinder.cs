@@ -184,7 +184,7 @@ namespace Ninject.Core.Binding
 		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereTargetHas<T>()
 		{
 			// Uses non-generic version to dodge problem with generic constraints on the Mono compiler.
-			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Target.HasAttribute(typeof(T)));
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.HasAttribute(typeof(T)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -193,7 +193,7 @@ namespace Ninject.Core.Binding
 			if (!typeof(Attribute).IsAssignableFrom(attribute))
 				throw new NotSupportedException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, attribute));
 
-			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Target.HasAttribute(attribute));
+			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.HasAttribute(attribute));
 			return this;
 		}
 		#endregion
