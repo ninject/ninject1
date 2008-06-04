@@ -32,7 +32,7 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void ExistingInstanceReceivesPropertyInjection()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				RequestsPropertyInjection mock = new RequestsPropertyInjection();
 				kernel.Inject(mock);
@@ -45,7 +45,7 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void ExistingInstanceReceivesMethodInjection()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				RequestsMethodInjection mock = new RequestsMethodInjection();
 				kernel.Inject(mock);
@@ -58,7 +58,7 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void ExistingInstanceReceivesFieldInjection()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				RequestsFieldInjection mock = new RequestsFieldInjection();
 				kernel.Inject(mock);

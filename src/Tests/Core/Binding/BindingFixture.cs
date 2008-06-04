@@ -36,20 +36,16 @@ namespace Ninject.Tests.Binding
 		[Test]
 		public void CanBindType()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<IMock>().To<SimpleObject>();
-			});
+			var module = new InlineModule(m => m.Bind<IMock>().To<SimpleObject>());
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IBinding binding = kernel.GetBinding<IMock>(new StandardContext(kernel, typeof(IMock)));
+				IContext context = new StandardContext(kernel, typeof(IMock));
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(typeof(IMock), context);
 
-				StandardProvider provider = binding.Provider as StandardProvider;
+				var provider = binding.Provider as StandardProvider;
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(provider, Is.Not.Null);
-
-				IContext context = new StandardContext(kernel, typeof(IMock));
 
 				Assert.That(provider.GetImplementationType(context), Is.EqualTo(typeof(SimpleObject)));
 			}
@@ -58,17 +54,14 @@ namespace Ninject.Tests.Binding
 		[Test]
 		public void CanBindConstant()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<string>().ToConstant("test");
-			});
+			var module = new InlineModule(m => m.Bind<string>().ToConstant("test"));
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				IContext context = new StandardContext(kernel, typeof(string));
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(typeof(string), context);
 
-				IBinding binding = kernel.GetBinding<string>(context);
-				ConstantProvider provider = binding.Provider as ConstantProvider;
+				var provider = binding.Provider as ConstantProvider;
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(provider, Is.Not.Null);
 
@@ -80,19 +73,18 @@ namespace Ninject.Tests.Binding
 		[Test, ExpectedException(typeof(NotSupportedException))]
 		public void DefiningMultipleDefaultBindingsThrowsException()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA));
-				m.Bind(typeof(IMock)).To(typeof(ImplB));
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).To(typeof(ImplA)),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplB))
+			);
 
-			IKernel kernel = new StandardKernel(module);
+			var kernel = new StandardKernel(module);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test, ExpectedException(typeof(NotSupportedException))]
 		public void MultipleInjectionConstructorsThrowsException()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				kernel.Get<ObjectWithMultipleInjectionConstructors>();
 			}
@@ -101,15 +93,10 @@ namespace Ninject.Tests.Binding
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void IncompatibleProviderAndBindingServiceTypeThrowsException()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ObjectWithNoInterfaces));
-			});
+			var module = new InlineModule(m => m.Bind(typeof(IMock)).To(typeof(ObjectWithNoInterfaces)));
+			var options = new KernelOptions { IgnoreProviderCompatibility = false };
 
-			KernelOptions options = new KernelOptions();
-			options.IgnoreProviderCompatibility = false;
-
-			using (IKernel kernel = new StandardKernel(options, module))
+			using (var kernel = new StandardKernel(options, module))
 			{
 				kernel.Get<IMock>();
 			}
@@ -118,17 +105,12 @@ namespace Ninject.Tests.Binding
 		[Test]
 		public void IncompatibleProviderAllowedIfProviderCompatibilityIsIgnored()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ObjectWithNoInterfaces));
-			});
+			var module = new InlineModule(m => m.Bind(typeof(IMock)).To(typeof(ObjectWithNoInterfaces)));
+			var options = new KernelOptions { IgnoreProviderCompatibility = true };
 
-			KernelOptions options = new KernelOptions();
-			options.IgnoreProviderCompatibility = true;
-
-			using (IKernel kernel = new StandardKernel(options, module))
+			using (var kernel = new StandardKernel(options, module))
 			{
-				ObjectWithNoInterfaces mock = kernel.Get(typeof(IMock)) as ObjectWithNoInterfaces;
+				var mock = kernel.Get(typeof(IMock)) as ObjectWithNoInterfaces;
 				Assert.That(mock, Is.Not.Null);
 			}
 		}
@@ -136,15 +118,12 @@ namespace Ninject.Tests.Binding
 		[Test]
 		public void CanOverrideBehaviorViaBindingDeclaration()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<IMock>().To<ImplA>().Using<SingletonBehavior>();
-			});
+			var module = new InlineModule(m => m.Bind<IMock>().To<ImplA>().Using<SingletonBehavior>());
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock1 = kernel.Get<IMock>();
-				IMock mock2 = kernel.Get<IMock>();
+				var mock1 = kernel.Get<IMock>();
+				var mock2 = kernel.Get<IMock>();
 
 				Assert.That(mock1, Is.Not.Null);
 				Assert.That(mock2, Is.Not.Null);
@@ -155,11 +134,7 @@ namespace Ninject.Tests.Binding
 		[Test, ExpectedException(typeof(InvalidOperationException))]
 		public void IncompleteBindingCausesKernelToThrowException()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<IMock>();
-			});
-
+			var module = new InlineModule(m => m.Bind<IMock>());
 			IKernel kernel = new StandardKernel(module);
 		}
 		/*----------------------------------------------------------------------------------------*/

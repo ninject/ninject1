@@ -57,7 +57,9 @@ namespace Ninject.Core.Resolution.Resolvers
 			Ensure.ArgumentNotNull(innerContext, "innerContext");
 			Ensure.NotDisposed(this);
 
-			IBinding binding = innerContext.Kernel.GetBinding(innerContext.Service, innerContext);
+			var selector = innerContext.Kernel.Components.Get<IBindingSelector>();
+			IBinding binding = selector.SelectBinding(innerContext.Service, innerContext);
+
 			return (binding == null) ? null : binding.Provider;
 		}
 		#endregion

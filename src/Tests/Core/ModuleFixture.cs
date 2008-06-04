@@ -32,7 +32,7 @@ namespace Ninject.Tests
 		[Test]
 		public void KernelLoadsModulesAndAppliesTheirBindings()
 		{
-			using (IKernel kernel = new StandardKernel(new MockModuleA(), new MockModuleB()))
+			using (var kernel = new StandardKernel(new MockModuleA(), new MockModuleB()))
 			{
 				IServiceA one = kernel.Get<IServiceA>();
 				Assert.That(one, Is.Not.Null);

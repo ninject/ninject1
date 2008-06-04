@@ -32,9 +32,9 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void SelfBoundTypeReceivesFieldInjection()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
-				RequestsFieldInjection mock = kernel.Get<RequestsFieldInjection>();
+				var mock = kernel.Get<RequestsFieldInjection>();
 
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Child, Is.Not.Null);
@@ -46,9 +46,9 @@ namespace Ninject.Tests.Activation
 		{
 			var options = new KernelOptions { InjectNonPublicMembers = true };
 
-			using (IKernel kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel(options))
 			{
-				RequestsPrivateFieldInjection mock = kernel.Get<RequestsPrivateFieldInjection>();
+				var mock = kernel.Get<RequestsPrivateFieldInjection>();
 
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Child, Is.Not.Null);
@@ -58,17 +58,14 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void ServiceBoundTypeReceivesFieldInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(RequestsFieldInjection));
-			});
+			var module = new InlineModule(m => m.Bind(typeof(IMock)).To(typeof(RequestsFieldInjection)));
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 
-				RequestsFieldInjection typedMock = mock as RequestsFieldInjection;
+				var typedMock = mock as RequestsFieldInjection;
 				Assert.That(typedMock, Is.Not.Null);
 				Assert.That(typedMock.Child, Is.Not.Null);
 			}
@@ -77,19 +74,15 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void ServiceBoundTypeReceivesPrivateFieldInjection()
 		{
+			var module = new InlineModule(m => m.Bind(typeof(IMock)).To(typeof(RequestsPrivateFieldInjection)));
 			var options = new KernelOptions { InjectNonPublicMembers = true };
 
-			IModule module = new InlineModule(m =>
+			using (var kernel = new StandardKernel(options, module))
 			{
-				m.Bind(typeof(IMock)).To(typeof(RequestsPrivateFieldInjection));
-			});
-
-			using (IKernel kernel = new StandardKernel(options, module))
-			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 
-				RequestsPrivateFieldInjection typedMock = mock as RequestsPrivateFieldInjection;
+				var typedMock = mock as RequestsPrivateFieldInjection;
 				Assert.That(typedMock, Is.Not.Null);
 				Assert.That(typedMock.Child, Is.Not.Null);
 			}
@@ -98,9 +91,9 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanInjectKernelInstanceIntoFields()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
-				RequestsKernelViaFieldInjection mock = kernel.Get<RequestsKernelViaFieldInjection>();
+				var mock = kernel.Get<RequestsKernelViaFieldInjection>();
 
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Kernel, Is.Not.Null);
@@ -111,19 +104,17 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanInjectCircularReferencesIntoFields()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<CircularFieldMockA>().ToSelf();
-				m.Bind<CircularFieldMockB>().ToSelf();
-			});
+			var module = new InlineModule(
+				m => m.Bind<CircularFieldMockA>().ToSelf(),
+				m => m.Bind<CircularFieldMockB>().ToSelf()
+			);
 
-			KernelOptions options = new KernelOptions();
-			options.InjectNonPublicMembers = true;
+			var options = new KernelOptions { InjectNonPublicMembers = true };
 
-			using (IKernel kernel = new StandardKernel(options, module))
+			using (var kernel = new StandardKernel(options, module))
 			{
-				CircularFieldMockA mockA = kernel.Get<CircularFieldMockA>();
-				CircularFieldMockB mockB = kernel.Get<CircularFieldMockB>();
+				var mockA = kernel.Get<CircularFieldMockA>();
+				var mockB = kernel.Get<CircularFieldMockB>();
 
 				Assert.That(mockA, Is.Not.Null);
 				Assert.That(mockB, Is.Not.Null);

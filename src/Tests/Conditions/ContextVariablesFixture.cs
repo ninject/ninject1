@@ -34,24 +34,23 @@ namespace Ninject.Tests.Conditions
 		[Test]
 		public void ContextVariablesCanBeUsedToAlterBindings()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Variable("bind").EqualTo("foo"));
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Variable("bind").EqualTo("bar"));
-				m.Bind(typeof(IMock)).To(typeof(ImplC)).Only(When.Context.Variable("bind").IsNotDefined);
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Variable("bind").EqualTo("foo")),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Variable("bind").EqualTo("bar")),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplC)).Only(When.Context.Variable("bind").IsNotDefined)
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock1 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "foo"));
+				var mock1 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "foo"));
 				Assert.That(mock1, Is.Not.Null);
 				Assert.That(mock1, Is.InstanceOfType(typeof(ImplA)));
 
-				IMock mock2 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "bar"));
+				var mock2 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "bar"));
 				Assert.That(mock2, Is.Not.Null);
 				Assert.That(mock2, Is.InstanceOfType(typeof(ImplB)));
 
-				IMock mock3 = kernel.Get<IMock>();
+				var mock3 = kernel.Get<IMock>();
 				Assert.That(mock3, Is.Not.Null);
 				Assert.That(mock3, Is.InstanceOfType(typeof(ImplC)));
 			}
@@ -60,19 +59,18 @@ namespace Ninject.Tests.Conditions
 		[Test]
 		public void ContextVariablesCanBeUsedToAlterBindingsWithCaseInsensitivity()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Variable("bind").EqualTo("Foo", StringComparer.OrdinalIgnoreCase));
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Variable("bind").EqualTo("BaR", StringComparer.OrdinalIgnoreCase));
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Variable("bind").EqualTo("Foo", StringComparer.OrdinalIgnoreCase)),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Variable("bind").EqualTo("BaR", StringComparer.OrdinalIgnoreCase))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock1 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "FOO"));
+				var mock1 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "FOO"));
 				Assert.That(mock1, Is.Not.Null);
 				Assert.That(mock1, Is.InstanceOfType(typeof(ImplA)));
 
-				IMock mock2 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "bar"));
+				var mock2 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "bar"));
 				Assert.That(mock2, Is.Not.Null);
 				Assert.That(mock2, Is.InstanceOfType(typeof(ImplB)));
 			}

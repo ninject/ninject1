@@ -44,10 +44,12 @@ namespace Ninject.Core
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Static Fields
-		private static readonly Type[] RequiredComponents = new Type[] {
+		private static readonly Type[] RequiredComponents = new[] {
 			typeof(IPlanner),
 			typeof(IActivator),
 			typeof(ITracker),
+			typeof(IBindingRegistry),
+			typeof(IBindingSelector),
 			typeof(IBindingFactory),
 			typeof(IProviderFactory),
 			typeof(IInjectorFactory),
@@ -65,7 +67,6 @@ namespace Ninject.Core
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private readonly Multimap<Type, IBinding> _bindings = new Multimap<Type, IBinding>();
 		private readonly Stack<IScope> _scopes = new Stack<IScope>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -107,11 +108,8 @@ namespace Ninject.Core
 				// Release all currently-tracked instances.
 				Components.Get<ITracker>().ReleaseAll();
 
-				// Release all of the registered bindings.
-				foreach (List<IBinding> bindings in _bindings.Values)
-					DisposeCollection(bindings);
-
-				_bindings.Clear();
+				// Release all bindings.
+				Components.Get<IBindingRegistry>().ReleaseAll();
 
 				// Dispose of the component container.
 				DisposeMember(Components);
@@ -146,7 +144,7 @@ namespace Ninject.Core
 
 			LoadModules(modules);
 
-			ValidateBindings();
+			Components.Get<IBindingRegistry>().Validate();
 			ActivateEagerServices();
 		}
 		#endregion
@@ -158,70 +156,7 @@ namespace Ninject.Core
 		/// <param name="binding">The binding to register.</param>
 		public void AddBinding(IBinding binding)
 		{
-			DoAddBinding(binding);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Resolves the binding for the specified type within a root context.
-		/// </summary>
-		/// <typeparam name="T">The type whose binding should be resolved.</typeparam>
-		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
-		public IBinding GetBinding<T>()
-		{
-			return ResolveBinding(typeof(T), CreateRootContext(typeof(T), null));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Resolves the binding for the specified type, given the specified context.
-		/// </summary>
-		/// <typeparam name="T">The type whose binding should be resolved.</typeparam>
-		/// <param name="context">The context in which to resolve the binding.</param>
-		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
-		public IBinding GetBinding<T>(IContext context)
-		{
-			return ResolveBinding(typeof(T), context);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Resolves the binding for the specified type within a root context.
-		/// </summary>
-		/// <param name="type">The type whose binding should be resolved.</param>
-		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
-		public IBinding GetBinding(Type type)
-		{
-			return ResolveBinding(type, CreateRootContext(type, null));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Resolves the binding for the specified type, given the specified context.
-		/// </summary>
-		/// <param name="type">The type whose binding should be resolved.</param>
-		/// <param name="context">The context in which to resolve the binding.</param>
-		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
-		public IBinding GetBinding(Type type, IContext context)
-		{
-			return ResolveBinding(type, context);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Returns a collection of all bindings registered for the specified type.
-		/// </summary>
-		/// <param name="type">The type in question.</param>
-		/// <returns>The collection of bindings, or <see langword="null"/> if none have been registered.</returns>
-		public ICollection<IBinding> GetAllBindings(Type type)
-		{
-			return _bindings.ContainsKey(type) ? _bindings[type] : null;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Returns a value indicating whether one or more bindings are registered on the kernel
-		/// for the specified type.
-		/// </summary>
-		/// <param name="type">The type in question.</param>
-		/// <returns><see langword="True"/> if the type has one or more bindings, otherwise <see langword="false"/>.</returns>
-		public bool HasBinding(Type type)
-		{
-			return _bindings.ContainsKey(type);
+			Components.Get<IBindingRegistry>().Add(binding);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -436,41 +371,6 @@ namespace Ninject.Core
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Validates all bindings to ensure that there are no competing ones.
-		/// </summary>
-		protected virtual void ValidateBindings()
-		{
-			foreach (KeyValuePair<Type, List<IBinding>> pair in _bindings)
-			{
-				Type service = pair.Key;
-				List<IBinding> bindings = pair.Value;
-
-				if (Logger.IsDebugEnabled)
-				{
-					Logger.Debug("Validating {0} binding{1} for service {2}",
-						bindings.Count, (bindings.Count == 1 ? "" : "s"), Format.Type(service));
-				}
-
-				// Ensure there are no bindings registered without providers.
-
-				List<IBinding> incompleteBindings = bindings.FindAll(b => b.Provider == null);
-
-				if (incompleteBindings.Count > 0)
-					throw new InvalidOperationException(ExceptionFormatter.IncompleteBindingsRegistered(service, incompleteBindings));
-
-				// Ensure there is at most one default binding declared for a service.
-
-				List<IBinding> defaultBindings = bindings.FindAll(b => b.IsDefault);
-
-				if (defaultBindings.Count > 1)
-					throw new NotSupportedException(ExceptionFormatter.MultipleDefaultBindingsRegistered(service, defaultBindings));
-			}
-
-			if (Logger.IsDebugEnabled)
-				Logger.Debug("Validation complete. All registered bindings are valid.");
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Activates any services that should be eagerly activated.
 		/// </summary>
 		protected virtual void ActivateEagerServices()
@@ -483,7 +383,10 @@ namespace Ninject.Core
 				return;
 			}
 
-			foreach (Type service in _bindings.Keys)
+			// Get a list of registered services.
+			ICollection<Type> services = Components.Get<IBindingRegistry>().GetServices();
+
+			foreach (Type service in services)
 			{
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Eagerly activating service {0}", service.Name);
@@ -502,25 +405,6 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods: Bindings
 		/// <summary>
-		/// Registers a binding with the kernel.
-		/// </summary>
-		/// <param name="binding">The binding to register.</param>
-		protected virtual void DoAddBinding(IBinding binding)
-		{
-			Ensure.ArgumentNotNull(binding, "binding");
-			Ensure.NotDisposed(this);
-
-			// Associate the binding with the service.
-			lock (_bindings)
-			{
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Adding new binding for service {0}", Format.Type(binding.Service));
-
-				_bindings.Add(binding.Service, binding);
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Determines which binding should be used for the specified service in the specified context.
 		/// </summary>
 		/// <param name="service">The type whose binding is to be resolved.</param>
@@ -530,95 +414,35 @@ namespace Ninject.Core
 		{
 			Ensure.NotDisposed(this);
 
-			if (Logger.IsDebugEnabled)
-				Logger.Debug("Resolving binding for {0}", Format.Context(context));
+			var registry = Components.Get<IBindingRegistry>();
+			var selector = Components.Get<IBindingSelector>();
 
 			IBinding binding;
 
-			lock (_bindings)
+			if (!registry.HasBinding(service))
 			{
-				// Determine whether any bindings have been registered for the service.
-				if (!_bindings.ContainsKey(service))
+				// If no bindings have been registered, see if we can create an implicit self-binding.
+				if (!Options.ImplicitSelfBinding || !StandardProvider.CanSupportType(service))
 				{
-					if (!Options.ImplicitSelfBinding || !StandardProvider.CanSupportType(service))
-					{
-						if (Logger.IsDebugEnabled)
-							Logger.Debug("No binding exists for service {0}, and type is not self-bindable", Format.Type(service));
-
-						return null;
-					}
-
 					if (Logger.IsDebugEnabled)
-						Logger.Debug("No binding exists for service {0}, creating implicit self-binding", Format.Type(service));
+						Logger.Debug("No binding exists for service {0}, and type is not self-bindable", Format.Type(service));
 
-					// Create a new implicit self-binding for the service type.
-					binding = CreateImplicitSelfBinding(service);
-
-					// Associate the binding with the service.
-					DoAddBinding(binding);
+					return null;
 				}
-				else
-				{
-					List<IBinding> candidates = _bindings[service];
 
-					if (Logger.IsDebugEnabled)
-					{
-						Logger.Debug("{0} candidate binding{1} available for service {2}",
-							candidates.Count,
-							(candidates.Count == 1 ? "" : "s"),
-							Format.Type(service));
-					}
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("No binding exists for service {0}, creating implicit self-binding", Format.Type(service));
 
-					List<IBinding> matches = new List<IBinding>();
-					IBinding defaultBinding = null;
+				// Create a new implicit self-binding for the service type.
+				binding = CreateImplicitSelfBinding(service);
 
-					foreach (IBinding candidate in candidates)
-					{
-						if (candidate.IsDefault)
-							defaultBinding = candidate;
-						else if (candidate.Matches(context))
-							matches.Add(candidate);
-					}
-
-					if (Logger.IsDebugEnabled)
-					{
-						Logger.Debug("{0} default binding and {1} conditional binding{2} match the current context",
-							(defaultBinding == null ? "No" : "One"),
-							matches.Count,
-							(matches.Count == 1 ? "" : "s"));
-					}
-
-					if (matches.Count == 0)
-					{
-						if (Logger.IsDebugEnabled)
-							Logger.Debug("No conditional bindings matched, falling back on default binding.");
-
-						// If we didn't find a default binding, this will intentionally cause the method to return null.
-						binding = defaultBinding;
-					}
-					else if (matches.Count == 1)
-					{
-						if (Logger.IsDebugEnabled)
-							Logger.Debug("Using the single matching conditional binding");
-
-						binding = matches[0];
-					}
-					else
-					{
-						if (defaultBinding != null)
-						{
-							if (Logger.IsDebugEnabled)
-								Logger.Debug("Multiple conditional bindings matched, falling back on default binding");
-
-							binding = defaultBinding;
-						}
-						else
-						{
-							// More than one conditional binding matched, and there is no default binding, so fail.
-							throw new ActivationException(ExceptionFormatter.MultipleConditionalBindingsMatch(context, matches));
-						}
-					}
-				}
+				// Register the new binding.
+				registry.Add(binding);
+			}
+			else
+			{
+				// Ask the binding selector to choose which binding should be used.
+				binding = selector.SelectBinding(service, context);
 			}
 
 			if ((binding != null) && Logger.IsDebugEnabled)
@@ -696,6 +520,7 @@ namespace Ninject.Core
 						}
 						else
 						{
+							// We couldn't resolve a binding for the service, so fail.
 							throw new ActivationException(ExceptionFormatter.CouldNotResolveBindingForType(service, context));
 						}
 					}
@@ -805,12 +630,14 @@ namespace Ninject.Core
 		/// <summary>
 		/// Resolves an instance of the specified type, if a default binding has been registered for it.
 		/// </summary>
-		/// <param name="serviceType">The type to retrieve.</param>
+		/// <param name="service">The type to retrieve.</param>
 		/// <returns>An instance of the requested type, or <see langword="null"/> if there is no default binding.</returns>
-		object IServiceProvider.GetService(Type serviceType)
+		object IServiceProvider.GetService(Type service)
 		{
-			IBinding binding = GetBinding(serviceType);
-			return (binding == null) ? null : Get(serviceType);
+			IContext context = Components.Get<IContextFactory>().Create(service);
+			IBinding binding = Components.Get<IBindingSelector>().SelectBinding(service, context);
+
+			return (binding == null) ? null : Get(service);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

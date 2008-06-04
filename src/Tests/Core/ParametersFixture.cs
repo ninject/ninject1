@@ -34,15 +34,14 @@ namespace Ninject.Tests
 		[Test]
 		public void TransientConstructorArgumentDefinedDirectlyOverridesInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<RequestsConstructorInjection>().ToSelf();
-				m.Bind<SimpleObject>().ToSelf();
-			});
+			var module = new InlineModule(
+				m => m.Bind<RequestsConstructorInjection>().ToSelf(),
+				m => m.Bind<SimpleObject>().ToSelf()
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				SimpleObject child = new SimpleObject();
+				var child = new SimpleObject();
 
 				var obj = kernel.Get<RequestsConstructorInjection>(
 					With.Parameters
@@ -58,15 +57,14 @@ namespace Ninject.Tests
 		[Test]
 		public void TransientConstructorArgumentDefinedViaDictionaryOverridesInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<RequestsConstructorInjection>().ToSelf();
-				m.Bind<SimpleObject>().ToSelf();
-			});
+			var module = new InlineModule(
+				m => m.Bind<RequestsConstructorInjection>().ToSelf(),
+				m => m.Bind<SimpleObject>().ToSelf()
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				SimpleObject child = new SimpleObject();
+				var child = new SimpleObject();
 
 				var arguments = new Dictionary<string, object>();
 				arguments.Add("child", child);
@@ -85,15 +83,14 @@ namespace Ninject.Tests
 		[Test]
 		public void TransientConstructorArgumentDefinedViaAnonymousTypeOverridesInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<RequestsConstructorInjection>().ToSelf();
-				m.Bind<SimpleObject>().ToSelf();
-			});
+			var module = new InlineModule(
+				m => m.Bind<RequestsConstructorInjection>().ToSelf(),
+				m => m.Bind<SimpleObject>().ToSelf()
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				SimpleObject child = new SimpleObject();
+				var child = new SimpleObject();
 
 				var obj = kernel.Get<RequestsConstructorInjection>(
 					With.Parameters
@@ -108,15 +105,14 @@ namespace Ninject.Tests
 		[Test]
 		public void TransientPropertyValueDefinedDirectlyOverridesInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<RequestsPropertyInjection>().ToSelf();
-				m.Bind<SimpleObject>().ToSelf();
-			});
+			var module = new InlineModule(
+				m => m.Bind<RequestsPropertyInjection>().ToSelf(),
+				m => m.Bind<SimpleObject>().ToSelf()
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				SimpleObject child = new SimpleObject();
+				var child = new SimpleObject();
 
 				var obj = kernel.Get<RequestsPropertyInjection>(
 					With.Parameters
@@ -132,15 +128,14 @@ namespace Ninject.Tests
 		[Test]
 		public void TransientPropertyValueDefinedViaDictionaryOverridesInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<RequestsPropertyInjection>().ToSelf();
-				m.Bind<SimpleObject>().ToSelf();
-			});
+			var module = new InlineModule(
+				m => m.Bind<RequestsPropertyInjection>().ToSelf(),
+				m => m.Bind<SimpleObject>().ToSelf()
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				SimpleObject child = new SimpleObject();
+				var child = new SimpleObject();
 
 				var arguments = new Dictionary<string, object>();
 				arguments.Add("Child", child);
@@ -159,15 +154,14 @@ namespace Ninject.Tests
 		[Test]
 		public void TransientPropertyValueDefinedViaAnonymousTypeOverridesInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<RequestsPropertyInjection>().ToSelf();
-				m.Bind<SimpleObject>().ToSelf();
-			});
+			var module = new InlineModule(
+				m => m.Bind<RequestsPropertyInjection>().ToSelf(),
+				m => m.Bind<SimpleObject>().ToSelf()
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				SimpleObject child = new SimpleObject();
+				var child = new SimpleObject();
 
 				var obj = kernel.Get<RequestsPropertyInjection>(
 					With.Parameters
@@ -183,7 +177,7 @@ namespace Ninject.Tests
 		[Test, ExpectedException(typeof(InvalidOperationException))]
 		public void DeclaringTwoTransientConstructorArgumentsWithTheSameNameThrowsException()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				kernel.Get<RequestsConstructorInjection>(
 					With.Parameters
@@ -196,7 +190,7 @@ namespace Ninject.Tests
 		[Test, ExpectedException(typeof(InvalidOperationException))]
 		public void DeclaringTwoTransientPropertyValuesWithTheSameNameThrowsException()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				kernel.Get<RequestsPropertyInjection>(
 					With.Parameters

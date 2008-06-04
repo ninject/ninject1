@@ -18,41 +18,25 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
+using Ninject.Core.Activation;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Tests.Activation
+namespace Ninject.Core.Binding
 {
-	[TestFixture]
-	public class CustomProviderFixture
+	/// <summary>
+	/// Selects bindings to use in response to activation requests.
+	/// </summary>
+	public interface IBindingSelector : IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
-		[Test]
-		public void CustomProviderCanAlterImplementationType()
-		{
-			var provider = new MockProvider();
-
-			var module = new InlineModule(
-				m => m.Bind<IMock>().ToProvider(provider)
-			);
-
-			using (var kernel = new StandardKernel(module))
-			{
-				var mock1 = kernel.Get<IMock>();
-
-				Assert.That(mock1, Is.Not.Null);
-				Assert.That(mock1, Is.InstanceOfType(typeof(ImplA)));
-
-				provider.ReturnB = true;
-
-				var mock2 = kernel.Get<IMock>();
-
-				Assert.That(mock2, Is.Not.Null);
-				Assert.That(mock2, Is.InstanceOfType(typeof(ImplB)));
-			}
-		}
+		/// <summary>
+		/// Determines which binding should be used for the specified service in the specified context.
+		/// </summary>
+		/// <param name="service">The service type that is being activated.</param>
+		/// <param name="context">The context in which the binding is being resolved.</param>
+		/// <returns>The selected binding.</returns>
+		IBinding SelectBinding(Type service, IContext context);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

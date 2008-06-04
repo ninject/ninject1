@@ -36,16 +36,13 @@ namespace Ninject.Tests.Interception
 		[Test]
 		public void StaticInterceptorsAreRegisteredFromAttributesDefinedOnMethods()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
-			});
+			var module = new InlineModule(m => m.Bind<ObjectWithMethodInterceptor>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
+				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 
 				IContext context = new StandardContext(kernel, typeof(ObjectWithMethodInterceptor));
 
@@ -71,16 +68,13 @@ namespace Ninject.Tests.Interception
 		[Test]
 		public void StaticInterceptorsAreRegisteredFromAttributesDefinedOnClasses()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<ObjectWithClassInterceptor>().ToSelf();
-			});
+			var module = new InlineModule(m => m.Bind<ObjectWithClassInterceptor>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				ObjectWithClassInterceptor obj = kernel.Get<ObjectWithClassInterceptor>();
+				var obj = kernel.Get<ObjectWithClassInterceptor>();
 
 				IContext context1 = new StandardContext(kernel, typeof(ObjectWithClassInterceptor));
 
@@ -115,12 +109,9 @@ namespace Ninject.Tests.Interception
 		[Test]
 		public void StaticInterceptorsAreRegisteredFromInterceptWithAttributes()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<ObjectWithInterceptWithAttribute>().ToSelf();
-			});
+			var module = new InlineModule(m => m.Bind<ObjectWithInterceptWithAttribute>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
@@ -150,16 +141,13 @@ namespace Ninject.Tests.Interception
 		[Test]
 		public void StaticInterceptorsNotRegisteredForMethodsDecoratedWithDoNotInterceptAttribute()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<ObjectWithClassInterceptor>().ToSelf();
-			});
+			var module = new InlineModule(m => m.Bind<ObjectWithClassInterceptor>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				ObjectWithClassInterceptor obj = kernel.Get<ObjectWithClassInterceptor>();
+				var obj = kernel.Get<ObjectWithClassInterceptor>();
 
 				IContext context = new StandardContext(kernel, typeof(ObjectWithClassInterceptor));
 
@@ -181,12 +169,9 @@ namespace Ninject.Tests.Interception
 		[Test]
 		public void DynamicInterceptorsCanBeRegistered()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
-			});
+			var module = new InlineModule(m => m.Bind<ObjectWithMethodInterceptor>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
@@ -195,7 +180,7 @@ namespace Ninject.Tests.Interception
 				ICondition<IRequest> condition = new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Bar"));
 				registry.RegisterDynamic(typeof(FlagInterceptor), 0, condition);
 
-				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
+				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 
 				IContext context = new StandardContext(kernel, typeof(ObjectWithMethodInterceptor));
 
@@ -220,12 +205,9 @@ namespace Ninject.Tests.Interception
 		[Test]
 		public void InterceptorsAreReturnedInAscendingOrder()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<ObjectWithMethodInterceptor>().ToSelf();
-			});
+			var module = new InlineModule(m => m.Bind<ObjectWithMethodInterceptor>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
@@ -237,7 +219,7 @@ namespace Ninject.Tests.Interception
 				// to put the FlagInterceptor before the CountInterceptor.
 				registry.RegisterDynamic(typeof(FlagInterceptor), -1, condition);
 
-				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
+				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 
 				IContext context = new StandardContext(kernel, typeof(ObjectWithMethodInterceptor));
 

@@ -34,18 +34,13 @@ namespace Ninject.Tests
 		[Test]
 		public void DebugInfoCreatedFromStackTrace()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<IMock>().To<SimpleObject>();
-			});
+			var module = new InlineModule(m => m.Bind<IMock>().To<SimpleObject>());
+			var options = new KernelOptions { GenerateDebugInfo = true };
 
-			KernelOptions options = new KernelOptions();
-			options.GenerateDebugInfo = true;
-
-			using (IKernel kernel = new StandardKernel(options, module))
+			using (var kernel = new StandardKernel(options, module))
 			{
 				IContext context = new StandardContext(kernel, typeof(IMock));
-				IBinding binding = kernel.GetBinding<IMock>(context);
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(typeof(IMock), context);
 
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(binding.DebugInfo, Is.Not.Null);
@@ -55,18 +50,13 @@ namespace Ninject.Tests
 		[Test]
 		public void DebugInfoFromStackFrameContainsFileInfo()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<IMock>().To<SimpleObject>();
-			});
+			var module = new InlineModule(m => m.Bind<IMock>().To<SimpleObject>());
+			var options = new KernelOptions { GenerateDebugInfo = true };
 
-			KernelOptions options = new KernelOptions();
-			options.GenerateDebugInfo = true;
-
-			using (IKernel kernel = new StandardKernel(options, module))
+			using (var kernel = new StandardKernel(options, module))
 			{
 				IContext context = new StandardContext(kernel, typeof(IMock));
-				IBinding binding = kernel.GetBinding<IMock>(context);
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(typeof(IMock), context);
 
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(binding.DebugInfo, Is.Not.Null);

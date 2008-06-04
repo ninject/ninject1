@@ -18,8 +18,10 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core;
+using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -38,8 +40,9 @@ namespace Ninject.Tests
 
 			using (var kernel = new StandardKernel(module))
 			{
-				IBinding binding = kernel.GetBinding<IMock>();
-				Assert.That(binding, Is.Not.Null);
+				ICollection<IBinding> bindings = kernel.Components.Get<IBindingRegistry>().GetBindings(typeof(IMock));
+				Assert.That(bindings, Is.Not.Null);
+				Assert.That(bindings, Is.Not.Empty);
 
 				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
@@ -54,8 +57,9 @@ namespace Ninject.Tests
 
 			using (var kernel = new StandardKernel(module))
 			{
-				IBinding binding = kernel.GetBinding<ObjectWithSelfBindingServiceAttribute>();
-				Assert.That(binding, Is.Not.Null);
+				ICollection<IBinding> bindings = kernel.Components.Get<IBindingRegistry>().GetBindings(typeof(ObjectWithSelfBindingServiceAttribute));
+				Assert.That(bindings, Is.Not.Null);
+				Assert.That(bindings, Is.Not.Empty);
 
 				var mock = kernel.Get<ObjectWithSelfBindingServiceAttribute>();
 				Assert.That(mock, Is.Not.Null);
@@ -65,11 +69,14 @@ namespace Ninject.Tests
 		[Test]
 		public void AutoModuleRegistersProviderBindingForTypesWithServiceAttribute()
 		{
-			AutoModule module = new AutoModule(Assembly.GetExecutingAssembly());
+			var module = new AutoModule(Assembly.GetExecutingAssembly());
 
 			using (var kernel = new StandardKernel(module))
 			{
-				IBinding binding = kernel.GetBinding<ObjectWithProviderBindingServiceAttribute>();
+				Type type = typeof(ObjectWithProviderBindingServiceAttribute);
+				IContext context = new StandardContext(kernel, type);
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
+
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(binding.Provider, Is.InstanceOfType(typeof(ServiceAttributeObjectProvider)));
 

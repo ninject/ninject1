@@ -34,7 +34,7 @@ namespace Ninject.Tests.Extensions.MessageBroker
 		[Test]
 		public void OnePublisherOneSubscriber()
 		{
-			using (IKernel kernel = new StandardKernel(new MessageBrokerModule()))
+			using (var kernel = new StandardKernel(new MessageBrokerModule()))
 			{
 				PublisherMock pub = kernel.Get<PublisherMock>();
 				Assert.That(pub, Is.Not.Null);
@@ -54,7 +54,7 @@ namespace Ninject.Tests.Extensions.MessageBroker
 		[Test]
 		public void ManyPublishersOneSubscriber()
 		{
-			using (IKernel kernel = new StandardKernel(new MessageBrokerModule()))
+			using (var kernel = new StandardKernel(new MessageBrokerModule()))
 			{
 				PublisherMock pub1 = kernel.Get<PublisherMock>();
 				PublisherMock pub2 = kernel.Get<PublisherMock>();
@@ -82,7 +82,7 @@ namespace Ninject.Tests.Extensions.MessageBroker
 		[Test]
 		public void OnePublisherManySubscribers()
 		{
-			using (IKernel kernel = new StandardKernel(new MessageBrokerModule()))
+			using (var kernel = new StandardKernel(new MessageBrokerModule()))
 			{
 				PublisherMock pub = kernel.Get<PublisherMock>();
 				Assert.That(pub, Is.Not.Null);
@@ -105,7 +105,7 @@ namespace Ninject.Tests.Extensions.MessageBroker
 		[Test]
 		public void ManyPublishersManySubscribers()
 		{
-			using (IKernel kernel = new StandardKernel(new MessageBrokerModule()))
+			using (var kernel = new StandardKernel(new MessageBrokerModule()))
 			{
 				PublisherMock pub1 = kernel.Get<PublisherMock>();
 				PublisherMock pub2 = kernel.Get<PublisherMock>();
@@ -140,7 +140,7 @@ namespace Ninject.Tests.Extensions.MessageBroker
 		[Test]
 		public void DisabledChannelsDoNotUnbindButEventsAreNotSent()
 		{
-			using (IKernel kernel = new StandardKernel(new MessageBrokerModule()))
+			using (var kernel = new StandardKernel(new MessageBrokerModule()))
 			{
 				PublisherMock pub = kernel.Get<PublisherMock>();
 				Assert.That(pub, Is.Not.Null);
@@ -162,7 +162,7 @@ namespace Ninject.Tests.Extensions.MessageBroker
 		[Test]
 		public void ClosingChannelUnbindsPublisherEventsFromChannel()
 		{
-			using (IKernel kernel = new StandardKernel(new MessageBrokerModule()))
+			using (var kernel = new StandardKernel(new MessageBrokerModule()))
 			{
 				PublisherMock pub = kernel.Get<PublisherMock>();
 				Assert.That(pub, Is.Not.Null);

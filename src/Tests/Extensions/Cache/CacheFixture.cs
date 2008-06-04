@@ -36,14 +36,11 @@ namespace Ninject.Tests.Extensions.Cache
 		[Test]
 		public void ResultOfMethodCallWithNoArgumentsIsCached()
 		{
-			IModule testModule = new InlineModule(m =>
-			{
-				m.Bind<CacheMock>().ToSelf();
-			});
+			var testModule = new InlineModule(m => m.Bind<CacheMock>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
+			using (var kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
 			{
-				CacheMock obj = kernel.Get<CacheMock>();
+				var obj = kernel.Get<CacheMock>();
 
 				CacheMock.ResetCounts();
 
@@ -62,14 +59,11 @@ namespace Ninject.Tests.Extensions.Cache
 		[Test]
 		public void ResultOfMethodCallWithSameArgumentsIsCached()
 		{
-			IModule testModule = new InlineModule(m =>
-			{
-				m.Bind<CacheMock>().ToSelf();
-			});
+			IModule testModule = new InlineModule(m => m.Bind<CacheMock>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
+			using (var kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
 			{
-				CacheMock obj = kernel.Get<CacheMock>();
+				var obj = kernel.Get<CacheMock>();
 
 				CacheMock.ResetCounts();
 
@@ -92,21 +86,18 @@ namespace Ninject.Tests.Extensions.Cache
 		[Test]
 		public void ResultOfMethodCallWithSameComplexTypeIsCached()
 		{
-			IModule testModule = new InlineModule(m =>
-			{
-				m.Bind<CacheMock>().ToSelf();
-			});
+			var testModule = new InlineModule(m => m.Bind<CacheMock>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
+			using (var kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
 			{
-				CacheMock obj = kernel.Get<CacheMock>();
+				var obj = kernel.Get<CacheMock>();
 
 				CacheMock.ResetCounts();
 
 				string result;
 
-				SimpleObject simple1 = new SimpleObject();
-				SimpleObject simple2 = new SimpleObject();
+				var simple1 = new SimpleObject();
+				var simple2 = new SimpleObject();
 
 				result = obj.Convert(simple1);
 				Assert.That(result, Is.EqualTo(simple1.ToString()));
@@ -125,15 +116,12 @@ namespace Ninject.Tests.Extensions.Cache
 		[Test]
 		public void ResultOfMethodCallNotCachedForCallsToDifferentInstances()
 		{
-			IModule testModule = new InlineModule(m =>
-			{
-				m.Bind<CacheMock>().ToSelf();
-			});
+			var testModule = new InlineModule(m => m.Bind<CacheMock>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
+			using (var kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
 			{
-				CacheMock obj1 = kernel.Get<CacheMock>();
-				CacheMock obj2 = kernel.Get<CacheMock>();
+				var obj1 = kernel.Get<CacheMock>();
+				var obj2 = kernel.Get<CacheMock>();
 
 				CacheMock.ResetCounts();
 
@@ -156,12 +144,9 @@ namespace Ninject.Tests.Extensions.Cache
 		[Test]
 		public void TimeoutControlsCachedValue()
 		{
-			IModule testModule = new InlineModule(m =>
-			{
-				m.Bind<CacheMockWithTimeout>().ToSelf();
-			});
+			var testModule = new InlineModule(m => m.Bind<CacheMockWithTimeout>().ToSelf());
 
-			using (IKernel kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
+			using (var kernel = new StandardKernel(new LinFuModule(), new CacheModule(), testModule))
 			{
 				var obj = kernel.Get<CacheMockWithTimeout>();
 

@@ -33,14 +33,13 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanBindToParameterlessStaticFactoryMethod()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<IMock>(MockFactory.CreateStatic));
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<IMock>(MockFactory.CreateStatic))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock, Is.InstanceOfType(typeof(ImplA)));
 			}
@@ -49,14 +48,13 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanBindToStaticFactoryMethodWithParameters()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<string, int, IMock>(MockFactory.CreateStatic, "foo", 42));
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<string, int, IMock>(MockFactory.CreateStatic, "foo", 42))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock, Is.InstanceOfType(typeof(ImplB)));
 			}
@@ -65,15 +63,15 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanBindToParameterlessInstanceFactoryMethod()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				MockFactory factory = new MockFactory();
-				m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<IMock>(factory.Create));
-			});
+			var factory = new MockFactory();
 
-			using (IKernel kernel = new StandardKernel(module))
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<IMock>(factory.Create))
+			);
+
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock, Is.InstanceOfType(typeof(ImplA)));
 			}
@@ -82,15 +80,15 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanBindToInstanceFactoryMethodWithParameters()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				MockFactory factory = new MockFactory();
-				m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<string, int, IMock>(factory.Create, "foo", 42));
-			});
+			var factory = new MockFactory();
 
-			using (IKernel kernel = new StandardKernel(module))
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<string, int, IMock>(factory.Create, "foo", 42))
+			);
+
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock, Is.InstanceOfType(typeof(ImplB)));
 			}

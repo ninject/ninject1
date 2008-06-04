@@ -32,7 +32,7 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void ManyInstancesCreatedForTransientTypes()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				ObjectWithTransientBehavior mock1 = kernel.Get<ObjectWithTransientBehavior>();
 				ObjectWithTransientBehavior mock2 = kernel.Get<ObjectWithTransientBehavior>();
@@ -46,7 +46,7 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void BehaviorDefaultsToTransient()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				SimpleObject mock1 = kernel.Get<SimpleObject>();
 				SimpleObject mock2 = kernel.Get<SimpleObject>();

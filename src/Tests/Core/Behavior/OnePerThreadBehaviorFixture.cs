@@ -33,7 +33,7 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void SameInstanceReusedOnSameThreadForOnePerThreadTypes()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				ObjectWithOnePerThreadBehavior mock1 = kernel.Get<ObjectWithOnePerThreadBehavior>();
 				ObjectWithOnePerThreadBehavior mock2 = kernel.Get<ObjectWithOnePerThreadBehavior>();
@@ -47,7 +47,7 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void NewInstanceCreatedOnDifferentThreadForOnePerThreadTypes()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				ObjectWithOnePerThreadBehavior mock1 = kernel.Get<ObjectWithOnePerThreadBehavior>();
 				ObjectWithOnePerThreadBehavior mock2 = null;

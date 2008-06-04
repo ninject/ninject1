@@ -44,7 +44,8 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
 		public bool ShouldInject(IBinding binding, Type type, IActivationPlan plan, PropertyInfo candidate)
 		{
-			return candidate.CanWrite && (candidate.GetSetMethod() != null) && Kernel.HasBinding(candidate.PropertyType);
+			var registry = Kernel.Components.Get<IBindingRegistry>();
+			return candidate.CanWrite && (candidate.GetSetMethod() != null) && registry.HasBinding(candidate.PropertyType);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

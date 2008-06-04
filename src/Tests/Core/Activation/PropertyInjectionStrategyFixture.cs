@@ -32,9 +32,9 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void SelfBoundTypeReceivesPropertyInjection()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
-				RequestsPropertyInjection mock = kernel.Get<RequestsPropertyInjection>();
+				var mock = kernel.Get<RequestsPropertyInjection>();
 
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Child, Is.Not.Null);
@@ -46,9 +46,9 @@ namespace Ninject.Tests.Activation
 		{
 			var options = new KernelOptions { InjectNonPublicMembers = true };
 
-			using (IKernel kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel(options))
 			{
-				RequestsPrivatePropertyInjection mock = kernel.Get<RequestsPrivatePropertyInjection>();
+				var mock = kernel.Get<RequestsPrivatePropertyInjection>();
 
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Child, Is.Not.Null);
@@ -58,17 +58,14 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void ServiceBoundTypeReceivesPropertyInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(RequestsPropertyInjection));
-			});
+			var module = new InlineModule(m => m.Bind(typeof(IMock)).To(typeof(RequestsPropertyInjection)));
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 
-				RequestsPropertyInjection typedMock = mock as RequestsPropertyInjection;
+				var typedMock = mock as RequestsPropertyInjection;
 				Assert.That(typedMock, Is.Not.Null);
 				Assert.That(typedMock.Child, Is.Not.Null);
 				Assert.That(typedMock.Child, Is.InstanceOfType(typeof(SimpleObject)));
@@ -78,19 +75,15 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void ServiceBoundTypeReceivesPrivatePropertyInjection()
 		{
+			var module = new InlineModule(m => m.Bind(typeof(IMock)).To(typeof(RequestsPrivatePropertyInjection)));
 			var options = new KernelOptions { InjectNonPublicMembers = true };
 
-			IModule module = new InlineModule(m =>
+			using (var kernel = new StandardKernel(options, module))
 			{
-				m.Bind(typeof(IMock)).To(typeof(RequestsPrivatePropertyInjection));
-			});
-
-			using (IKernel kernel = new StandardKernel(options, module))
-			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 
-				RequestsPrivatePropertyInjection typedMock = mock as RequestsPrivatePropertyInjection;
+				var typedMock = mock as RequestsPrivatePropertyInjection;
 				Assert.That(typedMock, Is.Not.Null);
 				Assert.That(typedMock.Child, Is.Not.Null);
 				Assert.That(typedMock.Child, Is.InstanceOfType(typeof(SimpleObject)));
@@ -100,9 +93,9 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanInjectKernelInstanceIntoProperties()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
-				RequestsKernelViaPropertyInjection mock = kernel.Get<RequestsKernelViaPropertyInjection>();
+				var mock = kernel.Get<RequestsKernelViaPropertyInjection>();
 
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Kernel, Is.Not.Null);
@@ -113,19 +106,17 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanInjectCircularReferencesIntoProperties()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<CircularPropertyMockA>().ToSelf();
-				m.Bind<CircularPropertyMockB>().ToSelf();
-			});
+			var module = new InlineModule(
+				m => m.Bind<CircularPropertyMockA>().ToSelf(),
+				m => m.Bind<CircularPropertyMockB>().ToSelf()
+			);
 
-			KernelOptions options = new KernelOptions();
-			options.InjectNonPublicMembers = true;
+			var options = new KernelOptions { InjectNonPublicMembers = true };
 
-			using (IKernel kernel = new StandardKernel(options, module))
+			using (var kernel = new StandardKernel(options, module))
 			{
-				CircularPropertyMockA mockA = kernel.Get<CircularPropertyMockA>();
-				CircularPropertyMockB mockB = kernel.Get<CircularPropertyMockB>();
+				var mockA = kernel.Get<CircularPropertyMockA>();
+				var mockB = kernel.Get<CircularPropertyMockB>();
 
 				Assert.That(mockA, Is.Not.Null);
 				Assert.That(mockB, Is.Not.Null);

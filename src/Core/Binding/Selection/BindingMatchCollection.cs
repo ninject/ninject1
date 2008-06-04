@@ -19,39 +19,53 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Core.Activation;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core
+namespace Ninject.Core.Binding
 {
 	/// <summary>
-	/// A module that uses a callback for its Load() implementation. Useful for creating simple
-	/// modules, especially for testing.
+	/// A collection of potential bindings for a service, within a specific context.
 	/// </summary>
-	public class InlineModule : StandardModule
+	public class BindingMatchCollection
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private readonly List<Action<InlineModule>> _loadCallbacks;
+		#region Properties
+		/// <summary>
+		/// Gets or sets the default binding.
+		/// </summary>
+		public IBinding DefaultBinding { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the conditional bindings.
+		/// </summary>
+		public IList<IBinding> ConditionalBindings { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether the collection has a default binding.
+		/// </summary>
+		public bool HasDefaultBinding
+		{
+			get { return DefaultBinding != null; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether the collection has one or more conditional bindings.
+		/// </summary>
+		public bool HasConditionalBindings
+		{
+			get { return ConditionalBindings.Count > 0; }
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="InlineModule"/> class.
+		/// Initializes a new instance of the <see cref="BindingMatchCollection"/> class.
 		/// </summary>
-		/// <param name="loadCallbacks">One or more methods to call when the module is loaded.</param>
-		public InlineModule(params Action<InlineModule>[] loadCallbacks)
+		public BindingMatchCollection()
 		{
-			_loadCallbacks = new List<Action<InlineModule>>(loadCallbacks);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
-		/// <summary>
-		/// Loads the module into the kernel.
-		/// </summary>
-		public override void Load()
-		{
-			_loadCallbacks.ForEach(callback => callback(this));
+			ConditionalBindings = new List<IBinding>();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

@@ -121,51 +121,6 @@ namespace Ninject.Core
 		/// </summary>
 		/// <param name="binding">The binding to register.</param>
 		void AddBinding(IBinding binding);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Resolves the binding for the specified type within a root context.
-		/// </summary>
-		/// <typeparam name="T">The type whose binding should be resolved.</typeparam>
-		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
-		IBinding GetBinding<T>();
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Resolves the binding for the specified type, given the specified context.
-		/// </summary>
-		/// <typeparam name="T">The type whose binding should be resolved.</typeparam>
-		/// <param name="context">The context in which to resolve the binding.</param>
-		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
-		IBinding GetBinding<T>(IContext context);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Resolves the binding for the specified type within a root context.
-		/// </summary>
-		/// <param name="type">The type whose binding should be resolved.</param>
-		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
-		IBinding GetBinding(Type type);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Resolves the binding for the specified type, given the specified context.
-		/// </summary>
-		/// <param name="type">The type whose binding should be resolved.</param>
-		/// <param name="context">The context in which to resolve the binding.</param>
-		/// <returns>The resolved binding, or <see langword="null"/> if no bindings matched, and no default binding was defined.</returns>
-		IBinding GetBinding(Type type, IContext context);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Returns a collection of all bindings registered for the specified type.
-		/// </summary>
-		/// <param name="type">The type in question.</param>
-		/// <returns>The collection of bindings, or <see langword="null"/> if none have been registered.</returns>
-		ICollection<IBinding> GetAllBindings(Type type);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Returns a value indicating whether one or more bindings are registered on the kernel
-		/// for the specified type.
-		/// </summary>
-		/// <param name="type">The type in question.</param>
-		/// <returns><see langword="True"/> if the type has one or more bindings, otherwise <see langword="false"/>.</returns>
-		bool HasBinding(Type type);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Modules

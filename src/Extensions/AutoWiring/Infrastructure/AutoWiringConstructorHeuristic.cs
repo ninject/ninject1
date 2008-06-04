@@ -68,12 +68,14 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		private int GetScoreForCandidate(ConstructorInfo candidate)
 		{
+			var registry = Kernel.Components.Get<IBindingRegistry>();
+
 			Type[] types = candidate.GetParameterTypes();
 			int score = 0;
 
 			foreach (Type type in types)
 			{
-				if (Kernel.HasBinding(type))
+				if (registry.HasBinding(type))
 					score++;
 			}
 

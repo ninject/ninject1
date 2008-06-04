@@ -32,7 +32,7 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void CustomBehaviorProviderUsed()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				ObjectWithCustomBehavior mock1 = kernel.Get<ObjectWithCustomBehavior>();
 				ObjectWithCustomBehavior mock2 = kernel.Get<ObjectWithCustomBehavior>();

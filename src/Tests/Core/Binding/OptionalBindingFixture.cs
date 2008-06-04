@@ -32,7 +32,7 @@ namespace Ninject.Tests.Binding
 		[Test]
 		public void OptionalDependenciesForSelfBoundTypesAreResolved()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				RequestsOptionalConcreteType parent = kernel.Get<RequestsOptionalConcreteType>();
 
@@ -50,7 +50,7 @@ namespace Ninject.Tests.Binding
 				m.Bind<IMock>().To<SimpleObject>();
 			});
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				RequestsOptionalService parent = kernel.Get<RequestsOptionalService>();
 
@@ -63,7 +63,7 @@ namespace Ninject.Tests.Binding
 		[Test]
 		public void OptionalDependenciesForServiceBoundTypesAreIgnoredIfNoBindingsExist()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				RequestsOptionalService parent = kernel.Get<RequestsOptionalService>();
 

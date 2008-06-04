@@ -36,17 +36,16 @@ namespace Ninject.Tests.Conditions
 		[Test]
 		public void MemberBasedBindingOfTypeDependencies()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(ObjectWithMethodInterceptor)).ToSelf();
-				m.Intercept<CountInterceptor>(When.Request.Method.Name.StartsWith("F"));
-			});
+			IModule module = new InlineModule(
+				m => m.Bind(typeof(ObjectWithMethodInterceptor)).ToSelf(),
+				m => m.Intercept<CountInterceptor>(When.Request.Method.Name.StartsWith("F"))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
+				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 
 				IContext context = new StandardContext(kernel, typeof(ObjectWithMethodInterceptor));
 
@@ -77,18 +76,17 @@ namespace Ninject.Tests.Conditions
 		{
 			int argument = 42;
 
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(ObjectWithMethodInterceptor)).ToSelf();
-				m.Intercept<CountInterceptor>(When.Request.Method.ReturnType.EqualTo(typeof(void)));
-				m.Intercept<CountInterceptor>(When.Request.Arguments.Contains(argument));
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(ObjectWithMethodInterceptor)).ToSelf(),
+				m => m.Intercept<CountInterceptor>(When.Request.Method.ReturnType.EqualTo(typeof(void))),
+				m => m.Intercept<CountInterceptor>(When.Request.Arguments.Contains(argument))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				ObjectWithMethodInterceptor obj = kernel.Get<ObjectWithMethodInterceptor>();
+				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 
 				IContext context = new StandardContext(kernel, typeof(ObjectWithMethodInterceptor));
 

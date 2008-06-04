@@ -38,10 +38,10 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void OneInstanceCreatedForSingletonTypes()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
-				ObjectWithSingletonBehavior mock1 = kernel.Get<ObjectWithSingletonBehavior>();
-				ObjectWithSingletonBehavior mock2 = kernel.Get<ObjectWithSingletonBehavior>();
+				var mock1 = kernel.Get<ObjectWithSingletonBehavior>();
+				var mock2 = kernel.Get<ObjectWithSingletonBehavior>();
 
 				Assert.That(mock1, Is.Not.Null);
 				Assert.That(mock2, Is.Not.Null);
@@ -52,23 +52,21 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void LazyActivationCausesSingletonInstancesToBeLazilyActivated()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<ObjectWithSingletonBehavior>().ToSelf();
-			});
+			var module = new InlineModule(m => m.Bind<ObjectWithSingletonBehavior>().ToSelf());
+			var options = new KernelOptions { UseEagerActivation = false };
 
-			KernelOptions options = new KernelOptions();
-			options.UseEagerActivation = false;
-
-			using (IKernel kernel = new StandardKernel(options, module))
+			using (var kernel = new StandardKernel(options, module))
 			{
-				IBinding binding = kernel.GetBinding<ObjectWithSingletonBehavior>(new StandardContext(kernel, typeof(ObjectWithSingletonBehavior)));
+				Type type = typeof(ObjectWithSingletonBehavior);
+				IContext context = new StandardContext(kernel, type);
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
+
 				Assert.That(binding, Is.Not.Null);
 
 				var planner = kernel.Components.Get<IPlanner>();
 				IActivationPlan plan = planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
 
-				SingletonBehavior behavior = plan.Behavior as SingletonBehavior;
+				var behavior = plan.Behavior as SingletonBehavior;
 				Assert.That(behavior, Is.Not.Null);
 
 				Assert.That(behavior.Instance, Is.Null);
@@ -78,23 +76,21 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void EagerActivationCausesSingletonInstancesToBeImmediatelyActivated()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<ObjectWithSingletonBehavior>().ToSelf();
-			});
+			var module = new InlineModule(m => m.Bind<ObjectWithSingletonBehavior>().ToSelf());
+			var options = new KernelOptions { UseEagerActivation = true };
 
-			KernelOptions options = new KernelOptions();
-			options.UseEagerActivation = true;
-
-			using (IKernel kernel = new StandardKernel(options, module))
+			using (var kernel = new StandardKernel(options, module))
 			{
-				IBinding binding = kernel.GetBinding<ObjectWithSingletonBehavior>(new StandardContext(kernel, typeof(ObjectWithSingletonBehavior)));
+				Type type = typeof(ObjectWithSingletonBehavior);
+				IContext context = new StandardContext(kernel, type);
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
+
 				Assert.That(binding, Is.Not.Null);
 
 				var planner = kernel.Components.Get<IPlanner>();
 				IActivationPlan plan = planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
 
-				SingletonBehavior behavior = plan.Behavior as SingletonBehavior;
+				var behavior = plan.Behavior as SingletonBehavior;
 				Assert.That(behavior, Is.Not.Null);
 
 				Assert.That(behavior.Instance, Is.Not.Null);
@@ -104,7 +100,7 @@ namespace Ninject.Tests.Behavior
 		[Test]
 		public void SingletonsAreThreadSafe()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				int count = 10;
 				var items = new List<ObjectWithSingletonBehavior>();

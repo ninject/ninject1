@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core;
+using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Tracking;
 using NUnit.Framework;
@@ -36,7 +37,7 @@ namespace Ninject.Tests.Activation
 		{
 			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
 
-			using (IKernel kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel(options))
 			{
 				DisposableMock mock = kernel.Get<DisposableMock>();
 				Assert.That(mock, Is.Not.Null);
@@ -49,7 +50,7 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void InitializableObjectIsInitializedWhenActivated()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				InitializableMock mock = kernel.Get<InitializableMock>();
 				Assert.That(mock, Is.Not.Null);
@@ -60,7 +61,7 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void StartableObjectIsStartedWhenActivated()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				StartableMock mock = kernel.Get<StartableMock>();
 				Assert.That(mock, Is.Not.Null);
@@ -73,7 +74,7 @@ namespace Ninject.Tests.Activation
 		{
 			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
 
-			using (IKernel kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel(options))
 			{
 				StartableMock mock = kernel.Get<StartableMock>();
 				Assert.That(mock, Is.Not.Null);
@@ -87,15 +88,18 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void ContextAwareObjectIsInjectedWithActivationContextWhenActivated()
 		{
-			using (IKernel kernel = new StandardKernel())
-			{
-				ContextAwareMock mock = kernel.Get<ContextAwareMock>();
-				Assert.That(mock, Is.Not.Null);
-				Assert.That(mock.Context, Is.Not.Null);
+			IModule module = new InlineModule(m => m.Bind<ContextAwareMock>().ToSelf());
 
-				IBinding binding = kernel.GetBinding<ContextAwareMock>();
+			using (var kernel = new StandardKernel(module))
+			{
+				Type type = typeof(ContextAwareMock);
+				IContext context = new StandardContext(kernel, type);
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
 				Assert.That(binding, Is.Not.Null);
 
+				var mock = kernel.Get<ContextAwareMock>();
+				Assert.That(mock, Is.Not.Null);
+				Assert.That(mock.Context, Is.Not.Null);
 				Assert.That(mock.Context.Binding, Is.SameAs(binding));
 			}
 		}

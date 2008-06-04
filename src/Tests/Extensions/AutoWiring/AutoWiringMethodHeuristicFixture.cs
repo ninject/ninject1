@@ -33,14 +33,13 @@ namespace Ninject.Tests.Extensions.AutoWiring
 		[Test]
 		public void HeuristicSelectsPropertiesIfTheyHaveMatchingBindings()
 		{
-			IModule testModule = new InlineModule(m =>
-			{
-				m.Bind<PocoForMethodAutoWiring>().ToSelf();
-				m.Bind<IServiceA>().To<ServiceImplA>();
-				m.Bind<IServiceB>().To<ServiceImplB>();
-			});
+			var testModule = new InlineModule(
+				m => m.Bind<PocoForMethodAutoWiring>().ToSelf(),
+				m => m.Bind<IServiceA>().To<ServiceImplA>(),
+				m => m.Bind<IServiceB>().To<ServiceImplB>()
+			);
 
-			using (IKernel kernel = new StandardKernel(new AutoWiringModule(), testModule))
+			using (var kernel = new StandardKernel(new AutoWiringModule(), testModule))
 			{
 				var mock = kernel.Get<PocoForMethodAutoWiring>();
 				Assert.That(mock, Is.Not.Null);
@@ -58,13 +57,12 @@ namespace Ninject.Tests.Extensions.AutoWiring
 		[Test]
 		public void HeuristicIgnoresMethodsIfItCannotInjectValuesForAllArguments()
 		{
-			IModule testModule = new InlineModule(m =>
-			{
-				m.Bind<PocoForMethodAutoWiring>().ToSelf();
-				m.Bind<IMock>().To<SimpleObject>();
-			});
+			var testModule = new InlineModule(
+				m => m.Bind<PocoForMethodAutoWiring>().ToSelf(),
+				m => m.Bind<IMock>().To<SimpleObject>()
+			);
 
-			using (IKernel kernel = new StandardKernel(new AutoWiringModule(), testModule))
+			using (var kernel = new StandardKernel(new AutoWiringModule(), testModule))
 			{
 				var mock = kernel.Get<PocoForMethodAutoWiring>();
 				Assert.That(mock, Is.Not.Null);

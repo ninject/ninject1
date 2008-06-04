@@ -35,7 +35,7 @@ namespace Ninject.Tests
 		[Test]
 		public void KernelComponentsInstalledAndConnected()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				var activator = kernel.Components.Get<IActivator>();
 				Assert.That(activator, Is.Not.Null);
@@ -54,7 +54,7 @@ namespace Ninject.Tests
 		[Test]
 		public void StandardKernelUsesDefaultOptions()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				Assert.That(kernel.Options, Is.SameAs(KernelOptions.Default));
 			}

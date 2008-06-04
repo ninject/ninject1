@@ -76,6 +76,13 @@ namespace Ninject.Core.Infrastructure
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region CannotReleaseUnregisteredBinding
+		public static string CannotReleaseUnregisteredBinding(IBinding binding)
+		{
+			return String.Format("Error releasing {0}: the binding has not been registered.", Format.Binding(binding));
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region CouldNotCreateInstanceOfType
 		public static string CouldNotCreateInstanceOfType(Type type, Exception exception)
 		{

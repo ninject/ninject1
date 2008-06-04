@@ -33,26 +33,25 @@ namespace Ninject.Tests.Conditions
 		[Test]
 		public void MemberBasedBindingOfTypeDependencies()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Member.Tag.EqualTo("A"));
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Member.Tag.EqualTo("B"));
-				m.Bind(typeof(IMock)).To(typeof(ImplC)).Only(!When.Context.Member.Tag.EqualTo("A") & !When.Context.Member.Tag.EqualTo("B"));
-			}); 
+			IModule module = new InlineModule(
+				m => m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Member.Tag.EqualTo("A")),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Member.Tag.EqualTo("B")),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplC)).Only(!When.Context.Member.Tag.EqualTo("A") & !When.Context.Member.Tag.EqualTo("B"))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				RequestsTagA obj1 = kernel.Get<RequestsTagA>();
+				var obj1 = kernel.Get<RequestsTagA>();
 				Assert.That(obj1, Is.Not.Null);
 				Assert.That(obj1.Child, Is.Not.Null);
 				Assert.That(obj1.Child, Is.InstanceOfType(typeof(ImplA)));
 
-				RequestsTagB obj2 = kernel.Get<RequestsTagB>();
+				var obj2 = kernel.Get<RequestsTagB>();
 				Assert.That(obj2, Is.Not.Null);
 				Assert.That(obj2.Child, Is.Not.Null);
 				Assert.That(obj2.Child, Is.InstanceOfType(typeof(ImplB)));
 
-				RequestsNoTag obj3 = kernel.Get<RequestsNoTag>();
+				var obj3 = kernel.Get<RequestsNoTag>();
 				Assert.That(obj3, Is.Not.Null);
 				Assert.That(obj3.Child, Is.Not.Null);
 				Assert.That(obj3.Child, Is.InstanceOfType(typeof(ImplC)));
@@ -62,20 +61,19 @@ namespace Ninject.Tests.Conditions
 		[Test]
 		public void MemberBasedBindingOfConstantDependencies()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<string>().ToConstant("Hello, world!").Only(When.Context.Member.Tag.EqualTo("HelloWorld"));
-				m.Bind<string>().ToConstant("SNAFU").Only(When.Context.Member.Tag.EqualTo("FooBar"));
-			});
+			IModule module = new InlineModule(
+				m => m.Bind<string>().ToConstant("Hello, world!").Only(When.Context.Member.Tag.EqualTo("HelloWorld")),
+				m => m.Bind<string>().ToConstant("SNAFU").Only(When.Context.Member.Tag.EqualTo("FooBar"))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				RequestsHelloWorldConstant obj1 = kernel.Get<RequestsHelloWorldConstant>();
+				var obj1 = kernel.Get<RequestsHelloWorldConstant>();
 				Assert.That(obj1, Is.Not.Null);
 				Assert.That(obj1.Message, Is.Not.Null);
 				Assert.That(obj1.Message, Is.EqualTo("Hello, world!"));
 
-				RequestsFooBarConstant obj2 = kernel.Get<RequestsFooBarConstant>();
+				var obj2 = kernel.Get<RequestsFooBarConstant>();
 				Assert.That(obj2, Is.Not.Null);
 				Assert.That(obj2.Message, Is.Not.Null);
 				Assert.That(obj2.Message, Is.EqualTo("SNAFU"));
@@ -85,46 +83,43 @@ namespace Ninject.Tests.Conditions
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void MultipleMatchingConditionalBindingsWithNoDefaultBindingThrowsException()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Kernel.IsDefined);
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.IsDefined);
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Kernel.IsDefined),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.IsDefined)
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				kernel.Get<IMock>();
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void NoMatchingConditionalBindingsWithNoDefaultBindingThrowsException()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Kernel.Configuration.EqualTo("foo"));
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.Configuration.EqualTo("bar"));
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.Kernel.Configuration.EqualTo("foo")),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.Configuration.EqualTo("bar"))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				kernel.Get<IMock>();
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
 		public void MultipleMatchingConditionalBindingsWithDefaultBindingUsesDefaultBinding()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.IsRoot);
-				m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.IsDefined);
-				m.Bind(typeof(IMock)).To(typeof(ImplC));
-			});
+			IModule module = new InlineModule(
+				m => m.Bind(typeof(IMock)).To(typeof(ImplA)).Only(When.Context.IsRoot),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplB)).Only(When.Context.Kernel.IsDefined),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplC))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock, Is.InstanceOfType(typeof(ImplC)));
 			}
@@ -133,15 +128,14 @@ namespace Ninject.Tests.Conditions
 		[Test]
 		public void ConditionalBindingViaPredicate()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IMock)).To(typeof(ImplA)).OnlyIf(c => c.IsRoot);
-				m.Bind(typeof(IMock)).To(typeof(ImplB));
-			});
+			var module = new InlineModule(
+				m => m.Bind(typeof(IMock)).To(typeof(ImplA)).OnlyIf(c => c.IsRoot),
+				m => m.Bind(typeof(IMock)).To(typeof(ImplB))
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IMock mock = kernel.Get<IMock>();
+				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock, Is.InstanceOfType(typeof(ImplA)));
 			}

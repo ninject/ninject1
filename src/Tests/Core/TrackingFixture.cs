@@ -33,7 +33,7 @@ namespace Ninject.Tests
 		[Test]
 		public void TransientServicesAreNotTrackedIfAllReferencesAreDestroyed()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				var obj = kernel.Get<ObjectWithTransientBehavior>();
 				Assert.That(obj, Is.Not.Null);
@@ -50,7 +50,7 @@ namespace Ninject.Tests
 		[Test]
 		public void SingletonServicesAreTrackedEvenIfAllReferencesAreDestroyed()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				var obj = kernel.Get<ObjectWithSingletonBehavior>();
 				Assert.That(obj, Is.Not.Null);
@@ -69,7 +69,7 @@ namespace Ninject.Tests
 		{
 			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
 
-			using (IKernel kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel(options))
 			{
 				var obj1 = kernel.Get<ObjectWithTransientBehavior>();
 				var obj2 = kernel.Get<ObjectWithTransientBehavior>();
@@ -84,7 +84,7 @@ namespace Ninject.Tests
 		[Test]
 		public void TrackerTracksOnlyOneInstanceForSingletonService()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				var obj1 = kernel.Get<ObjectWithSingletonBehavior>();
 				var obj2 = kernel.Get<ObjectWithSingletonBehavior>();
@@ -104,7 +104,7 @@ namespace Ninject.Tests
 			DisposableMock obj1;
 			DisposableMock obj2;
 
-			using (IKernel kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel(options))
 			{
 				obj1 = kernel.Get<DisposableMock>();
 				obj2 = kernel.Get<DisposableMock>();
@@ -128,7 +128,7 @@ namespace Ninject.Tests
 			DisposableMock obj1;
 			DisposableMock obj2;
 
-			using (IKernel kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel(options))
 			{
 				var tracker = kernel.Components.Get<ITracker>();
 

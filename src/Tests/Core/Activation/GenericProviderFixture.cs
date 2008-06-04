@@ -35,14 +35,13 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanBindGenericTypeDefinitions()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IGenericObject<>)).To(typeof(GenericImpl<>));
-			});
+			var module = new InlineModule(m => m.Bind(typeof(IGenericObject<>)).To(typeof(GenericImpl<>)));
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IBinding binding = kernel.GetBinding(typeof(IGenericObject<>), new StandardContext(kernel, typeof(IGenericObject<>)));
+				Type type = typeof(IGenericObject<>);
+				IContext context = new StandardContext(kernel, type);
+				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
 
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(binding.Provider, Is.InstanceOfType(typeof(GenericProvider)));
@@ -52,14 +51,11 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanActivateGenericTypeViaGenericTypeDefinitionBinding()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IGenericObject<>)).To(typeof(GenericImpl<>));
-			});
+			var module = new InlineModule(m => m.Bind(typeof(IGenericObject<>)).To(typeof(GenericImpl<>)));
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				IGenericObject<string> mock = kernel.Get<IGenericObject<string>>();
+				var mock = kernel.Get<IGenericObject<string>>();
 
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock, Is.InstanceOfType(typeof(GenericImpl<string>)));
@@ -69,21 +65,20 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void GenericTypeReceivesInjection()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind<string>().ToConstant("Hello, world!");
-				m.Bind<int>().ToConstant(42);
-			});
+			var module = new InlineModule(
+				m => m.Bind<string>().ToConstant("Hello, world!"),
+				m => m.Bind<int>().ToConstant(42)
+			);
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
-				RequestsGenericObject<string> mock1 = kernel.Get<RequestsGenericObject<string>>();
+				var mock1 = kernel.Get<RequestsGenericObject<string>>();
 				Assert.That(mock1, Is.Not.Null);
 				Assert.That(mock1.ValueHolder, Is.Not.Null);
 				Assert.That(mock1.ValueHolder, Is.InstanceOfType(typeof(GenericValueHolder<string>)));
 				Assert.That(mock1.ValueHolder.Value, Is.EqualTo("Hello, world!"));
 
-				RequestsGenericObject<int> mock2 = kernel.Get<RequestsGenericObject<int>>();
+				var mock2 = kernel.Get<RequestsGenericObject<int>>();
 				Assert.That(mock2, Is.Not.Null);
 				Assert.That(mock2.ValueHolder, Is.Not.Null);
 				Assert.That(mock2.ValueHolder, Is.InstanceOfType(typeof(GenericValueHolder<int>)));
@@ -94,12 +89,9 @@ namespace Ninject.Tests.Activation
 		[Test, ExpectedException(typeof(ActivationException))]
 		public void GenericProviderThrowsExceptionForIncompatibleBinding()
 		{
-			IModule module = new InlineModule(m =>
-			{
-				m.Bind(typeof(IGenericObject<>)).To(typeof(IncompatibleGenericImpl<>));
-			});
+			var module = new InlineModule(m => m.Bind(typeof(IGenericObject<>)).To(typeof(IncompatibleGenericImpl<>)));
 
-			using (IKernel kernel = new StandardKernel(module))
+			using (var kernel = new StandardKernel(module))
 			{
 				kernel.Get<IGenericObject<string>>();
 			}

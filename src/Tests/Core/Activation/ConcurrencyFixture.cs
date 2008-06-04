@@ -33,7 +33,7 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void MultipleThreadsActivatingSameServiceDoNotTriggerCircularReferenceException()
 		{
-			using (IKernel kernel = new StandardKernel())
+			using (var kernel = new StandardKernel())
 			{
 				List<Thread> threads = new List<Thread>();
 

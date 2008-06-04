@@ -93,6 +93,8 @@ namespace Ninject.Core
 			components.Connect<IActivator>(new StandardActivator());
 			components.Connect<IPlanner>(new StandardPlanner());
 			components.Connect<ITracker>(new StandardTracker());
+			components.Connect<IBindingRegistry>(new StandardBindingRegistry());
+			components.Connect<IBindingSelector>(new StandardBindingSelector());
 			components.Connect<IBindingFactory>(new StandardBindingFactory());
 			components.Connect<IProviderFactory>(new StandardProviderFactory());
 			components.Connect<IResolverFactory>(new StandardResolverFactory());
