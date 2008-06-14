@@ -69,6 +69,24 @@ namespace System.Collections.Generic
 			return results;
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Converts all of the items in the specified list using the specified converter.
+		/// </summary>
+		/// <typeparam name="TInput">The type of items contained in the input list.</typeparam>
+		/// <typeparam name="TOutput">The type of items to return.</typeparam>
+		/// <param name="items">The list of items to convert.</param>
+		/// <param name="converter">The converter to use to convert the items.</param>
+		/// <returns>A list of the converted items.</returns>
+		public static List<TOutput> ConvertAll<TInput, TOutput>(this List<TInput> items, Converter<TInput, TOutput> converter)
+		{
+			var results = new List<TOutput>(items.Count);
+
+			foreach (TInput item in items)
+				results.Add(converter(item));
+
+			return results;
+		}
+		/*----------------------------------------------------------------------------------------*/
 	}
 }
 

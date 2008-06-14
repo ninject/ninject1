@@ -35,6 +35,7 @@ namespace Ninject.Core.Infrastructure
 		#region Static Fields
 		private static readonly ConstructorInfo TargetParameterCountExceptionConstructor =
 			typeof(TargetParameterCountException).GetConstructor(Type.EmptyTypes);
+		private static readonly Module Module = typeof(DynamicMethodFactory).Module;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
@@ -224,7 +225,7 @@ namespace Ninject.Core.Infrastructure
 		private static DynamicMethod CreateDynamicInvoker()
 		{
 #if !NO_SKIP_VISIBILITY
-			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object), typeof(object[]) }, true);
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object), typeof(object[]) }, Module, true);
 #else
 			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object), typeof(object[]) });
 #endif
@@ -233,7 +234,7 @@ namespace Ninject.Core.Infrastructure
 		private static DynamicMethod CreateDynamicFactoryMethod()
 		{
 #if !NO_SKIP_VISIBILITY
-			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object[]) }, true);
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object[]) }, Module, true);
 #else
 			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object[]) });
 #endif
@@ -242,7 +243,7 @@ namespace Ninject.Core.Infrastructure
 		private static DynamicMethod CreateDynamicGetterMethod()
 		{
 #if !NO_SKIP_VISIBILITY
-			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object) }, true);
+			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object) }, Module, true);
 #else
 			return new DynamicMethod(String.Empty, typeof(object), new[] { typeof(object) });
 #endif
@@ -251,7 +252,7 @@ namespace Ninject.Core.Infrastructure
 		private static DynamicMethod CreateDynamicSetterMethod()
 		{
 #if !NO_SKIP_VISIBILITY
-			return new DynamicMethod(String.Empty, typeof(void), new[] { typeof(object), typeof(object) }, true);
+			return new DynamicMethod(String.Empty, typeof(void), new[] { typeof(object), typeof(object) }, Module, true);
 #else
 			return new DynamicMethod(String.Empty, typeof(void), new[] { typeof(object), typeof(object) });
 #endif
