@@ -91,6 +91,11 @@ namespace Ninject.Core.Infrastructure
 		/// <param name="type">The service that the component provides.</param>
 		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
 		bool Has(Type type);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Validates the components in the container to ensure they have been configured properly.
+		/// </summary>
+		void ValidateAll();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

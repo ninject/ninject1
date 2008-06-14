@@ -77,7 +77,7 @@ namespace Ninject.Core.Binding
 		/// <summary>
 		/// Validates the registered bindings. This is called after modules are loaded into the kernel.
 		/// </summary>
-		void Validate();
+		void ValidateBindings();
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

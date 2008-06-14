@@ -133,6 +133,13 @@ namespace Ninject.Core.Infrastructure
 			OnDisconnected(new EventArgs());
 			Kernel = null;
 		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Validates the component and throws an exception if it is not configured properly.
+		/// </summary>
+		public virtual void Validate()
+		{
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

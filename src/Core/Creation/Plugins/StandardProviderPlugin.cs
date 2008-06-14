@@ -18,42 +18,36 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation;
-using Ninject.Core.Infrastructure;
-using Ninject.Core.Planning.Targets;
+using Ninject.Core.Creation.Providers;
 #endregion
 
-namespace Ninject.Core.Resolution.Resolvers
+namespace Ninject.Core.Creation.Plugins
 {
 	/// <summary>
-	/// A dependency resolver that returns instances of the kernel itself.
+	/// A <see cref="IProviderFactoryPlugin"/> that creates <see cref="StandardProvider"/>s.
 	/// </summary>
-	public class KernelResolver : ResolverBase
+	public class StandardProviderPlugin : IProviderFactoryPlugin
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Creates a new KernelResolver.
+		/// Returns a value indicating whether the plugin can create a provider for the specified type.
 		/// </summary>
-		/// <param name="target">The target whose values will be resolved.</param>
-		public KernelResolver(ITarget target)
-			: base(target)
+		/// <param name="type">The type in question.</param>
+		/// <returns><see langword="True"/> if the plugin can create a provider for the type, otherwise, <see langword="false"/>.</returns>
+		public bool Matches(Type type)
 		{
+			return true;
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods
 		/// <summary>
-		/// Resolves the dependency.
+		/// Creates a provider for the specified type.
 		/// </summary>
-		/// <param name="outerContext">The context in which the dependency was requested.</param>
-		/// <param name="innerContext">The context in which the dependency should be resolved.</param>
-		/// <returns>An object that satisfies the dependency.</returns>
-		protected override object ResolveInstance(IContext outerContext, IContext innerContext)
+		/// <param name="type">The type to create a provider for.</param>
+		/// <returns>The provider.</returns>
+		public IProvider Create(Type type)
 		{
-			return innerContext.Kernel;
+			return new StandardProvider(type);
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

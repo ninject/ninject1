@@ -39,6 +39,7 @@ namespace Ninject.Core.Resolution
 		/*----------------------------------------------------------------------------------------*/
 		private void RegisterPlugins()
 		{
+			DefaultPlugin = new StandardResolverPlugin();
 			Plugins.Add(new ProviderResolverPlugin());
 			Plugins.Add(new KernelResolverPlugin());
 			Plugins.Add(new LoggerResolverPlugin());

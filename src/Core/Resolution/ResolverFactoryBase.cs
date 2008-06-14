@@ -41,8 +41,7 @@ namespace Ninject.Core.Resolution
 		/// <returns>The newly-created dependency resolver.</returns>
 		public IResolver Create(IBinding binding, ITarget target)
 		{
-			IResolverFactoryPlugin plugin = FindPlugin(target);
-			return (plugin != null) ? plugin.Create(binding, target) : new StandardResolver(target);
+			return FindPlugin(target).Create(binding, target);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

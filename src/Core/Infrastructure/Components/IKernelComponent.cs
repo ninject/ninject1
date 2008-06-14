@@ -59,5 +59,10 @@ namespace Ninject.Core.Infrastructure
 		/// </summary>
 		void Disconnect();
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Validates the component and throws an exception if it is not configured properly.
+		/// </summary>
+		void Validate();
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

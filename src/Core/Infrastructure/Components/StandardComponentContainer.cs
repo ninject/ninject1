@@ -171,6 +171,14 @@ namespace Ninject.Core.Infrastructure
 		{
 			return DoHas(type);
 		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Validates the components in the container to ensure they have been configured properly.
+		/// </summary>
+		public void ValidateAll()
+		{
+			DoValidateAll();
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
@@ -249,6 +257,20 @@ namespace Ninject.Core.Infrastructure
 			lock (_components)
 			{
 				return _components.ContainsKey(type);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Validates the components in the container to ensure they have been configured properly.
+		/// </summary>
+		protected virtual void DoValidateAll()
+		{
+			Ensure.NotDisposed(this);
+
+			lock (_components)
+			{
+				foreach (IKernelComponent component in _components.Values)
+					component.Validate();
 			}
 		}
 		#endregion

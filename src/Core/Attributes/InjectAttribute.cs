@@ -25,9 +25,7 @@ namespace Ninject.Core
 	/// <summary>
 	/// Indicates that a value should be resolved and injected into the decorated member.
 	/// </summary>
-	[AttributeUsage(
-		AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field,
-		AllowMultiple = false, Inherited = true)]
+	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
 	public sealed class InjectAttribute : Attribute
 	{
 	}

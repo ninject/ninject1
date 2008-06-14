@@ -29,13 +29,18 @@ namespace Ninject.Core.Infrastructure
 	/// <typeparam name="TSubject">The type of input that determines which plugin will be used.</typeparam>
 	/// <typeparam name="TPlugin">The type plugin that the factory supports.</typeparam>
 	public abstract class PluggableFactoryComponentBase<TSubject, TPlugin> : KernelComponentBase
-		where TPlugin : ICondition<TSubject>
+		where TPlugin : class, ICondition<TSubject>
 	{
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the default plugin, which will be used if no conditional plugins match.
+		/// </summary>
+		public TPlugin DefaultPlugin { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets a collection of plug-in factories that can contribute to the creation of specialized items.
 		/// </summary>
-		public List<TPlugin> Plugins { get; protected set; }
+		public List<TPlugin> Plugins { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PluggableFactoryComponentBase{TSubject, TPlugin}"/> class.
@@ -46,13 +51,22 @@ namespace Ninject.Core.Infrastructure
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Validates the component and throws an exception if it is not configured properly.
+		/// </summary>
+		public override void Validate()
+		{
+			if (DefaultPlugin == null)
+				throw new InvalidOperationException(ExceptionFormatter.PluggableFactoryComponentMissingDefaultPlugin(GetType()));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Finds the first plugin that matches the specified subject.
 		/// </summary>
 		/// <param name="subject">The item to match.</param>
 		/// <returns>The matching plugin, or <see langword="null"/> if none matches.</returns>
 		public TPlugin FindPlugin(TSubject subject)
 		{
-			return Plugins.Find(p => p.Matches(subject));
+			return Plugins.Find(p => p.Matches(subject)) ?? DefaultPlugin;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

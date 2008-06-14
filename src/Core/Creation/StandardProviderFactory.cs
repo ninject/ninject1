@@ -39,6 +39,7 @@ namespace Ninject.Core.Creation
 		/*----------------------------------------------------------------------------------------*/
 		private void RegisterPlugins()
 		{
+			DefaultPlugin = new StandardProviderPlugin();
 			Plugins.Add(new GenericProviderPlugin());
 		}
 		/*----------------------------------------------------------------------------------------*/

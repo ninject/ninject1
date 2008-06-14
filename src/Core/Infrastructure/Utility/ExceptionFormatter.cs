@@ -386,6 +386,13 @@ namespace Ninject.Core.Infrastructure
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region PluggableFactoryComponentMissingDefaultPlugin
+		public static string PluggableFactoryComponentMissingDefaultPlugin(Type type)
+		{
+			return String.Format("The kernel component '{0}' is a pluggable factory, and is missing a default plugin.", Format.Type(type));
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region ProviderCouldNotCreateInstance
 		public static string ProviderCouldNotCreateInstance(IContext context)
 		{

@@ -144,7 +144,7 @@ namespace Ninject.Core
 
 			LoadModules(modules);
 
-			Components.Get<IBindingRegistry>().Validate();
+			Components.Get<IBindingRegistry>().ValidateBindings();
 			ActivateEagerServices();
 		}
 		#endregion
@@ -317,11 +317,15 @@ namespace Ninject.Core
 			if (Components == null)
 				throw new InvalidOperationException(ExceptionFormatter.KernelHasNoComponentContainer());
 
+			// Ensure all required components have been connected.
 			foreach (Type component in RequiredComponents)
 			{
 				if (!Components.Has(component))
 					throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(component));
 			}
+
+			// Validate the components' configuration.
+			Components.ValidateAll();
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

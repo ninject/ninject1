@@ -40,7 +40,7 @@ namespace Ninject.Core.Creation.Providers
 		public GenericProvider(Type prototype)
 			: base(prototype)
 		{
-			if (!CanSupportType(prototype))
+			if (!prototype.IsGenericTypeDefinition)
 				throw new NotSupportedException(ExceptionFormatter.GenericProviderDoesNotSupportType(prototype));
 		}
 		#endregion
@@ -82,18 +82,6 @@ namespace Ninject.Core.Creation.Providers
 			}
 
 			return implementation;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Static Methods
-		/// <summary>
-		/// Determines whether the provider can create instances of the specified type.
-		/// </summary>
-		/// <param name="type">The type in question.</param>
-		/// <returns><see langword="True"/> if instances can be created, otherwise <see langword="false"/>.</returns>
-		public static bool CanSupportType(Type type)
-		{
-			return type.IsGenericTypeDefinition;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

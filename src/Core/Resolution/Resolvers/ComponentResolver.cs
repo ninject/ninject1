@@ -42,19 +42,15 @@ namespace Ninject.Core.Resolution.Resolvers
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
+		#region Protected Methods
 		/// <summary>
 		/// Resolves the dependency.
 		/// </summary>
 		/// <param name="outerContext">The context in which the dependency was requested.</param>
 		/// <param name="innerContext">The context in which the dependency should be resolved.</param>
 		/// <returns>An object that satisfies the dependency.</returns>
-		public override object Resolve(IContext outerContext, IContext innerContext)
+		protected override object ResolveInstance(IContext outerContext, IContext innerContext)
 		{
-			Ensure.ArgumentNotNull(outerContext, "outerContext");
-			Ensure.ArgumentNotNull(innerContext, "innerContext");
-			Ensure.NotDisposed(this);
-
 			return innerContext.Kernel.Components.Get(Target.Type);
 		}
 		#endregion

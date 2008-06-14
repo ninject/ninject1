@@ -170,7 +170,7 @@ namespace Ninject.Core.Binding
 		/// <summary>
 		/// Validates all bindings to ensure that there are no incomplete or competing ones.
 		/// </summary>
-		public void Validate()
+		public void ValidateBindings()
 		{
 			lock (_bindings)
 			{

@@ -18,42 +18,40 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation;
-using Ninject.Core.Infrastructure;
+using Ninject.Core.Binding;
+using Ninject.Core.Creation;
 using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution.Resolvers;
 #endregion
 
-namespace Ninject.Core.Resolution.Resolvers
+namespace Ninject.Core.Resolution.Plugins
 {
 	/// <summary>
-	/// A dependency resolver that returns instances of the kernel itself.
+	/// A <see cref="IResolverFactoryPlugin"/> that creates <see cref="StandardResolver"/>s.
 	/// </summary>
-	public class KernelResolver : ResolverBase
+	public class StandardResolverPlugin : IResolverFactoryPlugin
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Creates a new KernelResolver.
+		/// Returns a value indicating whether the plugin can create a resolver for the specified target.
 		/// </summary>
-		/// <param name="target">The target whose values will be resolved.</param>
-		public KernelResolver(ITarget target)
-			: base(target)
+		/// <param name="target">The target in question.</param>
+		/// <returns><see langword="True"/> if the plugin can create a resolver for the target, otherwise, <see langword="false"/>.</returns>
+		public bool Matches(ITarget target)
 		{
+			return true;
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods
 		/// <summary>
-		/// Resolves the dependency.
+		/// Creates a dependency resolver for the specified binding and target.
 		/// </summary>
-		/// <param name="outerContext">The context in which the dependency was requested.</param>
-		/// <param name="innerContext">The context in which the dependency should be resolved.</param>
-		/// <returns>An object that satisfies the dependency.</returns>
-		protected override object ResolveInstance(IContext outerContext, IContext innerContext)
+		/// <param name="binding">The binding requesting the injection.</param>
+		/// <param name="target">The target whose value the resolver will resolve.</param>
+		/// <returns>The newly-created dependency resolver.</returns>
+		public IResolver Create(IBinding binding, ITarget target)
 		{
-			return innerContext.Kernel;
+			return new StandardResolver(target);
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
