@@ -45,6 +45,7 @@ namespace Ninject.Integration.NLog
 		/// </summary>
 		public override void Load()
 		{
+			Bind<ILogger>().To<NLogLogger>();
 		}
 	}
 }

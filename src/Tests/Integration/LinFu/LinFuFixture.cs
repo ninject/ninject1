@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using LinFu.DynamicProxy;
+using Ninject.Conditions;
 using Ninject.Core;
 using Ninject.Integration.LinFu;
 using NUnit.Framework;
@@ -161,6 +162,25 @@ namespace Ninject.Tests.Integration.LinFu
 
 				Assert.That(result, Is.EqualTo("42"));
 				Assert.That(FlagInterceptor.WasCalled, Is.True);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void SelfBoundTypesThatAreProxiedReceiveConstructorInjections()
+		{
+			var testModule = new InlineModule(
+				m => m.Bind<RequestsConstructorInjection>().ToSelf(),
+				// This is just here to trigger proxying, but we won't intercept any calls
+				m => m.Intercept<FlagInterceptor>(When.Request.Matches(r => false))
+			);
+
+			using (var kernel = new StandardKernel(new LinFuModule(), testModule))
+			{
+				var obj = kernel.Get<RequestsConstructorInjection>();
+
+				Assert.That(obj, Is.Not.Null);
+				Assert.That(obj, Is.InstanceOfType(typeof(IProxy)));
+				Assert.That(obj.Child, Is.Not.Null);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

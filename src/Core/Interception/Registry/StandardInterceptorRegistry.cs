@@ -141,14 +141,7 @@ namespace Ninject.Core.Interception
 		#region Private Methods
 		private static RuntimeMethodHandle GetMethodHandle(MethodInfo method)
 		{
-			RuntimeMethodHandle handle;
-
-			if (method.IsGenericMethod)
-				handle = method.GetGenericMethodDefinition().MethodHandle;
-			else
-				handle = method.MethodHandle;
-
-			return handle;
+			return method.IsGenericMethod ? method.GetGenericMethodDefinition().MethodHandle : method.MethodHandle;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

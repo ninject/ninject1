@@ -46,6 +46,7 @@ namespace Ninject.Integration.Log4net
 		/// </summary>
 		public override void Load()
 		{
+			Bind<ILogger>().To<Log4netLogger>();
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

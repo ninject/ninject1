@@ -19,10 +19,12 @@
 #region Using Directives
 using System;
 using Castle.Core.Interceptor;
+using Ninject.Conditions;
 using Ninject.Core;
 using Ninject.Core.Interception;
 using Ninject.Integration.DynamicProxy2;
 using Ninject.Integration.DynamicProxy2.Infrastructure;
+using Ninject.Integration.LinFu;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 #endregion
@@ -165,6 +167,25 @@ namespace Ninject.Tests.Integration.DynamicProxy2
 
 				Assert.That(result, Is.EqualTo("42"));
 				Assert.That(FlagInterceptor.WasCalled, Is.True);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void SelfBoundTypesThatAreProxiedReceiveConstructorInjections()
+		{
+			var testModule = new InlineModule(
+				m => m.Bind<RequestsConstructorInjection>().ToSelf(),
+				// This is just here to trigger proxying, but we won't intercept any calls
+				m => m.Intercept<FlagInterceptor>(When.Request.Matches(r => false))
+			);
+
+			using (var kernel = new StandardKernel(new DynamicProxy2Module(), testModule))
+			{
+				var obj = kernel.Get<RequestsConstructorInjection>();
+
+				Assert.That(obj, Is.Not.Null);
+				Assert.That(obj, Is.InstanceOfType(typeof(IProxyTargetAccessor)));
+				Assert.That(obj.Child, Is.Not.Null);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
