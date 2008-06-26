@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
@@ -30,20 +31,11 @@ namespace Ninject.Core.Behavior
 	public class SingletonBehavior : BehaviorBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private object _instance;
-		private IContext _context;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the instance associated with the behavior.
 		/// </summary>
-		public object Instance
-		{
-			get { return _instance; }
-			set { _instance = value; }
-		}
+		public ContextCache ContextCache { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -55,14 +47,18 @@ namespace Ninject.Core.Behavior
 		{
 			if (disposing && !IsDisposed)
 			{
-				if (_instance != null)
+				lock (this)
 				{
-					DestroyInstance(_context, _instance);
-					DisposeMember(_context);
-				}
+					var activator = Kernel.Components.Get<IActivator>();
 
-				_instance = null;
-				_context = null;
+					foreach (IContext context in ContextCache)
+					{
+						activator.Destroy(context);
+						DisposeMember(context);
+					}
+
+					ContextCache.Clear();
+				}
 			}
 
 			base.Dispose(disposing);
@@ -75,6 +71,8 @@ namespace Ninject.Core.Behavior
 		/// </summary>
 		public SingletonBehavior()
 		{
+			ContextCache = new ContextCache();
+
 			SupportsEagerActivation = true;
 			ShouldTrackInstances = true;
 		}
@@ -92,22 +90,21 @@ namespace Ninject.Core.Behavior
 
 			lock (this)
 			{
-				if (_instance == null)
-				{
-					CreateInstance(context, ref _instance);
-					_context = context;
-				}
-			}
+				if (ContextCache.Contains(context.Implementation))
+					return ContextCache[context.Implementation].Instance;
 
-			return _instance;
+				ContextCache.Add(context);
+				Kernel.Components.Get<IActivator>().Activate(context);
+
+				return context.Instance;
+			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Does nothing; the instance will be released when the behavior is disposed.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to release.</param>
-		public override void Release(IContext context, object instance)
+		public override void Release(IContext context)
 		{
 		}
 		#endregion

@@ -20,6 +20,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Web;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
@@ -35,20 +36,11 @@ namespace Ninject.Core.Behavior
 	public class OnePerRequestBehavior : BehaviorBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private object _instance;
-		private IContext _context;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the instance associated with the behavior.
 		/// </summary>
-		public object Instance
-		{
-			get { return _instance; }
-			set { _instance = value; }
-		}
+		public ContextCache ContextCache { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -59,7 +51,7 @@ namespace Ninject.Core.Behavior
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-				DestroyInstanceIfExists();
+				CleanUpInstances();
 
 			base.Dispose(disposing);
 		}
@@ -71,6 +63,8 @@ namespace Ninject.Core.Behavior
 		/// </summary>
 		public OnePerRequestBehavior()
 		{
+			ContextCache = new ContextCache();
+
 			SupportsEagerActivation = true;
 			ShouldTrackInstances = false;
 		}
@@ -88,42 +82,42 @@ namespace Ninject.Core.Behavior
 
 			lock (this)
 			{
-				if (_instance == null)
-				{
-					CreateInstance(context, ref _instance);
-					_context = context;
+				if (ContextCache.Contains(context.Implementation))
+					return ContextCache[context.Implementation].Instance;
 
-					if (HttpContext.Current != null)
-						HttpContext.Current.ApplicationInstance.EndRequest += (sender, evt) => DestroyInstanceIfExists();
-				}
+				ContextCache.Add(context);
+				Kernel.Components.Get<IActivator>().Activate(context);
+
+				if (HttpContext.Current != null)
+					HttpContext.Current.ApplicationInstance.EndRequest += (sender, evt) => CleanUpInstances();
+
+				return context.Instance;
 			}
-
-			return _instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Does nothing; the instance will be released when the behavior is disposed.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to release.</param>
-		public override void Release(IContext context, object instance)
+		public override void Release(IContext context)
 		{
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Private Methods
-		private void DestroyInstanceIfExists()
+		private void CleanUpInstances()
 		{
 			lock (this)
 			{
-				if (_instance != null)
+				var activator = Kernel.Components.Get<IActivator>();
+
+				foreach (IContext context in ContextCache)
 				{
-					DestroyInstance(_context, _instance);
-					DisposeMember(_context);
+					activator.Destroy(context);
+					DisposeMember(context);
 				}
 
-				_instance = null;
-				_context = null;
+				ContextCache.Clear();
 			}
 		}
 		#endregion

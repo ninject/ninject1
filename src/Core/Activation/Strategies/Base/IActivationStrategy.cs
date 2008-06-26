@@ -32,72 +32,51 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed before the instance is created.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		StrategyResult BeforeCreate(IContext context, ref object instance);
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		StrategyResult BeforeCreate(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Executed after the instance is created, but before it is initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		StrategyResult AfterCreate(IContext context, ref object instance);
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		StrategyResult AfterCreate(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Executed when the instance is being initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		StrategyResult Initialize(IContext context, ref object instance);
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		StrategyResult Initialize(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Executed after the instance is initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		StrategyResult AfterInitialize(IContext context, ref object instance);
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		StrategyResult AfterInitialize(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Executed before the instance is destroyed.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		StrategyResult BeforeDestroy(IContext context, ref object instance);
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		StrategyResult BeforeDestroy(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Executed when the instance is being destroyed.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		StrategyResult Destroy(IContext context, ref object instance);
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		StrategyResult Destroy(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Executed after the instance is destroyed.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		StrategyResult AfterDestroy(IContext context, ref object instance);
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		StrategyResult AfterDestroy(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

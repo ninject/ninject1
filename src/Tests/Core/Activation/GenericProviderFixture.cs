@@ -20,6 +20,7 @@
 using System;
 using Ninject.Core;
 using Ninject.Core.Activation;
+using Ninject.Core.Behavior;
 using Ninject.Core.Binding;
 using Ninject.Core.Creation.Providers;
 using NUnit.Framework;
@@ -55,10 +56,64 @@ namespace Ninject.Tests.Activation
 
 			using (var kernel = new StandardKernel(module))
 			{
-				var mock = kernel.Get<IGenericObject<string>>();
+				var mock1 = kernel.Get<IGenericObject<string>>();
+				Assert.That(mock1, Is.Not.Null);
+				Assert.That(mock1, Is.InstanceOfType(typeof(GenericImpl<string>)));
 
-				Assert.That(mock, Is.Not.Null);
-				Assert.That(mock, Is.InstanceOfType(typeof(GenericImpl<string>)));
+				var mock2 = kernel.Get<IGenericObject<int>>();
+				Assert.That(mock2, Is.Not.Null);
+				Assert.That(mock2, Is.InstanceOfType(typeof(GenericImpl<int>)));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void CanActivateGenericTypeViaGenericTypeDefinitionBindingWithSingletonBehavior()
+		{
+			var module = new InlineModule(m => m.Bind(typeof(IGenericObject<>)).To(typeof(GenericImpl<>)).Using<SingletonBehavior>());
+
+			using (var kernel = new StandardKernel(module))
+			{
+				var mock1 = kernel.Get<IGenericObject<string>>();
+				Assert.That(mock1, Is.Not.Null);
+				Assert.That(mock1, Is.InstanceOfType(typeof(GenericImpl<string>)));
+
+				var mock2 = kernel.Get<IGenericObject<int>>();
+				Assert.That(mock2, Is.Not.Null);
+				Assert.That(mock2, Is.InstanceOfType(typeof(GenericImpl<int>)));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void CanActivateGenericTypeViaGenericTypeDefinitionBindingWithOnePerThreadBehavior()
+		{
+			var module = new InlineModule(m => m.Bind(typeof(IGenericObject<>)).To(typeof(GenericImpl<>)).Using<OnePerThreadBehavior>());
+
+			using (var kernel = new StandardKernel(module))
+			{
+				var mock1 = kernel.Get<IGenericObject<string>>();
+				Assert.That(mock1, Is.Not.Null);
+				Assert.That(mock1, Is.InstanceOfType(typeof(GenericImpl<string>)));
+
+				var mock2 = kernel.Get<IGenericObject<int>>();
+				Assert.That(mock2, Is.Not.Null);
+				Assert.That(mock2, Is.InstanceOfType(typeof(GenericImpl<int>)));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void CanActivateGenericTypeViaGenericTypeDefinitionBindingWithOnePerRequestBehavior()
+		{
+			var module = new InlineModule(m => m.Bind(typeof(IGenericObject<>)).To(typeof(GenericImpl<>)).Using<OnePerRequestBehavior>());
+
+			using (var kernel = new StandardKernel(module))
+			{
+				var mock1 = kernel.Get<IGenericObject<string>>();
+				Assert.That(mock1, Is.Not.Null);
+				Assert.That(mock1, Is.InstanceOfType(typeof(GenericImpl<string>)));
+
+				var mock2 = kernel.Get<IGenericObject<int>>();
+				Assert.That(mock2, Is.Not.Null);
+				Assert.That(mock2, Is.InstanceOfType(typeof(GenericImpl<int>)));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

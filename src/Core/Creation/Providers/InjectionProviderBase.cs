@@ -112,7 +112,7 @@ namespace Ninject.Core.Creation.Providers
         if (value == null)
 				{
 					// Create a new context in which the parameter's value will be activated.
-					IContext injectionContext = contextFactory.CreateChild(context, null, directive.Member,
+					IContext injectionContext = contextFactory.CreateChild(context, directive.Member,
 						argument.Target, argument.Optional);
 
 					// Resolve the value to inject for the parameter.

@@ -537,20 +537,17 @@ namespace Ninject.Core
 			IProvider provider = context.Binding.Provider;
 
 			// Ask the provider which type will be resolved.
-			Type type = context.Binding.Provider.GetImplementationType(context);
+			context.Implementation = context.Binding.Provider.GetImplementationType(context);
 
 			// Unless we are ignoring compatibility, ensure the provider can resolve the service.
-			if (!Options.IgnoreProviderCompatibility)
-			{
-				if (!provider.IsCompatibleWith(context))
-					throw new ActivationException(ExceptionFormatter.ProviderIncompatibleWithService(context, type));
-			}
+			if (!Options.IgnoreProviderCompatibility && !provider.IsCompatibleWith(context))
+				throw new ActivationException(ExceptionFormatter.ProviderIncompatibleWithService(context));
 
 			if (Logger.IsDebugEnabled)
-				Logger.Debug("Will create instance of type {0} for service {1}", Format.Type(type), Format.Type(service));
+				Logger.Debug("Will create instance of type {0} for service {1}", Format.Type(context.Implementation), Format.Type(service));
 
 			// Ask the planner to resolve or build the activation plan for the type, and add it to the context.
-			context.Plan = Components.Get<IPlanner>().GetPlan(context.Binding, type);
+			context.Plan = Components.Get<IPlanner>().GetPlan(context.Binding, context.Implementation);
 
 			// Now that we have an activation plan, if this is an eager activation request, and the
 			// plan's behavior doesn't support eager activation, don't actually resolve an instance.
@@ -587,6 +584,7 @@ namespace Ninject.Core
 			Type type = instance.GetType();
 
 			IContext context = CreateRootContext(type, null);
+
 			context.Binding = ResolveBinding(type, context);
 
 			if (context.Binding == null)
@@ -595,8 +593,11 @@ namespace Ninject.Core
 			// Generate the activation plan for the instance.
 			context.Plan = Components.Get<IPlanner>().GetPlan(context.Binding, type);
 
-			// Activate the instance.
-      Components.Get<IActivator>().Create(context, ref instance);
+			// Add the instance to the context.
+			context.Instance = instance;
+
+			// Inject the instance.
+      Components.Get<IActivator>().Activate(context);
 
 			// Register the contextualized instance with the tracker.
 			Components.Get<ITracker>().Track(instance, context);

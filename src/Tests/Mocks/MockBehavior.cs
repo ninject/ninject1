@@ -28,7 +28,7 @@ namespace Ninject.Tests
 	public class MockBehavior : BehaviorBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		private InstanceWithContext _reference;
+		private IContext _context;
 		/*----------------------------------------------------------------------------------------*/
 		public MockBehavior()
 		{
@@ -38,17 +38,16 @@ namespace Ninject.Tests
 		/*----------------------------------------------------------------------------------------*/
 		public override object Resolve(IContext context)
 		{
-			if (_reference == null)
+			if (_context == null)
 			{
-				object instance = null;
-				CreateInstance(context, ref instance);
-				_reference = new InstanceWithContext(instance, context);
+				Kernel.Components.Get<IActivator>().Activate(context);
+				_context = context;
 			}
 
-			return _reference.Instance;
+			return _context.Instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		public override void Release(IContext context, object instance)
+		public override void Release(IContext context)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/

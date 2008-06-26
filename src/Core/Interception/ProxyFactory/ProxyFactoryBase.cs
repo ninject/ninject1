@@ -31,20 +31,18 @@ namespace Ninject.Core.Interception
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Wraps the specified instance in a proxy.
+		/// Wraps the instance in the specified context in a proxy.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to wrap.</param>
 		/// <returns>A proxy that wraps the instance.</returns>
-		public abstract object Wrap(IContext context, object instance);
+		public abstract object Wrap(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Unwraps the specified proxied instance.
+		/// Unwraps the instance in the specified context.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="proxy">The proxied instance to unwrap.</param>
 		/// <returns>The unwrapped instance.</returns>
-		public abstract object Unwrap(IContext context, object proxy);
+		public abstract object Unwrap(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

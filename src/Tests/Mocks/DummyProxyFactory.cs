@@ -27,14 +27,14 @@ namespace Ninject.Tests
 	public class DummyProxyFactory : ProxyFactoryBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		public override object Unwrap(IContext context, object proxy)
+		public override object Unwrap(IContext context)
 		{
-			return proxy;
+			return context.Instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		public override object Wrap(IContext context, object instance)
+		public override object Wrap(IContext context)
 		{
-			return instance;
+			return context.Instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

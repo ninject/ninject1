@@ -54,34 +54,30 @@ namespace Ninject.Integration.LinFu.Infrastructure
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
-		/// Wraps the specified instance in a proxy.
+		/// Wraps the instance in the specified context in a proxy.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to wrap.</param>
 		/// <returns>A proxy that wraps the instance.</returns>
-		public override object Wrap(IContext context, object instance)
+		public override object Wrap(IContext context)
 		{
-			LinFuWrapper wrapper = new LinFuWrapper(Kernel, context, instance);
-			return _factory.CreateProxy(instance.GetType(), wrapper);
+			var wrapper = new LinFuWrapper(Kernel, context, context.Instance);
+			return _factory.CreateProxy(context.Instance.GetType(), wrapper);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Unwraps the specified proxied instance.
+		/// Unwraps the instance in the specified context.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="proxy">The proxied instance to unwrap.</param>
 		/// <returns>The unwrapped instance.</returns>
-		public override object Unwrap(IContext context, object proxy)
+		public override object Unwrap(IContext context)
 		{
-			IProxy proxyObject = proxy as IProxy;
+			var proxy = context.Instance as IProxy;
 
-			if (proxyObject != null)
-			{
-				LinFuWrapper wrapper = proxyObject.Interceptor as LinFuWrapper;
-				return (wrapper == null) ? proxy : wrapper.Instance;
-			}
+			if (proxy == null)
+				return context.Instance;
 
-			return proxy;
+			var wrapper = proxy.Interceptor as LinFuWrapper;
+			return (wrapper == null) ? proxy : wrapper.Context.Instance;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

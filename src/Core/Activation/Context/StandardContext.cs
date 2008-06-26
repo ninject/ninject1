@@ -34,10 +34,6 @@ namespace Ninject.Core.Activation
 	public class StandardContext : DebugInfoProvider, IContext
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private WeakReference _reference;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets or sets the kernel that is processing the activation request.
@@ -61,6 +57,11 @@ namespace Ninject.Core.Activation
 		public Type Service { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets the implementation type that will be returned.
+		/// </summary>
+		public Type Implementation { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets or sets the binding being used to activate items within the context.
 		/// </summary>
 		public IBinding Binding { get; set; }
@@ -71,6 +72,11 @@ namespace Ninject.Core.Activation
 		public IActivationPlan Plan { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets the instance that is being activated.
+		/// </summary>
+		public object Instance { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the generic type arguments associated with the service, if applicable.
 		/// </summary>
 		public Type[] GenericArguments { get; protected set; }
@@ -79,15 +85,6 @@ namespace Ninject.Core.Activation
 		/// Gets or sets the transient parameters for the context, if any are defined.
 		/// </summary>
 		public IParameterCollection Parameters { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets or sets the instance that is being injected, if it has been created.
-		/// </summary>
-		public object Instance
-		{
-			get { return (_reference.IsAlive ? _reference.Target : null); }
-			set { _reference = new WeakReference(value); }
-		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the member that is being injected.
@@ -141,6 +138,7 @@ namespace Ninject.Core.Activation
 				GenericArguments = null;
 				Binding = null;
 				Plan = null;
+				Instance = null;
 				Member = null;
 				Target = null;
 			}

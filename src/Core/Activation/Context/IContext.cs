@@ -51,6 +51,11 @@ namespace Ninject.Core.Activation
 		Type Service { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets the implementation type that will be returned.
+		/// </summary>
+		Type Implementation { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets or sets the numeric nesting level for the context.
 		/// </summary>
 		int Level { get; set; }
@@ -66,6 +71,11 @@ namespace Ninject.Core.Activation
 		IActivationPlan Plan { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets the instance that is being activated.
+		/// </summary>
+		object Instance { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the generic type arguments associated with the service, if applicable.
 		/// </summary>
 		Type[] GenericArguments { get; }
@@ -76,13 +86,7 @@ namespace Ninject.Core.Activation
 		IParameterCollection Parameters { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the instance that is being injected, if it has been created, and not
-		/// garbage collected.
-		/// </summary>
-		object Instance { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets or sets the member that is being injected.
+		/// Gets or sets the member that is being activated.
 		/// </summary>
 		MemberInfo Member { get; set; }
 		/*----------------------------------------------------------------------------------------*/

@@ -34,13 +34,10 @@ namespace Ninject.Core.Activation.Strategies
 		/// Executed after the instance is destroyed.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult AfterDestroy(IContext context, ref object instance)
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult AfterDestroy(IContext context)
 		{
-			var disposable = instance as IDisposable;
+			var disposable = context.Instance as IDisposable;
 
 			if (disposable != null)
 				disposable.Dispose();

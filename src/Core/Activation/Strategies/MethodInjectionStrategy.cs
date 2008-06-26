@@ -35,12 +35,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed when the instance is being initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult Initialize(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult Initialize(IContext context)
 		{
 			IList<MethodInjectionDirective> directives = context.Plan.Directives.GetAll<MethodInjectionDirective>();
 
@@ -51,20 +48,20 @@ namespace Ninject.Core.Activation.Strategies
 				foreach (MethodInjectionDirective directive in directives)
 				{
 					// Resolve the arguments that should be injected via the method's arguments.
-					object[] arguments = ResolveArguments(context, directive, instance);
+					object[] arguments = ResolveArguments(context, directive);
 
 					// Get an injector that can call the method.
 					IMethodInjector injector = injectorFactory.GetInjector(directive.Member);
 
 					// Call the method.
-					injector.Invoke(instance, arguments);
+					injector.Invoke(context.Instance, arguments);
 				}
 			}
 
 			return StrategyResult.Proceed;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		private static object[] ResolveArguments(IContext context, MethodInjectionDirective directive, object instance)
+		private static object[] ResolveArguments(IContext context, MethodInjectionDirective directive)
 		{
 			var contextFactory = context.Kernel.Components.Get<IContextFactory>();
 			var arguments = new object[directive.Arguments.Count];
@@ -73,7 +70,7 @@ namespace Ninject.Core.Activation.Strategies
 			foreach (Argument argument in directive.Arguments)
 			{
 				// Create a new context in which the parameter's value will be activated.
-				IContext injectionContext = contextFactory.CreateChild(context, instance,
+				IContext injectionContext = contextFactory.CreateChild(context,
 					directive.Member, argument.Target, argument.Optional);
 
 				// Resolve the value to inject for the parameter.

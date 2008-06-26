@@ -69,8 +69,12 @@ namespace Ninject.Integration.DynamicProxy2.Infrastructure
 		{
 			var requestFactory = Kernel.Components.Get<IRequestFactory>();
 
-			return requestFactory.Create(Context, Instance, castleInvocation.GetConcreteMethod(),
-				castleInvocation.Arguments, castleInvocation.GenericArguments);
+			return requestFactory.Create(
+				Context,
+				Instance,
+				castleInvocation.GetConcreteMethod(),
+				castleInvocation.Arguments,
+				castleInvocation.GenericArguments);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

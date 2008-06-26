@@ -32,14 +32,11 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed after the instance is initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult AfterInitialize(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult AfterInitialize(IContext context)
 		{
-			IInitializable init = instance as IInitializable;
+			var init = context.Instance as IInitializable;
 
 			if (init != null)
 				init.Initialize();

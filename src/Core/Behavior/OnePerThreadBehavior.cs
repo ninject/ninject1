@@ -37,12 +37,12 @@ namespace Ninject.Core.Behavior
 #if NETCF
 		private static readonly LocalDataStoreSlot ThreadSlot = Thread.AllocateNamedDataSlot("Ninject.ThreadLocalStorage");
 #else
-		[ThreadStatic] private static Dictionary<IBinding, object> _map;
+		[ThreadStatic] private static Dictionary<IBinding, ContextCache> _map;
 #endif
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private List<InstanceWithContext> _references = new List<InstanceWithContext>();
+		private readonly List<IContext> _references = new List<IContext>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -54,14 +54,15 @@ namespace Ninject.Core.Behavior
 		{
 			if (disposing && !IsDisposed)
 			{
-				foreach (InstanceWithContext reference in _references)
+				var activator = Kernel.Components.Get<IActivator>();
+
+				foreach (IContext context in _references)
 				{
-					DestroyInstance(reference);
-					DisposeMember(reference);
+					activator.Destroy(context);
+					DisposeMember(context);
 				}
 
 				_references.Clear();
-				_references = null;
 			}
 
 			base.Dispose(disposing);
@@ -90,47 +91,55 @@ namespace Ninject.Core.Behavior
 			Ensure.NotDisposed(this);
 
 			// Get the instance map from the thread-local storage block, creating it if necessary.
-			Dictionary<IBinding, object> map = GetInstanceMap();
+			Dictionary<IBinding, ContextCache> map = GetInstanceMap();
+			ContextCache cache;
 
-			if (!map.ContainsKey(context.Binding))
+			if (map.ContainsKey(context.Binding))
 			{
-				object instance = null;
+				cache = map[context.Binding];
 
-				CreateInstance(context, ref instance);
-				map.Add(context.Binding, instance);
-
-				_references.Add(new InstanceWithContext(instance, context));
+				if (cache.Contains(context.Implementation))
+					return cache[context.Implementation].Instance;
+			}
+			else
+			{
+				cache = new ContextCache();
+				map.Add(context.Binding, cache);
 			}
 
-			return map[context.Binding];
+			Kernel.Components.Get<IActivator>().Activate(context);
+			cache.Add(context);
+
+			_references.Add(context);
+
+			return context.Instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Does nothing; the instances will be released when the behavior is disposed.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to release.</param>
-		public override void Release(IContext context, object instance)
+		public override void Release(IContext context)
 		{
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Private Methods
-		private static Dictionary<IBinding, object> GetInstanceMap()
+		private static Dictionary<IBinding, ContextCache> GetInstanceMap()
 		{
 #if NETCF
-				var map = Thread.GetData(ThreadSlot) as Dictionary<IBinding, object>;
+				var map = Thread.GetData(ThreadSlot) as Dictionary<IBinding, ContextCache>;
 
 				if (map == null)
 				{
-					map = new Dictionary<IBinding, object>();
+					map = new Dictionary<IBinding, ContextCache>();
 					Thread.SetData(ThreadSlot, map);
 				}
 
 				return map;
 #else
 			if (_map == null)
-				_map = new Dictionary<IBinding, object>();
+				_map = new Dictionary<IBinding, ContextCache>();
 
 			return _map;
 #endif

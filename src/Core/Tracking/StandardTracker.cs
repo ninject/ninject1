@@ -32,7 +32,7 @@ namespace Ninject.Core.Tracking
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private Dictionary<WeakReference, IContext> _contextCache = new Dictionary<WeakReference, IContext>(new WeakReferenceComparer());
+		private readonly Dictionary<object, IContext> _contextCache = new Dictionary<object, IContext>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -53,10 +53,7 @@ namespace Ninject.Core.Tracking
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && !IsDisposed)
-			{
 				ReleaseAll();
-				_contextCache = null;
-			}
 
 			base.Dispose(disposing);
 		}
@@ -79,8 +76,7 @@ namespace Ninject.Core.Tracking
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Starting to track instance resulting from {0}", Format.Context(context));
 
-				var reference = new WeakReference(instance);
-				_contextCache[reference] = context;
+				_contextCache[instance] = context;
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -94,19 +90,17 @@ namespace Ninject.Core.Tracking
 		{
 			lock (_contextCache)
 			{
-				var reference = new WeakReference(instance);
-
-				if (!_contextCache.ContainsKey(reference))
+				if (!_contextCache.ContainsKey(instance))
 					return false;
 
 				// Release the instance by using its activation context.
-				IContext context = _contextCache[reference];
+				IContext context = _contextCache[instance];
 
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Releasing tracked instance resulting from {0}", Format.Context(context));
 
-				DoRelease(context, instance);
-				_contextCache.Remove(reference);
+				context.Plan.Behavior.Release(context);
+				_contextCache.Remove(instance);
 
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Instance released, no longer tracked");
@@ -122,14 +116,8 @@ namespace Ninject.Core.Tracking
 		{
 			lock (_contextCache)
 			{
-				foreach (KeyValuePair<WeakReference, IContext> entry in _contextCache)
-				{
-					WeakReference reference = entry.Key;
-					IContext context = entry.Value;
-
-					if (reference.IsAlive)
-						DoRelease(context, reference.Target);
-				}
+				foreach (IContext context in _contextCache.Values)
+					context.Plan.Behavior.Release(context);
 
 				_contextCache.Clear();
 			}
@@ -150,12 +138,6 @@ namespace Ninject.Core.Tracking
 				default:
 					return context.Plan.Behavior.ShouldTrackInstances;
 			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private static void DoRelease(IContext context, object instance)
-		{
-			// Release the instance via the behavior it was activated with.
-			context.Plan.Behavior.Release(context, instance);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

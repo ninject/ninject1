@@ -361,7 +361,7 @@ namespace Ninject.Core.Infrastructure
 		{
 			using (var sw = new StringWriter())
 			{
-				sw.WriteLine("Error activating {0}: the implementation type {1} requests static interceptors, or dynamic interceptors have been defined." +
+				sw.WriteLine("Error activating {0}: the implementation type {1} requests static interceptors, or dynamic interceptors have been defined.",
 					Format.Type(context.Binding.Service),
 					Format.Type(context.Plan.Type));
 
@@ -417,7 +417,7 @@ namespace Ninject.Core.Infrastructure
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region ProviderIncompatibleWithService
-		public static string ProviderIncompatibleWithService(IContext context, Type implementation)
+		public static string ProviderIncompatibleWithService(IContext context)
 		{
 			using (var sw = new StringWriter())
 			{
@@ -425,7 +425,7 @@ namespace Ninject.Core.Infrastructure
 					"Error activating {0}: the {1} returned an instance of type {2}, which is not compatible with the requested service.",
 					Format.Type(context.Service),
 					Format.Type(context.Binding.Provider.GetType()),
-					Format.Type(implementation));
+					Format.Type(context.Implementation));
 
 				sw.WriteLine("Using {0}", Format.Binding(context.Binding));
 

@@ -56,25 +56,15 @@ namespace Ninject.Core.Interception
 		/// </summary>
 		/// <param name="kernel">The kernel associated with the wrapper.</param>
 		/// <param name="context">The context in which the instance was activated.</param>
-		protected StandardWrapper(IKernel kernel, IContext context)
+		/// <param name="instance">The wrapped instance.</param>
+		protected StandardWrapper(IKernel kernel, IContext context, object instance)
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			Ensure.ArgumentNotNull(context, "context");
+			Ensure.ArgumentNotNull(instance, "instance");
 
 			Kernel = kernel;
 			Context = context;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Initializes a new instance of the <see cref="StandardWrapper"/> class.
-		/// </summary>
-		/// <param name="kernel">The kernel associated with the wrapper.</param>
-		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The wrapped instance.</param>
-		protected StandardWrapper(IKernel kernel, IContext context, object instance)
-			: this(kernel, context)
-		{
-			Ensure.ArgumentNotNull(instance, "instance");
 			Instance = instance;
 		}
 		#endregion

@@ -57,38 +57,36 @@ namespace Ninject.Integration.DynamicProxy2.Infrastructure
 		/// Wraps the specified instance in a proxy.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to wrap.</param>
 		/// <returns>A proxy that wraps the instance.</returns>
-		public override object Wrap(IContext context, object instance)
+		public override object Wrap(IContext context)
 		{
-			DynamicProxy2Wrapper wrapper = new DynamicProxy2Wrapper(Kernel, context, instance);
-			return _generator.CreateClassProxy(instance.GetType(), wrapper);
+			var wrapper = new DynamicProxy2Wrapper(Kernel, context, context.Instance);
+			return _generator.CreateClassProxy(context.Instance.GetType(), wrapper);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Unwraps the specified proxied instance.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="proxy">The proxied instance to unwrap.</param>
 		/// <returns>The unwrapped instance.</returns>
-		public override object Unwrap(IContext context, object proxy)
+		public override object Unwrap(IContext context)
 		{
-			IProxyTargetAccessor accessor = proxy as IProxyTargetAccessor;
+			var accessor = context.Instance as IProxyTargetAccessor;
 
 			if (accessor == null)
-				return proxy;
+				return context.Instance;
 
 			IInterceptor[] interceptors = accessor.GetInterceptors();
 
 			if ((interceptors == null) || (interceptors.Length == 0))
-				return proxy;
+				return context.Instance;
 
 			IWrapper wrapper = interceptors[0] as IWrapper;
 
 			if (wrapper == null)
-				return proxy;
+				return context.Instance;
 
-			return wrapper.Instance;
+			return wrapper.Context.Instance;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

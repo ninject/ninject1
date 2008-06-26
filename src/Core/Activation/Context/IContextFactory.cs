@@ -42,12 +42,11 @@ namespace Ninject.Core.Activation
 		/// Creates a child context using the specified context as its parent.
 		/// </summary>
 		/// <param name="parent">The parent context.</param>
-		/// <param name="instance">The instance receiving the injection.</param>
 		/// <param name="member">The member that the child context will be injecting.</param>
 		/// <param name="target">The target that is being injected.</param>
 		/// <param name="optional"><see langword="True"/> if the child context's resolution is optional, otherwise, <see langword="false"/>.</param>
 		/// <returns>The child context.</returns>
-		IContext CreateChild(IContext parent, object instance, MemberInfo member, ITarget target, bool optional);
+		IContext CreateChild(IContext parent, MemberInfo member, ITarget target, bool optional);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

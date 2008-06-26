@@ -69,7 +69,7 @@ namespace Ninject.Tests.Behavior
 				var behavior = plan.Behavior as SingletonBehavior;
 				Assert.That(behavior, Is.Not.Null);
 
-				Assert.That(behavior.Instance, Is.Null);
+				Assert.That(behavior.ContextCache, Is.Empty);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -93,7 +93,7 @@ namespace Ninject.Tests.Behavior
 				var behavior = plan.Behavior as SingletonBehavior;
 				Assert.That(behavior, Is.Not.Null);
 
-				Assert.That(behavior.Instance, Is.Not.Null);
+				Assert.That(behavior.ContextCache, Is.Not.Empty);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

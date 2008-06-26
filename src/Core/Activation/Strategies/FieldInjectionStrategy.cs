@@ -35,12 +35,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed when the instance is being initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult Initialize(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult Initialize(IContext context)
 		{
 			IList<FieldInjectionDirective> directives = context.Plan.Directives.GetAll<FieldInjectionDirective>();
 
@@ -52,7 +49,7 @@ namespace Ninject.Core.Activation.Strategies
 				foreach (FieldInjectionDirective directive in directives)
 				{
 					// Create a new context in which the field's value will be activated.
-					IContext injectionContext = contextFactory.CreateChild(context, instance,
+					IContext injectionContext = contextFactory.CreateChild(context,
 						directive.Member, directive.Target, directive.Argument.Optional);
 
 					// Resolve the value to inject into the field.
@@ -62,7 +59,7 @@ namespace Ninject.Core.Activation.Strategies
 					IFieldInjector injector = injectorFactory.GetInjector(directive.Member);
 
 					// Inject the value.
-					injector.Set(instance, value);
+					injector.Set(context.Instance, value);
 				}
 			}
 

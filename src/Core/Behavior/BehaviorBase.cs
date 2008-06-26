@@ -76,53 +76,15 @@ namespace Ninject.Core.Behavior
 		/// <summary>
 		/// Resolves an instance of the type based on the rules of the behavior.
 		/// </summary>
-		/// <param name="context">The context in which the instance is being activated.</param>
+		/// <param name="context">The activation context.</param>
 		/// <returns>An instance of the type associated with the behavior.</returns>
 		public abstract object Resolve(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Releases an instance of the type based on the rules of the behavior.
+		/// Releases the instance of the type contained in the context based on the rules of the behavior.
 		/// </summary>
-		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to release.</param>
-		public abstract void Release(IContext context, object instance);
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods
-		/// <summary>
-		/// Creates a new instance of the type via the kernel's <see cref="IActivator"/>.
-		/// </summary>
-		/// <param name="context">The context in which the instance should be created.</param>
-		/// <param name="instance">The existing instance, if applicable.</param>
-		protected virtual void CreateInstance(IContext context, ref object instance)
-		{
-			lock (this)
-			{
-				// Ask the activator to create an instance of the appropriate type.
-				Kernel.Components.Get<IActivator>().Create(context, ref instance);
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Destroys an instance of the type via the kernel's <see cref="IActivator"/>.
-		/// </summary>
-		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to destroy.</param>
-		protected virtual void DestroyInstance(IContext context, object instance)
-		{
-			if (instance != null)
-				Kernel.Components.Get<IActivator>().Destroy(context, ref instance);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Destroys an instance of the type via the kernel's <see cref="IActivator"/>.
-		/// </summary>
-		/// <param name="contextualized">The contextualized instance to destroy.</param>
-		protected virtual void DestroyInstance(InstanceWithContext contextualized)
-		{
-			object instance = contextualized.Instance;
-			Kernel.Components.Get<IActivator>().Destroy(contextualized.Context, ref instance);
-		}
+		/// <param name="context">The activation context.</param>
+		public abstract void Release(IContext context);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

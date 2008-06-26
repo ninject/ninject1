@@ -26,7 +26,7 @@ using Ninject.Core.Planning.Directives;
 namespace Ninject.Core.Activation.Strategies
 {
 	/// <summary>
-	/// An activation strategy that resolves and injects values into methods on the instance.
+	/// An activation strategy that wraps the instance that is being activated in a proxy.
 	/// </summary>
 	public class ProxyStrategy : ActivationStrategyBase
 	{
@@ -35,18 +35,15 @@ namespace Ninject.Core.Activation.Strategies
 		/// Executed after the instance is initialized.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult AfterInitialize(IContext context, ref object instance)
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult AfterInitialize(IContext context)
 		{
-			if (ShouldProxy(context, instance))
+			if (ShouldProxy(context))
 			{
 				if (!Kernel.Components.Has<IProxyFactory>())
 					throw new InvalidOperationException(ExceptionFormatter.NoProxyFactoryAvailable(context));
 
-				instance = Kernel.Components.Get<IProxyFactory>().Wrap(context, instance);
+				context.Instance = Kernel.Components.Get<IProxyFactory>().Wrap(context);
 			}
 
 			return StrategyResult.Proceed;
@@ -56,25 +53,21 @@ namespace Ninject.Core.Activation.Strategies
 		/// Executed before the instance is destroyed.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult BeforeDestroy(IContext context, ref object instance)
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult BeforeDestroy(IContext context)
 		{
 			if (Kernel.Components.Has<IProxyFactory>())
-				instance = Kernel.Components.Get<IProxyFactory>().Unwrap(context, instance);
+				context.Instance = Kernel.Components.Get<IProxyFactory>().Unwrap(context);
 
 			return StrategyResult.Proceed;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Returns a value indicating whether the specified instance should be proxied.
+		/// Returns a value indicating whether the instance in the specified context should be proxied.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
+		/// <param name="context">The activation context.</param>
 		/// <returns><see langword="True"/> if the instance should be proxied, otherwise <see langword="false"/>.</returns>
-		protected virtual bool ShouldProxy(IContext context, object instance)
+		protected virtual bool ShouldProxy(IContext context)
 		{
 			var registry = Kernel.Components.Get<IInterceptorRegistry>();
 

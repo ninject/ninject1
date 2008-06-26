@@ -92,34 +92,33 @@ namespace Ninject.Core.Activation
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
-		/// Creates an instance by executing the chain of creation strategies.
+		/// Activates an instance by executing the chain of activation strategies.
 		/// </summary>
-		/// <param name="context">The context in which the instance is being activated.</param>
-		/// <param name="instance">A reference to the instance that is being created.</param>
-		public void Create(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		public void Activate(IContext context)
 		{
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);
 
-			if (instance == null)
+			if (context.Instance == null)
 			{
 				// Execute the "before create" phase.
 				foreach (IActivationStrategy strategy in Strategies)
 				{
-					if (strategy.BeforeCreate(context, ref instance) == StrategyResult.Stop)
+					if (strategy.BeforeCreate(context) == StrategyResult.Stop)
 						break;
 				}
 
 				// Request a new instance from the binding's provider.
-				instance = context.Binding.Provider.Create(context);
+				context.Instance = context.Binding.Provider.Create(context);
 
-				if (instance == null)
+				if (context.Instance == null)
 					throw new ActivationException(ExceptionFormatter.ProviderCouldNotCreateInstance(context));
 
 				// Execute the "after create" phase.
 				foreach (IActivationStrategy strategy in Strategies)
 				{
-					if (strategy.AfterCreate(context, ref instance) == StrategyResult.Stop)
+					if (strategy.AfterCreate(context) == StrategyResult.Stop)
 						break;
 				}
 			}
@@ -127,14 +126,14 @@ namespace Ninject.Core.Activation
 			// Execute the "initialize" phase.
 			foreach (IActivationStrategy strategy in Strategies)
 			{
-				if (strategy.Initialize(context, ref instance) == StrategyResult.Stop)
+				if (strategy.Initialize(context) == StrategyResult.Stop)
 					break;
 			}
 
 			// Execute the "after initialize" phase.
 			foreach (IActivationStrategy strategy in Strategies)
 			{
-				if (strategy.AfterInitialize(context, ref instance) == StrategyResult.Stop)
+				if (strategy.AfterInitialize(context) == StrategyResult.Stop)
 					break;
 			}
 		}
@@ -143,30 +142,33 @@ namespace Ninject.Core.Activation
 		/// Destroys an instance by executing the chain of destruction strategies.
 		/// </summary>
 		/// <param name="context">The context in which the instance was requested.</param>
-		/// <param name="instance">A reference to the instance that is being destroyed.</param>
-		public void Destroy(IContext context, ref object instance)
+		public void Destroy(IContext context)
 		{
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);
 
+			// TODO
+			if (context.Instance == null)
+				throw new InvalidOperationException("Context does not contain an instance to destroy");
+
 			// Execute the "before destroy" phase.
 			foreach (IActivationStrategy strategy in Strategies)
 			{
-				if (strategy.BeforeDestroy(context, ref instance) == StrategyResult.Stop)
+				if (strategy.BeforeDestroy(context) == StrategyResult.Stop)
 					break;
 			}
 
 			// Execute the "destroy" phase.
 			foreach (IActivationStrategy strategy in Strategies)
 			{
-				if (strategy.Destroy(context, ref instance) == StrategyResult.Stop)
+				if (strategy.Destroy(context) == StrategyResult.Stop)
 					break;
 			}
 
 			// Execute the "after destroy" phase.
 			foreach (IActivationStrategy strategy in Strategies)
 			{
-				if (strategy.AfterDestroy(context, ref instance) == StrategyResult.Stop)
+				if (strategy.AfterDestroy(context) == StrategyResult.Stop)
 					break;
 			}
 		}

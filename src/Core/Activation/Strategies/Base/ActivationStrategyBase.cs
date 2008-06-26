@@ -32,12 +32,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed before the instance is created.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public virtual StrategyResult BeforeCreate(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public virtual StrategyResult BeforeCreate(IContext context)
 		{
 			return StrategyResult.Proceed;
 		}
@@ -45,12 +42,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed after the instance is created, but before it is initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public virtual StrategyResult AfterCreate(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public virtual StrategyResult AfterCreate(IContext context)
 		{
 			return StrategyResult.Proceed;
 		}
@@ -58,12 +52,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed to create the instance.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public virtual StrategyResult Create(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public virtual StrategyResult Create(IContext context)
 		{
 			return StrategyResult.Proceed;
 		}
@@ -71,12 +62,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed when the instance is being initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public virtual StrategyResult Initialize(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public virtual StrategyResult Initialize(IContext context)
 		{
 			return StrategyResult.Proceed;
 		}
@@ -84,12 +72,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed after the instance is initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public virtual StrategyResult AfterInitialize(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public virtual StrategyResult AfterInitialize(IContext context)
 		{
 			return StrategyResult.Proceed;
 		}
@@ -97,12 +82,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed before the instance is destroyed.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public virtual StrategyResult BeforeDestroy(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public virtual StrategyResult BeforeDestroy(IContext context)
 		{
 			return StrategyResult.Proceed;
 		}
@@ -110,12 +92,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed when the instance is being destroyed.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public virtual StrategyResult Destroy(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public virtual StrategyResult Destroy(IContext context)
 		{
 			return StrategyResult.Proceed;
 		}
@@ -123,12 +102,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed after the instance is destroyed.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public virtual StrategyResult AfterDestroy(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public virtual StrategyResult AfterDestroy(IContext context)
 		{
 			return StrategyResult.Proceed;
 		}

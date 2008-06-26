@@ -58,16 +58,15 @@ namespace Ninject.Core.Behavior
 		/// <summary>
 		/// Resolves an instance of the type based on the rules of the behavior.
 		/// </summary>
-		/// <param name="context">The context in which the instance is being activated.</param>
+		/// <param name="context">The activation context.</param>
 		/// <returns>An instance of the type associated with the behavior.</returns>
 		object Resolve(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Releases an instance of the type based on the rules of the behavior.
+		/// Releases the instance of the type contained in the context based on the rules of the behavior.
 		/// </summary>
-		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to release.</param>
-		void Release(IContext context, object instance);
+		/// <param name="context">The activation context.</param>
+		void Release(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

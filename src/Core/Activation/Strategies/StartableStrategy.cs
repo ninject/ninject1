@@ -33,14 +33,11 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed after the instance is initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult AfterInitialize(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult AfterInitialize(IContext context)
 		{
-			var startable = instance as IStartable;
+			var startable = context.Instance as IStartable;
 
 			if (startable != null)
 				startable.Start();
@@ -51,14 +48,11 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed before the instance is destroyed.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult BeforeDestroy(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult BeforeDestroy(IContext context)
 		{
-			var startable = instance as IStartable;
+			var startable = context.Instance as IStartable;
 
 			if (startable != null)
 				startable.Stop();

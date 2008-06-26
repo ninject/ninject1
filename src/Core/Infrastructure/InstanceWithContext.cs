@@ -34,12 +34,12 @@ namespace Ninject.Core.Infrastructure
 		/// <summary>
 		/// The contextualized instance.
 		/// </summary>
-		public object Instance { get; private set; }
+		public object Instance { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// The context in which the instance was activated.
 		/// </summary>
-		public IContext Context { get; private set; }
+		public IContext Context { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -58,19 +58,6 @@ namespace Ninject.Core.Infrastructure
 			}
 
 			base.Dispose(disposing);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="InstanceWithContext"/> class.
-		/// </summary>
-		/// <param name="instance">The instance.</param>
-		/// <param name="context">The context.</param>
-		public InstanceWithContext(object instance, IContext context)
-		{
-			Instance = instance;
-			Context = context;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

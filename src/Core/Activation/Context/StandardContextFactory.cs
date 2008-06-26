@@ -45,12 +45,11 @@ namespace Ninject.Core.Activation
 		/// Creates a child context using the specified context as its parent.
 		/// </summary>
 		/// <param name="parent">The parent context.</param>
-		/// <param name="instance">The instance receiving the injection.</param>
 		/// <param name="member">The member that the child context will be injecting.</param>
 		/// <param name="target">The target that is being injected.</param>
 		/// <param name="optional"><see langword="True"/> if the child context's resolution is optional, otherwise, <see langword="false"/>.</param>
 		/// <returns>The child context.</returns>
-		public IContext CreateChild(IContext parent, object instance, MemberInfo member, ITarget target, bool optional)
+		public IContext CreateChild(IContext parent, MemberInfo member, ITarget target, bool optional)
 		{
 			Ensure.ArgumentNotNull(member, "member");
 			Ensure.ArgumentNotNull(target, "target");
@@ -58,10 +57,8 @@ namespace Ninject.Core.Activation
 
 			var child = new StandardContext(Kernel, target.Type);
 
-			child.Instance = instance;
 			child.Member = member;
 			child.Target = target;
-			child.Instance = instance;
 			child.IsOptional = optional;
 
 			return child;

@@ -37,12 +37,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <summary>
 		/// Executed when the instance is being initialized.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <param name="instance">The instance being activated.</param>
-		/// <returns>
-		/// A value indicating whether to proceed or stop the execution of the strategy chain.
-		/// </returns>
-		public override StrategyResult Initialize(IContext context, ref object instance)
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult Initialize(IContext context)
 		{
 			IList<PropertyInjectionDirective> directives = context.Plan.Directives.GetAll<PropertyInjectionDirective>();
 
@@ -60,7 +57,7 @@ namespace Ninject.Core.Activation.Strategies
 					if (value == null)
 					{
 						// Create a new context in which the property's value will be activated.
-						IContext injectionContext = contextFactory.CreateChild(context, instance,
+						IContext injectionContext = contextFactory.CreateChild(context,
 							directive.Member, directive.Target, directive.Argument.Optional);
 
 						// Resolve the value to inject into the property.
@@ -71,7 +68,7 @@ namespace Ninject.Core.Activation.Strategies
 					IPropertyInjector injector = injectorFactory.GetInjector(directive.Member);
 
 					// Inject the value.
-					injector.Set(instance, value);
+					injector.Set(context.Instance, value);
 				}
 			}
 

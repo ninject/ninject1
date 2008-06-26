@@ -18,35 +18,28 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation.Strategies;
-using Ninject.Core.Infrastructure;
+using System.Collections.ObjectModel;
+using Ninject.Core.Activation;
+
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// Performs the actual creation and destruction of instances.
+	/// A collection of activation contexts, organized by implementation type.
 	/// </summary>
-	public interface IActivator : IKernelComponent
+	public class ContextCache : KeyedCollection<Type, IContext>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// The chain of activation strategies.
+		/// When implemented in a derived class, extracts the key from the specified element.
 		/// </summary>
-		IStrategyChain<IActivator, IActivationStrategy> Strategies { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Activates an instance by executing the chain of activation strategies.
-		/// </summary>
-		/// <param name="context">The activation context.</param>
-		/// <returns>The created instance.</returns>
-		void Activate(IContext context);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Destroys an instance by executing the chain of activation strategies.
-		/// </summary>
-		/// <param name="context">The activation context.</param>
-		void Destroy(IContext context);
+		/// <param name="item">The element from which to extract the key.</param>
+		/// <returns>The key for the specified element.</returns>
+		protected override Type GetKeyForItem(IContext item)
+		{
+			return item.Implementation;
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

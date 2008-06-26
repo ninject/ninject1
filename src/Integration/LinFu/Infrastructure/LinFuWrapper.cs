@@ -64,13 +64,14 @@ namespace Ninject.Integration.LinFu.Infrastructure
 		#region Private Methods
 		private IRequest CreateRequest(InvocationInfo info)
 		{
-			return new StandardRequest(
+			var requestFactory = Kernel.Components.Get<IRequestFactory>();
+
+			return requestFactory.Create(
 				Context,
 				Instance,
 				info.TargetMethod,
 				info.Arguments,
-				info.TypeArguments
-			);
+				info.TypeArguments);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

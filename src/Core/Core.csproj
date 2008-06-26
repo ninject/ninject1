@@ -78,6 +78,7 @@
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
     <Compile Include="Infrastructure\Components\IComponentContainer.cs" />
     <Compile Include="Infrastructure\Components\StandardComponentContainer.cs" />
+    <Compile Include="Infrastructure\ContextCache.cs" />
     <Compile Include="Infrastructure\Delegates\Action.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionsForMethodBase.cs" />

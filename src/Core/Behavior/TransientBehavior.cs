@@ -50,22 +50,19 @@ namespace Ninject.Core.Behavior
 		public override object Resolve(IContext context)
 		{
 			Ensure.NotDisposed(this);
+			Kernel.Components.Get<IActivator>().Activate(context);
 
-			object instance = null;
-			CreateInstance(context, ref instance);
-
-			return instance;
+			return context.Instance;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Releases an instance of the type based on the rules of the behavior.
 		/// </summary>
 		/// <param name="context">The context in which the instance was activated.</param>
-		/// <param name="instance">The instance to release.</param>
-		public override void Release(IContext context, object instance)
+		public override void Release(IContext context)
 		{
 			Ensure.NotDisposed(this);
-			DestroyInstance(context, instance);
+			Kernel.Components.Get<IActivator>().Destroy(context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
