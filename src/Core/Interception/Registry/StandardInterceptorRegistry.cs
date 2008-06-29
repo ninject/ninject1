@@ -121,10 +121,10 @@ namespace Ninject.Core.Interception
         matches.AddRange(_staticInterceptors[handle]);
 
 			// Test each defined dynamic interceptor and add those that match.
-			matches.AddRange(_dynamicInterceptors.FindAll(reg => reg.Condition.Matches(request)));
+			matches.AddRange(_dynamicInterceptors.Where(reg => reg.Condition.Matches(request)));
 
 			// Sort the matches by their registered order.
-			matches.Sort();
+			matches.Sort((r1, r2) => r1.Order - r2.Order);
 
 			// Extract the factory methods from the registrations and call them to create the interceptors.
 			List<IInterceptor> interceptors = matches.ConvertAll(reg => reg.FactoryMethod(request));

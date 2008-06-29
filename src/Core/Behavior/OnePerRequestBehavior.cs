@@ -107,18 +107,8 @@ namespace Ninject.Core.Behavior
 		#region Private Methods
 		private void CleanUpInstances()
 		{
-			lock (this)
-			{
-				var activator = Kernel.Components.Get<IActivator>();
-
-				foreach (IContext context in ContextCache)
-				{
-					activator.Destroy(context);
-					DisposeMember(context);
-				}
-
-				ContextCache.Clear();
-			}
+			DestroyAll(ContextCache);
+			ContextCache.Clear();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

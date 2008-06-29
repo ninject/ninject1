@@ -25,7 +25,7 @@ namespace Ninject.Core.Infrastructure
 	/// <summary>
 	/// A container that manages components for an <see cref="IKernel"/>.
 	/// </summary>
-	public interface IComponentContainer : IDisposableEx
+	public interface IComponentContainer : IDisposable
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties

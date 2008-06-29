@@ -29,7 +29,7 @@ using Ninject.Core.Tracking;
 namespace Ninject.Core
 {
 	/// <summary>
-	/// A lightweight, flexible, general-purpose inversion-of-control container.
+	/// A super-factory that can create objects of all kinds, following hints provided by <see cref="IBinding"/>s.
 	/// </summary>
 	public interface IKernel : IServiceProvider, IDisposable
 	{
@@ -117,10 +117,16 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Bindings
 		/// <summary>
-		/// Registers a binding with the kernel.
+		/// Registers the specified binding with the kernel.
 		/// </summary>
 		/// <param name="binding">The binding to register.</param>
 		void AddBinding(IBinding binding);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Removes the specified binding from the kernel.
+		/// </summary>
+		/// <param name="binding">The binding to unregister.</param>
+		void RemoveBinding(IBinding binding);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Modules
@@ -135,6 +141,18 @@ namespace Ninject.Core
 		/// </summary>
 		/// <param name="modules">The modules to load.</param>
 		void Load(IEnumerable<IModule> modules);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Unloads the specified modules from the kernel.
+		/// </summary>
+		/// <param name="modules">The modules to unload.</param>
+		void Unload(params IModule[] modules);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Unloads the specified modules into the kernel.
+		/// </summary>
+		/// <param name="modules">The modules to unload.</param>
+		void Unload(IEnumerable<IModule> modules);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Scopes

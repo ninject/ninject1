@@ -27,7 +27,7 @@ namespace Ninject.Core.Planning.Strategies
 	/// <summary>
 	/// A strategy that contributes to the construction or destruction of an activation plan.
 	/// </summary>
-	public abstract class PlanningStrategyBase : StrategyBase<IPlanner>, IPlanningStrategy
+	public abstract class PlanningStrategyBase : StrategyBase, IPlanningStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

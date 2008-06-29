@@ -26,7 +26,7 @@ namespace Ninject.Core.Activation.Strategies
 	/// <summary>
 	/// A baseline definition of an activation strategy.
 	/// </summary>
-	public abstract class ActivationStrategyBase : StrategyBase<IActivator>, IActivationStrategy
+	public abstract class ActivationStrategyBase : StrategyBase, IActivationStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

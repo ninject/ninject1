@@ -30,44 +30,14 @@ namespace Ninject.Core.Planning
 	/// The baseline implemenation of a planner with no strategies installed. This type can be
 	/// extended to customize the planning process.
 	/// </summary>
-	public abstract class PlannerBase : KernelComponentBase, IPlanner
+	public abstract class PlannerBase : KernelComponentWithStrategies<IPlanningStrategy>, IPlanner
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// The chain of strategies that contribute to the creation and destruction of activation plans.
-		/// </summary>
-		/// <value></value>
-		public IStrategyChain<IPlanner, IPlanningStrategy> Strategies { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// The collection of activation plans that have been generated.
 		/// </summary>
 		public IDictionary<Type, IActivationPlan> Plans { get; private set; }
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Event Sources
-		/// <summary>
-		/// Called when the component is connected to its environment.
-		/// </summary>
-		/// <param name="args">The event arguments.</param>
-		protected override void OnConnected(EventArgs args)
-		{
-			Strategies.Kernel = Kernel;
-			base.OnConnected(args);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Called when the component is disconnected from its environment.
-		/// </summary>
-		/// <param name="args">The event arguments.</param>
-		protected override void OnDisconnected(EventArgs args)
-		{
-			base.OnDisconnected(args);
-
-			if (Strategies != null)
-				Strategies.Kernel = null;
-		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -79,10 +49,7 @@ namespace Ninject.Core.Planning
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeCollection(Strategies);
 				DisposeDictionary(Plans);
-
-				Strategies = null;
 				Plans = null;
 			}
 
@@ -96,7 +63,6 @@ namespace Ninject.Core.Planning
 		/// </summary>
 		protected PlannerBase()
 		{
-			Strategies = new StrategyChain<IPlanner, IPlanningStrategy>(this);
 			Plans = new Dictionary<Type, IActivationPlan>();
 		}
 		#endregion
@@ -130,29 +96,15 @@ namespace Ninject.Core.Planning
 					return Plans[type];
 				}
 
+				IActivationPlan plan = Kernel.Components.Get<IActivationPlanFactory>().Create(type);
+				Plans.Add(type, plan);
+
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Type has not been analyzed, building activation plan");
 
-				IActivationPlan plan = CreateEmptyPlan(type);
-				Plans.Add(type, plan);
-
-				foreach (IPlanningStrategy strategy in Strategies)
-				{
-					if (strategy.BeforeBuild(binding, type, plan) == StrategyResult.Stop)
-						break;
-				}
-
-				foreach (IPlanningStrategy strategy in Strategies)
-				{
-					if (strategy.Build(binding, type, plan) == StrategyResult.Stop)
-						break;
-				}
-
-				foreach (IPlanningStrategy strategy in Strategies)
-				{
-					if (strategy.AfterBuild(binding, type, plan) == StrategyResult.Stop)
-						break;
-				}
+				Strategies.ExecuteForChain(s => s.BeforeBuild(binding, type, plan));
+				Strategies.ExecuteForChain(s => s.Build(binding, type, plan));
+				Strategies.ExecuteForChain(s => s.AfterBuild(binding, type, plan));
 
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Activation plan for {0} built successfully", Format.Type(type));
@@ -190,40 +142,15 @@ namespace Ninject.Core.Planning
 
 				IActivationPlan plan = Plans[type];
 
-				foreach (IPlanningStrategy strategy in Strategies)
-				{
-					if (strategy.BeforeRelease(binding, type, plan) == StrategyResult.Stop)
-						break;
-				}
-
-				foreach (IPlanningStrategy strategy in Strategies)
-				{
-					if (strategy.Release(binding, type, plan) == StrategyResult.Stop)
-						break;
-				}
-
-				foreach (IPlanningStrategy strategy in Strategies)
-				{
-					if (strategy.AfterRelease(binding, type, plan) == StrategyResult.Stop)
-						break;
-				}
+				Strategies.ExecuteForChain(s => s.BeforeRelease(binding, type, plan));
+				Strategies.ExecuteForChain(s => s.Release(binding, type, plan));
+				Strategies.ExecuteForChain(s => s.AfterRelease(binding, type, plan));
 
 				Plans.Remove(type);
 
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Finished releasing activation plan for type {0}", Format.Type(type));
 			}
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods
-		/// <summary>
-		/// Creates a new empty activation plan, that will subsequently be built up by the inspector.
-		/// </summary>
-		/// <returns>The new empty binding.</returns>
-		protected virtual IActivationPlan CreateEmptyPlan(Type type)
-		{
-			return new StandardActivationPlan(type);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

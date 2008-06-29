@@ -58,7 +58,10 @@
     <Compile Include="Binding\StandardBindingFactory.cs" />
     <Compile Include="Binding\IBindingFactory.cs" />
     <Compile Include="Creation\Plugins\StandardProviderPlugin.cs" />
-    <Compile Include="Infrastructure\Components\PluggableFactoryComponentBase.cs" />
+    <Compile Include="Infrastructure\Components\WithStrategies\KernelComponentWithStrategies.cs" />
+    <Compile Include="Infrastructure\Components\WithStrategies\IHaveStrategies.cs" />
+    <Compile Include="Infrastructure\Components\WithPlugins\IHavePlugins.cs" />
+    <Compile Include="Infrastructure\Components\WithPlugins\KernelComponentWithPlugins.cs" />
     <Compile Include="Creation\StandardProviderFactory.cs" />
     <Compile Include="Creation\IProviderFactory.cs" />
     <Compile Include="Creation\Plugins\IProviderFactoryPlugin.cs" />
@@ -76,14 +79,14 @@
     <Compile Include="Activation\Strategies\ProxyStrategy.cs" />
     <Compile Include="Attributes\DoNotInterceptAttribute.cs" />
     <Compile Include="Binding\Syntax\IBindingInlineArgumentSyntax.cs" />
-    <Compile Include="Infrastructure\Components\IComponentContainer.cs" />
-    <Compile Include="Infrastructure\Components\StandardComponentContainer.cs" />
+    <Compile Include="Infrastructure\Components\Container\IComponentContainer.cs" />
+    <Compile Include="Infrastructure\Components\Container\StandardComponentContainer.cs" />
     <Compile Include="Infrastructure\ContextCache.cs" />
     <Compile Include="Infrastructure\Delegates\Action.cs" />
+    <Compile Include="Infrastructure\Extensions\ExtensionsForIEnumerable.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Infrastructure\Extensions\ExtensionsForMethodBase.cs" />
     <Compile Include="Infrastructure\FrameworkPatches\ExtensionAttribute.cs" />
-    <Compile Include="Infrastructure\FrameworkPatches\ExtensionsForSilverlightList.cs" />
     <Compile Include="Infrastructure\Structures\TypedCollection.cs" />
     <Compile Include="Infrastructure\Utility\ExceptionThrower.cs" />
     <Compile Include="Interception\InterceptorFactoryMethod.cs" />
@@ -108,6 +111,8 @@
     <Compile Include="Planning\Heuristics\Constructor\StandardConstructorHeuristic.cs" />
     <Compile Include="Planning\Heuristics\Constructor\IConstructorHeuristic.cs" />
     <Compile Include="Planning\Heuristics\Property\StandardPropertyHeuristic.cs" />
+    <Compile Include="Planning\Plans\StandardActivationPlanFactory.cs" />
+    <Compile Include="Planning\Plans\IActivationPlanFactory.cs" />
     <Compile Include="Resolution\Plugins\StandardResolverPlugin.cs" />
     <Compile Include="Tracking\InstanceTrackingMode.cs" />
     <Compile Include="Tracking\Scope\StandardScopeFactory.cs" />
@@ -122,8 +127,6 @@
     <Compile Include="Interfaces\IContextAware.cs" />
     <Compile Include="Infrastructure\Attributes\InterceptAttribute.cs" />
     <Compile Include="Infrastructure\Utility\ReflectionDictionaryBuilder.cs" />
-    <Compile Include="Infrastructure\InstanceWithContext.cs" />
-    <Compile Include="Infrastructure\WeakReferenceComparer.cs" />
     <Compile Include="Infrastructure\PredicateCondition.cs" />
     <Compile Include="Infrastructure\Utility\Format.cs" />
     <Compile Include="Injection\InjectorFactoryBase.cs" />

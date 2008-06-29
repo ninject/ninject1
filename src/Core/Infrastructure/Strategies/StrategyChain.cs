@@ -28,15 +28,13 @@ namespace Ninject.Core.Infrastructure
 	/// A chain of strategies, owned by the same object, that will be executed in order to
 	/// satisfy the implementation of a procedure.
 	/// </summary>
-	/// <typeparam name="TOwner">The type of object that owns the strategies.</typeparam>
 	/// <typeparam name="TStrategy">The type of strategy stored in the collection.</typeparam>
-	public class StrategyChain<TOwner, TStrategy> : DisposableObject, IStrategyChain<TOwner, TStrategy>
-		where TStrategy : class, IStrategy<TOwner>
-		where TOwner : class, IKernelComponent
+	public class StrategyChain<TStrategy> : DisposableObject, IStrategyChain<TStrategy>
+		where TStrategy : IStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private List<TStrategy> _items = new List<TStrategy>();
+		private List<TStrategy> _strategies = new List<TStrategy>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -48,14 +46,14 @@ namespace Ninject.Core.Infrastructure
 		/// <summary>
 		/// Gets or sets the owner of the collection's strategies.
 		/// </summary>
-		public TOwner Owner { get; set; }
+		public IHaveStrategies<TStrategy> Owner { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the count of strategies stored in the collection.
 		/// </summary>
 		public int Count
 		{
-			get { return _items.Count; }
+			get { return _strategies.Count; }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -68,11 +66,11 @@ namespace Ninject.Core.Infrastructure
 		{
 			if (disposing && !IsDisposed)
 			{
-				DisposeCollection(_items);
+				DisposeCollection(_strategies);
 
 				Kernel = null;
 				Owner = null;
-				_items = null;
+				_strategies = null;
 			}
 
 			base.Dispose(disposing);
@@ -84,7 +82,7 @@ namespace Ninject.Core.Infrastructure
 		/// Creates a new StrategyChain.
 		/// </summary>
 		/// <param name="owner">The owner of the collection's strategies.</param>
-		public StrategyChain(TOwner owner)
+		public StrategyChain(IHaveStrategies<TStrategy> owner)
 		{
 			Owner = owner;
 		}
@@ -101,7 +99,7 @@ namespace Ninject.Core.Infrastructure
 			Ensure.NotDisposed(this);
 
 			ConnectItem(item);
-			_items.Insert(0, item);
+			_strategies.Insert(0, item);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -114,7 +112,7 @@ namespace Ninject.Core.Infrastructure
 			Ensure.NotDisposed(this);
 
 			ConnectItem(item);
-			_items.Add(item);
+			_strategies.Add(item);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -125,17 +123,7 @@ namespace Ninject.Core.Infrastructure
 			where T : TStrategy
 		{
 			Ensure.NotDisposed(this);
-
-			List<TStrategy> matchingItems = new List<TStrategy>();
-
-			foreach (TStrategy item in _items)
-			{
-				if (item is T)
-					matchingItems.Add(item);
-			}
-
-			foreach (TStrategy item in matchingItems)
-				Remove(item);
+			_strategies.Where(s => s is T).Each(s => Remove(s));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -145,10 +133,8 @@ namespace Ninject.Core.Infrastructure
 		{
 			Ensure.NotDisposed(this);
 
-			foreach (TStrategy item in _items)
-				DisconnectItem(item);
-
-			_items.Clear();
+			_strategies.Each(DisconnectItem);
+			_strategies.Clear();
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -161,7 +147,7 @@ namespace Ninject.Core.Infrastructure
 			Ensure.ArgumentNotNull(item, "item");
 			Ensure.NotDisposed(this);
 
-			return _items.Contains(item);
+			return _strategies.Contains(item);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -174,11 +160,25 @@ namespace Ninject.Core.Infrastructure
 			Ensure.ArgumentNotNull(item, "item");
 			Ensure.NotDisposed(this);
 
-			if (!_items.Contains(item))
+			if (!_strategies.Contains(item))
 				return false;
 
 			DisconnectItem(item);
-			return _items.Remove(item);
+			return _strategies.Remove(item);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Executes the specified callback on the chain of strategies, until the chain is complete
+		/// or one of the callbacks returns <see cref="StrategyResult.Stop"/>.
+		/// </summary>
+		/// <param name="callback">The callback to execute.</param>
+		public void ExecuteForChain(Func<TStrategy, StrategyResult> callback)
+		{
+			foreach (TStrategy strategy in _strategies)
+			{
+				if (callback(strategy) == StrategyResult.Stop)
+					break;
+			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -189,7 +189,7 @@ namespace Ninject.Core.Infrastructure
 		/// <param name="item">The strategy to connect.</param>
 		protected void ConnectItem(TStrategy item)
 		{
-			item.Connect(Kernel, Owner);
+			item.Connect(Kernel);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -205,7 +205,7 @@ namespace Ninject.Core.Infrastructure
 		#region IEnumerable Implementation
 		IEnumerator<TStrategy> IEnumerable<TStrategy>.GetEnumerator()
 		{
-			foreach (TStrategy item in _items)
+			foreach (TStrategy item in _strategies)
 				yield return item;
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -214,7 +214,7 @@ namespace Ninject.Core.Infrastructure
 		/// </summary>
 		public IEnumerator GetEnumerator()
 		{
-			foreach (TStrategy item in _items)
+			foreach (TStrategy item in _strategies)
 				yield return item;
 		}
 		#endregion

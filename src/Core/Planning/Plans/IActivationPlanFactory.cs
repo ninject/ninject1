@@ -18,31 +18,26 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Binding;
+using Ninject.Core.Behavior;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Planning.Targets;
-using Ninject.Core.Resolution.Plugins;
-using Ninject.Core.Resolution.Resolvers;
+
 #endregion
 
-namespace Ninject.Core.Resolution
+namespace Ninject.Core.Planning
 {
 	/// <summary>
-	/// A baseline definition of a <see cref="IResolverFactory"/>.
+	/// Creates <see cref="IActivationPlan"/>s that describe the means by which an object should
+	/// be created and injected.
 	/// </summary>
-	public abstract class ResolverFactoryBase : KernelComponentWithPlugins<ITarget, IResolverFactoryPlugin>, IResolverFactory
+	public interface IActivationPlanFactory : IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a dependency resolver for the specified binding and target.
+		/// Creates an empty activation plan for the specified type.
 		/// </summary>
-		/// <param name="binding">The binding requesting the injection.</param>
-		/// <param name="target">The target whose value the resolver will resolve.</param>
-		/// <returns>The newly-created dependency resolver.</returns>
-		public IResolver Create(IBinding binding, ITarget target)
-		{
-			return FindPlugin(target).Create(binding, target);
-		}
+		/// <param name="type">The type to create the plan for.</param>
+		/// <returns>The specified plan.</returns>
+		IActivationPlan Create(Type type);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

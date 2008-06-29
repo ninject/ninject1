@@ -56,11 +56,11 @@ namespace Ninject.Core.Behavior
 			{
 				var activator = Kernel.Components.Get<IActivator>();
 
-				foreach (IContext context in _references)
+				_references.Each(ctx =>
 				{
-					activator.Destroy(context);
-					DisposeMember(context);
-				}
+					activator.Destroy(ctx);
+					DisposeMember(ctx);
+				});
 
 				_references.Clear();
 			}

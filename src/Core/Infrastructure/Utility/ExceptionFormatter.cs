@@ -83,6 +83,29 @@ namespace Ninject.Core.Infrastructure
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region CannotUnloadModuleThatIsNotLoaded
+		public static string CannotUnloadModuleThatIsNotLoaded(IModule module)
+		{
+			return String.Format("Cannot unload module '{0}'. The module has not been loaded.", Format.Type(module.GetType()));
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region ContextDoesNotContainInstanceToRelease
+		public static string ContextDoesNotContainInstanceToRelease(IContext context)
+		{
+			using (var sw = new StringWriter())
+			{
+				sw.WriteLine("Cannot release instance of service {0}: The context does not contain an instance to destroy.", Format.Type(context.Service));
+				sw.WriteLine("Attempted to release instance activated via {0}", Format.Context(context));
+
+				if (context.HasDebugInfo)
+					sw.WriteLine("     declared by {0}", context.Binding.DebugInfo);
+
+				return sw.ToString();
+			}
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region CouldNotCreateInstanceOfType
 		public static string CouldNotCreateInstanceOfType(Type type, Exception exception)
 		{

@@ -18,51 +18,57 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 #endregion
 
 namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// An object that implements a subset of a process.
+	/// A kernel component that conditionally delegates to one or more plugins.
 	/// </summary>
-	public interface IStrategy : IDisposable
+	/// <typeparam name="TSubject">The type of input that determines which plugin will be used.</typeparam>
+	/// <typeparam name="TPlugin">The type plugin that the factory supports.</typeparam>
+	public abstract class KernelComponentWithPlugins<TSubject, TPlugin> : KernelComponentBase, IHavePlugins<TSubject, TPlugin>
+		where TPlugin : class, ICondition<TSubject>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the kernel associated with the strategy.
+		/// Gets or sets the default plugin, which will be used if no conditional plugins match.
 		/// </summary>
-		IKernel Kernel { get; }
+		/// <value></value>
+		public TPlugin DefaultPlugin { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets a value indicating whether the strategy has been connected to its environment.
+		/// Gets the collection of plugins.
 		/// </summary>
-		bool IsConnected { get; }
+		public ICollection<TPlugin> Plugins { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets a value indicating whether the strategy has been disposed.
+		/// Initializes a new instance of the <see cref="KernelComponentWithPlugins{TSubject,TPlugin}"/> class.
 		/// </summary>
-		bool IsDisposed { get; }
+		protected KernelComponentWithPlugins()
+		{
+			Plugins = new List<TPlugin>();
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that the strategy has been connected to its environment.
+		/// Validates the component and throws an exception if it is not configured properly.
 		/// </summary>
-		event EventHandler Connected;
+		public override void Validate()
+		{
+			if (DefaultPlugin == null)
+				throw new InvalidOperationException(ExceptionFormatter.PluggableFactoryComponentMissingDefaultPlugin(GetType()));
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that the strategy has been disconnected from its environment.
+		/// Finds the first plugin that matches the specified subject.
 		/// </summary>
-		event EventHandler Disconnected;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Connects the strategy to its environment.
-		/// </summary>
-		/// <param name="kernel">The kernel to associate the strategy with.</param>
-		void Connect(IKernel kernel);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Disconnects the strategy from its environment.
-		/// </summary>
-		void Disconnect();
+		/// <param name="subject">The item to match.</param>
+		/// <returns>The matching plugin, or <see langword="null"/> if none matches.</returns>
+		public TPlugin FindPlugin(TSubject subject)
+		{
+			return Plugins.Find(p => p.Matches(subject)) ?? DefaultPlugin;
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

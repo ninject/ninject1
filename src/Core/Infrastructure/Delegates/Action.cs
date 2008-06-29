@@ -26,14 +26,7 @@ namespace Ninject.Core.Infrastructure
 {
 	/*----------------------------------------------------------------------------------------*/
 	/// <summary>
-	/// A procedure that accepts one arguments.
-	/// </summary>
-	/// <typeparam name="A0">The type of the first argument.</typeparam>
-	/// <param name="arg0">The first argument.</param>
-	public delegate void Action<A0>(A0 arg0);
-	/*----------------------------------------------------------------------------------------*/
-	/// <summary>
-	/// A procedure that accepts one arguments.
+	/// A procedure that accepts two arguments.
 	/// </summary>
 	/// <typeparam name="A0">The type of the first argument.</typeparam>
 	/// <typeparam name="A1">The type of the second argument.</typeparam>
@@ -42,7 +35,7 @@ namespace Ninject.Core.Infrastructure
 	public delegate void Action<A0, A1>(A0 arg0, A1 arg1);
 	/*----------------------------------------------------------------------------------------*/
 	/// <summary>
-	/// A procedure that accepts one arguments.
+	/// A procedure that accepts three arguments.
 	/// </summary>
 	/// <typeparam name="A0">The type of the first argument.</typeparam>
 	/// <typeparam name="A1">The type of the second argument.</typeparam>
@@ -53,7 +46,7 @@ namespace Ninject.Core.Infrastructure
 	public delegate void Action<A0, A1, A2>(A0 arg0, A1 arg1, A2 arg2);
 	/*----------------------------------------------------------------------------------------*/
 	/// <summary>
-	/// A procedure that accepts one arguments.
+	/// A procedure that accepts four arguments.
 	/// </summary>
 	/// <typeparam name="A0">The type of the first argument.</typeparam>
 	/// <typeparam name="A1">The type of the second argument.</typeparam>

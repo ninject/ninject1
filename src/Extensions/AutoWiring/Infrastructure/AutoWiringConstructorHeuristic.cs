@@ -45,41 +45,11 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 		/// <returns>The member that should be injected.</returns>
 		public ConstructorInfo Select(IBinding binding, Type type, IActivationPlan plan, IList<ConstructorInfo> candidates)
 		{
-			// If there was only a single constructor defined for the type, try to use it.
 			if (candidates.Count == 1)
 				return candidates[0];
 
-			ConstructorInfo bestCandidate = null;
-			int bestScore = 0;
-
-			foreach (ConstructorInfo candidate in candidates)
-			{
-				int score = GetScoreForCandidate(candidate);
-
-				if (score > bestScore)
-				{
-					bestCandidate = candidate;
-					bestScore = score;
-				}
-			}
-
-			return bestCandidate;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private int GetScoreForCandidate(ConstructorInfo candidate)
-		{
 			var registry = Kernel.Components.Get<IBindingRegistry>();
-
-			Type[] types = candidate.GetParameterTypes();
-			int score = 0;
-
-			foreach (Type type in types)
-			{
-				if (registry.HasBinding(type))
-					score++;
-			}
-
-			return score;
+			return candidates.Best(c => c.GetParameterTypes().Count(registry.HasBinding));
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

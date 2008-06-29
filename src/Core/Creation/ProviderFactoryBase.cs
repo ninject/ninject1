@@ -27,7 +27,7 @@ namespace Ninject.Core.Creation
 	/// <summary>
 	/// A baseline definition of a <see cref="IProviderFactory"/>.
 	/// </summary>
-	public class ProviderFactoryBase : PluggableFactoryComponentBase<Type, IProviderFactoryPlugin>, IProviderFactory
+	public class ProviderFactoryBase : KernelComponentWithPlugins<Type, IProviderFactoryPlugin>, IProviderFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

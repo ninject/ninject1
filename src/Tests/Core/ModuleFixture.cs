@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core;
+using Ninject.Core.Binding;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 #endregion
@@ -34,14 +35,46 @@ namespace Ninject.Tests
 		{
 			using (var kernel = new StandardKernel(new MockModuleA(), new MockModuleB()))
 			{
-				IServiceA one = kernel.Get<IServiceA>();
+				var one = kernel.Get<IServiceA>();
 				Assert.That(one, Is.Not.Null);
 				Assert.That(one, Is.InstanceOfType(typeof(ServiceImplA)));
 
-				IServiceB two = kernel.Get<IServiceB>();
+				var two = kernel.Get<IServiceB>();
 				Assert.That(two, Is.Not.Null);
 				Assert.That(two, Is.InstanceOfType(typeof(ServiceImplB)));
 			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void BindingsAreRemovedWhenModulesAreUnloaded()
+		{
+			var moduleA = new MockModuleA();
+			var moduleB = new MockModuleB();
+
+			using (var kernel = new StandardKernel(moduleA, moduleB))
+			{
+				var one = kernel.Get<IServiceA>();
+				Assert.That(one, Is.Not.Null);
+				Assert.That(one, Is.InstanceOfType(typeof(ServiceImplA)));
+
+				var two = kernel.Get<IServiceB>();
+				Assert.That(two, Is.Not.Null);
+				Assert.That(two, Is.InstanceOfType(typeof(ServiceImplB)));
+
+				kernel.Unload(moduleA);
+
+				var bindingRegistry = kernel.Components.Get<IBindingRegistry>();
+				Assert.That(bindingRegistry.HasBinding(typeof(IServiceA)), Is.False);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test, ExpectedException(typeof(InvalidOperationException))]
+		public void TryingToUnloadAModuleThatIsNotLoadedThrowsException()
+		{
+			var moduleA = new MockModuleA();
+
+			using (var kernel = new StandardKernel())
+				kernel.Unload(moduleA);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

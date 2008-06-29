@@ -21,6 +21,8 @@ using System;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution.Plugins;
+
 #endregion
 
 namespace Ninject.Core.Resolution
@@ -28,7 +30,7 @@ namespace Ninject.Core.Resolution
 	/// <summary>
 	/// Creates <see cref="IResolver"/>s that can resolve dependencies.
 	/// </summary>
-	public interface IResolverFactory : IKernelComponent
+	public interface IResolverFactory : IKernelComponent, IHavePlugins<ITarget, IResolverFactoryPlugin>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

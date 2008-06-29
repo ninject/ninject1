@@ -33,18 +33,11 @@ namespace Ninject.Integration.DynamicProxy2
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Prepares the module for being loaded. Can be used to connect component dependencies.
-		/// </summary>
-		public override void BeforeLoad()
-		{
-			Kernel.Components.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Loads the module into the kernel.
 		/// </summary>
 		public override void Load()
 		{
+			Kernel.Components.Connect<IProxyFactory>(new DynamicProxy2ProxyFactory());
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

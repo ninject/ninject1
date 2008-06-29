@@ -28,69 +28,9 @@ namespace Ninject.Core.Activation
 	/// The baseline implemenation of an activator with no strategies installed. This type can be
 	/// extended to customize the activation process.
 	/// </summary>
-	public abstract class ActivatorBase : KernelComponentBase, IActivator
+	public abstract class ActivatorBase : KernelComponentWithStrategies<IActivationStrategy>, IActivator
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Properties
-		/// <summary>
-		/// The chain of activation strategies.
-		/// </summary>
-		public IStrategyChain<IActivator, IActivationStrategy> Strategies { get; private set; }
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Event Sources
-		/// <summary>
-		/// Called when the component is connected to its environment.
-		/// </summary>
-		/// <param name="args">The event arguments.</param>
-		protected override void OnConnected(EventArgs args)
-		{
-			Strategies.Kernel = Kernel;
-
-			base.OnConnected(args);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Called when the component is disconnected from its environment.
-		/// </summary>
-		/// <param name="args">The event arguments.</param>
-		protected override void OnDisconnected(EventArgs args)
-		{
-			base.OnDisconnected(args);
-
-			if (Strategies != null)
-				Strategies.Kernel = null;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Disposal
-		/// <summary>
-		/// Releases all resources held by the object.
-		/// </summary>
-		/// <param name="disposing"><see langword="True"/> if managed objects should be disposed, otherwise <see langword="false"/>.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && !IsDisposed)
-			{
-				DisposeCollection(Strategies);
-				Strategies = null;
-			}
-
-			base.Dispose(disposing);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ActivatorBase"/> class.
-		/// </summary>
-		protected ActivatorBase()
-		{
-			Strategies = new StrategyChain<IActivator, IActivationStrategy>(this);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
 		/// <summary>
 		/// Activates an instance by executing the chain of activation strategies.
 		/// </summary>
@@ -102,12 +42,7 @@ namespace Ninject.Core.Activation
 
 			if (context.Instance == null)
 			{
-				// Execute the "before create" phase.
-				foreach (IActivationStrategy strategy in Strategies)
-				{
-					if (strategy.BeforeCreate(context) == StrategyResult.Stop)
-						break;
-				}
+				Strategies.ExecuteForChain(s => s.BeforeCreate(context));
 
 				// Request a new instance from the binding's provider.
 				context.Instance = context.Binding.Provider.Create(context);
@@ -115,27 +50,11 @@ namespace Ninject.Core.Activation
 				if (context.Instance == null)
 					throw new ActivationException(ExceptionFormatter.ProviderCouldNotCreateInstance(context));
 
-				// Execute the "after create" phase.
-				foreach (IActivationStrategy strategy in Strategies)
-				{
-					if (strategy.AfterCreate(context) == StrategyResult.Stop)
-						break;
-				}
+				Strategies.ExecuteForChain(s => s.AfterCreate(context));
 			}
 
-			// Execute the "initialize" phase.
-			foreach (IActivationStrategy strategy in Strategies)
-			{
-				if (strategy.Initialize(context) == StrategyResult.Stop)
-					break;
-			}
-
-			// Execute the "after initialize" phase.
-			foreach (IActivationStrategy strategy in Strategies)
-			{
-				if (strategy.AfterInitialize(context) == StrategyResult.Stop)
-					break;
-			}
+			Strategies.ExecuteForChain(s => s.Initialize(context));
+			Strategies.ExecuteForChain(s => s.AfterInitialize(context));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -147,32 +66,13 @@ namespace Ninject.Core.Activation
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);
 
-			// TODO
 			if (context.Instance == null)
-				throw new InvalidOperationException("Context does not contain an instance to destroy");
+				throw new InvalidOperationException(ExceptionFormatter.ContextDoesNotContainInstanceToRelease(context));
 
-			// Execute the "before destroy" phase.
-			foreach (IActivationStrategy strategy in Strategies)
-			{
-				if (strategy.BeforeDestroy(context) == StrategyResult.Stop)
-					break;
-			}
-
-			// Execute the "destroy" phase.
-			foreach (IActivationStrategy strategy in Strategies)
-			{
-				if (strategy.Destroy(context) == StrategyResult.Stop)
-					break;
-			}
-
-			// Execute the "after destroy" phase.
-			foreach (IActivationStrategy strategy in Strategies)
-			{
-				if (strategy.AfterDestroy(context) == StrategyResult.Stop)
-					break;
-			}
+			Strategies.ExecuteForChain(s => s.BeforeDestroy(context));
+			Strategies.ExecuteForChain(s => s.Destroy(context));
+			Strategies.ExecuteForChain(s => s.AfterDestroy(context));
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

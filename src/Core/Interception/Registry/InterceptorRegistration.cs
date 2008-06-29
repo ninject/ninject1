@@ -26,7 +26,7 @@ namespace Ninject.Core.Interception
 	/// <summary>
 	/// An interceptor registration.
 	/// </summary>
-	public class InterceptorRegistration : IComparable<InterceptorRegistration>
+	public class InterceptorRegistration
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -72,13 +72,6 @@ namespace Ninject.Core.Interception
 		{
 			Ensure.ArgumentNotNull(condition, "condition");
 			Condition = condition;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region IComparable Implementation
-		int IComparable<InterceptorRegistration>.CompareTo(InterceptorRegistration other)
-		{
-			return Order - other.Order;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

@@ -51,7 +51,7 @@ namespace Ninject.Core.Tracking
 		{
 			if (disposing && !IsDisposed)
 			{
-				_instances.ForEach(obj => Kernel.Release(obj));
+				_instances.Each(obj => Kernel.Release(obj));
 				_instances.Clear();
 				_instances = null;
 

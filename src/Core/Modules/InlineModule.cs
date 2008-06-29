@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core
@@ -51,7 +52,7 @@ namespace Ninject.Core
 		/// </summary>
 		public override void Load()
 		{
-			_loadCallbacks.ForEach(callback => callback(this));
+			_loadCallbacks.Each(callback => callback(this));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

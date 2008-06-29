@@ -44,17 +44,8 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
 		public bool ShouldInject(IBinding binding, Type type, IActivationPlan plan, MethodInfo candidate)
 		{
-			Type[] parameters = candidate.GetParameterTypes();
 			var registry = Kernel.Components.Get<IBindingRegistry>();
-
-			foreach (Type service in parameters)
-			{
-				// Only inject the method if a valid binding exists for each parameter.
-				if (!registry.HasBinding(service))
-					return false;
-			}
-
-			return true;
+			return candidate.GetParameterTypes().All(registry.HasBinding);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

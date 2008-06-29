@@ -44,10 +44,7 @@ namespace Ninject.Core.Binding
 		{
 			if (disposing && !IsDisposed)
 			{
-				// Release all of the registered bindings.
-				foreach (List<IBinding> bindings in _bindings.Values)
-					DisposeCollection(bindings);
-
+				_bindings.Values.Each(DisposeCollection);
 				_bindings.Clear();
 			}
 
@@ -90,7 +87,7 @@ namespace Ninject.Core.Binding
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Releasing {0}", Format.Binding(binding));
 
-				if (!_bindings.ContainsKey(service) || !_bindings[service].Remove(binding))
+				if (!_bindings.ContainsKey(service) || !_bindings.Remove(service, binding))
 					throw new InvalidOperationException(ExceptionFormatter.CannotReleaseUnregisteredBinding(binding));
 			}
 		}
@@ -187,14 +184,14 @@ namespace Ninject.Core.Binding
 
 					// Ensure there are no bindings registered without providers.
 
-					List<IBinding> incompleteBindings = bindings.FindAll(b => b.Provider == null);
+					List<IBinding> incompleteBindings = bindings.Where(b => b.Provider == null).ToList();
 
 					if (incompleteBindings.Count > 0)
 						throw new InvalidOperationException(ExceptionFormatter.IncompleteBindingsRegistered(service, incompleteBindings));
 
 					// Ensure there is at most one default binding declared for a service.
 
-					List<IBinding> defaultBindings = bindings.FindAll(b => b.IsDefault);
+					List<IBinding> defaultBindings = bindings.Where(b => b.IsDefault).ToList();
 
 					if (defaultBindings.Count > 1)
 						throw new NotSupportedException(ExceptionFormatter.MultipleDefaultBindingsRegistered(service, defaultBindings));

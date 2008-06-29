@@ -33,18 +33,11 @@ namespace Ninject.Integration.NLog
 	public class NLogModule : StandardModule
 	{
 		/// <summary>
-		/// Prepares the module for being loaded. Can be used to connect component dependencies.
-		/// </summary>
-		public override void BeforeLoad()
-		{
-			Kernel.Components.Connect<ILoggerFactory>(new NLogLoggerFactory());
-		}
-
-		/// <summary>
 		/// Loads the module into the kernel.
 		/// </summary>
 		public override void Load()
 		{
+			Kernel.Components.Connect<ILoggerFactory>(new NLogLoggerFactory());
 			Bind<ILogger>().To<NLogLogger>();
 		}
 	}

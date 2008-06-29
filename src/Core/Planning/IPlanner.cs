@@ -28,13 +28,8 @@ namespace Ninject.Core.Planning
 	/// <summary>
 	/// Creates activation plans by examining types and collecting metadata.
 	/// </summary>
-	public interface IPlanner : IKernelComponent
+	public interface IPlanner : IKernelComponent, IHaveStrategies<IPlanningStrategy>
 	{
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// The chain of strategies that contribute to the creation and destruction of activation plans.
-		/// </summary>
-		IStrategyChain<IPlanner, IPlanningStrategy> Strategies { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets an activation plan for the specified type, building it first if necessary.

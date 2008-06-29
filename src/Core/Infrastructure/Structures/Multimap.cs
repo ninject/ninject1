@@ -94,8 +94,13 @@ namespace Ninject.Core.Infrastructure
 		{
 			if (!_items.ContainsKey(key))
 				return false;
-			else
-				return _items[key].Remove(value);
+
+			bool wasFound = _items[key].Remove(value);
+			
+			if (wasFound && _items[key].Count == 0)
+				_items.Remove(key);
+
+			return wasFound;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -135,18 +140,6 @@ namespace Ninject.Core.Infrastructure
 		public bool ContainsValue(K key, V value)
 		{
 			return (_items.ContainsKey(key) && _items[key].Contains(value));
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Functor Methods
-		/// <summary>
-		/// Applies the specified action to each key/value pair of the multimap.
-		/// </summary>
-		/// <param name="action">The action to apply.</param>
-		public void ForEach(Action<K, List<V>> action)
-		{
-			foreach (KeyValuePair<K, List<V>> pair in _items)
-				action(pair.Key, pair.Value);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

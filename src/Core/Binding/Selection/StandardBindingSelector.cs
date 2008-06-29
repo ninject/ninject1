@@ -123,13 +123,13 @@ namespace Ninject.Core.Binding
 		{
 			var matches = new BindingMatchCollection();
 
-			foreach (IBinding candidate in candidates)
+			candidates.Each(candidate =>
 			{
 				if (candidate.IsDefault)
 					matches.DefaultBinding = candidate;
 				else if (candidate.Matches(context))
 					matches.ConditionalBindings.Add(candidate);
-			}
+			});
 
 			return matches;
 		}

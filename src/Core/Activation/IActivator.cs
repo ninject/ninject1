@@ -27,13 +27,8 @@ namespace Ninject.Core.Activation
 	/// <summary>
 	/// Performs the actual creation and destruction of instances.
 	/// </summary>
-	public interface IActivator : IKernelComponent
+	public interface IActivator : IKernelComponent, IHaveStrategies<IActivationStrategy>
 	{
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// The chain of activation strategies.
-		/// </summary>
-		IStrategyChain<IActivator, IActivationStrategy> Strategies { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Activates an instance by executing the chain of activation strategies.

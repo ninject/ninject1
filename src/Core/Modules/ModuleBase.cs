@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Interception;
@@ -54,6 +55,11 @@ namespace Ninject.Core
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets the collection of bindings that were defined by the module.
+		/// </summary>
+		public ICollection<IBinding> Bindings { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the logger associated with the module.
 		/// </summary>
 		protected ILogger Logger
@@ -86,26 +92,35 @@ namespace Ninject.Core
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
+		#region Constructors
 		/// <summary>
-		/// Prepares the module for being loaded. Can be used to connect component dependencies.
+		/// Initializes a new instance of the <see cref="ModuleBase{TBinder}"/> class.
 		/// </summary>
-		public virtual void BeforeLoad()
+		protected ModuleBase()
 		{
+			Bindings = new List<IBinding>();
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods: Load/Unload
 		/// <summary>
 		/// Loads the module into the kernel.
 		/// </summary>
 		public abstract void Load();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Executes any tasks after the module has been loaded into the kernel.
+		/// Unloads the module from the kernel.
 		/// </summary>
-		public virtual void AfterLoad()
+		public virtual void Unload()
 		{
+			if (Kernel == null)
+				throw new InvalidOperationException(ExceptionFormatter.CannotUnloadModuleThatIsNotLoaded(this));
+
+			Bindings.Each(Kernel.RemoveBinding);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods: Binding
 		/// <summary>
 		/// Begins a binding definition.
 		/// </summary>
@@ -125,7 +140,9 @@ namespace Ninject.Core
 		{
 			return DoBind(type);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods: Dynamic Interception
 		/// <summary>
 		/// Declares a dynamic interception definition.
 		/// </summary>
@@ -271,6 +288,9 @@ namespace Ninject.Core
 
 			// Register the binding in the kernel.
 			Kernel.AddBinding(binding);
+
+			// Store the binding to allow it to be un-registered if the module is unloaded.
+			Bindings.Add(binding);
 
 			return CreateBinder(binding);
 		}

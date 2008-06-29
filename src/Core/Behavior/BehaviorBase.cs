@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
@@ -85,6 +86,26 @@ namespace Ninject.Core.Behavior
 		/// </summary>
 		/// <param name="context">The activation context.</param>
 		public abstract void Release(IContext context);
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
+		/// <summary>
+		/// Destroys the instances in each of the specified activation contexts.
+		/// </summary>
+		/// <param name="contexts">The series of activation contexts to destroy.</param>
+		protected void DestroyAll(IEnumerable<IContext> contexts)
+		{
+			lock (this)
+			{
+				var activator = Kernel.Components.Get<IActivator>();
+
+				contexts.Each(ctx =>
+				{
+					activator.Destroy(ctx);
+					DisposeMember(ctx);
+				});
+			}
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

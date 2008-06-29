@@ -27,9 +27,9 @@ namespace Ninject.Core.Infrastructure
 	/// A chain of strategies, owned by the same object, that will be executed in order to
 	/// satisfy the implementation of a procedure.
 	/// </summary>
-	/// <typeparam name="TOwner">The type of object that owns the strategies.</typeparam>
 	/// <typeparam name="TStrategy">The type of strategy stored in the collection.</typeparam>
-	public interface IStrategyChain<TOwner, TStrategy> : IEnumerable<TStrategy>
+	public interface IStrategyChain<TStrategy> : IEnumerable<TStrategy>
+		where TStrategy : IStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Ninject.Core.Infrastructure
 		/// <summary>
 		/// Gets or sets the owner of the collection's strategies.
 		/// </summary>
-		TOwner Owner { get; set; }
+		IHaveStrategies<TStrategy> Owner { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the count of strategies stored in the collection.
@@ -83,6 +83,13 @@ namespace Ninject.Core.Infrastructure
 		/// <param name="item">The strategy to remove.</param>
 		/// <returns><see langword="True"/> if the strategy was removed successfully, otherwise <see langword="false"/>.</returns>
 		bool Remove(TStrategy item);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Executes the specified callback on the chain of strategies, until the chain is complete
+		/// or one of the callbacks returns <see cref="StrategyResult.Stop"/>.
+		/// </summary>
+		/// <param name="callback">The callback to execute.</param>
+		void ExecuteForChain(Func<TStrategy, StrategyResult> callback);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

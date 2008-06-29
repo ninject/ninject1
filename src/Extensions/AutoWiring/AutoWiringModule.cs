@@ -32,21 +32,14 @@ namespace Ninject.Extensions.AutoWiring
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Prepares the module for being loaded. Can be used to connect component dependencies.
+		/// Loads the module into the kernel.
 		/// </summary>
-		public override void BeforeLoad()
+		public override void Load()
 		{
 			Kernel.Components.Connect<IConstructorHeuristic>(new AutoWiringConstructorHeuristic());
 			Kernel.Components.Connect<IPropertyHeuristic>(new AutoWiringPropertyHeuristic());
 			Kernel.Components.Connect<IMethodHeuristic>(new AutoWiringMethodHeuristic());
 			Kernel.Components.Connect<IFieldHeuristic>(new AutoWiringFieldHeuristic());
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Loads the module into the kernel.
-		/// </summary>
-		public override void Load()
-		{
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

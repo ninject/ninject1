@@ -18,48 +18,37 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation;
+using System.Collections.Generic;
+
 #endregion
 
 namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// An activated instance of a service, with the context it was activated in. Used to properly
-	/// release instances for services with non-transient behaviors.
+	/// Defines a component that delegates to one or more conditional plugins.
 	/// </summary>
-	public class InstanceWithContext : DisposableObject
+	/// <typeparam name="TSubject">The type of item that will determine which plugin is used.</typeparam>
+	/// <typeparam name="TPlugin">The type of plugin.</typeparam>
+	public interface IHavePlugins<TSubject, TPlugin>
+		where TPlugin : ICondition<TSubject>
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Properties
 		/// <summary>
-		/// The contextualized instance.
+		/// Gets or sets the default plugin, which will be used if no conditional plugins match.
 		/// </summary>
-		public object Instance { get; set; }
+		TPlugin DefaultPlugin { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// The context in which the instance was activated.
+		/// Gets the collection of plugins.
 		/// </summary>
-		public IContext Context { get; set; }
-		#endregion
+		ICollection<TPlugin> Plugins { get; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Disposal
 		/// <summary>
-		/// Releases all resources currently held by the object.
+		/// Finds the first plugin that matches the specified subject.
 		/// </summary>
-		/// <param name="disposing"><see langword="True"/> if managed objects should be disposed, otherwise <see langword="false"/>.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && !IsDisposed)
-			{
-				DisposeMember(Context);
-
-				Instance = null;
-				Context = null;
-			}
-
-			base.Dispose(disposing);
-		}
-		#endregion
+		/// <param name="subject">The item to match.</param>
+		/// <returns>The matching plugin, or <see langword="null"/> if none matches.</returns>
+		TPlugin FindPlugin(TSubject subject);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

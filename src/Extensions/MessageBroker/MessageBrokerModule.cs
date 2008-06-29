@@ -54,9 +54,9 @@ namespace Ninject.Extensions.MessageBroker
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
-		/// Prepares the module for being loaded. Can be used to connect component dependencies.
+		/// Loads the module into the kernel.
 		/// </summary>
-		public override void BeforeLoad()
+		public override void Load()
 		{
 			Kernel.Components.Connect<IMessageBroker>(MessageBroker ?? new StandardMessageBroker());
 			Kernel.Components.Connect<IMessageChannelFactory>(ChannelFactory ?? new StandardMessageChannelFactory());
@@ -65,10 +65,14 @@ namespace Ninject.Extensions.MessageBroker
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Loads the module into the kernel.
+		/// Unloads the module from the kernel.
 		/// </summary>
-		public override void Load()
+		public override void Unload()
 		{
+			Kernel.Components.Disconnect<IMessageBroker>();
+			Kernel.Components.Disconnect<IMessageChannelFactory>();
+			Kernel.Components.Disconnect<IMessagePublicationFactory>();
+			Kernel.Components.Disconnect<IMessageSubscriptionFactory>();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

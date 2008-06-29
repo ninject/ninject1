@@ -19,37 +19,23 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+
 #endregion
 
 namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// Compares the targets of two WeakReferences to see if they are the same.
+	/// Defines a component that delegates to a chain of strategies.
 	/// </summary>
-	public class WeakReferenceComparer : IEqualityComparer<WeakReference>
+	/// <typeparam name="TStrategy">The type of strategy stored in the collection.</typeparam>
+	public interface IHaveStrategies<TStrategy>
+		where TStrategy : IStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Determines whether the specified references refer to the same instance.
+		/// Gets the component's chain of strategies.
 		/// </summary>
-		/// <param name="x">The first reference to compare.</param>
-		/// <param name="y">The second reference to compare.</param>
-		/// <returns><see langword="True"/> if the references refer to the same object, otherwise <see langword="false"/>.</returns>
-		public bool Equals(WeakReference x, WeakReference y)
-		{
-			return ReferenceEquals(x.Target, y.Target);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets a hash code for the reference.
-		/// </summary>
-		/// <param name="reference">The reference.</param>
-		/// <returns>The hash code.</returns>
-		public int GetHashCode(WeakReference reference)
-		{
-			Ensure.ArgumentNotNull(reference, "reference");
-			return reference.IsAlive ? reference.Target.GetHashCode() : reference.GetHashCode();
-		}
+		IStrategyChain<TStrategy> Strategies { get; }
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

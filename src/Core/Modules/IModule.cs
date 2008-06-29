@@ -41,20 +41,14 @@ namespace Ninject.Core
 		string Name { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Executes before the module is loaded into the kernel. Can be used to connect component
-		/// dependencies.
-		/// </summary>
-		void BeforeLoad();
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Loads the module into the kernel.
 		/// </summary>
 		void Load();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Executes after the module has been loaded into the kernel.
+		/// Unloads the module from the kernel.
 		/// </summary>
-		void AfterLoad();
+		void Unload();
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

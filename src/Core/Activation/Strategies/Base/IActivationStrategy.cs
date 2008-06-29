@@ -26,7 +26,7 @@ namespace Ninject.Core.Activation.Strategies
 	/// <summary>
 	/// A strategy that contributes to the activation of an instance.
 	/// </summary>
-	public interface IActivationStrategy : IStrategy<IActivator>
+	public interface IActivationStrategy : IStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

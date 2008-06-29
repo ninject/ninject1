@@ -24,49 +24,61 @@ using System.Collections.Generic;
 namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// A kernel component that acts as a factory by delegating to one or more plugins.
+	/// A kernel component that delegates to a chain of strategies.
 	/// </summary>
-	/// <typeparam name="TSubject">The type of input that determines which plugin will be used.</typeparam>
-	/// <typeparam name="TPlugin">The type plugin that the factory supports.</typeparam>
-	public abstract class PluggableFactoryComponentBase<TSubject, TPlugin> : KernelComponentBase
-		where TPlugin : class, ICondition<TSubject>
+	/// <typeparam name="TStrategy">The type of strategies used by the component.</typeparam>
+	public abstract class KernelComponentWithStrategies<TStrategy> : KernelComponentBase, IHaveStrategies<TStrategy>
+		where TStrategy : IStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the default plugin, which will be used if no conditional plugins match.
+		/// Gets the component's chain of strategies.
 		/// </summary>
-		public TPlugin DefaultPlugin { get; set; }
+		public IStrategyChain<TStrategy> Strategies { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets a collection of plug-in factories that can contribute to the creation of specialized items.
+		/// Releases all resources held by the object.
 		/// </summary>
-		public List<TPlugin> Plugins { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PluggableFactoryComponentBase{TSubject, TPlugin}"/> class.
-		/// </summary>
-		protected PluggableFactoryComponentBase()
+		/// <param name="disposing"><see langword="True"/> if managed objects should be disposed, otherwise <see langword="false"/>.</param>
+		protected override void Dispose(bool disposing)
 		{
-			Plugins = new List<TPlugin>();
+			if (disposing && !IsDisposed)
+			{
+				DisposeCollection(Strategies);
+				Strategies = null;
+			}
+
+			base.Dispose(disposing);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Validates the component and throws an exception if it is not configured properly.
+		/// Called when the component is connected to its environment.
 		/// </summary>
-		public override void Validate()
+		/// <param name="args">The event arguments.</param>
+		protected override void OnConnected(EventArgs args)
 		{
-			if (DefaultPlugin == null)
-				throw new InvalidOperationException(ExceptionFormatter.PluggableFactoryComponentMissingDefaultPlugin(GetType()));
+			Strategies.Kernel = Kernel;
+			base.OnConnected(args);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Finds the first plugin that matches the specified subject.
+		/// Called when the component is disconnected from its environment.
 		/// </summary>
-		/// <param name="subject">The item to match.</param>
-		/// <returns>The matching plugin, or <see langword="null"/> if none matches.</returns>
-		public TPlugin FindPlugin(TSubject subject)
+		/// <param name="args">The event arguments.</param>
+		protected override void OnDisconnected(EventArgs args)
 		{
-			return Plugins.Find(p => p.Matches(subject)) ?? DefaultPlugin;
+			base.OnDisconnected(args);
+
+			if (Strategies != null)
+				Strategies.Kernel = null;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="KernelComponentWithStrategies{TStrategy}"/> class.
+		/// </summary>
+		protected KernelComponentWithStrategies()
+		{
+			Strategies = new StrategyChain<TStrategy>(this);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

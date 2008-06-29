@@ -26,7 +26,7 @@ namespace Ninject.Core.Creation
 	/// <summary>
 	/// Creates <see cref="IProvider"/>s that can in turn create types for the kernel.
 	/// </summary>
-	public interface IProviderFactory : IKernelComponent
+	public interface IProviderFactory : IKernelComponent, IHavePlugins<Type, IProviderFactoryPlugin>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

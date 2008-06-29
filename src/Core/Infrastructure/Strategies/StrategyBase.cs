@@ -27,9 +27,7 @@ namespace Ninject.Core.Infrastructure
 	/// A baseline definition of a strategy. This type may be extended to create
 	/// custom strategy types.
 	/// </summary>
-	/// <typeparam name="TOwner">The type of object that owns the strategy.</typeparam>
-	public abstract class StrategyBase<TOwner> : DisposableObject, IStrategy<TOwner>
-		where TOwner : class, IKernelComponent
+	public abstract class StrategyBase : DisposableObject, IStrategy
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
@@ -41,11 +39,6 @@ namespace Ninject.Core.Infrastructure
 		/// Gets the kernel associated with the strategy.
 		/// </summary>
 		public IKernel Kernel { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the owner of the strategy.
-		/// </summary>
-		public TOwner Owner { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the logger associated with the strategy.
@@ -66,7 +59,7 @@ namespace Ninject.Core.Infrastructure
 		/// </summary>
 		public bool IsConnected
 		{
-			get { return (Kernel != null) && (Owner != null); }
+			get { return Kernel != null; }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -117,7 +110,6 @@ namespace Ninject.Core.Infrastructure
 				DisposeMember(_logger);
 
 				Kernel = null;
-				Owner = null;
 				_logger = null;
 			}
 
@@ -130,14 +122,10 @@ namespace Ninject.Core.Infrastructure
 		/// Connects the strategy to its environment.
 		/// </summary>
 		/// <param name="kernel">The kernel to associate the strategy with.</param>
-		/// <param name="owner">The owner of the strategy.</param>
-		public void Connect(IKernel kernel, TOwner owner)
+		public void Connect(IKernel kernel)
 		{
 			Ensure.NotDisposed(this);
-
 			Kernel = kernel;
-			Owner = owner;
-
 			OnConnected(new EventArgs());
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -147,11 +135,8 @@ namespace Ninject.Core.Infrastructure
 		public void Disconnect()
 		{
 			Ensure.NotDisposed(this);
-
 			OnDisconnected(new EventArgs());
-
 			Kernel = null;
-			Owner = null;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

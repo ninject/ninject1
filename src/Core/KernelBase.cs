@@ -51,6 +51,7 @@ namespace Ninject.Core
 			typeof(IBindingRegistry),
 			typeof(IBindingSelector),
 			typeof(IBindingFactory),
+			typeof(IActivationPlanFactory),
 			typeof(IProviderFactory),
 			typeof(IInjectorFactory),
 			typeof(IResolverFactory),
@@ -143,8 +144,6 @@ namespace Ninject.Core
 			Logger = Components.Get<ILoggerFactory>().GetLogger(GetType());
 
 			LoadModules(modules);
-
-			Components.Get<IBindingRegistry>().ValidateBindings();
 			ActivateEagerServices();
 		}
 		#endregion
@@ -157,6 +156,15 @@ namespace Ninject.Core
 		public void AddBinding(IBinding binding)
 		{
 			Components.Get<IBindingRegistry>().Add(binding);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Removes the specified binding from the kernel.
+		/// </summary>
+		/// <param name="binding">The binding to unregister.</param>
+		public void RemoveBinding(IBinding binding)
+		{
+			Components.Get<IBindingRegistry>().Release(binding);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -183,6 +191,30 @@ namespace Ninject.Core
 			Ensure.NotDisposed(this);
 
 			LoadModules(modules);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Unloads the specified modules from the kernel.
+		/// </summary>
+		/// <param name="modules">The modules to unload.</param>
+		public void Unload(params IModule[] modules)
+		{
+			Ensure.ArgumentNotNull(modules, "modules");
+			Ensure.NotDisposed(this);
+
+			UnloadModules(modules);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Unloads the specified modules into the kernel.
+		/// </summary>
+		/// <param name="modules">The modules to unload.</param>
+		public void Unload(IEnumerable<IModule> modules)
+		{
+			Ensure.ArgumentNotNull(modules, "modules");
+			Ensure.NotDisposed(this);
+
+			UnloadModules(modules);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -318,60 +350,13 @@ namespace Ninject.Core
 				throw new InvalidOperationException(ExceptionFormatter.KernelHasNoComponentContainer());
 
 			// Ensure all required components have been connected.
-			foreach (Type component in RequiredComponents)
+			RequiredComponents.Each(component =>
 			{
 				if (!Components.Has(component))
 					throw new InvalidOperationException(ExceptionFormatter.KernelMissingRequiredComponent(component));
-			}
+			});
 
-			// Validate the components' configuration.
 			Components.ValidateAll();
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Loads the specified modules into the kernel.
-		/// </summary>
-		protected virtual void LoadModules(IEnumerable<IModule> modules)
-		{
-			// Inject the kernel into each module.
-			foreach (IModule module in modules)
-				module.Kernel = this;
-
-			// Allow modules a chance to prepare.
-			foreach (IModule module in modules)
-			{
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Preparing module {0} for connection", module.Name);
-
-				module.BeforeLoad();
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Finished preparing module {0}", module.Name);
-			}
-
-			// Load each module into the kernel.
-			foreach (IModule module in modules)
-			{
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Loading module {0}", module.Name);
-
-				module.Load();
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Finished loading module {0}", module.Name);
-			}
-
-			// Allow modules a chance to clean up.
-			foreach (IModule module in modules)
-			{
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Cleaning up module {0}", module.Name);
-
-				module.AfterLoad();
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Finished cleaning up module {0}", module.Name);
-			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -387,10 +372,9 @@ namespace Ninject.Core
 				return;
 			}
 
-			// Get a list of registered services.
-			ICollection<Type> services = Components.Get<IBindingRegistry>().GetServices();
+			var registry = Components.Get<IBindingRegistry>();
 
-			foreach (Type service in services)
+			registry.GetServices().Each(service =>
 			{
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Eagerly activating service {0}", service.Name);
@@ -400,10 +384,52 @@ namespace Ninject.Core
 
 				// Resolve an instance of the component to "prime" the behavior.
 				ResolveInstance(service, context, true);
-			}
+			});
 
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Eager activation complete.");
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods: Modules
+		/// <summary>
+		/// Loads the specified modules into the kernel.
+		/// </summary>
+		protected virtual void LoadModules(IEnumerable<IModule> modules)
+		{
+			modules.Each(m => m.Kernel = this);
+
+			modules.Each(m =>
+			{
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Loading module {0}", m.Name);
+
+				m.Load();
+
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Finished loading module {0}", m.Name);
+			});
+
+			Components.Get<IBindingRegistry>().ValidateBindings();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Unloads the specified modules from the kernel.
+		/// </summary>
+		protected virtual void UnloadModules(IEnumerable<IModule> modules)
+		{
+			modules.Each(m =>
+			{
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Unloading module {0}", m.Name);
+
+				m.Unload();
+
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Finished unloading module {0}", m.Name);
+			});
+
+			Components.Get<IBindingRegistry>().ValidateBindings();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
