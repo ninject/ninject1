@@ -119,7 +119,7 @@ namespace Ninject.Core.Infrastructure
 		/// <param name="items">The series of items to convert.</param>
 		/// <param name="converter">The converter to use to convert the items.</param>
 		/// <returns>A list of the converted items.</returns>
-		public static IEnumerable<TOutput> ConvertAll<TInput, TOutput>(this IEnumerable<TInput> items, Converter<TInput, TOutput> converter)
+		public static IEnumerable<TOutput> Convert<TInput, TOutput>(this IEnumerable<TInput> items, Converter<TInput, TOutput> converter)
 		{
 			foreach (TInput item in items)
 				yield return converter(item);

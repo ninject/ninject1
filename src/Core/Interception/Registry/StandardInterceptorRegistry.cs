@@ -127,7 +127,7 @@ namespace Ninject.Core.Interception
 			matches.Sort((r1, r2) => r1.Order - r2.Order);
 
 			// Extract the factory methods from the registrations and call them to create the interceptors.
-			List<IInterceptor> interceptors = matches.ConvertAll(reg => reg.FactoryMethod(request));
+			List<IInterceptor> interceptors = matches.Convert(reg => reg.FactoryMethod(request)).ToList();
       
 			// If there are no dynamic interceptors defined, we can safely cache the results.
 			// Otherwise, we have to evaluate and re-activate the interceptors each time.
