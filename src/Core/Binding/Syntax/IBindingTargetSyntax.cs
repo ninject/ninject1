@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 using Ninject.Core.Creation;
 using Ninject.Core.Infrastructure;
 #endregion
@@ -66,6 +67,13 @@ namespace Ninject.Core.Binding.Syntax
 		/// </summary>
 		/// <param name="provider">The provider to use.</param>
 		IBindingConditionBehaviorOrArgumentSyntax ToProvider(IProvider provider);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Indicates that the service should be bound to the specified provider.
+		/// </summary>
+		/// <typeparam name="T">The type that will be returend by the method.</typeparam>
+		/// <param name="callback">The callback that will be triggered.</param>
+		IBindingConditionBehaviorOrArgumentSyntax ToInlineProvider<T>(Func<IContext, T> callback);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to the specified constant value.

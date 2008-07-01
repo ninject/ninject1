@@ -57,6 +57,7 @@
     <Compile Include="Binding\Selection\IBindingSelector.cs" />
     <Compile Include="Binding\StandardBindingFactory.cs" />
     <Compile Include="Binding\IBindingFactory.cs" />
+    <Compile Include="Creation\InlineProvider.cs" />
     <Compile Include="Creation\Plugins\StandardProviderPlugin.cs" />
     <Compile Include="Infrastructure\Components\WithStrategies\KernelComponentWithStrategies.cs" />
     <Compile Include="Infrastructure\Components\WithStrategies\IHaveStrategies.cs" />

@@ -80,6 +80,12 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
+		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToInlineProvider<T>(Func<IContext, T> callback)
+		{
+			Binding.Provider = new InlineProvider<T>(callback);
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToProvider(IProvider provider)
 		{
 			Binding.Provider = provider;
