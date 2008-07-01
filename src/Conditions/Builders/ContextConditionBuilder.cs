@@ -114,8 +114,8 @@ namespace Ninject.Conditions.Builders
 		{
 			return new SimpleConditionBuilder<TRoot, IContext, object>(this, ctx =>
 			{
-				ContextVariableParameter parameter = ctx.Parameters.GetOne<ContextVariableParameter>(name);
-				return (parameter == null) ? null : parameter.Value;
+				var parameter = ctx.Parameters.GetOne<ContextVariableParameter>(name);
+				return (parameter == null) ? null : parameter.GetValue(ctx);
 			});
 		}
 		/*----------------------------------------------------------------------------------------*/

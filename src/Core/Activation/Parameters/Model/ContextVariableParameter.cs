@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -29,16 +30,15 @@ namespace Ninject.Core.Parameters
 	public class ContextVariableParameter : IParameter
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Fields
+		private readonly Func<IContext, object> _valueProvider;
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
 		/// Gets the name of the parameter.
 		/// </summary>
 		public string Name { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the value of the context variable.
-		/// </summary>
-		public object Value { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -46,13 +46,25 @@ namespace Ninject.Core.Parameters
 		/// Initializes a new instance of the <see cref="ContextVariableParameter"/> class.
 		/// </summary>
 		/// <param name="name">The name of the variable to define.</param>
-		/// <param name="value">The value to assign to the variable.</param>
-		public ContextVariableParameter(string name, object value)
+		/// <param name="valueProvider">The function that will be called to resolve the value for the variable.</param>
+		public ContextVariableParameter(string name, Func<IContext, object> valueProvider)
 		{
 			Ensure.ArgumentNotNull(name, "name");
 
 			Name = name;
-			Value = value;
+			_valueProvider = valueProvider;
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Resolves the value for the context variable.
+		/// </summary>
+		/// <param name="context">The current context.</param>
+		/// <returns>The value of the variable.</returns>
+		public object GetValue(IContext context)
+		{
+			return _valueProvider(context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

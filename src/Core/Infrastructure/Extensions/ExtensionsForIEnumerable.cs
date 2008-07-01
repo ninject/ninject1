@@ -146,6 +146,22 @@ namespace Ninject.Core.Infrastructure
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Returns the first item in the series.
+		/// </summary>
+		/// <typeparam name="T">The type of items.</typeparam>
+		/// <param name="items">The series of items.</param>
+		/// <returns>The first item in the series.</returns>
+		public static T First<T>(this IEnumerable<T> items)
+		{
+			var enumerator = items.GetEnumerator();
+
+			if (!enumerator.MoveNext())
+				throw new InvalidOperationException("The series contains no items.");
+
+			return enumerator.Current;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Returns the best item in the series, based on the specified scoring function.
 		/// </summary>
 		/// <typeparam name="T">The type of items.</typeparam>

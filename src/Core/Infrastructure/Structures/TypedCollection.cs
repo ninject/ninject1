@@ -106,15 +106,9 @@ namespace Ninject.Core.Infrastructure
 			Type type = typeof(T);
 
 			if (!_items.ContainsKey(type))
-			{
 				return default(T);
-			}
 			else
-			{
-				var enumerator = _items[type].Values.GetEnumerator();
-				enumerator.MoveNext();
-				return (T)enumerator.Current;
-			}
+				return (T)_items[type].Values.First();
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

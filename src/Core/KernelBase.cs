@@ -563,7 +563,7 @@ namespace Ninject.Core
 			IProvider provider = context.Binding.Provider;
 
 			// Ask the provider which type will be resolved.
-			context.Implementation = context.Binding.Provider.GetImplementationType(context);
+			context.Implementation = provider.GetImplementationType(context);
 
 			// Unless we are ignoring compatibility, ensure the provider can resolve the service.
 			if (!Options.IgnoreProviderCompatibility && !provider.IsCompatibleWith(context))

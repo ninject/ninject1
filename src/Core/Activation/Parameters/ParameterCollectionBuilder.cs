@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -121,7 +122,19 @@ namespace Ninject.Core.Parameters
 		/// <param name="value">The value for the variable.</param>
 		public ParameterCollectionBuilder ContextVariable(string name, object value)
 		{
-			_collection.Add(new ContextVariableParameter(name, value));
+			_collection.Add(new ContextVariableParameter(name, ctx => value));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Adds a late-bound variable to the context. The callback will be triggered when the
+		/// variable's value is requested during activation.
+		/// </summary>
+		/// <param name="name">The name of the variable.</param>
+		/// <param name="valueProvider">The callback that will return the value for the variable.</param>
+		public ParameterCollectionBuilder ContextVariable(string name, Func<IContext, object> valueProvider)
+		{
+			_collection.Add(new ContextVariableParameter(name, valueProvider));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -132,7 +145,12 @@ namespace Ninject.Core.Parameters
 		public ParameterCollectionBuilder ContextVariables(IDictionary values)
 		{
 			foreach (DictionaryEntry entry in values)
-				_collection.Add(new ContextVariableParameter(entry.Key.ToString(), entry.Value));
+			{
+				string key = entry.Key.ToString();
+				object value = entry.Value;
+
+				_collection.Add(new ContextVariableParameter(key, ctx => value));
+			}
 
 			return this;
 		}
@@ -146,7 +164,12 @@ namespace Ninject.Core.Parameters
 			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
 
 			foreach (DictionaryEntry entry in dictionary)
-				_collection.Add(new ContextVariableParameter(entry.Key.ToString(), entry.Value));
+			{
+				string key = entry.Key.ToString();
+				object value = entry.Value;
+
+				_collection.Add(new ContextVariableParameter(key, ctx => value));
+			}
 
 			return this;
 		}
