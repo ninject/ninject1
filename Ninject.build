@@ -32,6 +32,7 @@
 	</target>
 
 	<target name="all" depends="config">
+		<call target="platform-net35"/>
 		<call target="platform-net20"/>
 		<call target="platform-netcf20"/>
 		<call target="platform-silverlight20"/>
@@ -93,6 +94,13 @@
 		</asminfo>
 	</target>
 
+	<target name="config-platform-net35">
+		<property name="nant.settings.currentframework" value="net-3.5"/>
+		<property name="build.platform" value="net-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
+		<property name="current.path.bin" value="${path.bin}/net-3.5/${build.config}"/>
+	</target>
+
 	<target name="config-platform-net20">
 		<!-- The v3.5 compiler is used to take advantage of C# 3.0 features, but the code is compatible with v2.0 of the framework. -->
 		<property name="nant.settings.currentframework" value="net-3.5"/>
@@ -125,6 +133,23 @@
 	<target name="ensure-platform-selected">
 		<if test="${not(property::exists('build.platform'))}">
 			<call target="config-platform-net20"/>
+		</if>
+	</target>
+
+	<target name="platform-net35" depends="config">
+		<if test="${framework::exists('net-3.5')}">
+			<echo message="Building Ninject ${build.version} for .NET Framework v3.5."/>
+			<call target="config-platform-net35"/>
+			<call target="core"/>
+			<call target="conditions"/>
+			<call target="extensions"/>
+			<call target="frameworks"/>
+			<call target="integrations"/>
+			<call target="test"/>
+			<call target="package-platform"/>
+		</if>
+		<if test="${not(framework::exists('net-3.5'))}">
+			<echo message=".NET Framework v3.5 is not available. Skipping platform."/>
 		</if>
 	</target>
 
@@ -221,6 +246,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Web.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -240,6 +266,7 @@
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -260,6 +287,7 @@
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -280,6 +308,7 @@
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -300,6 +329,7 @@
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -322,6 +352,7 @@
 				<include name="System.dll"/>
 				<include name="System.Web.dll"/>
 				<include name="System.Web.Services.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -343,6 +374,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Windows.Forms.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -369,6 +401,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Web.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="AjaxPro.2.dll"/>
 				<include name="Ninject.Core.dll"/>
 				<include name="Ninject.Framework.Web.dll"/>
@@ -397,6 +430,7 @@
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Castle.Core.dll"/>
 				<include name="Castle.DynamicProxy2.dll"/>
 				<include name="Ninject.Core.dll"/>
@@ -424,6 +458,7 @@
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="LinFu.DynamicProxy.dll"/>
 				<include name="Ninject.Core.dll"/>
 			</references>
@@ -450,6 +485,7 @@
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="log4net.dll"/>
 				<include name="Ninject.Core.dll"/>
 			</references>
@@ -478,6 +514,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Web.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Castle.Core.dll"/>
 				<include name="Castle.MonoRail.Framework.dll"/>
 				<include name="Ninject.Core.dll"/>
@@ -505,6 +542,7 @@
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="NLog.dll"/>
 				<include name="Ninject.Core.dll"/>
 			</references>
@@ -516,7 +554,6 @@
 
 	<target name="compile-tests">
 		<call target="config-build-debug"/>
-		<call target="config-platform-net20"/>
 		<mkdir dir="${path.bin.tests}"/>
 		<copy todir="${path.bin.tests}">
 			<fileset basedir="${current.path.bin}">
@@ -537,6 +574,7 @@
 			<references basedir="${path.bin.tests}">
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
 				<include name="Castle.Core.dll"/>
 				<include name="Castle.DynamicProxy2.dll"/>
 				<include name="LinFu.DynamicProxy.dll"/>
