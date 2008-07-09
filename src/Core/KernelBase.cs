@@ -325,12 +325,26 @@ namespace Ninject.Core
 		/// longer needed.
 		/// </summary>
 		/// <param name="instance">The instance to release.</param>
+		/// <returns><see langword="True"/> if the instance was being tracked, otherwise <see langword="false"/>.</returns>
 		public bool Release(object instance)
 		{
 			Ensure.ArgumentNotNull(instance, "instance");
 			Ensure.NotDisposed(this);
 
 			return Components.Get<ITracker>().Release(instance);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases the specified context.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		/// <returns><see langword="True"/> if the context was being tracked, otherwise <see langword="false"/>.</returns>
+		public bool Release(IContext context)
+		{
+			Ensure.ArgumentNotNull(context, "context");
+			Ensure.NotDisposed(this);
+
+			return Components.Get<ITracker>().Release(context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -591,9 +605,9 @@ namespace Ninject.Core
 			// Register the contextualized instance with the tracker.
 			Components.Get<ITracker>().Track(instance, context);
 
-			// If there is an activation scope defined, register the instance with it as well.
+			// If there is an activation scope defined, register the context with it as well.
       if (_scopes.Count > 0)
-				_scopes.Peek().Register(instance);
+				_scopes.Peek().Register(context);
 
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Instance of service {0} resolved successfully", Format.Type(service));

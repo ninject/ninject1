@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -37,9 +38,11 @@ namespace Ninject.Core.Tracking
 		IKernel Kernel { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Registers the specified instance in the scope.
+		/// Registers the specified context in the scope. The instance contained therein will
+		/// be released when the scope is disposed.
 		/// </summary>
-		void Register(object instance);
+		/// <param name="context">The context to register.</param>
+		void Register(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

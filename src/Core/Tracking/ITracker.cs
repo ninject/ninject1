@@ -51,6 +51,14 @@ namespace Ninject.Core.Tracking
 		bool Release(object instance);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Releases the instance in the specified context via the binding which was used to activate it,
+		/// and stops tracking it if it was being tracked.
+		/// </summary>
+		/// <param name="context">The context to release.</param>
+		/// <returns><see langword="True"/> if the context was being tracked, otherwise <see langword="false"/>.</returns>
+		bool Release(IContext context);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Releases all of the instances that are currently being tracked.
 		/// </summary>
 		void ReleaseAll();

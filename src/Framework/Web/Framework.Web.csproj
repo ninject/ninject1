@@ -48,6 +48,7 @@
     <Compile Include="NinjectHttpApplication.cs" />
     <Compile Include="HttpHandlerBase.cs">
     </Compile>
+    <Compile Include="NinjectHttpModule.cs" />
     <Compile Include="WebServiceBase.cs">
       <SubType>Component</SubType>
     </Compile>

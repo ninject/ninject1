@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -31,7 +32,7 @@ namespace Ninject.Core.Tracking
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private List<object> _instances = new List<object>();
+		private List<IContext> _contextCache = new List<IContext>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -51,9 +52,9 @@ namespace Ninject.Core.Tracking
 		{
 			if (disposing && !IsDisposed)
 			{
-				_instances.Each(obj => Kernel.Release(obj));
-				_instances.Clear();
-				_instances = null;
+				_contextCache.Each(ctx => Kernel.Release(ctx));
+				_contextCache.Clear();
+				_contextCache = null;
 
 				Kernel.EndScope();
 				Kernel = null;
@@ -77,12 +78,13 @@ namespace Ninject.Core.Tracking
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
-		/// Registers the specified instance in the scope.
+		/// Registers the specified context in the scope. The instance contained therein will
+		/// be released when the scope is disposed.
 		/// </summary>
-		/// <param name="instance"></param>
-		public void Register(object instance)
+		/// <param name="context">The context to register.</param>
+		public void Register(IContext context)
 		{
-			_instances.Add(instance);
+			_contextCache.Add(context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

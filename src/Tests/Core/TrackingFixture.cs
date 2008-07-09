@@ -123,31 +123,23 @@ namespace Ninject.Tests
 		[Test]
 		public void DisposingActivationScopeReleasesAllInstancesCreatedTherein()
 		{
-			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
-
 			DisposableMock obj1;
 			DisposableMock obj2;
 
-			using (var kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel())
 			{
-				var tracker = kernel.Components.Get<ITracker>();
-
 				obj1 = kernel.Get<DisposableMock>();
 
 				Assert.That(obj1, Is.Not.Null);
-				Assert.That(tracker.ReferenceCount, Is.EqualTo(1));
 
 				using (kernel.BeginScope())
 				{
 					obj2 = kernel.Get<DisposableMock>();
-
 					Assert.That(obj2, Is.Not.Null);
-					Assert.That(tracker.ReferenceCount, Is.EqualTo(2));
 				}
 
 				Assert.That(obj1.Disposed, Is.False);
 				Assert.That(obj2.Disposed, Is.True);
-				Assert.That(tracker.ReferenceCount, Is.EqualTo(1));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

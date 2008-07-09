@@ -93,19 +93,36 @@ namespace Ninject.Core.Tracking
 				if (!_contextCache.ContainsKey(instance))
 					return false;
 
-				// Release the instance by using its activation context.
 				IContext context = _contextCache[instance];
 
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Releasing tracked instance resulting from {0}", Format.Context(context));
-
-				context.Plan.Behavior.Release(context);
+				DoRelease(context);
 				_contextCache.Remove(instance);
 
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Instance released, no longer tracked");
-
 				return true;
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases the instance in the specified context via the binding which was used to activate it,
+		/// and stops tracking it if it was being tracked.
+		/// </summary>
+		/// <param name="context">The context to release.</param>
+		/// <returns><see langword="True"/> if the context was being tracked, otherwise <see langword="false"/>.</returns>
+		public bool Release(IContext context)
+		{
+			lock (_contextCache)
+			{
+				DoRelease(context);
+
+				if (!_contextCache.ContainsKey(context.Instance))
+				{
+					_contextCache.Remove(context.Instance);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -116,15 +133,24 @@ namespace Ninject.Core.Tracking
 		{
 			lock (_contextCache)
 			{
-				foreach (IContext context in _contextCache.Values)
-					context.Plan.Behavior.Release(context);
-
+				_contextCache.Values.Each(DoRelease);
 				_contextCache.Clear();
 			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Private Methods
+		private void DoRelease(IContext context)
+		{
+			if (Logger.IsDebugEnabled)
+				Logger.Debug("Releasing tracked instance resulting from {0}", Format.Context(context));
+
+			context.Plan.Behavior.Release(context);
+
+			if (Logger.IsDebugEnabled)
+				Logger.Debug("Instance released");
+		}
+		/*----------------------------------------------------------------------------------------*/
 		private bool ShouldTrack(IContext context)
 		{
 			switch (Kernel.Options.InstanceTrackingMode)

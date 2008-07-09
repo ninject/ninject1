@@ -111,8 +111,15 @@ namespace Ninject.Core
 		/// longer needed.
 		/// </summary>
 		/// <param name="instance">The instance to release.</param>
-		/// <returns><see langword="True"/> if the kernel was tracking the instance, otherwise <see langword="false"/>.</returns>
+		/// <returns><see langword="True"/> if the instance was being tracked, otherwise <see langword="false"/>.</returns>
 		bool Release(object instance);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases the instance contained in the specifeid context.
+		/// </summary>
+		/// <param name="context">The context containing the instance to release.</param>
+		/// <returns><see langword="True"/> if the context was being tracked, otherwise <see langword="false"/>.</returns>
+		bool Release(IContext context);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods: Bindings

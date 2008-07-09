@@ -113,10 +113,9 @@ namespace Ninject.Core
 		public bool IgnoreProviderCompatibility { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the mode by which the kernel will track instances. <see cref="WeakReference"/>s
-		/// will be held for each tracked instance, and when the kernel is disposed, all tracked
-		/// instances whose references are still alive will be released by passing them to the
-		/// <c>Release()</c> method on the kernel.
+		/// Gets or sets the mode by which the kernel will track instances. When the kernel is disposed,
+		/// all tracked instances will be released by passing them to the <c>Release()</c> method on
+		/// the kernel.
 		/// </summary>
 		/// <remarks>
 		/// By default, the kernel will use <c>InstanceTrackingMode.Default</c>, which means that only
