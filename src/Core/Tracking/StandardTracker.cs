@@ -115,14 +115,10 @@ namespace Ninject.Core.Tracking
 				DoRelease(context);
 
 				if (!_contextCache.ContainsKey(context.Instance))
-				{
-					_contextCache.Remove(context.Instance);
-					return true;
-				}
-				else
-				{
 					return false;
-				}
+
+				_contextCache.Remove(context.Instance);
+				return true;
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
