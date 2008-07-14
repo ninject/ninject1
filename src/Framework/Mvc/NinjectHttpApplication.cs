@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 //
 // Author: Nate Kohari <nkohari@gmail.com>
 // Copyright (c) 2007-2008, Enkari, Ltd.
@@ -18,12 +18,16 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using Ninject.Core;
 using Ninject.Core.Logging;
 #endregion
 
-namespace Ninject.Framework.Web
+namespace Ninject.Framework.Mvc
 {
 	/// <summary>
 	/// A <see cref="HttpApplication"/> that creates a <see cref="IKernel"/> for use throughout
@@ -32,24 +36,17 @@ namespace Ninject.Framework.Web
 	public abstract class NinjectHttpApplication : HttpApplication
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Properties
-		/// <summary>
-		/// Gets or sets the logger associated with the object.
-		/// </summary>
-		[Inject] public ILogger Logger { get; set; }
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
 		#region Lifecycle Event Handlers
 		/// <summary>
 		/// Initializes the application.
 		/// </summary>
 		public void Application_Start()
 		{
-			// Create the Ninject kernel and store it in the static container.
 			KernelContainer.Kernel = CreateKernel();
-
-			// Request injections for the application itself.
 			KernelContainer.Inject(this);
+
+			ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
+			RegisterRoutes(RouteTable.Routes);
 
 			OnApplicationStarted();
 		}
@@ -77,6 +74,12 @@ namespace Ninject.Framework.Web
 		protected virtual void OnApplicationEnded()
 		{
 		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Register routes for the application.
+		/// </summary>
+		/// <param name="routes">The route collection.</param>
+		protected abstract void RegisterRoutes(RouteCollection routes);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a Ninject kernel that will be used to inject objects.
