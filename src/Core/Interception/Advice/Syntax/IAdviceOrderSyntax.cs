@@ -18,30 +18,23 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Behavior;
 using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Binding.Syntax
+namespace Ninject.Core.Interception.Syntax
 {
 	/// <summary>
-	/// Describes a fluent syntax for modifying the behavior of a binding.
+	/// Describes a fluent syntax for modifying the order of an interception.
 	/// </summary>
-	public interface IBindingBehaviorSyntax : IFluentSyntax
+	public interface IAdviceOrderSyntax : IFluentSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that the service's instantiation should be controlled by a new instance of
-		/// the specified behavior type. The default constructor on the behavior type will be called.
+		/// Indicates that the interceptor should be called with the specified order. (Interceptors
+		/// with a lower order will be called first.)
 		/// </summary>
-		/// <typeparam name="T">The behavior type to use.</typeparam>
-		IBindingInlineArgumentSyntax Using<T>() where T : IBehavior, new();
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the service's instantiation should be controlled by the specified behavior.
-		/// </summary>
-		/// <param name="behavior">The behavior to use.</param>
-		IBindingInlineArgumentSyntax Using(IBehavior behavior);
+		/// <param name="order">The order.</param>
+		void InOrder(int order);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

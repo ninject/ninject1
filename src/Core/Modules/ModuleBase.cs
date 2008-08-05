@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Interception;
@@ -31,8 +32,9 @@ namespace Ninject.Core
 	/// The baseline definition of a kernel module. This type should not generally be used directly
 	/// by application modules; instead, they should extend the <see cref="StandardModule"/> type.
 	/// </summary>
-	/// <typeparam name="TBinder">The type of binder to use in the module.</typeparam>
-	public abstract class ModuleBase<TBinder> : DisposableObject, IModule
+	/// <typeparam name="TBindingBuilder">The type of binding builder to use in the module.</typeparam>
+	/// <typeparam name="TAdviceBuilder">The type of advice builder to use in the module.</typeparam>
+	public abstract class ModuleBase<TBindingBuilder, TAdviceBuilder> : DisposableObject, IModule
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
@@ -94,7 +96,7 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ModuleBase{TBinder}"/> class.
+		/// Initializes a new instance of the <see cref="ModuleBase{TBindingBuilder, TAspectBuilder}"/> class.
 		/// </summary>
 		protected ModuleBase()
 		{
@@ -125,8 +127,8 @@ namespace Ninject.Core
 		/// Begins a binding definition.
 		/// </summary>
 		/// <typeparam name="T">The service type to bind from.</typeparam>
-		/// <returns>A binder that can be used to build the binding definition.</returns>
-		public TBinder Bind<T>()
+		/// <returns>A binding builder.</returns>
+		public TBindingBuilder Bind<T>()
 		{
 			return DoBind(typeof(T));
 		}
@@ -135,136 +137,32 @@ namespace Ninject.Core
 		/// Begins a binding definition.
 		/// </summary>
 		/// <param name="type">The service type to bind from.</param>
-		/// <returns>A binder that can be used to build the binding definition.</returns>
-		public TBinder Bind(Type type)
+		/// <returns>A binding builder.</returns>
+		public TBindingBuilder Bind(Type type)
 		{
 			return DoBind(type);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods: Dynamic Interception
+		#region Public Methods: Interception
 		/// <summary>
-		/// Declares a dynamic interception definition.
+		/// Defines a dynamic interceptor with the specified condition.
 		/// </summary>
-		/// <typeparam name="T">The type of interceptor to attach.</typeparam>
-		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
-		public void Intercept<T>(ICondition<IRequest> condition)
+		/// <param name="condition">The condition to match.</param>
+		/// <returns>An advice builder.</returns>
+		public TAdviceBuilder Intercept(ICondition<IRequest> condition)
 		{
-			RegisterInterceptor(typeof(T), 0, condition);
+			return DoIntercept(condition);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Declares a dynamic interception definition.
+		/// Defines a dynamic interceptor with the specified predicate.
 		/// </summary>
-		/// <typeparam name="T">The type of interceptor to attach.</typeparam>
-		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
-		public void Intercept<T>(Predicate<IRequest> predicate)
+		/// <param name="predicate">The predicate to match.</param>
+		/// <returns>An advice builder.</returns>
+		public TAdviceBuilder Intercept(Predicate<IRequest> predicate)
 		{
-			RegisterInterceptor(typeof(T), 0, new PredicateCondition<IRequest>(predicate));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
-		public void Intercept<T>(int order, ICondition<IRequest> condition)
-		{
-			RegisterInterceptor(typeof(T), order, condition);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
-		public void Intercept<T>(int order, Predicate<IRequest> predicate)
-		{
-			RegisterInterceptor(typeof(T), order, new PredicateCondition<IRequest>(predicate));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="type">The type of interceptor to attach.</param>
-		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
-		public void Intercept(Type type, ICondition<IRequest> condition)
-		{
-			RegisterInterceptor(type, 0, condition);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="type">The type of interceptor to attach.</param>
-		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
-		public void Intercept(Type type, Predicate<IRequest> predicate)
-		{
-			RegisterInterceptor(type, 0, new PredicateCondition<IRequest>(predicate));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="type">The type of interceptor to attach.</param>
-		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
-		public void Intercept(Type type, int order, ICondition<IRequest> condition)
-		{
-			RegisterInterceptor(type, order, condition);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="type">The type of interceptor to attach.</param>
-		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
-		public void Intercept(Type type, int order, Predicate<IRequest> predicate)
-		{
-			RegisterInterceptor(type, order, new PredicateCondition<IRequest>(predicate));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
-		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
-		public void Intercept(ICondition<IRequest> condition, InterceptorFactoryMethod factoryMethod)
-		{
-			RegisterInterceptor(factoryMethod, 0, condition);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
-		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
-		public void Intercept(Predicate<IRequest> predicate, InterceptorFactoryMethod factoryMethod)
-		{
-			RegisterInterceptor(factoryMethod, 0, new PredicateCondition<IRequest>(predicate));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
-		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
-		public void Intercept(int order, ICondition<IRequest> condition, InterceptorFactoryMethod factoryMethod)
-		{
-			RegisterInterceptor(factoryMethod, order, condition);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Declares a dynamic interception definition.
-		/// </summary>
-		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		/// <param name="predicate">A predicate that determine where a request should be intercepted.</param>
-		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
-		public void Intercept(int order, Predicate<IRequest> predicate, InterceptorFactoryMethod factoryMethod)
-		{
-			RegisterInterceptor(factoryMethod, order, new PredicateCondition<IRequest>(predicate));
+			return DoIntercept(new PredicateCondition<IRequest>(predicate));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -273,8 +171,8 @@ namespace Ninject.Core
 		/// Begins a binding definition.
 		/// </summary>
 		/// <param name="type">The service type to bind from.</param>
-		/// <returns>A binder that can be used to build the binding definition.</returns>
-		protected virtual TBinder DoBind(Type type)
+		/// <returns>A binding builder.</returns>
+		protected virtual TBindingBuilder DoBind(Type type)
 		{
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Declaring binding for service {0}", Format.Type(type));
@@ -292,38 +190,48 @@ namespace Ninject.Core
 			// Store the binding to allow it to be un-registered if the module is unloaded.
 			Bindings.Add(binding);
 
-			return CreateBinder(binding);
+			return CreateBindingBuilder(binding);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Registers a dynamic interceptor.
+		/// Begins a static interception definition.
 		/// </summary>
-		/// <param name="type">The type of interceptor to attach.</param>
-		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
-		protected virtual void RegisterInterceptor(Type type, int order, ICondition<IRequest> condition)
+		/// <param name="method">The method to intercept.</param>
+		/// <returns>An advice builder.</returns>
+		protected virtual TAdviceBuilder DoIntercept(MethodInfo method)
 		{
-			Kernel.Components.Get<IInterceptorRegistry>().RegisterDynamic(type, order, condition);
+			IAdvice advice = Kernel.Components.Get<IAdviceFactory>().Create(method);
+			Kernel.Components.Get<IAdviceRegistry>().Register(advice);
+
+			return CreateAdviceBuilder(advice);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Registers a dynamic interceptor.
+		/// Begins a dynamic interception definition.
 		/// </summary>
-		/// <param name="factoryMethod">The method that should be called to create the interceptor.</param>
-		/// <param name="order">The order of precedence that the interceptor should be called in.</param>
-		/// <param name="condition">The condition that defines whether a method call will be intercepted.</param>
-		protected virtual void RegisterInterceptor(InterceptorFactoryMethod factoryMethod, int order,
-			ICondition<IRequest> condition)
+		/// <param name="condition">The condition to evaluate to determine if a request should be intercepted.</param>
+		/// <returns>An advice builder.</returns>
+		protected virtual TAdviceBuilder DoIntercept(ICondition<IRequest> condition)
 		{
-			Kernel.Components.Get<IInterceptorRegistry>().RegisterDynamic(factoryMethod, order, condition);
+			IAdvice advice = Kernel.Components.Get<IAdviceFactory>().Create(condition);
+			Kernel.Components.Get<IAdviceRegistry>().Register(advice);
+
+			return CreateAdviceBuilder(advice);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a binder that will be used to build the specified binding.
+		/// Creates a binding builder.
 		/// </summary>
 		/// <param name="binding">The binding that will be built.</param>
-		/// <returns>The created binder.</returns>
-		protected abstract TBinder CreateBinder(IBinding binding);
+		/// <returns>The created builder.</returns>
+		protected abstract TBindingBuilder CreateBindingBuilder(IBinding binding);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates an advice builder.
+		/// </summary>
+		/// <param name="advice">The advice that will be built.</param>
+		/// <returns>The created advice.</returns>
+		protected abstract TAdviceBuilder CreateAdviceBuilder(IAdvice advice);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

@@ -102,7 +102,8 @@ namespace Ninject.Core
 			components.Connect<IContextFactory>(new StandardContextFactory());
 			components.Connect<IScopeFactory>(new StandardScopeFactory());
 			components.Connect<IRequestFactory>(new StandardRequestFactory());
-			components.Connect<IInterceptorRegistry>(new StandardInterceptorRegistry());
+			components.Connect<IAdviceFactory>(new StandardAdviceFactory());
+			components.Connect<IAdviceRegistry>(new StandardAdviceRegistry());
 
 #if NO_LCG
 			// If the target platform doesn't have DynamicMethod support, we can't use DynamicInjectorFactory.

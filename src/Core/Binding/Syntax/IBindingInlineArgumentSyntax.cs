@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Binding.Syntax
@@ -26,7 +27,7 @@ namespace Ninject.Core.Binding.Syntax
 	/// <summary>
 	/// Describes a fluent syntax for adding inline arguments to the constructor of a service.
 	/// </summary>
-	public interface IBindingInlineArgumentSyntax
+	public interface IBindingInlineArgumentSyntax : IFluentSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

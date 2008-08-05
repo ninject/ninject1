@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core;
+using Ninject.Core.Creation;
 using Ninject.Core.Creation.Providers;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -27,14 +28,14 @@ using NUnit.Framework.SyntaxHelpers;
 namespace Ninject.Tests.Activation
 {
 	[TestFixture]
-	public class FactoryMethodProviderFixture
+	public class CallbackProviderFixture
 	{
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
 		public void CanBindToParameterlessStaticFactoryMethod()
 		{
 			var module = new InlineModule(
-				m => m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<IMock>(MockFactory.CreateStatic))
+				m => m.Bind(typeof(IMock)).ToMethod(ctx => MockFactory.CreateStatic())
 			);
 
 			using (var kernel = new StandardKernel(module))
@@ -49,7 +50,7 @@ namespace Ninject.Tests.Activation
 		public void CanBindToStaticFactoryMethodWithParameters()
 		{
 			var module = new InlineModule(
-				m => m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<string, int, IMock>(MockFactory.CreateStatic, "foo", 42))
+				m => m.Bind(typeof(IMock)).ToMethod(ctx => MockFactory.CreateStatic("foo", 42))
 			);
 
 			using (var kernel = new StandardKernel(module))
@@ -66,7 +67,7 @@ namespace Ninject.Tests.Activation
 			var factory = new MockFactory();
 
 			var module = new InlineModule(
-				m => m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<IMock>(factory.Create))
+				m => m.Bind(typeof(IMock)).ToMethod(ctx => factory.Create())
 			);
 
 			using (var kernel = new StandardKernel(module))
@@ -83,7 +84,7 @@ namespace Ninject.Tests.Activation
 			var factory = new MockFactory();
 
 			var module = new InlineModule(
-				m => m.Bind(typeof(IMock)).ToProvider(new FactoryMethodProvider<string, int, IMock>(factory.Create, "foo", 42))
+				m => m.Bind(typeof(IMock)).ToMethod(ctx => factory.Create("foo", 42))
 			);
 
 			using (var kernel = new StandardKernel(module))

@@ -18,39 +18,23 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Binding;
-using Ninject.Core.Binding.Syntax;
+using Ninject.Core.Infrastructure;
 using Ninject.Core.Interception;
 using Ninject.Core.Interception.Syntax;
 #endregion
 
-namespace Ninject.Core
+namespace Ninject.Core.Interception
 {
 	/// <summary>
-	/// The standard definition of a module. Most application modules should extend this type.
+	/// Builds information associated with advice.
 	/// </summary>
-	public abstract class StandardModule : ModuleBase<IBindingTargetSyntax, IAdviceTargetSyntax>
+	public interface IAdviceBuilder : IDisposable
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a binding builder.
+		/// Gets the advice the builder should manipulate.
 		/// </summary>
-		/// <param name="binding">The binding that will be built.</param>
-		/// <returns>The created builder.</returns>
-		protected override IBindingTargetSyntax CreateBindingBuilder(IBinding binding)
-		{
-			return new StandardBindingBuilder(binding);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates an advice builder.
-		/// </summary>
-		/// <param name="advice">The advice that will be built.</param>
-		/// <returns>The created builder.</returns>
-		protected override IAdviceTargetSyntax CreateAdviceBuilder(IAdvice advice)
-		{
-			return new StandardAdviceBuilder(advice);
-		}
+		IAdvice Advice { get; }
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

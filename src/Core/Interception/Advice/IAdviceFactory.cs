@@ -18,35 +18,31 @@
 #endregion
 #region Using Directives
 using System;
+using System.Reflection;
 using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Binding
+namespace Ninject.Core.Interception
 {
 	/// <summary>
-	/// The baseline definition of a binder, which builds up information about a binding.
+	/// Creates <see cref="IAdvice"/> objects, which hold information about interception.
 	/// </summary>
-	public abstract class BinderBase : DisposableObject, IBinder
+	public interface IAdviceFactory : IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Properties
 		/// <summary>
-		/// Gets the binding that the binder should manipulate.
+		/// Creates static advice for the specified method.
 		/// </summary>
-		public IBinding Binding { get; protected set; }
-		#endregion
+		/// <param name="method">The method that will be intercepted.</param>
+		/// <returns>The created advice.</returns>
+		IAdvice Create(MethodInfo method);
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="BinderBase"/> class.
+		/// Creates dynamic advice for the specified condition.
 		/// </summary>
-		/// <param name="binding">The binding that the binder should manipulate.</param>
-		protected BinderBase(IBinding binding)
-		{
-			Ensure.ArgumentNotNull(binding, "binding");
-			Binding = binding;
-		}
-		#endregion
+		/// <param name="condition">The condition that will be evaluated to determine whether a request should be intercepted.</param>
+		/// <returns>The created advice.</returns>
+		IAdvice Create(ICondition<IRequest> condition);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

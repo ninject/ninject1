@@ -30,17 +30,17 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Core.Binding
 {
 	/// <summary>
-	/// The stock definition of a binder.
+	/// The stock definition of a binding builder.
 	/// </summary>
-	public class StandardBinder : BinderBase, IBindingTargetSyntax, IBindingConditionBehaviorOrArgumentSyntax, IBindingBehaviorOrArgumentSyntax
+	public class StandardBindingBuilder : BindingBuilderBase, IBindingTargetSyntax, IBindingConditionBehaviorOrArgumentSyntax, IBindingBehaviorOrArgumentSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="StandardBinder"/> class.
+		/// Initializes a new instance of the <see cref="StandardBindingBuilder"/> class.
 		/// </summary>
-		/// <param name="binding">The binding that the binder should manipulate.</param>
-		public StandardBinder(IBinding binding)
+		/// <param name="binding">The binding that the builder should manipulate.</param>
+		public StandardBindingBuilder(IBinding binding)
 			: base(binding)
 		{
 		}
@@ -80,62 +80,21 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToInlineProvider<T>(Func<IContext, T> callback)
-		{
-			Binding.Provider = new InlineProvider<T>(callback);
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToProvider(IProvider provider)
 		{
 			Binding.Provider = provider;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
+		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToMethod<T>(Func<IContext, T> callback)
+		{
+			Binding.Provider = new CallbackProvider<T>(callback);
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToConstant<T>(T value)
 		{
 			Binding.Provider = new ConstantProvider(value);
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-#if !NO_REMOTING
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToRemotingChannel(string uri)
-		{
-			Binding.Provider = new RemotingProvider(Binding.Service, uri);
-			return this;
-		}
-#endif
-		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToFactoryMethod<R>(Func<R> method)
-		{
-			Binding.Provider = new FactoryMethodProvider<R>(method);
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToFactoryMethod<A1, R>(Func<A1, R> method, A1 arg1)
-		{
-			Binding.Provider = new FactoryMethodProvider<A1, R>(method, arg1);
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToFactoryMethod<A1, A2, R>(Func<A1, A2, R> method, A1 arg1,
-			A2 arg2)
-		{
-			Binding.Provider = new FactoryMethodProvider<A1, A2, R>(method, arg1, arg2);
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToFactoryMethod<A1, A2, A3, R>(Func<A1, A2, A3, R> method,
-			A1 arg1, A2 arg2, A3 arg3)
-		{
-			Binding.Provider = new FactoryMethodProvider<A1, A2, A3, R>(method, arg1, arg2, arg3);
-			return this;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToFactoryMethod<A1, A2, A3, A4, R>(
-			Func<A1, A2, A3, A4, R> method, A1 arg1, A2 arg2, A3 arg3, A4 arg4)
-		{
-			Binding.Provider = new FactoryMethodProvider<A1, A2, A3, A4, R>(method, arg1, arg2, arg3, arg4);
 			return this;
 		}
 		#endregion

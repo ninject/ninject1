@@ -62,7 +62,7 @@ namespace Ninject.Core.Infrastructure
 				Disconnect<IActivator>();
 				Disconnect<IInjectorFactory>();
 				Disconnect<IResolverFactory>();
-				Disconnect<IInterceptorRegistry>();
+				Disconnect<IAdviceRegistry>();
 				Disconnect<ILoggerFactory>();
 
 				// Disconnect any remaining custom components.

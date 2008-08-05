@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ninject.Tests</RootNamespace>
     <AssemblyName>Ninject.Tests</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\Tests\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -48,6 +48,9 @@
       <HintPath>..\..\tools\nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
@@ -85,7 +88,7 @@
     <Compile Include="Core\Activation\ConcurrencyFixture.cs" />
     <Compile Include="Core\Activation\CustomProviderFixture.cs" />
     <Compile Include="Core\Activation\ExistingInstanceFixture.cs" />
-    <Compile Include="Core\Activation\FactoryMethodProviderFixture.cs" />
+    <Compile Include="Core\Activation\CallbackProviderFixture.cs" />
     <Compile Include="Core\Activation\FieldInjectionStrategyFixture.cs" />
     <Compile Include="Core\Activation\GenericProviderFixture.cs" />
     <Compile Include="Core\Activation\LoggerResolverFixture.cs" />

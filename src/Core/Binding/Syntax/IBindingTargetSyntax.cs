@@ -28,7 +28,7 @@ namespace Ninject.Core.Binding.Syntax
 	/// <summary>
 	/// Describes a fluent syntax for modifying the target of a binding.
 	/// </summary>
-	public interface IBindingTargetSyntax
+	public interface IBindingTargetSyntax : IFluentSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -69,11 +69,11 @@ namespace Ninject.Core.Binding.Syntax
 		IBindingConditionBehaviorOrArgumentSyntax ToProvider(IProvider provider);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that the service should be bound to the specified provider.
+		/// Indicates that the service should be bound to the specified callback.
 		/// </summary>
 		/// <typeparam name="T">The type that will be returend by the method.</typeparam>
 		/// <param name="callback">The callback that will be triggered.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToInlineProvider<T>(Func<IContext, T> callback);
+		IBindingConditionBehaviorOrArgumentSyntax ToMethod<T>(Func<IContext, T> callback);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to the specified constant value.
@@ -81,69 +81,6 @@ namespace Ninject.Core.Binding.Syntax
 		/// <typeparam name="T">The type of the value.</typeparam>
 		/// <param name="value">The constant value.</param>
 		IBindingConditionBehaviorOrArgumentSyntax ToConstant<T>(T value);
-		/*----------------------------------------------------------------------------------------*/
-#if !NO_REMOTING
-		/// <summary>
-		/// Indicates that the service should be bound to the remoting channel at the specified URI.
-		/// </summary>
-		/// <param name="uri">The URI to bind the service to.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToRemotingChannel(string uri);
-#endif
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the service should be bound to the specified factory method.
-		/// </summary>
-		/// <typeparam name="R">The return value of the factory method.</typeparam>
-		/// <param name="method">The factory method.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToFactoryMethod<R>(Func<R> method);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the service should be bound to the specified factory method.
-		/// </summary>
-		/// <typeparam name="A1">The type of the factory method's first argument.</typeparam>
-		/// <typeparam name="R">The return value of the factory method.</typeparam>
-		/// <param name="method">The factory method.</param>
-		/// <param name="arg1">The factory method's first argument.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToFactoryMethod<A1, R>(Func<A1, R> method, A1 arg1);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the service should be bound to the specified factory method.
-		/// </summary>
-		/// <typeparam name="A1">The type of the factory method's first argument.</typeparam>
-		/// <typeparam name="A2">The type of the factory method's second argument.</typeparam>
-		/// <typeparam name="R">The return value of the factory method.</typeparam>
-		/// <param name="method">The factory method.</param>
-		/// <param name="arg1">The factory method's first argument.</param>
-		/// <param name="arg2">The factory method's second argument.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToFactoryMethod<A1, A2, R>(Func<A1, A2, R> method, A1 arg1, A2 arg2);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the service should be bound to the specified factory method.
-		/// </summary>
-		/// <typeparam name="A1">The type of the factory method's first argument.</typeparam>
-		/// <typeparam name="A2">The type of the factory method's second argument.</typeparam>
-		/// <typeparam name="A3">The type of the factory method's third argument.</typeparam>
-		/// <typeparam name="R">The return value of the factory method.</typeparam>
-		/// <param name="method">The factory method.</param>
-		/// <param name="arg1">The factory method's first argument.</param>
-		/// <param name="arg2">The factory method's second argument.</param>
-		/// <param name="arg3">The factory method's third argument.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToFactoryMethod<A1, A2, A3, R>(Func<A1, A2, A3, R> method, A1 arg1, A2 arg2, A3 arg3);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the service should be bound to the specified factory method.
-		/// </summary>
-		/// <typeparam name="A1">The type of the factory method's first argument.</typeparam>
-		/// <typeparam name="A2">The type of the factory method's second argument.</typeparam>
-		/// <typeparam name="A3">The type of the factory method's third argument.</typeparam>
-		/// <typeparam name="A4">The type of the factory method's fourth argument.</typeparam>
-		/// <typeparam name="R">The return value of the factory method.</typeparam>
-		/// <param name="method">The factory method.</param>
-		/// <param name="arg1">The factory method's first argument.</param>
-		/// <param name="arg2">The factory method's second argument.</param>
-		/// <param name="arg3">The factory method's third argument.</param>
-		/// <param name="arg4">The factory method's fourth argument.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToFactoryMethod<A1, A2, A3, A4, R>(Func<A1, A2, A3, A4, R> method, A1 arg1, A2 arg2, A3 arg3, A4 arg4);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

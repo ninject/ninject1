@@ -44,7 +44,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <returns>A value indicating whether to proceed or interrupt the strategy chain.</returns>
 		public override StrategyResult Build(IBinding binding, Type type, IActivationPlan plan)
 		{
-			ICollection<MethodInfo> candidates = GetCandidateMethods(type);
+			IEnumerable<MethodInfo> candidates = GetCandidateMethods(type);
 
 			RegisterClassInterceptors(binding, type, plan, candidates);
 
@@ -74,7 +74,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="plan">The activation plan that is being manipulated.</param>
 		/// <param name="candidates">The candidate methods to intercept.</param>
 		protected virtual void RegisterClassInterceptors(IBinding binding, Type type, IActivationPlan plan,
-			ICollection<MethodInfo> candidates)
+			IEnumerable<MethodInfo> candidates)
 		{
 			InterceptAttribute[] attributes = type.GetAllAttributes<InterceptAttribute>();
 
@@ -102,10 +102,18 @@ namespace Ninject.Core.Planning.Strategies
 		protected virtual void RegisterMethodInterceptors(IBinding binding, Type type, IActivationPlan plan,
 			MethodInfo method, ICollection<InterceptAttribute> attributes)
 		{
-			var registry = Kernel.Components.Get<IInterceptorRegistry>();
+			var factory = Kernel.Components.Get<IAdviceFactory>();
+			var registry = Kernel.Components.Get<IAdviceRegistry>();
 
 			foreach (InterceptAttribute attribute in attributes)
-				registry.RegisterStatic(attribute.CreateInterceptor, attribute.Order, method);
+			{
+				IAdvice advice = factory.Create(method);
+
+				advice.Callback = attribute.CreateInterceptor;
+				advice.Order = attribute.Order;
+
+				registry.Register(advice);
+			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -113,18 +121,15 @@ namespace Ninject.Core.Planning.Strategies
 		/// </summary>
 		/// <param name="type">The type to examine.</param>
 		/// <returns>The candidate methods.</returns>
-		protected virtual ICollection<MethodInfo> GetCandidateMethods(Type type)
+		protected virtual IEnumerable<MethodInfo> GetCandidateMethods(Type type)
 		{
-			var candidates = new List<MethodInfo>();
 			MethodInfo[] methods = type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
 			foreach (MethodInfo method in methods)
 			{
 				if (method.DeclaringType != typeof(object) && !method.IsPrivate && !method.IsFinal)
-					candidates.Add(method);
+					yield return method;
 			}
-
-			return candidates;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

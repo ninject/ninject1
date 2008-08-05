@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Binding.Syntax
@@ -26,7 +27,7 @@ namespace Ninject.Core.Binding.Syntax
 	/// <summary>
 	/// Describes a fluent syntax for modifying the condition of a binding.
 	/// </summary>
-	public interface IBindingConditionSyntax
+	public interface IBindingConditionSyntax : IFluentSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

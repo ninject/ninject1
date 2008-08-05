@@ -171,7 +171,7 @@ namespace Ninject.Tests.Integration.LinFu
 			var testModule = new InlineModule(
 				m => m.Bind<RequestsConstructorInjection>().ToSelf(),
 				// This is just here to trigger proxying, but we won't intercept any calls
-				m => m.Intercept<FlagInterceptor>(When.Request.Matches(r => false))
+				m => m.Intercept(When.Request.Matches(r => false)).With<FlagInterceptor>()
 			);
 
 			using (var kernel = new StandardKernel(new LinFuModule(), testModule))

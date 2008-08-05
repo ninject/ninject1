@@ -18,38 +18,40 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Binding;
-using Ninject.Core.Binding.Syntax;
-using Ninject.Core.Interception;
-using Ninject.Core.Interception.Syntax;
+using Ninject.Core.Activation;
+using Ninject.Core.Creation.Providers;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core
+namespace Ninject.Core.Creation
 {
 	/// <summary>
-	/// The standard definition of a module. Most application modules should extend this type.
+	/// A provider that triggers a callback method when an instance is requested.
 	/// </summary>
-	public abstract class StandardModule : ModuleBase<IBindingTargetSyntax, IAdviceTargetSyntax>
+	/// <typeparam name="T">The type of instance that will be created.</typeparam>
+	public class CallbackProvider<T> : SimpleProvider<T>
 	{
 		/*----------------------------------------------------------------------------------------*/
+		private readonly Func<IContext, T> _callback;
+		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a binding builder.
+		/// Initializes a new instance of the <see cref="CallbackProvider{T}"/> class.
 		/// </summary>
-		/// <param name="binding">The binding that will be built.</param>
-		/// <returns>The created builder.</returns>
-		protected override IBindingTargetSyntax CreateBindingBuilder(IBinding binding)
+		/// <param name="callback">The callback that will be triggered to create the instance.</param>
+		public CallbackProvider(Func<IContext, T> callback)
 		{
-			return new StandardBindingBuilder(binding);
+			Ensure.ArgumentNotNull(callback, "callback");
+			_callback = callback;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates an advice builder.
+		/// Creates a new instance of the type.
 		/// </summary>
-		/// <param name="advice">The advice that will be built.</param>
-		/// <returns>The created builder.</returns>
-		protected override IAdviceTargetSyntax CreateAdviceBuilder(IAdvice advice)
+		/// <param name="context">The context in which the activation is occurring.</param>
+		/// <returns>The instance of the type.</returns>
+		protected override T CreateInstance(IContext context)
 		{
-			return new StandardAdviceBuilder(advice);
+			return _callback(context);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

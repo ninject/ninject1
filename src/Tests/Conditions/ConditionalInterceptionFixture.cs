@@ -38,7 +38,7 @@ namespace Ninject.Tests.Conditions
 		{
 			IModule module = new InlineModule(
 				m => m.Bind(typeof(ObjectWithMethodInterceptor)).ToSelf(),
-				m => m.Intercept<CountInterceptor>(When.Request.Method.Name.StartsWith("F"))
+				m => m.Intercept(When.Request.Method.Name.StartsWith("F")).With<CountInterceptor>()
 			);
 
 			using (var kernel = new StandardKernel(module))
@@ -57,7 +57,7 @@ namespace Ninject.Tests.Conditions
 					Type.EmptyTypes
 				);
 
-				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				var registry = kernel.Components.Get<IAdviceRegistry>();
 				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
 				Assert.That(interceptors.Count, Is.EqualTo(2));
 
@@ -78,8 +78,8 @@ namespace Ninject.Tests.Conditions
 
 			var module = new InlineModule(
 				m => m.Bind(typeof(ObjectWithMethodInterceptor)).ToSelf(),
-				m => m.Intercept<CountInterceptor>(When.Request.Method.ReturnType.EqualTo(typeof(void))),
-				m => m.Intercept<CountInterceptor>(When.Request.Arguments.Contains(argument))
+				m => m.Intercept(When.Request.Method.ReturnType.EqualTo(typeof(void))).With<CountInterceptor>(),
+				m => m.Intercept(When.Request.Arguments.Contains(argument)).With<CountInterceptor>()
 			);
 
 			using (var kernel = new StandardKernel(module))
@@ -98,7 +98,7 @@ namespace Ninject.Tests.Conditions
 					Type.EmptyTypes
 				);
 
-				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				var registry = kernel.Components.Get<IAdviceRegistry>();
 				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
 				Assert.That(interceptors.Count, Is.EqualTo(2));
 

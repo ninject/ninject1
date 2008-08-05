@@ -18,30 +18,20 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Behavior;
-using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Binding.Syntax
+namespace Ninject.Core.Binding
 {
 	/// <summary>
-	/// Describes a fluent syntax for modifying the behavior of a binding.
+	/// Builds information to store in a binding.
 	/// </summary>
-	public interface IBindingBehaviorSyntax : IFluentSyntax
+	public interface IBindingBuilder : IDisposable
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that the service's instantiation should be controlled by a new instance of
-		/// the specified behavior type. The default constructor on the behavior type will be called.
+		/// Gets the binding that the builder should manipulate.
 		/// </summary>
-		/// <typeparam name="T">The behavior type to use.</typeparam>
-		IBindingInlineArgumentSyntax Using<T>() where T : IBehavior, new();
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that the service's instantiation should be controlled by the specified behavior.
-		/// </summary>
-		/// <param name="behavior">The behavior to use.</param>
-		IBindingInlineArgumentSyntax Using(IBehavior behavior);
+		IBinding Binding { get; }
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

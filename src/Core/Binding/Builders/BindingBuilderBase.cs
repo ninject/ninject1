@@ -18,20 +18,35 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Binding
 {
 	/// <summary>
-	/// Configures type bindings.
+	/// The baseline definition of a binding builder.
 	/// </summary>
-	public interface IBinder : IDisposable
+	public abstract class BindingBuilderBase : DisposableObject, IBindingBuilder
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Properties
 		/// <summary>
 		/// Gets the binding that the binder should manipulate.
 		/// </summary>
-		IBinding Binding { get; }
+		public IBinding Binding { get; protected set; }
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Constructors
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BindingBuilderBase"/> class.
+		/// </summary>
+		/// <param name="binding">The binding that the binder should manipulate.</param>
+		protected BindingBuilderBase(IBinding binding)
+		{
+			Ensure.ArgumentNotNull(binding, "binding");
+			Binding = binding;
+		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

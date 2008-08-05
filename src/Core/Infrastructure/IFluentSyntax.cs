@@ -3,6 +3,8 @@
 // Author: Nate Kohari <nkohari@gmail.com>
 // Copyright (c) 2007-2008, Enkari, Ltd.
 //
+// Credit to Nick Blumhardt for the original idea.
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -18,41 +20,45 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation;
-using Ninject.Core.Creation.Providers;
-using Ninject.Core.Infrastructure;
+using System.ComponentModel;
 #endregion
 
-namespace Ninject.Core.Creation
+namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// A provider that triggers a callback method when an instance is requested.
+	/// Hides members defined by <see cref="System.Object"/> to make fluent interfaces more readable.
 	/// </summary>
-	/// <typeparam name="T">The type of instance that will be created.</typeparam>
-	public class InlineProvider<T> : SimpleProvider<T>
+	[EditorBrowsable(EditorBrowsableState.Never)]
+	public interface IFluentSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
-		private readonly Func<IContext, T> _callback;
+		/// <summary>
+		/// Gets the object's type.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		Type GetType();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Initializes a new instance of the <see cref="InlineProvider{T}"/> class.
+		/// Gets the object's hash code.
 		/// </summary>
-		/// <param name="callback">The callback that will be triggered to create the instance.</param>
-		public InlineProvider(Func<IContext, T> callback)
-		{
-			Ensure.ArgumentNotNull(callback, "callback");
-			_callback = callback;
-		}
+		/// <returns>THe hash code.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		int GetHashCode();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new instance of the type.
+		/// Creates a string representation of the object.
 		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <returns>The instance of the type.</returns>
-		protected override T CreateInstance(IContext context)
-		{
-			return _callback(context);
-		}
+		/// <returns>The string representation.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		string ToString();
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Determines whether the object matches the specified object.
+		/// </summary>
+		/// <param name="other">The other object.</param>
+		/// <returns><see langword="True"/> if the object matches, otherwise <see langword="false"/>.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		bool Equals(object other);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

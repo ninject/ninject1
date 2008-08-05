@@ -54,7 +54,7 @@ namespace Ninject.Tests.Interception
 					Type.EmptyTypes
 				);
 
-				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				var registry = kernel.Components.Get<IAdviceRegistry>();
 				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();
@@ -86,7 +86,7 @@ namespace Ninject.Tests.Interception
 					Type.EmptyTypes
 				);
 
-				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				var registry = kernel.Components.Get<IAdviceRegistry>();
 
 				ICollection<IInterceptor> interceptors1 = registry.GetInterceptors(request1);
 				Assert.That(interceptors1.Count, Is.EqualTo(1));
@@ -127,7 +127,7 @@ namespace Ninject.Tests.Interception
 					Type.EmptyTypes
 				);
 
-				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				var registry = kernel.Components.Get<IAdviceRegistry>();
 				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();
@@ -159,7 +159,7 @@ namespace Ninject.Tests.Interception
 					Type.EmptyTypes
 				);
 
-				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				var registry = kernel.Components.Get<IAdviceRegistry>();
 				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
 
 				Assert.That(interceptors.Count, Is.EqualTo(0));
@@ -175,10 +175,12 @@ namespace Ninject.Tests.Interception
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				var factory = kernel.Components.Get<IAdviceFactory>();
+				var registry = kernel.Components.Get<IAdviceRegistry>();
 
-				ICondition<IRequest> condition = new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Bar"));
-				registry.RegisterDynamic(typeof(FlagInterceptor), 0, condition);
+				IAdvice advice = factory.Create(new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Bar")));
+				advice.Callback = r => r.Kernel.Get<FlagInterceptor>();
+				registry.Register(advice);
 
 				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 
@@ -211,13 +213,15 @@ namespace Ninject.Tests.Interception
 			{
 				kernel.Components.Connect<IProxyFactory>(new DummyProxyFactory());
 
-				var registry = kernel.Components.Get<IInterceptorRegistry>();
+				var factory = kernel.Components.Get<IAdviceFactory>();
+				var registry = kernel.Components.Get<IAdviceRegistry>();
 
-				ICondition<IRequest> condition = new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Foo"));
+				IAdvice advice = factory.Create(new PredicateCondition<IRequest>(r => r.Method.Name.Equals("Foo")));
 
-				// The CountAttribute set on ObjectWithMethodInterceptor defaults to order 0, so we'll use -1
-				// to put the FlagInterceptor before the CountInterceptor.
-				registry.RegisterDynamic(typeof(FlagInterceptor), -1, condition);
+				advice.Callback = r => r.Kernel.Get<FlagInterceptor>();
+				advice.Order = -1;
+
+				registry.Register(advice);
 
 				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 

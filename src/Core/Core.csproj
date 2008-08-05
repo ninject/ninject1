@@ -16,13 +16,14 @@
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\Debug\Ninject.Core.xml</DocumentationFile>
@@ -38,6 +39,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +61,16 @@
     <Compile Include="Binding\Selection\IBindingSelector.cs" />
     <Compile Include="Binding\StandardBindingFactory.cs" />
     <Compile Include="Binding\IBindingFactory.cs" />
-    <Compile Include="Creation\InlineProvider.cs" />
+    <Compile Include="Infrastructure\IFluentSyntax.cs" />
+    <Compile Include="Interception\Advice\Builders\AdviceBuilderBase.cs" />
+    <Compile Include="Interception\Advice\Builders\IAdviceBuilder.cs" />
+    <Compile Include="Interception\Advice\StandardAdviceFactory.cs" />
+    <Compile Include="Interception\Advice\IAdviceFactory.cs" />
+    <Compile Include="Interception\Advice\IAdvice.cs" />
+    <Compile Include="Interception\Advice\Builders\StandardAdviceBuilder.cs" />
+    <Compile Include="Interception\Advice\Syntax\IAdviceOrderSyntax.cs" />
+    <Compile Include="Interception\Advice\Syntax\IAdviceTargetSyntax.cs" />
+    <Compile Include="Creation\CallbackProvider.cs" />
     <Compile Include="Creation\Plugins\StandardProviderPlugin.cs" />
     <Compile Include="Infrastructure\Components\WithStrategies\KernelComponentWithStrategies.cs" />
     <Compile Include="Infrastructure\Components\WithStrategies\IHaveStrategies.cs" />
@@ -68,7 +81,6 @@
     <Compile Include="Creation\Plugins\IProviderFactoryPlugin.cs" />
     <Compile Include="Creation\Plugins\GenericProviderPlugin.cs" />
     <Compile Include="Creation\ProviderFactoryBase.cs" />
-    <Compile Include="Creation\Providers\RemotingProvider.cs" />
     <Compile Include="Creation\SimpleProvider.cs" />
     <Compile Include="Creation\Providers\ProviderBase.cs" />
     <Compile Include="Creation\Providers\InjectionProviderBase.cs" />
@@ -124,7 +136,7 @@
     <Compile Include="Interception\Request\IRequest.cs" />
     <Compile Include="Interception\Wrapper\IWrapper.cs" />
     <Compile Include="Interception\Wrapper\StandardWrapper.cs" />
-    <Compile Include="Interception\Registry\InterceptorRegistration.cs" />
+    <Compile Include="Interception\Advice\StandardAdvice.cs" />
     <Compile Include="Interfaces\IContextAware.cs" />
     <Compile Include="Infrastructure\Attributes\InterceptAttribute.cs" />
     <Compile Include="Infrastructure\Utility\ReflectionDictionaryBuilder.cs" />
@@ -132,8 +144,8 @@
     <Compile Include="Infrastructure\Utility\Format.cs" />
     <Compile Include="Injection\InjectorFactoryBase.cs" />
     <Compile Include="Interception\Invocation\InvocationBase.cs" />
-    <Compile Include="Interception\Registry\IInterceptorRegistry.cs" />
-    <Compile Include="Interception\Registry\StandardInterceptorRegistry.cs" />
+    <Compile Include="Interception\Registry\IAdviceRegistry.cs" />
+    <Compile Include="Interception\Registry\StandardAdviceRegistry.cs" />
     <Compile Include="Interception\ProxyFactory\ProxyFactoryBase.cs" />
     <Compile Include="Interception\Invocation\StandardInvocation.cs" />
     <Compile Include="Interception\SimpleInterceptor.cs" />
@@ -145,7 +157,6 @@
     <Compile Include="Logging\Formatters\IMessageFormatter.cs" />
     <Compile Include="Logging\LoggerFactoryBase.cs" />
     <Compile Include="Interfaces\IStartable.cs" />
-    <Compile Include="Creation\Providers\FactoryMethodProviders.cs" />
     <Compile Include="Creation\Providers\GenericProvider.cs" />
     <Compile Include="Activation\StandardActivator.cs" />
     <Compile Include="Creation\Providers\ConstantProvider.cs" />
@@ -158,8 +169,8 @@
     <Compile Include="Activation\Strategies\MethodInjectionStrategy.cs" />
     <Compile Include="Activation\Strategies\FieldInjectionStrategy.cs" />
     <Compile Include="Activation\Strategies\PropertyInjectionStrategy.cs" />
-    <Compile Include="Binding\Binders\StandardBinder.cs" />
-    <Compile Include="Binding\Binders\BinderBase.cs" />
+    <Compile Include="Binding\Builders\StandardBindingBuilder.cs" />
+    <Compile Include="Binding\Builders\BindingBuilderBase.cs" />
     <Compile Include="Binding\Syntax\IBindingConditionBehaviorOrArgumentSyntax.cs" />
     <Compile Include="Binding\Syntax\IBindingConditionSyntax.cs" />
     <Compile Include="Binding\Syntax\IBindingBehaviorSyntax.cs" />
@@ -180,7 +191,7 @@
     <Compile Include="Activation\Parameters\ParameterCollection.cs" />
     <Compile Include="Activation\Parameters\With.cs" />
     <Compile Include="Planning\Directives\Base\InjectionDirectiveBase.cs" />
-    <Compile Include="Binding\Binders\IBinder.cs" />
+    <Compile Include="Binding\Builders\IBindingBuilder.cs" />
     <Compile Include="Planning\Strategies\Base\PlanningStrategyBase.cs" />
     <Compile Include="Planning\Strategies\Base\IPlanningStrategy.cs" />
     <Compile Include="Planning\Strategies\Base\ReflectionStrategyBase.cs" />

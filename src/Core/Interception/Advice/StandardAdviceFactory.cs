@@ -19,46 +19,35 @@
 #region Using Directives
 using System;
 using System.Reflection;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Infrastructure
+namespace Ninject.Core.Interception
 {
 	/// <summary>
-	/// Contains extension methods for <see cref="MethodBase"/>.
+	/// The stock definition of an advice factory.
 	/// </summary>
-	public static class ExtensionsForMethodBase
+	public class StandardAdviceFactory : KernelComponentBase, IAdviceFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the types of the parameters of the method.
+		/// Creates static advice for the specified method.
 		/// </summary>
-		/// <param name="method">The method in question.</param>
-		/// <returns>An array containing the types of the method's parameters.</returns>
-		public static Type[] GetParameterTypes(this MethodBase method)
+		/// <param name="method">The method that will be intercepted.</param>
+		/// <returns>The created advice.</returns>
+		public IAdvice Create(MethodInfo method)
 		{
-			ParameterInfo[] parameters = method.GetParameters();
-			var types = new Type[parameters.Length];
-
-			for (int idx = 0; idx < parameters.Length; idx++)
-				types[idx] = parameters[idx].ParameterType;
-
-			return types;
+			return new StandardAdvice(method);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the method handle of either the method or its generic type definition, if it is
-		/// a generic method.
+		/// Creates dynamic advice for the specified condition.
 		/// </summary>
-		/// <param name="method">The method in question.</param>
-		/// <returns>The runtime method handle for the method or its generic type definition.</returns>
-		public static RuntimeMethodHandle GetMethodHandle(this MethodBase method)
+		/// <param name="condition">The condition that will be evaluated to determine whether a request should be intercepted.</param>
+		/// <returns>The created advice.</returns>
+		public IAdvice Create(ICondition<IRequest> condition)
 		{
-			var mi = method as MethodInfo;
-
-			if (mi != null && mi.IsGenericMethod)
-				return mi.GetGenericMethodDefinition().MethodHandle;
-			else
-				return method.MethodHandle;
+			return new StandardAdvice(condition);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}
