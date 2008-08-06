@@ -1,4 +1,4 @@
-#if !NET_35
+#if !NET_35 && !SILVERLIGHT
 
 #region License
 //

@@ -247,7 +247,8 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Web.dll"/>
-				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />        
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -268,6 +269,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -289,6 +291,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -310,6 +313,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -331,6 +335,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -405,7 +410,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Windows.Forms.dll"/>
-				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />        
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -432,7 +437,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Web.dll"/>
-				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />        
 				<include name="AjaxPro.2.dll"/>
 				<include name="Ninject.Core.dll"/>
 				<include name="Ninject.Framework.Web.dll"/>
