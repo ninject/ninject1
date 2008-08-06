@@ -31,7 +31,7 @@ namespace Ninject.Core.Binding
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets the binding that the binder should manipulate.
+		/// Gets the binding that the builder should manipulate.
 		/// </summary>
 		public IBinding Binding { get; protected set; }
 		#endregion
@@ -40,7 +40,7 @@ namespace Ninject.Core.Binding
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BindingBuilderBase"/> class.
 		/// </summary>
-		/// <param name="binding">The binding that the binder should manipulate.</param>
+		/// <param name="binding">The binding that the builder should manipulate.</param>
 		protected BindingBuilderBase(IBinding binding)
 		{
 			Ensure.ArgumentNotNull(binding, "binding");

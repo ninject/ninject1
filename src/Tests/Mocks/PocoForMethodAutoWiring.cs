@@ -32,6 +32,13 @@ namespace Ninject.Tests
 		/*----------------------------------------------------------------------------------------*/
 		public IMock Child { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
+		public bool ParameterlessMethodWasCalled { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		public void ShouldNotBeCalled()
+		{
+			ParameterlessMethodWasCalled = true;
+		}
+		/*----------------------------------------------------------------------------------------*/
 		public void InjectServiceAndChild(IServiceA serviceA, IMock child)
 		{
 			ServiceA = serviceA;

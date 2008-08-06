@@ -45,7 +45,13 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 		public bool ShouldInject(IBinding binding, Type type, IActivationPlan plan, MethodInfo candidate)
 		{
 			var registry = Kernel.Components.Get<IBindingRegistry>();
-			return candidate.GetParameterTypes().All(registry.HasBinding);
+
+			ParameterInfo[] parameters = candidate.GetParameters();
+
+			if (parameters.Length == 0)
+				return false;
+			else
+				return parameters.Convert(p => p.ParameterType).All(registry.HasBinding);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

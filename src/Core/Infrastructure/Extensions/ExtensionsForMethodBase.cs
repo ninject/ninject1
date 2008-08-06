@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 #endregion
 
@@ -34,15 +35,9 @@ namespace Ninject.Core.Infrastructure
 		/// </summary>
 		/// <param name="method">The method in question.</param>
 		/// <returns>An array containing the types of the method's parameters.</returns>
-		public static Type[] GetParameterTypes(this MethodBase method)
+		public static IEnumerable<Type> GetParameterTypes(this MethodBase method)
 		{
-			ParameterInfo[] parameters = method.GetParameters();
-			var types = new Type[parameters.Length];
-
-			for (int idx = 0; idx < parameters.Length; idx++)
-				types[idx] = parameters[idx].ParameterType;
-
-			return types;
+			return method.GetParameters().Convert(p => p.ParameterType);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

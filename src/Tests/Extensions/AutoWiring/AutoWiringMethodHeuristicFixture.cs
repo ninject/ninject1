@@ -73,5 +73,18 @@ namespace Ninject.Tests.Extensions.AutoWiring
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void HeuristicIgnoresParameterlessMethods()
+		{
+			var testModule = new InlineModule(m => m.Bind<PocoForMethodAutoWiring>().ToSelf());
+
+			using (var kernel = new StandardKernel(new AutoWiringModule(), testModule))
+			{
+				var mock = kernel.Get<PocoForMethodAutoWiring>();
+				Assert.That(mock, Is.Not.Null);
+				Assert.That(mock.ParameterlessMethodWasCalled, Is.False);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
 	}
 }
