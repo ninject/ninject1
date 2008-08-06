@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.ComponentModel;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -71,6 +72,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		/// <param name="obj">The object to compare.</param>
 		/// <returns><see langword="True"/> if the objects are equal, otherwise <see langword="false"/>.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public override bool Equals(object obj)
 		{
 			return base.Equals(obj);
@@ -80,9 +82,30 @@ namespace Ninject.Conditions.Builders
 		/// Creates a hash code for the object.
 		/// </summary>
 		/// <returns>A hash code for the object.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a string that represents the object.
+		/// </summary>
+		/// <returns>A string that represents the object.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public override string ToString()
+		{
+			return base.ToString();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the type of the object.
+		/// </summary>
+		/// <returns>The object's type.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public new Type GetType()
+		{
+			return base.GetType();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

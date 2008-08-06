@@ -20,7 +20,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Conditions.Builders
@@ -128,9 +127,18 @@ namespace Ninject.Conditions.Builders
 		/// Creates a terminating condition that determines whether the subject is an instance
 		/// of the specified type.
 		/// </summary>
-		public TerminatingCondition<TRoot, TSubject> InstanceOf(Type type)
+		public TerminatingCondition<TRoot, TSubject> IsInstanceOf(Type type)
 		{
 			return Terminate(s => type.IsInstanceOfType(s));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that determines whether the subject is an instance
+		/// of the specified type.
+		/// </summary>
+		public TerminatingCondition<TRoot, TSubject> IsInstanceOf<T>()
+		{
+			return Terminate(s => typeof(T).IsInstanceOfType(s));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
