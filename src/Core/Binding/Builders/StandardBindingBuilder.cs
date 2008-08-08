@@ -112,6 +112,12 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
+		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.Only<T>()
+		{
+			Binding.Condition = Binding.Kernel.Get<T>();
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
 		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.OnlyIf(Predicate<IContext> predicate)
 		{
 			Binding.Condition = new PredicateCondition<IContext>(predicate);
@@ -184,7 +190,7 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingInlineArgumentSyntax Members
-		IBindingInlineArgumentSyntax IBindingInlineArgumentSyntax.WithArgument<T>(string name, T value)
+		IBindingInlineArgumentSyntax IBindingInlineArgumentSyntax.WithArgument(string name, object value)
 		{
 			Binding.InlineArguments.Add(name, value);
 			return this;

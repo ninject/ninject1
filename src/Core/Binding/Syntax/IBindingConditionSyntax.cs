@@ -43,6 +43,13 @@ namespace Ninject.Core.Binding.Syntax
 		IBindingBehaviorOrArgumentSyntax Only(ICondition<IContext> condition);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Indicates that the binding should only be used if the an instance of the specified
+		/// condition type is true in the context in which the service is activated. The condition
+		/// will be activated via the kernel.
+		/// </summary>
+		IBindingBehaviorOrArgumentSyntax Only<T>() where T : ICondition<IContext>;
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Indicates that the binding should only be used if the specified predicate evalutes to
 		/// true when the component is being activated.
 		/// </summary>

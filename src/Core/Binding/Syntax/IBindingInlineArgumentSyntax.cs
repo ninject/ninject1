@@ -35,10 +35,9 @@ namespace Ninject.Core.Binding.Syntax
 		/// with the specified value. These inline arguments will override any value that would
 		/// otherwise be injected.
 		/// </summary>
-		/// <typeparam name="T">The type of value to inject.</typeparam>
 		/// <param name="name">The name of the parameter to inject the value into.</param>
 		/// <param name="value">The value to inject.</param>
-		IBindingInlineArgumentSyntax WithArgument<T>(string name, T value);
+		IBindingInlineArgumentSyntax WithArgument(string name, object value);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that arguments on the service's constructor matching the keys of the
