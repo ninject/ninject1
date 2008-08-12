@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Core.Conversion;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
@@ -64,6 +65,8 @@ namespace Ninject.Core.Activation.Strategies
 		private static object[] ResolveArguments(IContext context, MethodInjectionDirective directive)
 		{
 			var contextFactory = context.Kernel.Components.Get<IContextFactory>();
+			var converter = context.Kernel.Components.Get<IConverter>();
+
 			var arguments = new object[directive.Arguments.Count];
 
 			int index = 0;
@@ -74,7 +77,13 @@ namespace Ninject.Core.Activation.Strategies
 					directive.Member, argument.Target, argument.Optional);
 
 				// Resolve the value to inject for the parameter.
-				arguments[index] = argument.Resolver.Resolve(context, injectionContext);
+				object value = argument.Resolver.Resolve(context, injectionContext);
+
+				// Convert the value if necessary.
+				if (!converter.TryConvert(value, argument.Target.Type, out value))
+					throw new ActivationException(ExceptionFormatter.CouldNotConvertValueForInjection(context, argument.Target, value));
+
+				arguments[index] = value;
 				index++;
 			}
 

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
+using Ninject.Core.Conversion;
 using Ninject.Core.Creation;
 using Ninject.Core.Creation.Providers;
 using Ninject.Core.Infrastructure;
@@ -48,6 +49,7 @@ namespace Ninject.Core
 			typeof(IPlanner),
 			typeof(IActivator),
 			typeof(ITracker),
+			typeof(IConverter),
 			typeof(IBindingRegistry),
 			typeof(IBindingSelector),
 			typeof(IBindingFactory),
@@ -459,39 +461,40 @@ namespace Ninject.Core
 		{
 			Ensure.NotDisposed(this);
 
-			var registry = Components.Get<IBindingRegistry>();
 			var selector = Components.Get<IBindingSelector>();
+			IBinding binding = selector.SelectBinding(service, context);
 
-			IBinding binding;
-
-			if (!registry.HasBinding(service))
+			// If the requested service type is generic, try to resolve a binding for its generic type definition.
+			if (binding == null && service.IsGenericType && !service.IsGenericTypeDefinition)
 			{
-				// If no bindings have been registered, see if we can create an implicit self-binding.
-				if (!Options.ImplicitSelfBinding || !StandardProvider.CanSupportType(service))
-				{
-					if (Logger.IsDebugEnabled)
-						Logger.Debug("No binding exists for service {0}, and type is not self-bindable", Format.Type(service));
+				Type genericTypeDefinition = service.GetGenericTypeDefinition();
 
-					return null;
+				if (Logger.IsDebugEnabled)
+				{
+					Logger.Debug("Couldn't find binding for actual service type {0}, trying for generic type definition {1}",
+						Format.Type(service), Format.Type(genericTypeDefinition));
 				}
 
+				binding = selector.SelectBinding(genericTypeDefinition, context);
+			}
+
+			// If there was no explicit binding defined, see if we can create an implicit self-binding.
+			if (binding == null && Options.ImplicitSelfBinding && StandardProvider.CanSupportType(service))
+			{
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("No binding exists for service {0}, creating implicit self-binding", Format.Type(service));
 
-				// Create a new implicit self-binding for the service type.
 				binding = CreateImplicitSelfBinding(service);
-
-				// Register the new binding.
-				registry.Add(binding);
+				AddBinding(binding);
 			}
-			else
+
+			if (Logger.IsDebugEnabled)
 			{
-				// Ask the binding selector to choose which binding should be used.
-				binding = selector.SelectBinding(service, context);
+				if (binding != null)
+					Logger.Debug("Selected {0} for service {1}", Format.Binding(binding), Format.Type(service));
+				else
+					Logger.Debug("No binding exists for service {0}, and type is not self-bindable or generic", Format.Type(service));
 			}
-
-			if ((binding != null) && Logger.IsDebugEnabled)
-				Logger.Debug("Selected {0} for service {1}", Format.Binding(binding), Format.Type(service));
 
 			return binding;
 		}
@@ -539,35 +542,17 @@ namespace Ninject.Core
 
 				if (binding == null)
 				{
-					// If no binding was found for the actual service type, and it's a generic type, try to
-					// resolve one for its generic type definition.
-					if (service.IsGenericType)
+					if (context.IsOptional)
 					{
-						Type genericTypeDefinition = service.GetGenericTypeDefinition();
-
 						if (Logger.IsDebugEnabled)
-						{
-							Logger.Debug("Couldn't find binding for actual service type {0}, trying for generic type definition {1}",
-								Format.Type(service), Format.Type(genericTypeDefinition));
-						}
+							Logger.Debug("No bindings were found for the service {0}, ignoring since the request was optional", Format.Type(service));
 
-						binding = ResolveBinding(genericTypeDefinition, context);
+						return null;
 					}
-
-					if (binding == null)
+					else
 					{
-						if (context.IsOptional)
-						{
-							if (Logger.IsDebugEnabled)
-								Logger.Debug("No bindings were found for the service {0}, ignoring since the request was optional", Format.Type(service));
-
-							return null;
-						}
-						else
-						{
-							// We couldn't resolve a binding for the service, so fail.
-							throw new ActivationException(ExceptionFormatter.CouldNotResolveBindingForType(service, context));
-						}
+						// We couldn't resolve a binding for the service, so fail.
+						throw new ActivationException(ExceptionFormatter.CouldNotResolveBindingForType(service, context));
 					}
 				}
 
@@ -577,12 +562,11 @@ namespace Ninject.Core
 
 			IProvider provider = context.Binding.Provider;
 
-			// Ask the provider which type will be resolved.
-			context.Implementation = provider.GetImplementationType(context);
-
-			// Unless we are ignoring compatibility, ensure the provider can resolve the service.
 			if (!Options.IgnoreProviderCompatibility && !provider.IsCompatibleWith(context))
 				throw new ActivationException(ExceptionFormatter.ProviderIncompatibleWithService(context));
+
+			// Ask the provider which type will be resolved.
+			context.Implementation = provider.GetImplementationType(context);
 
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Will create instance of type {0} for service {1}", Format.Type(context.Implementation), Format.Type(service));

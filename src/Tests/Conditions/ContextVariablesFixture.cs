@@ -42,11 +42,11 @@ namespace Ninject.Tests.Conditions
 
 			using (var kernel = new StandardKernel(module))
 			{
-				var mock1 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "foo"));
+				var mock1 = kernel.Get<IMock>(With.Parameters.Variable("bind", "foo"));
 				Assert.That(mock1, Is.Not.Null);
 				Assert.That(mock1, Is.InstanceOfType(typeof(ImplA)));
 
-				var mock2 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "bar"));
+				var mock2 = kernel.Get<IMock>(With.Parameters.Variable("bind", "bar"));
 				Assert.That(mock2, Is.Not.Null);
 				Assert.That(mock2, Is.InstanceOfType(typeof(ImplB)));
 
@@ -66,11 +66,11 @@ namespace Ninject.Tests.Conditions
 
 			using (var kernel = new StandardKernel(module))
 			{
-				var mock1 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "FOO"));
+				var mock1 = kernel.Get<IMock>(With.Parameters.Variable("bind", "FOO"));
 				Assert.That(mock1, Is.Not.Null);
 				Assert.That(mock1, Is.InstanceOfType(typeof(ImplA)));
 
-				var mock2 = kernel.Get<IMock>(With.Parameters.ContextVariable("bind", "bar"));
+				var mock2 = kernel.Get<IMock>(With.Parameters.Variable("bind", "bar"));
 				Assert.That(mock2, Is.Not.Null);
 				Assert.That(mock2, Is.InstanceOfType(typeof(ImplB)));
 			}

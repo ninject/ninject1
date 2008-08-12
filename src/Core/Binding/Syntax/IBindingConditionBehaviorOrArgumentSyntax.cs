@@ -25,7 +25,7 @@ namespace Ninject.Core.Binding.Syntax
 	/// <summary>
 	/// Describes a fluent syntax for modifying the condition or behavior of a binding.
 	/// </summary>
-	public interface IBindingConditionBehaviorOrArgumentSyntax : IBindingConditionSyntax, IBindingBehaviorSyntax, IBindingInlineArgumentSyntax
+	public interface IBindingConditionBehaviorOrArgumentSyntax : IBindingConditionSyntax, IBindingBehaviorSyntax, IBindingParameterSyntax
 	{
 	}
 }

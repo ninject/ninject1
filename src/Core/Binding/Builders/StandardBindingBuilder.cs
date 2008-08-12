@@ -19,12 +19,14 @@
 #region Using Directives
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
 using Ninject.Core.Binding.Syntax;
 using Ninject.Core.Creation;
 using Ninject.Core.Creation.Providers;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Parameters;
 #endregion
 
 namespace Ninject.Core.Binding
@@ -32,7 +34,7 @@ namespace Ninject.Core.Binding
 	/// <summary>
 	/// The stock definition of a binding builder.
 	/// </summary>
-	public class StandardBindingBuilder : BindingBuilderBase, IBindingTargetSyntax, IBindingConditionBehaviorOrArgumentSyntax, IBindingBehaviorOrArgumentSyntax
+	public class StandardBindingBuilder : BindingBuilderBase, IBindingTargetSyntax, IBindingConditionBehaviorOrArgumentSyntax, IBindingBehaviorOrParameterSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -100,50 +102,50 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingConditionSyntax Members
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.Always()
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.Always()
 		{
 			Binding.Condition = null;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.Only(ICondition<IContext> condition)
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.Only(ICondition<IContext> condition)
 		{
 			Binding.Condition = condition;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.Only<T>()
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.Only<T>()
 		{
 			Binding.Condition = Binding.Kernel.Get<T>();
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.OnlyIf(Predicate<IContext> predicate)
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.OnlyIf(Predicate<IContext> predicate)
 		{
 			Binding.Condition = new PredicateCondition<IContext>(predicate);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.ForMembersOf<T>()
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.ForMembersOf<T>()
 		{
 			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.ReflectedType == typeof(T));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.ForMembersOf(Type type)
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.ForMembersOf(Type type)
 		{
 			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.ReflectedType == type);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereMemberHas<T>()
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.WhereMemberHas<T>()
 		{
 			// Uses non-generic version to dodge problem with generic constraints on the Mono compiler.
 			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.HasAttribute(typeof(T)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereMemberHas(Type attribute)
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.WhereMemberHas(Type attribute)
 		{
 			if (!typeof(Attribute).IsAssignableFrom(attribute))
 				throw new NotSupportedException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, attribute));
@@ -152,14 +154,14 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereTargetHas<T>()
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.WhereTargetHas<T>()
 		{
 			// Uses non-generic version to dodge problem with generic constraints on the Mono compiler.
 			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.HasAttribute(typeof(T)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrArgumentSyntax IBindingConditionSyntax.WhereTargetHas(Type attribute)
+		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.WhereTargetHas(Type attribute)
 		{
 			if (!typeof(Attribute).IsAssignableFrom(attribute))
 				throw new NotSupportedException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, attribute));
@@ -170,7 +172,7 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingBehaviorSyntax Members
-		IBindingInlineArgumentSyntax IBindingBehaviorSyntax.Using<T>()
+		IBindingParameterSyntax IBindingBehaviorSyntax.Using<T>()
 		{
 			IBehavior behavior = new T();
 
@@ -180,7 +182,7 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingInlineArgumentSyntax IBindingBehaviorSyntax.Using(IBehavior behavior)
+		IBindingParameterSyntax IBindingBehaviorSyntax.Using(IBehavior behavior)
 		{
 			behavior.Kernel = Binding.Kernel;
 			Binding.Behavior = behavior;
@@ -189,28 +191,88 @@ namespace Ninject.Core.Binding
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region IBindingInlineArgumentSyntax Members
-		IBindingInlineArgumentSyntax IBindingInlineArgumentSyntax.WithArgument(string name, object value)
+		#region IBindingParameterSyntax Members
+		IBindingParameterSyntax IBindingParameterSyntax.WithConstructorArgument(string name, object value)
 		{
-			Binding.InlineArguments.Add(name, value);
+			Binding.Parameters.Add(new ConstructorArgumentParameter(name, value));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingInlineArgumentSyntax IBindingInlineArgumentSyntax.WithArguments(IDictionary arguments)
+		IBindingParameterSyntax IBindingParameterSyntax.WithConstructorArgument(string name, Func<IContext, object> valueProvider)
 		{
-			foreach (DictionaryEntry entry in arguments)
-        Binding.InlineArguments.Add(entry.Key.ToString(), entry.Value);
-
+			Binding.Parameters.Add(new ConstructorArgumentParameter(name, valueProvider));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingInlineArgumentSyntax IBindingInlineArgumentSyntax.WithArguments(object values)
+		IBindingParameterSyntax IBindingParameterSyntax.WithConstructorArguments(IDictionary arguments)
 		{
-			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
-
-			foreach (DictionaryEntry entry in dictionary)
-				Binding.InlineArguments.Add(entry.Key.ToString(), entry.Value);
-
+			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(arguments, (name, value) => new ConstructorArgumentParameter(name, value)));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithConstructorArguments(object arguments)
+		{
+			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(arguments, (name, value) => new ConstructorArgumentParameter(name, value)));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithPropertyValue(string name, object value)
+		{
+			Binding.Parameters.Add(new PropertyValueParameter(name, value));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithPropertyValue(string name, Func<IContext, object> valueProvider)
+		{
+			Binding.Parameters.Add(new PropertyValueParameter(name, valueProvider));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithPropertyValues(IDictionary values)
+		{
+			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(values, (name, value) => new PropertyValueParameter(name, value)));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithPropertyValues(object values)
+		{
+			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(values, (name, value) => new PropertyValueParameter(name, value)));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithVariable(string name, object value)
+		{
+			Binding.Parameters.Add(new VariableParameter(name, value));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithVariable(string name, Func<IContext, object> valueProvider)
+		{
+			Binding.Parameters.Add(new VariableParameter(name, valueProvider));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithVariables(IDictionary variables)
+		{
+			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(variables, (name, value) => new VariableParameter(name, value)));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithVariables(object variables)
+		{
+			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(variables, (name, value) => new VariableParameter(name, value)));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithParameter<T>(T parameter)
+		{
+			Binding.Parameters.Add(parameter);
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingParameterSyntax IBindingParameterSyntax.WithParameters<T>(IEnumerable<T> parameters)
+		{
+			Binding.Parameters.AddRange(parameters);
 			return this;
 		}
 		#endregion

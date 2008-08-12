@@ -37,7 +37,7 @@ namespace Ninject.Conditions.Builders
 		/// Creates a new TargetConditionBuilder.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		public TargetConditionBuilder(Converter<TRoot, ITarget> converter)
+		public TargetConditionBuilder(Func<TRoot, ITarget> converter)
 			: base(converter)
 		{
 		}
@@ -48,7 +48,7 @@ namespace Ninject.Conditions.Builders
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
 		public TargetConditionBuilder(IConditionBuilder<TRoot, TPrevious> last,
-			Converter<TPrevious, ITarget> converter)
+			Func<TPrevious, ITarget> converter)
 			: base(last, converter)
 		{
 		}

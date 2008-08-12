@@ -141,8 +141,7 @@ namespace Ninject.Tests
 				arguments.Add("Child", child);
 
 				var obj = kernel.Get<RequestsPropertyInjection>(
-					With.Parameters
-						.PropertyValues(arguments)
+					With.Parameters.PropertyValues(arguments)
 				);
 
 				Assert.That(obj, Is.Not.Null);

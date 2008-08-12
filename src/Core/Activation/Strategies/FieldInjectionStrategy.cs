@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Core.Conversion;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Planning.Directives;
@@ -45,6 +46,7 @@ namespace Ninject.Core.Activation.Strategies
 			{
 				var contextFactory = context.Kernel.Components.Get<IContextFactory>();
 				var injectorFactory = context.Kernel.Components.Get<IInjectorFactory>();
+				var converter = context.Kernel.Components.Get<IConverter>();
 
 				foreach (FieldInjectionDirective directive in directives)
 				{
@@ -54,6 +56,10 @@ namespace Ninject.Core.Activation.Strategies
 
 					// Resolve the value to inject into the field.
 					object value = directive.Argument.Resolver.Resolve(context, injectionContext);
+
+					// Convert the value if necessary.
+					if (!converter.TryConvert(value, directive.Target.Type, out value))
+						throw new ActivationException(ExceptionFormatter.CouldNotConvertValueForInjection(context, directive.Target, value));
 
 					// Get an injector that can inject the value.
 					IFieldInjector injector = injectorFactory.GetInjector(directive.Member);

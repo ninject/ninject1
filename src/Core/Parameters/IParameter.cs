@@ -19,54 +19,32 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
-using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Parameters
 {
 	/// <summary>
-	/// A transient parameter that will declare a variable that can be read by the context.
+	/// A transient parameter used during activation.
 	/// </summary>
-	public class ContextVariableParameter : IParameter
+	public interface IParameter
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private readonly Func<IContext, object> _valueProvider;
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Properties
 		/// <summary>
 		/// Gets the name of the parameter.
 		/// </summary>
-		public string Name { get; private set; }
-		#endregion
+		string Name { get; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="ContextVariableParameter"/> class.
+		/// Gets a value that uniquely identifies the parameter.
 		/// </summary>
-		/// <param name="name">The name of the variable to define.</param>
-		/// <param name="valueProvider">The function that will be called to resolve the value for the variable.</param>
-		public ContextVariableParameter(string name, Func<IContext, object> valueProvider)
-		{
-			Ensure.ArgumentNotNull(name, "name");
-
-			Name = name;
-			_valueProvider = valueProvider;
-		}
-		#endregion
+		object ParameterKey { get; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
 		/// <summary>
 		/// Resolves the value for the context variable.
 		/// </summary>
 		/// <param name="context">The current context.</param>
 		/// <returns>The value of the variable.</returns>
-		public object GetValue(IContext context)
-		{
-			return _valueProvider(context);
-		}
-		#endregion
+		object GetValue(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

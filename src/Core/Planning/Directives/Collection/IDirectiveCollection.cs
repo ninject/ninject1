@@ -61,19 +61,19 @@ namespace Ninject.Core.Planning
 		bool HasOneOrMore<T>() where T : IDirective;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the first item in the collection that is organized under the specified type.
-		/// </summary>
-		/// <typeparam name="T">The type to check.</typeparam>
-		/// <returns>The item, or <see langword="null"/> if none has been defined.</returns>
-		T GetOne<T>() where T : IDirective;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Gets the item with the specified key, organized under the specified type, if one has been defined.
 		/// </summary>
 		/// <typeparam name="T">The type the item is organized under.</typeparam>
 		/// <param name="key">The item's key.</param>
 		/// <returns>The item, or <see langword="null"/> if none has been defined.</returns>
-		T GetOne<T>(object key) where T : IDirective;
+		T Get<T>(object key) where T : IDirective;
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the first item in the collection that is organized under the specified type.
+		/// </summary>
+		/// <typeparam name="T">The type to check.</typeparam>
+		/// <returns>The item, or <see langword="null"/> if none has been defined.</returns>
+		T GetOne<T>() where T : IDirective;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets all items organized under the specified type.

@@ -26,7 +26,7 @@ namespace Ninject.Framework.Mvc
 		public IController CreateController(RequestContext context, string controllerName)
 		{
 			return KernelContainer.Kernel.Get<IController>(
-				With.Parameters.ContextVariable("controllerName", controllerName)
+				With.Parameters.Variable("controllerName", controllerName)
 			);
 		}
 		/*----------------------------------------------------------------------------------------*/

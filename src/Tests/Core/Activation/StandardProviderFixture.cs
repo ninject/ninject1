@@ -67,11 +67,11 @@ namespace Ninject.Tests.Activation
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		public void InlineArgumentsAllowHybridInjectionOfMissingConstructorArguments()
+		public void BindingParametersAllowHybridInjectionOfMissingConstructorArguments()
 		{
 			IModule module = new InlineModule(
 				m => m.Bind<IMock>().To<ImplA>(),
-				m => m.Bind<HybridInjectionMock>().ToSelf().WithArgument("connectionString", "this is a connection string")
+				m => m.Bind<HybridInjectionMock>().ToSelf().WithConstructorArgument("connectionString", "this is a connection string")
 			);
 
 			using (var kernel = new StandardKernel(module))
@@ -97,7 +97,7 @@ namespace Ninject.Tests.Activation
 				arguments.Add("connectionString", "this is a connection string");
 				arguments.Add("child", child);
 
-				m.Bind<HybridInjectionMock>().ToSelf().WithArguments(arguments);
+				m.Bind<HybridInjectionMock>().ToSelf().WithConstructorArguments(arguments);
 			});
 
 			using (var kernel = new StandardKernel(module))
@@ -119,7 +119,7 @@ namespace Ninject.Tests.Activation
 			IModule module = new InlineModule(
 				m => m.Bind<HybridInjectionMock>()
 							.ToSelf()
-							.WithArguments(new { connectionString = "this is a connection string", child = child })
+							.WithConstructorArguments(new { connectionString = "this is a connection string", child = child })
 			);
 
 			using (var kernel = new StandardKernel(module))
@@ -134,20 +134,20 @@ namespace Ninject.Tests.Activation
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		public void InlineArgumentsOverrideResolutionOfDependencies()
+		public void BindingParametersOverrideResolutionOfDependencies()
 		{
 			var childMock = new ImplA();
 
 			IModule module = new InlineModule(
 				m => m.Bind<HybridInjectionMock>()
 							.ToSelf()
-							.WithArgument("connectionString", "this is a connection string")
-							.WithArgument("child", childMock)
+							.WithConstructorArgument("connectionString", "this is a connection string")
+							.WithConstructorArgument("child", childMock)
 			);
 
 			using (var kernel = new StandardKernel(module))
 			{
-				HybridInjectionMock mock = kernel.Get<HybridInjectionMock>();
+				var mock = kernel.Get<HybridInjectionMock>();
 
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Child, Is.Not.Null);
@@ -157,11 +157,11 @@ namespace Ninject.Tests.Activation
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		public void InlineArgumentsAreConvertedIfNecessary()
+		public void BindingParametersAreConvertedIfNecessary()
 		{
 			var module = new InlineModule(
 				m => m.Bind<IMock>().To<ImplA>(),
-				m => m.Bind<HybridInjectionMock>().ToSelf().WithArgument("connectionString", 42)
+				m => m.Bind<HybridInjectionMock>().ToSelf().WithConstructorArgument("connectionString", 42)
 			);
 
 			using (var kernel = new StandardKernel(module))
@@ -174,13 +174,13 @@ namespace Ninject.Tests.Activation
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test, ExpectedException(typeof(ActivationException))]
-		public void HybridInjectionWithInlineArgumentThatCannotBeConvertedThrowsException()
+		public void HybridInjectionWithBindingParameterThatCannotBeConvertedThrowsException()
 		{
 			IModule module = new InlineModule(
 				m => m.Bind<HybridInjectionMock>()
 							.ToSelf()
-							.WithArgument("connectionString", "this is a connection string")
-							.WithArgument("child", "invalid")
+							.WithConstructorArgument("connectionString", "this is a connection string")
+							.WithConstructorArgument("child", "invalid")
 			);
 
 			using (var kernel = new StandardKernel(module))

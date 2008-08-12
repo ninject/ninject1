@@ -82,9 +82,9 @@ namespace Ninject.Core.Planning
 			return GetOne<T>();
 		}
 		/*----------------------------------------------------------------------------------------*/
-		T IDirectiveCollection.GetOne<T>(object key)
+		T IDirectiveCollection.Get<T>(object key)
 		{
-			return GetOne<T>(key);
+			return Get<T>(key);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IList<T> IDirectiveCollection.GetAll<T>()

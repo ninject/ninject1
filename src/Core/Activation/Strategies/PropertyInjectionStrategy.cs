@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Core.Conversion;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Parameters;
@@ -47,11 +48,16 @@ namespace Ninject.Core.Activation.Strategies
 			{
 				var contextFactory = context.Kernel.Components.Get<IContextFactory>();
 				var injectorFactory = context.Kernel.Components.Get<IInjectorFactory>();
+				var converter = context.Kernel.Components.Get<IConverter>();
 
 				foreach (PropertyInjectionDirective directive in directives)
 				{
-					// First, check the context for a transient value for the property.
-					object value = GetValueFromTransientParameter(context, directive.Target);
+					// First, try to get the value from a context parameter.
+					object value = context.Parameters.GetValueOf<PropertyValueParameter>(directive.Target.Name, context);
+
+					// Next, try to get the value from a binding parameter.
+					if (value == null)
+						value = context.Binding.Parameters.GetValueOf<PropertyValueParameter>(directive.Target.Name, context);
 
 					// If no overrides have been declared, activate a service of the proper type to use as the value.
 					if (value == null)
@@ -64,6 +70,10 @@ namespace Ninject.Core.Activation.Strategies
 						value = directive.Argument.Resolver.Resolve(context, injectionContext);
 					}
 
+					// Convert the value if necessary.
+					if (!converter.TryConvert(value, directive.Target.Type, out value))
+						throw new ActivationException(ExceptionFormatter.CouldNotConvertValueForInjection(context, directive.Target, value));
+
 					// Get an injector that can set the property's value.
 					IPropertyInjector injector = injectorFactory.GetInjector(directive.Member);
 
@@ -73,12 +83,6 @@ namespace Ninject.Core.Activation.Strategies
 			}
 
 			return StrategyResult.Proceed;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private static object GetValueFromTransientParameter(IContext context, ITarget target)
-		{
-			var parameter = context.Parameters.GetOne<PropertyValueParameter>(target.Name);
-			return (parameter == null) ? null : parameter.Value;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

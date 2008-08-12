@@ -18,30 +18,37 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Behavior;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Binding.Syntax
+namespace Ninject.Core.Parameters
 {
 	/// <summary>
-	/// Describes a fluent syntax for modifying the behavior of a binding.
+	/// A transient parameter that will override the injection for a constructor argument during activation.
 	/// </summary>
-	public interface IBindingBehaviorSyntax : IFluentSyntax
+	public class ConstructorArgumentParameter : ParameterBase
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that the service's instantiation should be controlled by a new instance of
-		/// the specified behavior type. The default constructor on the behavior type will be called.
+		/// Initializes a new instance of the <see cref="ConstructorArgumentParameter"/> class.
 		/// </summary>
-		/// <typeparam name="T">The behavior type to use.</typeparam>
-		IBindingParameterSyntax Using<T>() where T : IBehavior, new();
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="value">The value to associate with the parameter.</param>
+		public ConstructorArgumentParameter(string name, object value)
+			: base(name, value)
+		{
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that the service's instantiation should be controlled by the specified behavior.
+		/// Initializes a new instance of the <see cref="ConstructorArgumentParameter"/> class.
 		/// </summary>
-		/// <param name="behavior">The behavior to use.</param>
-		IBindingParameterSyntax Using(IBehavior behavior);
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="callback">The callback to trigger to get the parameter's value.</param>
+		public ConstructorArgumentParameter(string name, Func<IContext, object> callback)
+			: base(name, callback)
+		{
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

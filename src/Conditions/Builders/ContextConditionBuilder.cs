@@ -39,7 +39,7 @@ namespace Ninject.Conditions.Builders
 		/// Creates a new ContextConditionBuilder.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		public ContextConditionBuilder(Converter<TRoot, IContext> converter)
+		public ContextConditionBuilder(Func<TRoot, IContext> converter)
 			: base(converter)
 		{
 		}
@@ -49,7 +49,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
-		public ContextConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Converter<TPrevious, IContext> converter)
+		public ContextConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, IContext> converter)
 			: base(last, converter)
 		{
 		}
@@ -112,20 +112,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public SimpleConditionBuilder<TRoot, IContext, object> Variable(string name)
 		{
-			return new SimpleConditionBuilder<TRoot, IContext, object>(this, ctx =>
-			{
-				var parameter = ctx.Parameters.GetOne<ContextVariableParameter>(name);
-				return (parameter == null) ? null : parameter.GetValue(ctx);
-			});
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Continues the conditional chain, examining the value of the specified parameter.
-		/// </summary>
-		public SimpleConditionBuilder<TRoot, IContext, T> Parameter<T>(string name)
-			where T : class, IParameter
-		{
-			return new SimpleConditionBuilder<TRoot, IContext, T>(this, ctx => ctx.Parameters.GetOne<T>(name));
+			return new SimpleConditionBuilder<TRoot, IContext, object>(this, ctx => ctx.Parameters.GetValueOf<VariableParameter>(name, ctx));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -133,7 +120,16 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TerminatingCondition<TRoot, IContext> HasVariable(string name)
 		{
-			return Terminate(ctx => ctx.Parameters.Has<ContextVariableParameter>(name));
+			return Terminate(ctx => ctx.Parameters.Has<VariableParameter>(name));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Continues the conditional chain, examining the value of the specified parameter.
+		/// </summary>
+		public SimpleConditionBuilder<TRoot, IContext, object> Parameter<T>(string name)
+			where T : class, IParameter
+		{
+			return new SimpleConditionBuilder<TRoot, IContext, object>(this, ctx => ctx.Parameters.GetValueOf<T>(name, ctx));
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

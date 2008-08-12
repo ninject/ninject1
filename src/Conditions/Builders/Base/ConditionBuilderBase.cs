@@ -36,8 +36,8 @@ namespace Ninject.Conditions.Builders
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private readonly IConditionBuilder<TRoot, TPrevious> _last;
-		private readonly Converter<TRoot, TSubject> _directConverter;
-		private readonly Converter<TPrevious, TSubject> _converter;
+		private readonly Func<TRoot, TSubject> _directFunc;
+		private readonly Func<TPrevious, TSubject> _converter;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -45,10 +45,10 @@ namespace Ninject.Conditions.Builders
 		/// Creates a new ConditionBuilderBase.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		protected ConditionBuilderBase(Converter<TRoot, TSubject> converter)
+		protected ConditionBuilderBase(Func<TRoot, TSubject> converter)
 		{
 			Ensure.ArgumentNotNull(converter, "converter");
-			_directConverter = converter;
+			_directFunc = converter;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -56,7 +56,7 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
-		protected ConditionBuilderBase(IConditionBuilder<TRoot, TPrevious> last, Converter<TPrevious, TSubject> converter)
+		protected ConditionBuilderBase(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, TSubject> converter)
 		{
 			Ensure.ArgumentNotNull(last, "last");
 			Ensure.ArgumentNotNull(converter, "converter");
@@ -122,7 +122,7 @@ namespace Ninject.Conditions.Builders
 				if (ReferenceEquals(default(TRoot), root))
 					return default(TSubject);
 				else
-					return _directConverter(root);
+					return _directFunc(root);
 			}
 			else
 			{

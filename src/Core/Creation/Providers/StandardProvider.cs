@@ -68,7 +68,7 @@ namespace Ninject.Core.Creation.Providers
 		/// <returns><see langword="True"/> if instances can be created, otherwise <see langword="false"/>.</returns>
 		public static bool CanSupportType(Type type)
 		{
-			return (!type.IsInterface && !type.IsAbstract);
+			return !type.IsInterface && !type.IsAbstract && !type.IsGenericTypeDefinition;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

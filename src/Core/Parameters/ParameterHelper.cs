@@ -18,43 +18,29 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Parameters
 {
-	/// <summary>
-	/// A transient parameter that will override the injection for a constructor argument during activation.
-	/// </summary>
-	public class ConstructorArgumentParameter : IParameter
+	public static class ParameterHelper
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Properties
-		/// <summary>
-		/// Gets the name of the parameter.
-		/// </summary>
-		public string Name { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the value to inject into the constructor argument.
-		/// </summary>
-		public object Value { get; private set; }
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ConstructorArgumentParameter"/> class.
-		/// </summary>
-		/// <param name="name">The name of the argument to override.</param>
-		/// <param name="value">The value of the argument.</param>
-		public ConstructorArgumentParameter(string name, object value)
+		public static IEnumerable<T> CreateFromDictionary<T>(IDictionary dictionary, Func<string, object, T> callback)
 		{
-			Ensure.ArgumentNotNull(name, "name");
-
-			Name = name;
-			Value = value;
+			foreach (DictionaryEntry entry in dictionary)
+				yield return callback(entry.Key.ToString(), entry.Value);
 		}
-		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		public static IEnumerable<T> CreateFromDictionary<T>(object values, Func<string, object, T> callback)
+		{
+			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
+
+			foreach (DictionaryEntry entry in dictionary)
+				yield return callback(entry.Key.ToString(), entry.Value);
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

@@ -20,6 +20,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -28,48 +30,35 @@ namespace Ninject.Core.Parameters
 	/// <summary>
 	/// A collection that organizes parameters by type.
 	/// </summary>
-	public class ParameterCollection : TypedCollection<string, IParameter>, IParameterCollection
+	public class ParameterCollection : TypedCollection<object, IParameter>, IParameterCollection
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
-		/// <summary>
-		/// Gets the key for the specified item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		/// <returns>The key for the item.</returns>
-		protected override string GetKeyForItem(IParameter item)
+		protected override object GetKeyForItem(IParameter item)
 		{
 			return item.Name;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Called when an item is added to the collection when an item with the same key already
-		/// exists in the collection, organized under the same type.
-		/// </summary>
-		/// <param name="type">The type the items are organized under.</param>
-		/// <param name="key">The key the items share.</param>
-		/// <param name="newItem">The new item that was added.</param>
-		/// <param name="existingItem">The item that already existed in the collection.</param>
-		protected override void OnKeyCollision(Type type, string key, IParameter newItem, IParameter existingItem)
+		protected override void OnKeyCollision(Type type, object key, IParameter newItem, IParameter existingItem)
 		{
 			throw new InvalidOperationException(ExceptionFormatter.ParameterWithSameNameAlreadyDefined(newItem));
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IParameterCollection Implementation
-		void IParameterCollection.Add<T>(T item)
+		void IParameterCollection.Add<T>(T parameter)
 		{
-			Add(item);
+			Add(parameter);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		void IParameterCollection.AddRange<T>(IEnumerable<T> items)
+		void IParameterCollection.AddRange<T>(IEnumerable<T> parameters)
 		{
-			AddRange(items);
+			AddRange(parameters);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		bool IParameterCollection.Has<T>(string key)
+		bool IParameterCollection.Has<T>(string name)
 		{
-			return Has<T>(key);
+			return Has<T>(name);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		bool IParameterCollection.HasOneOrMore<T>()
@@ -77,19 +66,25 @@ namespace Ninject.Core.Parameters
 			return HasOneOrMore<T>();
 		}
 		/*----------------------------------------------------------------------------------------*/
+		T IParameterCollection.Get<T>(string name)
+		{
+			return Get<T>(name);
+		}
+		/*----------------------------------------------------------------------------------------*/
 		T IParameterCollection.GetOne<T>()
 		{
 			return GetOne<T>();
 		}
 		/*----------------------------------------------------------------------------------------*/
-		T IParameterCollection.GetOne<T>(string key)
-		{
-			return GetOne<T>(key);
-		}
-		/*----------------------------------------------------------------------------------------*/
 		IList<T> IParameterCollection.GetAll<T>()
 		{
 			return GetAll<T>();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		object IParameterCollection.GetValueOf<T>(string name, IContext context)
+		{
+			var parameter = Get<T>(name);
+			return (parameter == null) ? null : parameter.GetValue(context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

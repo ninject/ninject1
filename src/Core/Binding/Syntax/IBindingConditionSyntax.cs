@@ -33,68 +33,68 @@ namespace Ninject.Core.Binding.Syntax
 		/// <summary>
 		/// Indicates that the binding should be used by default.
 		/// </summary>
-		IBindingBehaviorOrArgumentSyntax Always();
+		IBindingBehaviorOrParameterSyntax Always();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used if the specified condition is true
 		/// in the context in which the service is activated.
 		/// </summary>
 		/// <param name="condition">The condition to test.</param>
-		IBindingBehaviorOrArgumentSyntax Only(ICondition<IContext> condition);
+		IBindingBehaviorOrParameterSyntax Only(ICondition<IContext> condition);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used if the an instance of the specified
 		/// condition type is true in the context in which the service is activated. The condition
 		/// will be activated via the kernel.
 		/// </summary>
-		IBindingBehaviorOrArgumentSyntax Only<T>() where T : ICondition<IContext>;
+		IBindingBehaviorOrParameterSyntax Only<T>() where T : ICondition<IContext>;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used if the specified predicate evalutes to
 		/// true when the component is being activated.
 		/// </summary>
 		/// <param name="predicate">The predicate to invoke.</param>
-		IBindingBehaviorOrArgumentSyntax OnlyIf(Predicate<IContext> predicate);
+		IBindingBehaviorOrParameterSyntax OnlyIf(Predicate<IContext> predicate);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used for members declared by the specified type.
 		/// </summary>
 		/// <typeparam name="T">The type in question.</typeparam>
-		IBindingBehaviorOrArgumentSyntax ForMembersOf<T>();
+		IBindingBehaviorOrParameterSyntax ForMembersOf<T>();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used for members declared by the specified type.
 		/// </summary>
 		/// <param name="type">The type in question.</param>
-		IBindingBehaviorOrArgumentSyntax ForMembersOf(Type type);
+		IBindingBehaviorOrParameterSyntax ForMembersOf(Type type);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used when the member being injected is decorated
 		/// with the specified attribute.
 		/// </summary>
 		/// <typeparam name="T">The attribute to look for.</typeparam>
-		IBindingBehaviorOrArgumentSyntax WhereMemberHas<T>() where T : Attribute;
+		IBindingBehaviorOrParameterSyntax WhereMemberHas<T>() where T : Attribute;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used when the member being injected is decorated
 		/// with the specified attribute.
 		/// </summary>
 		/// <param name="attribute">The attribute to look for.</param>
-		IBindingBehaviorOrArgumentSyntax WhereMemberHas(Type attribute);
+		IBindingBehaviorOrParameterSyntax WhereMemberHas(Type attribute);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used when the injection target is decorated
 		/// with the specified attribute.
 		/// </summary>
 		/// <typeparam name="T">The attribute to look for.</typeparam>
-		IBindingBehaviorOrArgumentSyntax WhereTargetHas<T>() where T : Attribute;
+		IBindingBehaviorOrParameterSyntax WhereTargetHas<T>() where T : Attribute;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used when the injection target is decorated
 		/// with the specified attribute.
 		/// </summary>
 		/// <param name="attribute">The attribute to look for.</param>
-		IBindingBehaviorOrArgumentSyntax WhereTargetHas(Type attribute);
+		IBindingBehaviorOrParameterSyntax WhereTargetHas(Type attribute);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

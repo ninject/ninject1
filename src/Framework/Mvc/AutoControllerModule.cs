@@ -91,7 +91,7 @@ namespace Ninject.Framework.Mvc
 			if (context.Parameters == null)
 				return false;
 
-			var parameter = context.Parameters.GetOne<ContextVariableParameter>("controllerName");
+			var parameter = context.Parameters.Get<VariableParameter>("controllerName");
 
 			if (parameter == null)
 				return false;

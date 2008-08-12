@@ -19,6 +19,8 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
+using Ninject.Core.Binding;
+using Ninject.Core.Conversion;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Parameters;
@@ -96,17 +98,19 @@ namespace Ninject.Core.Creation.Providers
 		protected virtual object[] ResolveConstructorArguments(IContext context, ConstructorInjectionDirective directive)
 		{
 			var contextFactory = context.Kernel.Components.Get<IContextFactory>();
+			var converter = context.Kernel.Components.Get<IConverter>();
+
 			var arguments = new object[directive.Arguments.Count];
 
 			int index = 0;
 			foreach (Argument argument in directive.Arguments)
 			{
 				// First, try to get the value from a transient parameter in the context.
-				object value = GetValueFromTransientParameter(context, argument.Target);
+				object value = context.Parameters.GetValueOf<ConstructorArgumentParameter>(argument.Target.Name, context);
 
 				// Next, try to get the value from an inline argument associated with the binding.
 				if (value == null)
-					value = GetValueFromInlineArgument(context, argument.Target);
+					value = context.Binding.Parameters.GetValueOf<ConstructorArgumentParameter>(argument.Target.Name, context);
 
 				// If no overrides have been declared, activate a service of the proper type to use as the value.
         if (value == null)
@@ -119,45 +123,14 @@ namespace Ninject.Core.Creation.Providers
 					value = argument.Resolver.Resolve(context, injectionContext);
 				}
 
+				// Convert the value if necessary.
+				if (!converter.TryConvert(value, argument.Target.Type, out value))
+					throw new ActivationException(ExceptionFormatter.CouldNotConvertValueForInjection(context, argument.Target, value));
+
 				arguments[index++] = value;
 			}
 
 			return arguments;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		private static object GetValueFromInlineArgument(IContext context, ITarget target)
-		{
-			if (!context.Binding.InlineArguments.ContainsKey(target.Name))
-				return null;
-
-			object value = context.Binding.InlineArguments[target.Name];
-
-#if !NO_CONVERT
-			// See if we can just inject the argument directly.
-			if (!target.Type.IsAssignableFrom(value.GetType()))
-			{
-				try
-				{
-					// Try to convert the inline argument to the expected type.
-					value = Convert.ChangeType(value, target.Type);
-				}
-				catch (InvalidCastException)
-				{
-					// If the conversion failed, we're out of options, so throw an ActivationException.
-					throw new ActivationException(ExceptionFormatter.InvalidInlineArgument(target, value, context));
-				}
-			}
-#endif //!NETCF
-
-			return value;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private static object GetValueFromTransientParameter(IContext context, ITarget target)
-		{
-			var parameter = context.Parameters.GetOne<ConstructorArgumentParameter>(target.Name);
-			return (parameter == null) ? null : parameter.Value;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

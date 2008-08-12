@@ -20,6 +20,7 @@
 using System;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
+using Ninject.Core.Conversion;
 using Ninject.Core.Creation;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
@@ -93,6 +94,7 @@ namespace Ninject.Core
 			components.Connect<IActivator>(new StandardActivator());
 			components.Connect<IPlanner>(new StandardPlanner());
 			components.Connect<ITracker>(new StandardTracker());
+			components.Connect<IConverter>(new StandardConverter());
 			components.Connect<IBindingRegistry>(new StandardBindingRegistry());
 			components.Connect<IBindingSelector>(new StandardBindingSelector());
 			components.Connect<IBindingFactory>(new StandardBindingFactory());

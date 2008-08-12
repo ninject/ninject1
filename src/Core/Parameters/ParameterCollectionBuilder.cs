@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
@@ -33,7 +34,50 @@ namespace Ninject.Core.Parameters
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private readonly ParameterCollection _collection = new ParameterCollection();
+		private readonly IParameterCollection _collection = new ParameterCollection();
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Determines whether this object is equal to the specified object.
+		/// </summary>
+		/// <param name="obj">The object to compare.</param>
+		/// <returns><see langword="True"/> if the objects are equal, otherwise <see langword="false"/>.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a hash code for the object.
+		/// </summary>
+		/// <returns>A hash code for the object.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a string that represents the object.
+		/// </summary>
+		/// <returns>A string that represents the object.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public override string ToString()
+		{
+			return base.ToString();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the type of the object.
+		/// </summary>
+		/// <returns>The object's type.</returns>
+		[EditorBrowsable(EditorBrowsableState.Never)]
+		public new Type GetType()
+		{
+			return base.GetType();
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods: Constructor Arguments
@@ -49,14 +93,23 @@ namespace Ninject.Core.Parameters
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Adds a transient value for the constructor argument with the specified name.
+		/// </summary>
+		/// <param name="name">The name of the argument.</param>
+		/// <param name="valueProvider">The callback to trigger to get the value to inject.</param>
+		public ParameterCollectionBuilder ConstructorArgument(string name, Func<IContext, object> valueProvider)
+		{
+			_collection.Add(new ConstructorArgumentParameter(name, valueProvider));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Adds transient values for the arguments defined in the dictionary.
 		/// </summary>
 		/// <param name="arguments">A dictionary of argument names and values to define.</param>
 		public ParameterCollectionBuilder ConstructorArguments(IDictionary arguments)
 		{
-			foreach (DictionaryEntry entry in arguments)
-				_collection.Add(new ConstructorArgumentParameter(entry.Key.ToString(), entry.Value));
-
+			_collection.AddRange(ParameterHelper.CreateFromDictionary(arguments, (name, value) => new ConstructorArgumentParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -66,11 +119,7 @@ namespace Ninject.Core.Parameters
 		/// <param name="arguments">An object containing the values to define as arguments.</param>
 		public ParameterCollectionBuilder ConstructorArguments(object arguments)
 		{
-			IDictionary dictionary = ReflectionDictionaryBuilder.Create(arguments);
-
-			foreach (DictionaryEntry entry in dictionary)
-				_collection.Add(new ConstructorArgumentParameter(entry.Key.ToString(), entry.Value));
-
+			_collection.AddRange(ParameterHelper.CreateFromDictionary(arguments, (name, value) => new ConstructorArgumentParameter(name, value)));
 			return this;
 		}
 		#endregion
@@ -88,14 +137,23 @@ namespace Ninject.Core.Parameters
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Adds a transient value for the property with the specified name.
+		/// </summary>
+		/// <param name="name">The name of the property.</param>
+		/// <param name="valueProvider">The callback to trigger to get the value to inject.</param>
+		public ParameterCollectionBuilder PropertyValue(string name, Func<IContext, object> valueProvider)
+		{
+			_collection.Add(new PropertyValueParameter(name, valueProvider));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Adds transient values for the properties defined in the dictionary.
 		/// </summary>
 		/// <param name="values">A dictionary of property names and values to define.</param>
 		public ParameterCollectionBuilder PropertyValues(IDictionary values)
 		{
-			foreach (DictionaryEntry entry in values)
-				_collection.Add(new PropertyValueParameter(entry.Key.ToString(), entry.Value));
-
+			_collection.AddRange(ParameterHelper.CreateFromDictionary(values, (name, value) => new PropertyValueParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -105,11 +163,7 @@ namespace Ninject.Core.Parameters
 		/// <param name="values">An object containing the values to define as arguments.</param>
 		public ParameterCollectionBuilder PropertyValues(object values)
 		{
-			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
-
-			foreach (DictionaryEntry entry in dictionary)
-				_collection.Add(new PropertyValueParameter(entry.Key.ToString(), entry.Value));
-
+			_collection.AddRange(ParameterHelper.CreateFromDictionary(values, (name, value) => new PropertyValueParameter(name, value)));
 			return this;
 		}
 		#endregion
@@ -120,9 +174,9 @@ namespace Ninject.Core.Parameters
 		/// </summary>
 		/// <param name="name">The name of the variable.</param>
 		/// <param name="value">The value for the variable.</param>
-		public ParameterCollectionBuilder ContextVariable(string name, object value)
+		public ParameterCollectionBuilder Variable(string name, object value)
 		{
-			_collection.Add(new ContextVariableParameter(name, ctx => value));
+			_collection.Add(new VariableParameter(name, value));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -132,9 +186,9 @@ namespace Ninject.Core.Parameters
 		/// </summary>
 		/// <param name="name">The name of the variable.</param>
 		/// <param name="valueProvider">The callback that will return the value for the variable.</param>
-		public ParameterCollectionBuilder ContextVariable(string name, Func<IContext, object> valueProvider)
+		public ParameterCollectionBuilder Variable(string name, Func<IContext, object> valueProvider)
 		{
-			_collection.Add(new ContextVariableParameter(name, valueProvider));
+			_collection.Add(new VariableParameter(name, valueProvider));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -142,16 +196,9 @@ namespace Ninject.Core.Parameters
 		/// Adds context variables for the properties defined in the dictionary.
 		/// </summary>
 		/// <param name="values">A dictionary of context variables and their associated values.</param>
-		public ParameterCollectionBuilder ContextVariables(IDictionary values)
+		public ParameterCollectionBuilder Variables(IDictionary values)
 		{
-			foreach (DictionaryEntry entry in values)
-			{
-				string key = entry.Key.ToString();
-				object value = entry.Value;
-
-				_collection.Add(new ContextVariableParameter(key, ctx => value));
-			}
-
+			_collection.AddRange(ParameterHelper.CreateFromDictionary(values, (name, value) => new VariableParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -159,18 +206,9 @@ namespace Ninject.Core.Parameters
 		/// Adds context variables for the properties defined on the object.
 		/// </summary>
 		/// <param name="values">An object containing the values to define as context variables.</param>
-		public ParameterCollectionBuilder ContextVariables(object values)
+		public ParameterCollectionBuilder Variables(object values)
 		{
-			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);
-
-			foreach (DictionaryEntry entry in dictionary)
-			{
-				string key = entry.Key.ToString();
-				object value = entry.Value;
-
-				_collection.Add(new ContextVariableParameter(key, ctx => value));
-			}
-
+			_collection.AddRange(ParameterHelper.CreateFromDictionary(values, (name, value) => new VariableParameter(name, value)));
 			return this;
 		}
 		#endregion
@@ -179,6 +217,7 @@ namespace Ninject.Core.Parameters
 		/// <summary>
 		/// Adds the specified custom parameter to the collection.
 		/// </summary>
+		/// <typeparam name="T">The type of the parameter.</typeparam>
 		/// <param name="parameter">The parameter to add.</param>
 		public ParameterCollectionBuilder Custom<T>(T parameter)
 			where T : class, IParameter
@@ -190,9 +229,10 @@ namespace Ninject.Core.Parameters
 		/// <summary>
 		/// Adds the specified custom parameters to the collection.
 		/// </summary>
+		/// <typeparam name="T">The type of the parameters.</typeparam>
 		/// <param name="parameters">The parameters to add.</param>
 		public ParameterCollectionBuilder Custom<T>(IEnumerable<T> parameters)
-			where T : class, IParameter
+			 where T : class, IParameter
 		{
 			_collection.AddRange(parameters);
 			return this;
@@ -220,20 +260,26 @@ namespace Ninject.Core.Parameters
 			return _collection.HasOneOrMore<T>();
 		}
 		/*----------------------------------------------------------------------------------------*/
+		T IParameterCollection.Get<T>(string name)
+		{
+			return _collection.Get<T>(name);
+		}
+		/*----------------------------------------------------------------------------------------*/
 		T IParameterCollection.GetOne<T>()
 		{
 			return _collection.GetOne<T>();
-		}
-		/*----------------------------------------------------------------------------------------*/
-		T IParameterCollection.GetOne<T>(string name)
-		{
-			return _collection.GetOne<T>(name);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IList<T> IParameterCollection.GetAll<T>()
 		{
 			return _collection.GetAll<T>();
 		}
+		/*----------------------------------------------------------------------------------------*/
+		object IParameterCollection.GetValueOf<T>(string name, IContext context)
+		{
+			return _collection.GetValueOf<T>(name, context);
+		}
+
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

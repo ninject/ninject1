@@ -18,45 +18,37 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Parameters
 {
 	/// <summary>
-	/// A transient parameter that will override the injection for a property during activation.
+	/// A transient parameter that will declare a variable that can be read during activation.
 	/// </summary>
-	public class PropertyValueParameter : IParameter
+	public class VariableParameter : ParameterBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Properties
 		/// <summary>
-		/// Gets the name of the parameter.
+		/// Initializes a new instance of the <see cref="VariableParameter"/> class.
 		/// </summary>
-		/// <value></value>
-		public string Name { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the value to inject into the property.
-		/// </summary>
-		/// <value>The value.</value>
-		public object Value { get; private set; }
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PropertyValueParameter"/> class.
-		/// </summary>
-		/// <param name="name">The name of the property whose injection will be overridden.</param>
-		/// <param name="value">The value to inject.</param>
-		public PropertyValueParameter(string name, object value)
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="value">The value to associate with the parameter.</param>
+		public VariableParameter(string name, object value)
+			: base(name, value)
 		{
-			Ensure.ArgumentNotNull(name, "name");
-
-			Name = name;
-			Value = value;
 		}
-		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="VariableParameter"/> class.
+		/// </summary>
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="callback">The callback to trigger to get the parameter's value.</param>
+		public VariableParameter(string name, Func<IContext, object> callback)
+			: base(name, callback)
+		{
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

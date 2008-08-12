@@ -37,7 +37,7 @@ namespace Ninject.Conditions.Builders
 		/// Creates a new AssemblyNameConditionBuilder.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		public AssemblyNameConditionBuilder(Converter<TRoot, AssemblyName> converter)
+		public AssemblyNameConditionBuilder(Func<TRoot, AssemblyName> converter)
 			: base(converter)
 		{
 		}
@@ -48,7 +48,7 @@ namespace Ninject.Conditions.Builders
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
 		public AssemblyNameConditionBuilder(IConditionBuilder<TRoot, TPrevious> last,
-			Converter<TPrevious, AssemblyName> converter)
+			Func<TPrevious, AssemblyName> converter)
 			: base(last, converter)
 		{
 		}

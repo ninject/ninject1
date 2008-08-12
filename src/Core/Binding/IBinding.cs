@@ -23,6 +23,7 @@ using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
 using Ninject.Core.Creation;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Parameters;
 #endregion
 
 namespace Ninject.Core.Binding
@@ -59,9 +60,9 @@ namespace Ninject.Core.Binding
 		ICondition<IContext> Condition { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets additional arguments that should be passed to the type's constructor.
+		/// Gets any parameters that have been defined for the binding.
 		/// </summary>
-		IDictionary<string, object> InlineArguments { get; }
+		IParameterCollection Parameters { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets a value indicating whether the binding was implicitly created by the kernel.

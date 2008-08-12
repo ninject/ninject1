@@ -18,20 +18,26 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Activation;
+using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Parameters
+namespace Ninject.Core.Conversion
 {
 	/// <summary>
-	/// A transient parameter used during activation.
+	/// Converts values from one type to another.
 	/// </summary>
-	public interface IParameter
+	public interface IConverter : IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the name of the parameter.
+		/// Converts the specified value.
 		/// </summary>
-		string Name { get; }
+		/// <param name="value">The value to convert.</param>
+		/// <param name="type">The type to convert the value to.</param>
+		/// <param name="result">The converted value.</param>
+		/// <returns><see langword="True"/> if the conversion succeeded or was unnecessary, otherwise <see langword="false"/>.</returns>
+		bool TryConvert(object value, Type type, out object result);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

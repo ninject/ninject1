@@ -106,6 +106,32 @@ namespace Ninject.Core.Infrastructure
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region CouldNotConvertValueForInjection
+		public static string CouldNotConvertValueForInjection(IContext context, ITarget target, object value)
+		{
+			Ensure.ArgumentNotNull(target, "target");
+			Ensure.ArgumentNotNull(context, "context");
+
+			using (var sw = new StringWriter())
+			{
+				sw.WriteLine("Error activating {0}: the available value's type ({1}) is not compatible with the expected type ({2}), and the value cannot be converted.",
+					Format.Type(context.Service),
+					Format.Type(value.GetType()),
+					Format.Type(target.Type));
+
+				sw.WriteLine("Using {0}", Format.Binding(context.Binding));
+
+				if (context.Binding.HasDebugInfo)
+					sw.WriteLine("  declared by {0}", context.Binding.DebugInfo);
+
+				sw.WriteLine("Activation path:");
+				sw.Write(Format.ActivationPath(context));
+
+				return sw.ToString();
+			}
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region CouldNotCreateInstanceOfType
 		public static string CouldNotCreateInstanceOfType(Type type, Exception exception)
 		{
@@ -226,36 +252,6 @@ namespace Ninject.Core.Infrastructure
 		public static string InvalidCustomBehavior(Type type)
 		{
 			return String.Format("The type {0} cannot be used as a custom behavior type because it does not implement the IBehavior interface.", type);
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region InvalidInlineArgument
-		public static string InvalidInlineArgument(ITarget target, object inlineArgument, IContext context)
-		{
-			Ensure.ArgumentNotNull(target, "target");
-			Ensure.ArgumentNotNull(context, "context");
-
-			using (var sw = new StringWriter())
-			{
-				sw.WriteLine("Error activating {0}: Invalid inline argument specified for constructor parameter '{1}' of type {2}.",
-					Format.Type(context.Service),
-					target.Name,
-					Format.Type(context.Plan.Type));
-
-				sw.WriteLine("The argument's type ({0}) is not compatible with the expected type ({1}), and the value cannot be converted.",
-					Format.Type(inlineArgument.GetType()),
-					Format.Type(target.Type));
-
-				sw.WriteLine("Using {0}", Format.Binding(context.Binding));
-
-				if (context.Binding.HasDebugInfo)
-					sw.WriteLine("  declared by {0}", context.Binding.DebugInfo);
-
-				sw.WriteLine("Activation path:");
-				sw.Write(Format.ActivationPath(context));
-
-				return sw.ToString();
-			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -445,10 +441,10 @@ namespace Ninject.Core.Infrastructure
 			using (var sw = new StringWriter())
 			{
 				sw.WriteLine(
-					"Error activating {0}: the {1} returned an instance of type {2}, which is not compatible with the requested service.",
+					"Error activating {0}: the {1} would create an instance of type {2}, which is not compatible with the requested service.",
 					Format.Type(context.Service),
 					Format.Type(context.Binding.Provider.GetType()),
-					Format.Type(context.Implementation));
+					Format.Type(context.Binding.Provider.GetImplementationType(context)));
 
 				sw.WriteLine("Using {0}", Format.Binding(context.Binding));
 
