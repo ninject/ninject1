@@ -33,6 +33,11 @@ namespace Ninject.Core.Infrastructure
 		/// Gets the kernel whose components are managed by the container.
 		/// </summary>
 		IKernel Kernel { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the parent container.
+		/// </summary>
+		IComponentContainer ParentContainer { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Methods

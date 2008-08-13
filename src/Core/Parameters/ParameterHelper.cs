@@ -25,15 +25,32 @@ using Ninject.Core.Infrastructure;
 
 namespace Ninject.Core.Parameters
 {
+	/// <summary>
+	/// A helper class that creates parameters.
+	/// </summary>
 	public static class ParameterHelper
 	{
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a series of parameters from the values in a dictionary.
+		/// </summary>
+		/// <typeparam name="T">The type of parameter to create.</typeparam>
+		/// <param name="dictionary">The dictionary to read.</param>
+		/// <param name="callback">The callback to execute to create each parameter.</param>
+		/// <returns>The series of parameters.</returns>
 		public static IEnumerable<T> CreateFromDictionary<T>(IDictionary dictionary, Func<string, object, T> callback)
 		{
 			foreach (DictionaryEntry entry in dictionary)
 				yield return callback(entry.Key.ToString(), entry.Value);
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a series of parameters from the values in a dictionary.
+		/// </summary>
+		/// <typeparam name="T">The type of parameter to create.</typeparam>
+		/// <param name="values">The object whose properties will become the values of the parameters.</param>
+		/// <param name="callback">The callback to execute to create each parameter.</param>
+		/// <returns>The series of parameters.</returns>
 		public static IEnumerable<T> CreateFromDictionary<T>(object values, Func<string, object, T> callback)
 		{
 			IDictionary dictionary = ReflectionDictionaryBuilder.Create(values);

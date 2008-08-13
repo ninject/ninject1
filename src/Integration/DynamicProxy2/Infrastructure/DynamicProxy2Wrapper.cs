@@ -67,7 +67,7 @@ namespace Ninject.Integration.DynamicProxy2.Infrastructure
 		#region Private Methods
 		private IRequest CreateRequest(IInvocation castleInvocation)
 		{
-			var requestFactory = Kernel.Components.Get<IRequestFactory>();
+			var requestFactory = Context.Binding.Components.Get<IRequestFactory>();
 
 			return requestFactory.Create(
 				Context,

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Core.Activation;
+using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -97,11 +98,9 @@ namespace Ninject.Core.Behavior
 		{
 			lock (this)
 			{
-				var activator = Kernel.Components.Get<IActivator>();
-
 				contexts.Each(ctx =>
 				{
-					activator.Destroy(ctx);
+					ctx.Binding.Components.Get<IActivator>().Destroy(ctx);
 					DisposeMember(ctx);
 				});
 			}

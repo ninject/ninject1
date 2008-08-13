@@ -23,9 +23,11 @@ using System;
 namespace Ninject.Core.Binding.Syntax
 {
 	/// <summary>
-	/// Describes a fluent syntax for modifying the condition or behavior of a binding.
+	/// Describes a fluent syntax for modifying the condition or behavior of a binding,
+	/// or adding transient components and parameters to it.
 	/// </summary>
-	public interface IBindingConditionBehaviorOrArgumentSyntax : IBindingConditionSyntax, IBindingBehaviorSyntax, IBindingParameterSyntax
+	public interface IBindingConditionBehaviorComponentOrParameterSyntax
+		: IBindingConditionSyntax, IBindingBehaviorSyntax, IBindingComponentSyntax, IBindingParameterSyntax
 	{
 	}
 }

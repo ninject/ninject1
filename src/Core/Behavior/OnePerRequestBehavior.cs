@@ -86,7 +86,7 @@ namespace Ninject.Core.Behavior
 					return ContextCache[context.Implementation].Instance;
 
 				ContextCache.Add(context);
-				Kernel.Components.Get<IActivator>().Activate(context);
+				context.Binding.Components.Get<IActivator>().Activate(context);
 
 				if (HttpContext.Current != null)
 					HttpContext.Current.ApplicationInstance.EndRequest += (sender, evt) => CleanUpInstances();

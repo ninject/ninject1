@@ -64,7 +64,7 @@ namespace Ninject.Integration.LinFu.Infrastructure
 		#region Private Methods
 		private IRequest CreateRequest(InvocationInfo info)
 		{
-			var requestFactory = Kernel.Components.Get<IRequestFactory>();
+			var requestFactory = Context.Binding.Components.Get<IRequestFactory>();
 
 			return requestFactory.Create(
 				Context,

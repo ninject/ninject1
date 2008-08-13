@@ -50,18 +50,13 @@ namespace Ninject.Core.Planning.Strategies
 		{
 			IList<TMember> candidates;
 
+			// If non-public members should be included, we have to scan the type hierarchy recursively.
 			if (Kernel.Options.InjectNonPublicMembers)
-			{
-				// If non-public members should be included, we have to scan the type hierarchy recursively.
 				candidates = GetCandidatesRecursive(binding, type);
-			}
 			else 
-			{
-				BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-				candidates = GetCandidates(binding, type, flags);
-			}
+				candidates = GetCandidates(binding, type, BindingFlags.Public | BindingFlags.Instance);
 
-			var heuristic = Kernel.Components.Get<THeuristic>();
+			var heuristic = binding.Components.Get<THeuristic>();
 
 			foreach (TMember candidate in candidates)
 			{

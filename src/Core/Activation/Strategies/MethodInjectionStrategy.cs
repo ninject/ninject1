@@ -44,7 +44,7 @@ namespace Ninject.Core.Activation.Strategies
 
 			if (directives.Count > 0)
 			{
-				var injectorFactory = context.Kernel.Components.Get<IInjectorFactory>();
+				var injectorFactory = context.Binding.Components.Get<IInjectorFactory>();
 
 				foreach (MethodInjectionDirective directive in directives)
 				{
@@ -64,8 +64,8 @@ namespace Ninject.Core.Activation.Strategies
 		/*----------------------------------------------------------------------------------------*/
 		private static object[] ResolveArguments(IContext context, MethodInjectionDirective directive)
 		{
-			var contextFactory = context.Kernel.Components.Get<IContextFactory>();
-			var converter = context.Kernel.Components.Get<IConverter>();
+			var contextFactory = context.Binding.Components.Get<IContextFactory>();
+			var converter = context.Binding.Components.Get<IConverter>();
 
 			var arguments = new object[directive.Arguments.Count];
 

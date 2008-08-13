@@ -32,7 +32,7 @@ namespace Ninject.Core.Infrastructure
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constants
-		private static readonly string CoreNamespace = "Ninject.Core";
+		private const string CoreNamespace = "Ninject.Core";
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties

@@ -34,53 +34,53 @@ namespace Ninject.Core.Binding.Syntax
 		/// <summary>
 		/// Indicates that the service should be bound to itself.
 		/// </summary>
-		IBindingConditionBehaviorOrArgumentSyntax ToSelf();
+		IBindingConditionBehaviorComponentOrParameterSyntax ToSelf();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to the specified implementation type.
 		/// </summary>
 		/// <typeparam name="T">The type to bind to.</typeparam>
-		IBindingConditionBehaviorOrArgumentSyntax To<T>();
+		IBindingConditionBehaviorComponentOrParameterSyntax To<T>();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to the specified implementation type.
 		/// </summary>
 		/// <param name="type">The type to bind to.</param>
-		IBindingConditionBehaviorOrArgumentSyntax To(Type type);
+		IBindingConditionBehaviorComponentOrParameterSyntax To(Type type);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to a provider of the specified type.
 		/// The provider will be requested from the kernel, meaning it will be activated as normal.
 		/// </summary>
 		/// <typeparam name="T">The provider type to use.</typeparam>
-		IBindingConditionBehaviorOrArgumentSyntax ToProvider<T>() where T : IProvider;
+		IBindingConditionBehaviorComponentOrParameterSyntax ToProvider<T>() where T : IProvider;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to a provider of the specified type.
 		/// The provider will be requested from the kernel, meaning it will be activated as normal.
 		/// </summary>
 		/// <param name="providerType">The provider type to use.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToProvider(Type providerType);
+		IBindingConditionBehaviorComponentOrParameterSyntax ToProvider(Type providerType);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to the specified provider.
 		/// </summary>
 		/// <param name="provider">The provider to use.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToProvider(IProvider provider);
+		IBindingConditionBehaviorComponentOrParameterSyntax ToProvider(IProvider provider);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to the specified callback.
 		/// </summary>
 		/// <typeparam name="T">The type that will be returend by the method.</typeparam>
 		/// <param name="callback">The callback that will be triggered.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToMethod<T>(Func<IContext, T> callback);
+		IBindingConditionBehaviorComponentOrParameterSyntax ToMethod<T>(Func<IContext, T> callback);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service should be bound to the specified constant value.
 		/// </summary>
 		/// <typeparam name="T">The type of the value.</typeparam>
 		/// <param name="value">The constant value.</param>
-		IBindingConditionBehaviorOrArgumentSyntax ToConstant<T>(T value);
+		IBindingConditionBehaviorComponentOrParameterSyntax ToConstant<T>(T value);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

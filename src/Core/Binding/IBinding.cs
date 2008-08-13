@@ -65,6 +65,11 @@ namespace Ninject.Core.Binding
 		IParameterCollection Parameters { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets the component container for the binding.
+		/// </summary>
+		IComponentContainer Components { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets or sets a value indicating whether the binding was implicitly created by the kernel.
 		/// </summary>
 		bool IsImplicit { get; set; }

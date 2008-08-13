@@ -45,6 +45,11 @@ namespace Ninject.Core.Infrastructure
 		/// Gets the kernel whose components are managed by the container.
 		/// </summary>
 		public IKernel Kernel { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the parent container.
+		/// </summary>
+		public IComponentContainer ParentContainer { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -84,6 +89,18 @@ namespace Ninject.Core.Infrastructure
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			Kernel = kernel;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StandardComponentContainer"/> class.
+		/// </summary>
+		/// <param name="kernel">The kernel whose components the container will manage.</param>
+		/// <param name="parentContainer">The parent container.</param>
+		public StandardComponentContainer(IKernel kernel, IComponentContainer parentContainer)
+			: this(kernel)
+		{
+			Ensure.ArgumentNotNull(parentContainer, "parentContainer");
+			ParentContainer = parentContainer;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -238,10 +255,13 @@ namespace Ninject.Core.Infrastructure
 			{
 				IKernelComponent component;
 
-				if (!_components.TryGetValue(type, out component))
-					throw new InvalidOperationException(ExceptionFormatter.KernelHasNoSuchComponent(type));
+				if (_components.TryGetValue(type, out component))
+					return component;
 
-				return component;
+				if (ParentContainer != null)
+					return ParentContainer.Get(type);
+
+				throw new InvalidOperationException(ExceptionFormatter.KernelHasNoSuchComponent(type));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -256,7 +276,13 @@ namespace Ninject.Core.Infrastructure
 
 			lock (_components)
 			{
-				return _components.ContainsKey(type);
+				if (_components.ContainsKey(type))
+					return true;
+
+				if (ParentContainer != null)
+					return ParentContainer.Has(type);
+
+				return false;
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

@@ -35,13 +35,13 @@ namespace Ninject.Core.Binding.Syntax
 		/// the specified behavior type. The default constructor on the behavior type will be called.
 		/// </summary>
 		/// <typeparam name="T">The behavior type to use.</typeparam>
-		IBindingParameterSyntax Using<T>() where T : IBehavior, new();
+		IBindingComponentOrParameterSyntax Using<T>() where T : IBehavior, new();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the service's instantiation should be controlled by the specified behavior.
 		/// </summary>
 		/// <param name="behavior">The behavior to use.</param>
-		IBindingParameterSyntax Using(IBehavior behavior);
+		IBindingComponentOrParameterSyntax Using(IBehavior behavior);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

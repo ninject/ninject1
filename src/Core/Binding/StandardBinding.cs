@@ -66,6 +66,11 @@ namespace Ninject.Core.Binding
 		public IParameterCollection Parameters { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets the component container for the binding.
+		/// </summary>
+		public IComponentContainer Components { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets a value indicating whether the binding was implicitly created by the kernel.
 		/// </summary>
 		public bool IsImplicit { get; set; }
@@ -128,6 +133,7 @@ namespace Ninject.Core.Binding
 			Kernel = kernel;
 			Service = service;
 			Parameters = new ParameterCollection();
+			Components = new StandardComponentContainer(kernel, kernel.Components);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

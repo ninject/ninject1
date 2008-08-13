@@ -61,7 +61,7 @@ namespace Ninject.Core.Planning.Strategies
 			var directive = new FieldInjectionDirective(member);
 
 			ITarget target = new FieldTarget(member);
-			IResolver resolver = Kernel.Components.Get<IResolverFactory>().Create(binding, target);
+			IResolver resolver = binding.Components.Get<IResolverFactory>().Create(binding, target);
 
 			// Determine if the dependency is optional.
 			bool optional = member.HasAttribute(Kernel.Options.OptionalAttributeType);

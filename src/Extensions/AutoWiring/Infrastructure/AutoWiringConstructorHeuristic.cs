@@ -48,7 +48,7 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 			if (candidates.Count == 1)
 				return candidates[0];
 
-			var registry = Kernel.Components.Get<IBindingRegistry>();
+			var registry = binding.Components.Get<IBindingRegistry>();
 			return candidates.Best(c => c.GetParameterTypes().Count(registry.HasBinding));
 		}
 		/*----------------------------------------------------------------------------------------*/

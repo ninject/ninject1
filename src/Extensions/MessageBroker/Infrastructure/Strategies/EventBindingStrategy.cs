@@ -40,7 +40,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
 		public override StrategyResult AfterInitialize(IContext context)
 		{
-			var messageBroker = Kernel.Components.Get<IMessageBroker>();
+			var messageBroker = context.Binding.Components.Get<IMessageBroker>();
 
 			IList<PublicationDirective> publications = context.Plan.Directives.GetAll<PublicationDirective>();
 
@@ -68,7 +68,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
 		public override StrategyResult BeforeDestroy(IContext context)
 		{
-			var messageBroker = Kernel.Components.Get<IMessageBroker>();
+			var messageBroker = context.Binding.Components.Get<IMessageBroker>();
 
 			IList<PublicationDirective> publications = context.Plan.Directives.GetAll<PublicationDirective>();
 

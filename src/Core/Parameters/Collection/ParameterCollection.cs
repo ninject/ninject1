@@ -34,11 +34,24 @@ namespace Ninject.Core.Parameters
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
+		/// <summary>
+		/// Gets the key for the specified item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <returns>The key for the item.</returns>
 		protected override object GetKeyForItem(IParameter item)
 		{
 			return item.Name;
 		}
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Called when an item is added to the collection when an item with the same key already
+		/// exists in the collection, organized under the same type.
+		/// </summary>
+		/// <param name="type">The type the items are organized under.</param>
+		/// <param name="key">The key the items share.</param>
+		/// <param name="newItem">The new item that was added.</param>
+		/// <param name="existingItem">The item that already existed in the collection.</param>
 		protected override void OnKeyCollision(Type type, object key, IParameter newItem, IParameter existingItem)
 		{
 			throw new InvalidOperationException(ExceptionFormatter.ParameterWithSameNameAlreadyDefined(newItem));

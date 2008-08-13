@@ -50,7 +50,7 @@ namespace Ninject.Core.Behavior
 		public override object Resolve(IContext context)
 		{
 			Ensure.NotDisposed(this);
-			Kernel.Components.Get<IActivator>().Activate(context);
+			context.Binding.Components.Get<IActivator>().Activate(context);
 
 			return context.Instance;
 		}
@@ -62,7 +62,7 @@ namespace Ninject.Core.Behavior
 		public override void Release(IContext context)
 		{
 			Ensure.NotDisposed(this);
-			Kernel.Components.Get<IActivator>().Destroy(context);
+			context.Binding.Components.Get<IActivator>().Destroy(context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

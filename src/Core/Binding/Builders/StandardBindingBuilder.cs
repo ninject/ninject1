@@ -34,7 +34,12 @@ namespace Ninject.Core.Binding
 	/// <summary>
 	/// The stock definition of a binding builder.
 	/// </summary>
-	public class StandardBindingBuilder : BindingBuilderBase, IBindingTargetSyntax, IBindingConditionBehaviorOrArgumentSyntax, IBindingBehaviorOrParameterSyntax
+	public class StandardBindingBuilder : BindingBuilderBase,
+		IBindingTargetSyntax,
+		IBindingConditionBehaviorComponentOrParameterSyntax,
+		IBindingBehaviorOrParameterSyntax,
+		IBindingComponentOrParameterSyntax,
+		IBindingConditionComponentOrParameterSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -49,31 +54,31 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingTargetSyntax Members
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToSelf()
+		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToSelf()
 		{
-			Binding.Provider = Binding.Kernel.Components.Get<IProviderFactory>().Create(Binding.Service);
+			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(Binding.Service);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.To<T>()
+		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.To<T>()
 		{
-			Binding.Provider = Binding.Kernel.Components.Get<IProviderFactory>().Create(typeof(T));
+			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(typeof(T));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.To(Type type)
+		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.To(Type type)
 		{
-			Binding.Provider = Binding.Kernel.Components.Get<IProviderFactory>().Create(type);
+			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(type);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToProvider<T>()
+		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToProvider<T>()
 		{
 			Binding.Provider = Binding.Kernel.Get<T>();
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToProvider(Type providerType)
+		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToProvider(Type providerType)
 		{
 			if (!typeof(IProvider).IsAssignableFrom(providerType))
 				throw new NotSupportedException(ExceptionFormatter.InvalidProviderType(Binding, providerType));
@@ -82,19 +87,19 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToProvider(IProvider provider)
+		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToProvider(IProvider provider)
 		{
 			Binding.Provider = provider;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToMethod<T>(Func<IContext, T> callback)
+		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToMethod<T>(Func<IContext, T> callback)
 		{
 			Binding.Provider = new CallbackProvider<T>(callback);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorOrArgumentSyntax IBindingTargetSyntax.ToConstant<T>(T value)
+		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToConstant<T>(T value)
 		{
 			Binding.Provider = new ConstantProvider(value);
 			return this;
@@ -172,7 +177,7 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingBehaviorSyntax Members
-		IBindingParameterSyntax IBindingBehaviorSyntax.Using<T>()
+		IBindingComponentOrParameterSyntax IBindingBehaviorSyntax.Using<T>()
 		{
 			IBehavior behavior = new T();
 
@@ -182,7 +187,7 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingBehaviorSyntax.Using(IBehavior behavior)
+		IBindingComponentOrParameterSyntax IBindingBehaviorSyntax.Using(IBehavior behavior)
 		{
 			behavior.Kernel = Binding.Kernel;
 			Binding.Behavior = behavior;
@@ -273,6 +278,20 @@ namespace Ninject.Core.Binding
 		IBindingParameterSyntax IBindingParameterSyntax.WithParameters<T>(IEnumerable<T> parameters)
 		{
 			Binding.Parameters.AddRange(parameters);
+			return this;
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region IBindingComponentSyntax Members
+		IBindingConditionComponentOrParameterSyntax IBindingComponentSyntax.WithComponent<T>(T component)
+		{
+			Binding.Components.Connect<T>(component);
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingConditionComponentOrParameterSyntax IBindingComponentSyntax.WithComponent(Type type, IKernelComponent component)
+		{
+			Binding.Components.Connect(type, component);
 			return this;
 		}
 		#endregion

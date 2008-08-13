@@ -55,7 +55,7 @@ namespace Ninject.Core.Planning.Strategies
 			ConstructorInfo[] candidates = type.GetConstructors(flags);
 
 			// Use the constructor heuristic to select which constructor should be used.
-			var heuristic = Kernel.Components.Get<IConstructorHeuristic>();
+			var heuristic = binding.Components.Get<IConstructorHeuristic>();
 			ConstructorInfo injectionConstructor = heuristic.Select(binding, type, plan, candidates);
 
 			// If an injection constructor was found, create an injection directive for it.
@@ -67,7 +67,7 @@ namespace Ninject.Core.Planning.Strategies
 		/*----------------------------------------------------------------------------------------*/
 		private ConstructorInjectionDirective CreateDirective(IBinding binding, ConstructorInfo constructor)
 		{
-			var resolverFactory = Kernel.Components.Get<IResolverFactory>();
+			var resolverFactory = binding.Components.Get<IResolverFactory>();
 
 			// Create a new directive that will hold the injection information.
 			var directive = new ConstructorInjectionDirective(constructor);

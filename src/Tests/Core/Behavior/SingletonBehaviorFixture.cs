@@ -63,7 +63,7 @@ namespace Ninject.Tests.Behavior
 
 				Assert.That(binding, Is.Not.Null);
 
-				var planner = kernel.Components.Get<IPlanner>();
+				var planner = binding.Components.Get<IPlanner>();
 				IActivationPlan plan = planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
 
 				var behavior = plan.Behavior as SingletonBehavior;
@@ -87,7 +87,7 @@ namespace Ninject.Tests.Behavior
 
 				Assert.That(binding, Is.Not.Null);
 
-				var planner = kernel.Components.Get<IPlanner>();
+				var planner = binding.Components.Get<IPlanner>();
 				IActivationPlan plan = planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
 
 				var behavior = plan.Behavior as SingletonBehavior;

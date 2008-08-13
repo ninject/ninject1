@@ -102,8 +102,8 @@ namespace Ninject.Core.Planning.Strategies
 		protected virtual void RegisterMethodInterceptors(IBinding binding, Type type, IActivationPlan plan,
 			MethodInfo method, ICollection<InterceptAttribute> attributes)
 		{
-			var factory = Kernel.Components.Get<IAdviceFactory>();
-			var registry = Kernel.Components.Get<IAdviceRegistry>();
+			var factory = binding.Components.Get<IAdviceFactory>();
+			var registry = binding.Components.Get<IAdviceRegistry>();
 
 			foreach (InterceptAttribute attribute in attributes)
 			{

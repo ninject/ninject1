@@ -53,6 +53,9 @@
     <Compile Include="Activation\Context\StandardContextFactory.cs" />
     <Compile Include="Activation\Context\IContextFactory.cs" />
     <Compile Include="Activation\Context\IContext.cs" />
+    <Compile Include="Binding\Syntax\Unions\IBindingConditionComponentOrParameterSyntax.cs" />
+    <Compile Include="Binding\Syntax\Unions\IBindingComponentOrParameterSyntax.cs" />
+    <Compile Include="Binding\Syntax\IBindingComponentSyntax.cs" />
     <Compile Include="Conversion\StandardConverter.cs" />
     <Compile Include="Conversion\IConverter.cs" />
     <Compile Include="Parameters\ParameterHelper.cs" />
@@ -95,7 +98,7 @@
     <Compile Include="Attributes\Behavior\OnePerRequestAttribute.cs" />
     <Compile Include="Attributes\ServiceAttribute.cs" />
     <Compile Include="Behavior\OnePerRequestBehavior.cs" />
-    <Compile Include="Binding\Syntax\IBindingBehaviorOrParameterSyntax.cs" />
+    <Compile Include="Binding\Syntax\Unions\IBindingBehaviorOrParameterSyntax.cs" />
     <Compile Include="Activation\Strategies\ProxyStrategy.cs" />
     <Compile Include="Attributes\DoNotInterceptAttribute.cs" />
     <Compile Include="Binding\Syntax\IBindingParameterSyntax.cs" />
@@ -178,7 +181,7 @@
     <Compile Include="Activation\Strategies\PropertyInjectionStrategy.cs" />
     <Compile Include="Binding\Builders\StandardBindingBuilder.cs" />
     <Compile Include="Binding\Builders\BindingBuilderBase.cs" />
-    <Compile Include="Binding\Syntax\IBindingConditionBehaviorOrArgumentSyntax.cs" />
+    <Compile Include="Binding\Syntax\Unions\IBindingConditionBehaviorComponentOrParameterSyntax.cs" />
     <Compile Include="Binding\Syntax\IBindingConditionSyntax.cs" />
     <Compile Include="Binding\Syntax\IBindingBehaviorSyntax.cs" />
     <Compile Include="Binding\Syntax\IBindingTargetSyntax.cs" />

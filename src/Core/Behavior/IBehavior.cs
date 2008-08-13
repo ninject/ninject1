@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
+using Ninject.Core.Binding;
 #endregion
 
 namespace Ninject.Core.Behavior

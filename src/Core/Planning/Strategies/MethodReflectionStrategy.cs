@@ -57,7 +57,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="member">The member to create a directive for.</param>
 		protected override void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, MethodInfo member)
 		{
-			var resolverFactory = Kernel.Components.Get<IResolverFactory>();
+			var resolverFactory = binding.Components.Get<IResolverFactory>();
 
 			// Create a new directive that will hold the injection information.
 			var directive = new MethodInjectionDirective(member);

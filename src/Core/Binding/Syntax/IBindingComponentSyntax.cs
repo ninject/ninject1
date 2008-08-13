@@ -18,42 +18,33 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Activation;
+using Ninject.Core.Behavior;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Planning.Targets;
 #endregion
 
-namespace Ninject.Core.Resolution.Resolvers
+namespace Ninject.Core.Binding.Syntax
 {
 	/// <summary>
-	/// A dependency resolver that returns <see cref="IKernelComponent"/>s.
+	/// Describes a fluent syntax for adding a transient component to a binding.
 	/// </summary>
-	public class ComponentResolver : ResolverBase
+	public interface IBindingComponentSyntax : IFluentSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Creates a new ComponentResolver.
+		/// Attaches the specified kernel component to the binding, overriding any component with
+		/// the same type defined on the kernel itself.
 		/// </summary>
-		/// <param name="target">The target whose values will be resolved.</param>
-		public ComponentResolver(ITarget target)
-			: base(target)
-		{
-		}
-		#endregion
+		/// <typeparam name="T">The type of the component.</typeparam>
+		/// <param name="component">The component instance to connect.</param>
+		IBindingConditionComponentOrParameterSyntax WithComponent<T>(T component) where T : IKernelComponent;
 		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods
 		/// <summary>
-		/// Resolves the dependency.
+		/// Attaches the specified kernel component to the binding, overriding any component with
+		/// the same type defined on the kernel itself.
 		/// </summary>
-		/// <param name="outerContext">The context in which the dependency was requested.</param>
-		/// <param name="innerContext">The context in which the dependency should be resolved.</param>
-		/// <returns>An object that satisfies the dependency.</returns>
-		protected override object ResolveInstance(IContext outerContext, IContext innerContext)
-		{
-			return outerContext.Binding.Components.Get(Target.Type);
-		}
-		#endregion
+		/// <param name="type">The type of the component.</param>
+		/// <param name="component">The component instance to connect.</param>
+		IBindingConditionComponentOrParameterSyntax WithComponent(Type type, IKernelComponent component);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }
