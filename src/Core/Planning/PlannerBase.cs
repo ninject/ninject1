@@ -102,6 +102,9 @@ namespace Ninject.Core.Planning
 				if (Logger.IsDebugEnabled)
 					Logger.Debug("Type has not been analyzed, building activation plan");
 
+				// Add any directives defined in the binding before analyzing the type directly.
+				plan.Directives.CopyFrom(binding.Directives);
+
 				Strategies.ExecuteForChain(s => s.BeforeBuild(binding, type, plan));
 				Strategies.ExecuteForChain(s => s.Build(binding, type, plan));
 				Strategies.ExecuteForChain(s => s.AfterBuild(binding, type, plan));

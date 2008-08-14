@@ -37,7 +37,12 @@ namespace Ninject.Core.Parameters
 		/// <summary>
 		/// Gets a value that uniquely identifies the parameter.
 		/// </summary>
-		object ParameterKey { get; }
+		string ParameterKey { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets a value indicating whether the parameter should be inherited by child contexts.
+		/// </summary>
+		bool ShouldInherit { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Resolves the value for the context variable.

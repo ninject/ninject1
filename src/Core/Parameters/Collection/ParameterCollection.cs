@@ -30,8 +30,55 @@ namespace Ninject.Core.Parameters
 	/// <summary>
 	/// A collection that organizes parameters by type.
 	/// </summary>
-	public class ParameterCollection : TypedCollection<object, IParameter>, IParameterCollection
+	public class ParameterCollection : TypedCollection<string, IParameter>, IParameterCollection
 	{
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Copies the parameters from the specified collection.
+		/// </summary>
+		/// <param name="parameters">The collection of parameters to copy from.</param>
+		public void CopyFrom(IParameterCollection parameters)
+		{
+			parameters.GetTypes().Each(t => AddRange(t, parameters.GetAll(t)));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Inherits any of the parameters in the specified collection that are marked for inheritance.
+		/// </summary>
+		/// <param name="parameters">The parameters to consider for inheritance.</param>
+		public void InheritFrom(IParameterCollection parameters)
+		{
+			parameters.GetTypes().Each(t => AddRange(t, parameters.GetAll(t).Where(p => p.ShouldInherit)));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Attempts to retrieve the value of the parameter with the specified type and name.
+		/// </summary>
+		/// <typeparam name="T">The type of the parameter.</typeparam>
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="context">The context in which the value is being resolved.</param>
+		/// <returns>The value of the parameter in question, or <see langword="null"/> if no such parameter exists.</returns>
+		public object GetValueOf<T>(string name, IContext context)
+			where T : class, IParameter
+		{
+			var parameter = Get<T>(name);
+			return (parameter == null) ? null : parameter.GetValue(context);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Attempts to retrieve the value of the parameter with the specified type and name.
+		/// </summary>
+		/// <param name="type">The type of the parameter.</param>
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="context">The context in which the value is being resolved.</param>
+		/// <returns>The value of the parameter in question, or <see langword="null"/> if no such parameter exists.</returns>
+		public object GetValueOf(Type type, string name, IContext context)
+		{
+			var parameter = Get(type, name);
+			return (parameter == null) ? null : parameter.GetValue(context);
+		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
 		/// <summary>
@@ -39,7 +86,7 @@ namespace Ninject.Core.Parameters
 		/// </summary>
 		/// <param name="item">The item.</param>
 		/// <returns>The key for the item.</returns>
-		protected override object GetKeyForItem(IParameter item)
+		protected override string GetKeyForItem(IParameter item)
 		{
 			return item.Name;
 		}
@@ -52,52 +99,10 @@ namespace Ninject.Core.Parameters
 		/// <param name="key">The key the items share.</param>
 		/// <param name="newItem">The new item that was added.</param>
 		/// <param name="existingItem">The item that already existed in the collection.</param>
-		protected override void OnKeyCollision(Type type, object key, IParameter newItem, IParameter existingItem)
+		/// <returns><see langword="True"/> if the new item should replace the existing item, otherwise <see langword="false"/>.</returns>
+		protected override bool OnKeyCollision(Type type, string key, IParameter newItem, IParameter existingItem)
 		{
 			throw new InvalidOperationException(ExceptionFormatter.ParameterWithSameNameAlreadyDefined(newItem));
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region IParameterCollection Implementation
-		void IParameterCollection.Add<T>(T parameter)
-		{
-			Add(parameter);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		void IParameterCollection.AddRange<T>(IEnumerable<T> parameters)
-		{
-			AddRange(parameters);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		bool IParameterCollection.Has<T>(string name)
-		{
-			return Has<T>(name);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		bool IParameterCollection.HasOneOrMore<T>()
-		{
-			return HasOneOrMore<T>();
-		}
-		/*----------------------------------------------------------------------------------------*/
-		T IParameterCollection.Get<T>(string name)
-		{
-			return Get<T>(name);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		T IParameterCollection.GetOne<T>()
-		{
-			return GetOne<T>();
-		}
-		/*----------------------------------------------------------------------------------------*/
-		IList<T> IParameterCollection.GetAll<T>()
-		{
-			return GetAll<T>();
-		}
-		/*----------------------------------------------------------------------------------------*/
-		object IParameterCollection.GetValueOf<T>(string name, IContext context)
-		{
-			var parameter = Get<T>(name);
-			return (parameter == null) ? null : parameter.GetValue(context);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

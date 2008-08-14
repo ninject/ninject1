@@ -31,6 +31,17 @@ namespace Ninject.Core.Planning
 	public class DirectiveCollection : TypedCollection<object, IDirective>, IDirectiveCollection
 	{
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Copies the directives from the specified collection.
+		/// </summary>
+		/// <param name="directives">The collection of directives to copy from.</param>
+		public void CopyFrom(IDirectiveCollection directives)
+		{
+			directives.GetTypes().Each(t => AddRange(t, directives.GetAll(t)));
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
 		/// <summary>
 		/// Gets the key for the specified item.
@@ -50,46 +61,11 @@ namespace Ninject.Core.Planning
 		/// <param name="key">The key the items share.</param>
 		/// <param name="newItem">The new item that was added.</param>
 		/// <param name="existingItem">The item that already existed in the collection.</param>
-		protected override void OnKeyCollision(Type type, object key, IDirective newItem, IDirective existingItem)
+		/// <returns><see langword="True"/> if the new item should replace the existing item, otherwise <see langword="false"/>.</returns>
+		protected override bool OnKeyCollision(Type type, object key, IDirective newItem, IDirective existingItem)
 		{
-			// Do nothing; allow the item to override the existing directive.
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region IDirectiveCollection Implementation
-		void IDirectiveCollection.Add<T>(T item)
-		{
-			Add(item);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		void IDirectiveCollection.AddRange<T>(IEnumerable<T> items)
-		{
-			AddRange(items);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		bool IDirectiveCollection.Has<T>(object key)
-		{
-			return Has<T>(key);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		bool IDirectiveCollection.HasOneOrMore<T>()
-		{
-			return HasOneOrMore<T>();
-		}
-		/*----------------------------------------------------------------------------------------*/
-		T IDirectiveCollection.GetOne<T>()
-		{
-			return GetOne<T>();
-		}
-		/*----------------------------------------------------------------------------------------*/
-		T IDirectiveCollection.Get<T>(object key)
-		{
-			return Get<T>(key);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		IList<T> IDirectiveCollection.GetAll<T>()
-		{
-			return GetAll<T>();
+			// The new directive should only override the old one if the old one was implicit, or they are both explicit.
+			return (existingItem.IsExplicit) ? newItem.IsExplicit : true;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

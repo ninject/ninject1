@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Ninject.Core.Activation;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Parameters
@@ -28,61 +29,20 @@ namespace Ninject.Core.Parameters
 	/// <summary>
 	/// A collection of transient parameters used during injection.
 	/// </summary>
-	public interface IParameterCollection
+	public interface IParameterCollection : ITypedCollection<string, IParameter>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Adds the specified parameter to the collection.
+		/// Copies the parameters from the specified collection.
 		/// </summary>
-		/// <typeparam name="T">The type of the parameter.</typeparam>
-		/// <param name="parameter">The parameter to add.</param>
-		void Add<T>(T parameter) where T : class, IParameter;
+		/// <param name="parameters">The collection of parameters to copy from.</param>
+		void CopyFrom(IParameterCollection parameters);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Adds the specified parameters to the collection.
+		/// Inherits any of the parameters in the specified collection that are marked for inheritance.
 		/// </summary>
-		/// <typeparam name="T">The type of the parameter.</typeparam>
-		/// <param name="parameters">The parameters to add.</param>
-		void AddRange<T>(IEnumerable<T> parameters) where T : class, IParameter;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets a value indicating whether the collection contains a parameter with the specified
-		/// type and the specified name.
-		/// </summary>
-		/// <typeparam name="T">The type of the parameter.</typeparam>
-		/// <param name="name">The name of the parameter in question.</param>
-		/// <returns><see langword="True"/> if the item has been defined, otherwise <see langword="false"/>.</returns>
-		bool Has<T>(string name) where T : class, IParameter;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets a value indicating whether the collection contains one or more parameters of the
-		/// specified type.
-		/// </summary>
-		/// <typeparam name="T">The type of the parameter.</typeparam>
-		/// <returns><see langword="True"/> if there are such items, otherwise <see langword="false"/>.</returns>
-		bool HasOneOrMore<T>() where T : class, IParameter;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the parameter in the collection with the specified type and name.
-		/// </summary>
-		/// <typeparam name="T">The type of the parameter.</typeparam>
-		/// <param name="name">The name of the parameter in question.</param>
-		/// <returns>The item, or <see langword="null"/> if none has been defined.</returns>
-		T Get<T>(string name) where T : class, IParameter;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the first parameter in the collection with the specified type.
-		/// </summary>
-		/// <typeparam name="T">The type of the parameter.</typeparam>
-		/// <returns>The item, or <see langword="null"/> if none has been defined.</returns>
-		T GetOne<T>() where T : class, IParameter;
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets all parameters defined in the collection of the specified type.
-		/// </summary>
-		/// <typeparam name="T">The type of the parameter.</typeparam>
-		/// <returns>The collection of parameters.</returns>
-		IList<T> GetAll<T>() where T : class, IParameter;
+		/// <param name="parameters">The parameters to consider for inheritance.</param>
+		void InheritFrom(IParameterCollection parameters);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Attempts to retrieve the value of the parameter with the specified type and name.
@@ -92,6 +52,15 @@ namespace Ninject.Core.Parameters
 		/// <param name="context">The context in which the value is being resolved.</param>
 		/// <returns>The value of the parameter in question, or <see langword="null"/> if no such parameter exists.</returns>
 		object GetValueOf<T>(string name, IContext context) where T : class, IParameter;
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Attempts to retrieve the value of the parameter with the specified type and name.
+		/// </summary>
+		/// <param name="type">The type of the parameter.</param>
+		/// <param name="name">The name of the parameter.</param>
+		/// <param name="context">The context in which the value is being resolved.</param>
+		/// <returns>The value of the parameter in question, or <see langword="null"/> if no such parameter exists.</returns>
+		object GetValueOf(Type type, string name, IContext context);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

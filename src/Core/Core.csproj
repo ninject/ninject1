@@ -58,6 +58,7 @@
     <Compile Include="Binding\Syntax\IBindingComponentSyntax.cs" />
     <Compile Include="Conversion\StandardConverter.cs" />
     <Compile Include="Conversion\IConverter.cs" />
+    <Compile Include="Infrastructure\Structures\ITypedCollection.cs" />
     <Compile Include="Parameters\ParameterHelper.cs" />
     <Compile Include="Parameters\Model\ConstructorArgumentParameter.cs" />
     <Compile Include="Parameters\Model\VariableParameter.cs" />

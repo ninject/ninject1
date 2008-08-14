@@ -59,12 +59,15 @@ namespace Ninject.Tests.Directives
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		public void AddingNewDirectiveWithSameKeyReplacesPreviousOne()
+		public void ExplicitDirectivesReplaceExistingImplicitDirectives()
 		{
-			StandardActivationPlan plan = new StandardActivationPlan(typeof(IMock));
+			var plan = new StandardActivationPlan(typeof(IMock));
 
-			MockDirective d1 = new MockDirective("key");
-			MockDirective d2 = new MockDirective("key");
+			var d1 = new MockDirective("key");
+			d1.IsExplicit = false;
+
+			var d2 = new MockDirective("key");
+			d2.IsExplicit = true;
 
 			plan.Directives.Add(d1);
 			plan.Directives.Add(d2);
@@ -74,6 +77,69 @@ namespace Ninject.Tests.Directives
 			Assert.That(results, Is.Not.Null);
 			Assert.That(results.Count, Is.EqualTo(1));
 			Assert.That(results[0], Is.SameAs(d2));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void ExplicitDirectivesReplaceExistingExplicitDirectives()
+		{
+			var plan = new StandardActivationPlan(typeof(IMock));
+
+			var d1 = new MockDirective("key");
+			d1.IsExplicit = true;
+
+			var d2 = new MockDirective("key");
+			d2.IsExplicit = true;
+
+			plan.Directives.Add(d1);
+			plan.Directives.Add(d2);
+
+			IList<MockDirective> results = plan.Directives.GetAll<MockDirective>();
+
+			Assert.That(results, Is.Not.Null);
+			Assert.That(results.Count, Is.EqualTo(1));
+			Assert.That(results[0], Is.SameAs(d2));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void ImplicitDirectivesReplaceExistingImplicitDirectives()
+		{
+			var plan = new StandardActivationPlan(typeof(IMock));
+
+			var d1 = new MockDirective("key");
+			d1.IsExplicit = false;
+
+			var d2 = new MockDirective("key");
+			d2.IsExplicit = false;
+
+			plan.Directives.Add(d1);
+			plan.Directives.Add(d2);
+
+			IList<MockDirective> results = plan.Directives.GetAll<MockDirective>();
+
+			Assert.That(results, Is.Not.Null);
+			Assert.That(results.Count, Is.EqualTo(1));
+			Assert.That(results[0], Is.SameAs(d2));
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void ImplicitDirectivesDoNotReplaceExistingExplicitDirectives()
+		{
+			var plan = new StandardActivationPlan(typeof(IMock));
+
+			var d1 = new MockDirective("key");
+			d1.IsExplicit = true;
+
+			var d2 = new MockDirective("key");
+			d2.IsExplicit = false;
+
+			plan.Directives.Add(d1);
+			plan.Directives.Add(d2);
+
+			IList<MockDirective> results = plan.Directives.GetAll<MockDirective>();
+
+			Assert.That(results, Is.Not.Null);
+			Assert.That(results.Count, Is.EqualTo(1));
+			Assert.That(results[0], Is.SameAs(d1));
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

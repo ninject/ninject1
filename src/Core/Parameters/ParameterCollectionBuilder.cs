@@ -239,47 +239,103 @@ namespace Ninject.Core.Parameters
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region IParameterCollection Implementation
-		void IParameterCollection.Add<T>(T parameter)
+		#region ITypedCollection Implementation
+		void ITypedCollection<string, IParameter>.Add<T>(T item)
 		{
-			_collection.Add(parameter);
+			_collection.Add(item);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		void IParameterCollection.AddRange<T>(IEnumerable<T> parameters)
+		void ITypedCollection<string, IParameter>.Add(Type type, IParameter item)
 		{
-			_collection.AddRange(parameters);
+			_collection.Add(type, item);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		bool IParameterCollection.Has<T>(string name)
+		void ITypedCollection<string, IParameter>.AddRange<T>(IEnumerable<T> items)
 		{
-			return _collection.Has<T>(name);
+			_collection.AddRange(items);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		bool IParameterCollection.HasOneOrMore<T>()
+		void ITypedCollection<string, IParameter>.AddRange(Type type, IEnumerable<IParameter> items)
+		{
+			_collection.AddRange(type, items);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		bool ITypedCollection<string, IParameter>.Has<T>(string key)
+		{
+			return _collection.Has<T>(key);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		bool ITypedCollection<string, IParameter>.Has(Type type, string key)
+		{
+			return _collection.Has(type, key);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		bool ITypedCollection<string, IParameter>.HasOneOrMore<T>()
 		{
 			return _collection.HasOneOrMore<T>();
 		}
 		/*----------------------------------------------------------------------------------------*/
-		T IParameterCollection.Get<T>(string name)
+		bool ITypedCollection<string, IParameter>.HasOneOrMore(Type type)
 		{
-			return _collection.Get<T>(name);
+			return _collection.HasOneOrMore(type);
 		}
 		/*----------------------------------------------------------------------------------------*/
-		T IParameterCollection.GetOne<T>()
+		T ITypedCollection<string, IParameter>.Get<T>(string key)
+		{
+			return _collection.Get<T>(key);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IParameter ITypedCollection<string, IParameter>.Get(Type type, string key)
+		{
+			return _collection.Get(type, key);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		T ITypedCollection<string, IParameter>.GetOne<T>()
 		{
 			return _collection.GetOne<T>();
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IList<T> IParameterCollection.GetAll<T>()
+		IParameter ITypedCollection<string, IParameter>.GetOne(Type type)
+		{
+			return _collection.GetOne(type);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IList<T> ITypedCollection<string, IParameter>.GetAll<T>()
 		{
 			return _collection.GetAll<T>();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IList<IParameter> ITypedCollection<string, IParameter>.GetAll(Type type)
+		{
+			return _collection.GetAll(type);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IList<Type> ITypedCollection<string, IParameter>.GetTypes()
+		{
+			return _collection.GetTypes();
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region IParameterCollection Implementation
+		void IParameterCollection.CopyFrom(IParameterCollection parameters)
+		{
+			_collection.CopyFrom(parameters);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		void IParameterCollection.InheritFrom(IParameterCollection parameters)
+		{
+			_collection.InheritFrom(parameters);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		object IParameterCollection.GetValueOf<T>(string name, IContext context)
 		{
 			return _collection.GetValueOf<T>(name, context);
 		}
-
+		/*----------------------------------------------------------------------------------------*/
+		object IParameterCollection.GetValueOf(Type type, string name, IContext context)
+		{
+			return _collection.GetValueOf(type, name, context);
+		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

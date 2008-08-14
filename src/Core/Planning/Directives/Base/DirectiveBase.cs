@@ -48,6 +48,11 @@ namespace Ninject.Core.Planning.Directives
 				return _key;
 			}
 		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether the directive was explicitly defined.
+		/// </summary>
+		public bool IsExplicit { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal

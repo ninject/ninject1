@@ -24,6 +24,7 @@ using Ninject.Core.Behavior;
 using Ninject.Core.Creation;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Parameters;
+using Ninject.Core.Planning;
 #endregion
 
 namespace Ninject.Core.Binding
@@ -59,6 +60,11 @@ namespace Ninject.Core.Binding
 		/// Gets or sets the condition under which this binding should be used.
 		/// </summary>
 		public ICondition<IContext> Condition { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the directives defined on the binding.
+		/// </summary>
+		public IDirectiveCollection Directives { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets any parameters that have been defined for the binding.
@@ -132,6 +138,8 @@ namespace Ninject.Core.Binding
 
 			Kernel = kernel;
 			Service = service;
+
+			Directives = new DirectiveCollection();
 			Parameters = new ParameterCollection();
 			Components = new StandardComponentContainer(kernel, kernel.Components);
 		}

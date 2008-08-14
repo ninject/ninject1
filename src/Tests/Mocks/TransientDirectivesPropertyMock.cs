@@ -18,22 +18,15 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Planning.Directives;
+using Ninject.Core;
 #endregion
 
 namespace Ninject.Tests
 {
-	public class MockDirective : IDirective
+	public class TransientDirectivesPropertyMock : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
-		public object DirectiveKey { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		public bool IsExplicit { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		public MockDirective(object dummyKey)
-		{
-			DirectiveKey = dummyKey;
-		}
+		public SimpleObject Child { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

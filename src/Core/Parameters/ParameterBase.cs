@@ -46,10 +46,15 @@ namespace Ninject.Core.Parameters
 		/// <summary>
 		/// Gets a value that uniquely identifies the parameter.
 		/// </summary>
-		public virtual object ParameterKey
+		public virtual string ParameterKey
 		{
 			get { return Name; }
 		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets a value indicating whether the parameter should be inherited by child contexts.
+		/// </summary>
+		public bool ShouldInherit { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors

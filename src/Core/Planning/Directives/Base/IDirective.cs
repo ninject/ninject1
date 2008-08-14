@@ -33,5 +33,11 @@ namespace Ninject.Core.Planning.Directives
 		/// </summary>
 		object DirectiveKey { get; }
 		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets a value indicating whether the directive was explicitly defined. Explicit
+		/// directives are given precedence over implicit directives in the case of a key collision.
+		/// </summary>
+		bool IsExplicit { get; set; }
+		/*----------------------------------------------------------------------------------------*/
 	}
 }
