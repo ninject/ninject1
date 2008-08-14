@@ -61,6 +61,7 @@
     <Compile Include="Conditions\ContextVariablesFixture.cs" />
     <Compile Include="Core\Binding\BindingParametersFixture.cs" />
     <Compile Include="Core\Binding\BindingComponentsFixture.cs" />
+    <Compile Include="Core\LoggingFixture.cs" />
     <Compile Include="Extensions\AutoWiring\AutoWiringConstructorHeuristicFixture.cs" />
     <Compile Include="Extensions\AutoWiring\AutoWiringPropertyHeuristicFixture.cs" />
     <Compile Include="Extensions\AutoWiring\AutoWiringFieldHeuristicFixture.cs" />

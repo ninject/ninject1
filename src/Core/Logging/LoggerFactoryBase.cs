@@ -60,13 +60,16 @@ namespace Ninject.Core.Logging
 		/// <returns>The newly-created logger.</returns>
 		public ILogger GetLogger(Type type)
 		{
-			if (_loggers.ContainsKey(type))
-				return _loggers[type];
+			lock (_loggers)
+			{
+				if (_loggers.ContainsKey(type))
+					return _loggers[type];
 
-			ILogger logger = CreateLogger(type);
-			_loggers.Add(type, logger);
+				ILogger logger = CreateLogger(type);
+				_loggers.Add(type, logger);
 
-			return logger;
+				return logger;
+			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

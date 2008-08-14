@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Reflection;
+using System.Threading;
 using Ninject.Core.Injection;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -273,6 +274,28 @@ namespace Ninject.Tests.Injection
 			Assert.That(injector, Is.Not.Null);
 
 			ThrowsExceptionFromInjectedConstructor mock = injector.Invoke(new object[0]) as ThrowsExceptionFromInjectedConstructor;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void InjectorFactoryIsThreadSafe()
+		{
+			MethodInfo method = typeof(MethodInvocationObject).GetMethod("Foo");
+
+			IMethodInjector injector1 = null;
+			IMethodInjector injector2 = null;
+
+			var thread1 = new Thread(x => injector1 = Factory.GetInjector(method));
+			var thread2 = new Thread(x => injector2 = Factory.GetInjector(method));
+
+			thread1.Start();
+			thread2.Start();
+
+			thread1.Join();
+			thread2.Join();
+
+			Assert.That(injector1, Is.Not.Null);
+			Assert.That(injector2, Is.Not.Null);
+			Assert.That(injector1, Is.SameAs(injector2));
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

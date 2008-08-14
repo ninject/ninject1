@@ -46,13 +46,16 @@ namespace Ninject.Core.Injection
 		/// <returns>A new injector for the constructor.</returns>
 		public IConstructorInjector GetInjector(ConstructorInfo constructor)
 		{
-			if (_constructorInjectors.ContainsKey(constructor))
-				return _constructorInjectors[constructor];
+			lock (_constructorInjectors)
+			{
+				if (_constructorInjectors.ContainsKey(constructor))
+					return _constructorInjectors[constructor];
 
-			IConstructorInjector injector = CreateInjector(constructor);
-			_constructorInjectors.Add(constructor, injector);
+				IConstructorInjector injector = CreateInjector(constructor);
+				_constructorInjectors.Add(constructor, injector);
 
-			return injector;
+				return injector;
+			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -62,16 +65,19 @@ namespace Ninject.Core.Injection
 		/// <returns>A new injector for the method.</returns>
 		public IMethodInjector GetInjector(MethodInfo method)
 		{
-			if (method.IsGenericMethodDefinition)
-				throw new InvalidOperationException(ExceptionFormatter.CannotCreateInjectorFromGenericTypeDefinition(method));
+			lock (_methodInjectors)
+			{
+				if (method.IsGenericMethodDefinition)
+					throw new InvalidOperationException(ExceptionFormatter.CannotCreateInjectorFromGenericTypeDefinition(method));
 
-			if (_methodInjectors.ContainsKey(method))
-				return _methodInjectors[method];
+				if (_methodInjectors.ContainsKey(method))
+					return _methodInjectors[method];
 
-			IMethodInjector injector = CreateInjector(method);
-			_methodInjectors.Add(method, injector);
+				IMethodInjector injector = CreateInjector(method);
+				_methodInjectors.Add(method, injector);
 
-			return injector;
+				return injector;
+			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -81,13 +87,16 @@ namespace Ninject.Core.Injection
 		/// <returns>A new injector for the property.</returns>
 		public IPropertyInjector GetInjector(PropertyInfo property)
 		{
-			if (_propertyInjectors.ContainsKey(property))
-				return _propertyInjectors[property];
+			lock (_propertyInjectors)
+			{
+				if (_propertyInjectors.ContainsKey(property))
+					return _propertyInjectors[property];
 
-			IPropertyInjector injector = CreateInjector(property);
-			_propertyInjectors.Add(property, injector);
+				IPropertyInjector injector = CreateInjector(property);
+				_propertyInjectors.Add(property, injector);
 
-			return injector;
+				return injector;
+			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -97,13 +106,16 @@ namespace Ninject.Core.Injection
 		/// <returns>A new injector for the field.</returns>
 		public IFieldInjector GetInjector(FieldInfo field)
 		{
-			if (_fieldInjectors.ContainsKey(field))
-				return _fieldInjectors[field];
+			lock (_fieldInjectors)
+			{
+				if (_fieldInjectors.ContainsKey(field))
+					return _fieldInjectors[field];
 
-			IFieldInjector injector = CreateInjector(field);
-			_fieldInjectors.Add(field, injector);
+				IFieldInjector injector = CreateInjector(field);
+				_fieldInjectors.Add(field, injector);
 
-			return injector;
+				return injector;
+			}
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
