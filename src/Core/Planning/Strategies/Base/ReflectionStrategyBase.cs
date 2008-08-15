@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning.Directives;
 using Ninject.Core.Planning.Heuristics;
 #endregion
 
@@ -48,7 +49,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// </returns>
 		public override StrategyResult Build(IBinding binding, Type type, IActivationPlan plan)
 		{
-			IList<TMember> candidates;
+			IEnumerable<TMember> candidates;
 
 			// If non-public members should be included, we have to scan the type hierarchy recursively.
 			if (Kernel.Options.InjectNonPublicMembers)
@@ -58,12 +59,9 @@ namespace Ninject.Core.Planning.Strategies
 
 			var heuristic = binding.Components.Get<THeuristic>();
 
-			foreach (TMember candidate in candidates)
-			{
-				// Determine which of the candidate members should be injected, and add directives for them.
-				if (heuristic.ShouldInject(binding, type, plan, candidate))
-					AddInjectionDirective(binding, type, plan, candidate);
-			}
+			// Add injection directives for each candidate member that matches the heuristic.
+			foreach (TMember member in candidates.Where(c => heuristic.ShouldInject(binding, type, plan, c)))
+				AddInjectionDirective(binding, type, plan, member);
 
 			return StrategyResult.Proceed;
 		}
@@ -77,7 +75,7 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="type">The type to collect the members from.</param>
 		/// <param name="flags">The <see cref="BindingFlags"/> that describe the scope of the search.</param>
 		/// <returns>A collection of members.</returns>
-		protected abstract IList<TMember> GetCandidates(IBinding binding, Type type, BindingFlags flags);
+		protected abstract IEnumerable<TMember> GetCandidates(IBinding binding, Type type, BindingFlags flags);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Adds an injection directive related to the specified member to the specified activation plan.
@@ -97,20 +95,18 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="binding">The binding that points at the type being inspected.</param>
 		/// <param name="type">The lowest type in the hierarchy to collect the members from.</param>
 		/// <returns>A collection of members.</returns>
-		private IList<TMember> GetCandidatesRecursive(IBinding binding, Type type)
+		private IEnumerable<TMember> GetCandidatesRecursive(IBinding binding, Type type)
 		{
-			BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+			const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 			Type current = type;
 
-			var members = new List<TMember>();
-
-			while ((current != null) && (current != typeof(object)))
+			while (current != null && current != typeof(object))
 			{
-				members.AddRange(GetCandidates(binding, current, flags));
+				foreach (TMember candidate in GetCandidates(binding, current, flags))
+					yield return candidate;
+
 				current = current.BaseType;
 			}
-
-			return members;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

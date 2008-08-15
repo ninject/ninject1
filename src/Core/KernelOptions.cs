@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Reflection;
 using Ninject.Core.Behavior;
 using Ninject.Core.Tracking;
 #endregion
@@ -178,6 +179,20 @@ namespace Ninject.Core
 			GenerateDebugInfo = false;
 #endif //DEBUG
 #endif //!NO_STACKTRACE
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Gets the binding flags that should be used to reflectively look up members.
+		/// </summary>
+		/// <returns>The binding flags that should be used.</returns>
+		public BindingFlags GetBindingFlags()
+		{
+			if (InjectNonPublicMembers)
+				return BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+			else
+				return BindingFlags.Instance | BindingFlags.Public;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

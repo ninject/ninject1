@@ -25,19 +25,19 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Core.Conversion
 {
 	/// <summary>
-	/// Converts values from one type to another.
+	/// A converter that can be plugged into a <see cref="IConverter"/> to conditionally convert
+	/// a value from one type to another.
 	/// </summary>
-	public interface IConverter : IKernelComponent, IHavePlugins<ConversionRequest, IConverterPlugin>
+	public interface IConverterPlugin : ICondition<ConversionRequest>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Converts the specified value to the specified type, if necessary.
+		/// Converts the specified value.
 		/// </summary>
-		/// <param name="value">The value to convert.</param>
-		/// <param name="type">The type to convert the value to.</param>
+		/// <param name="request">A description of the conversion request.</param>
 		/// <param name="result">The converted value.</param>
 		/// <returns><see langword="True"/> if the conversion succeeded or was unnecessary, otherwise <see langword="false"/>.</returns>
-		bool Convert(object value, Type type, out object result);
+		bool Convert(ConversionRequest request, out object result);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

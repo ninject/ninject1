@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.ComponentModel;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
@@ -25,19 +26,23 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Core.Conversion
 {
 	/// <summary>
-	/// Converts values from one type to another.
+	/// The baseline definition of a <see cref="IConverter"/>.
 	/// </summary>
-	public interface IConverter : IKernelComponent, IHavePlugins<ConversionRequest, IConverterPlugin>
+	public abstract class ConverterBase : KernelComponentWithPlugins<ConversionRequest, IConverterPlugin>, IConverter
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Converts the specified value to the specified type, if necessary.
+		/// Converts the specified value.
 		/// </summary>
 		/// <param name="value">The value to convert.</param>
 		/// <param name="type">The type to convert the value to.</param>
 		/// <param name="result">The converted value.</param>
 		/// <returns><see langword="True"/> if the conversion succeeded or was unnecessary, otherwise <see langword="false"/>.</returns>
-		bool Convert(object value, Type type, out object result);
+		public bool Convert(object value, Type type, out object result)
+		{
+			var request = new ConversionRequest(value, type);
+			return FindPlugin(request).Convert(request, out result);
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

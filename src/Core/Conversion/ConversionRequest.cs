@@ -25,19 +25,39 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Core.Conversion
 {
 	/// <summary>
-	/// Converts values from one type to another.
+	/// Describes a request to convert a value from one type to another.
 	/// </summary>
-	public interface IConverter : IKernelComponent, IHavePlugins<ConversionRequest, IConverterPlugin>
+	public class ConversionRequest
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Converts the specified value to the specified type, if necessary.
+		/// Gets the type of the value.
+		/// </summary>
+		public Type SourceType { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the type that the value should be converted to.
+		/// </summary>
+		public Type TargetType { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the value to convert.
+		/// </summary>
+		public object Value { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConversionRequest"/> class.
 		/// </summary>
 		/// <param name="value">The value to convert.</param>
-		/// <param name="type">The type to convert the value to.</param>
-		/// <param name="result">The converted value.</param>
-		/// <returns><see langword="True"/> if the conversion succeeded or was unnecessary, otherwise <see langword="false"/>.</returns>
-		bool Convert(object value, Type type, out object result);
+		/// <param name="targetType">The type that the value should be converted to.</param>
+		public ConversionRequest(object value, Type targetType)
+		{
+			Ensure.ArgumentNotNull(targetType, "targetType");
+
+			Value = value;
+			TargetType = targetType;
+			SourceType = (value == null) ? null : value.GetType();
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

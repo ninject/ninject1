@@ -43,39 +43,22 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="type">The type to collect the members from.</param>
 		/// <param name="flags">The <see cref="BindingFlags"/> that describe the scope of the search.</param>
 		/// <returns></returns>
-		protected override IList<MethodInfo> GetCandidates(IBinding binding, Type type, BindingFlags flags)
+		protected override IEnumerable<MethodInfo> GetCandidates(IBinding binding, Type type, BindingFlags flags)
 		{
 			return type.GetMethods(flags);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Adds an injection directive related to the specified member to the specified binding.
+		/// Adds an injection directive related to the specified member to the specified activation plan.
 		/// </summary>
-		/// <param name="binding">The binding to add the directive to.</param>
+		/// <param name="binding">The binding that points at the type being inspected.</param>
 		/// <param name="type">The type that is being inspected.</param>
 		/// <param name="plan">The activation plan to add the directive to.</param>
 		/// <param name="member">The member to create a directive for.</param>
 		protected override void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, MethodInfo member)
 		{
-			var resolverFactory = binding.Components.Get<IResolverFactory>();
-
-			// Create a new directive that will hold the injection information.
-			var directive = new MethodInjectionDirective(member);
-
-			foreach (ParameterInfo parameter in member.GetParameters())
-			{
-				ITarget target = new ParameterTarget(parameter);
-				IResolver resolver = resolverFactory.Create(binding, target);
-
-				// Determine if the parameter is optional.
-				bool optional = parameter.HasAttribute(Kernel.Options.OptionalAttributeType);
-
-				// Add the mapping between the injection point and the dependency resolver.
-				directive.Arguments.Add(new Argument(target, resolver, optional));
-			}
-
-			// Add the directive to the activation plan.
-			plan.Directives.Add(directive);
+			var directiveFactory = binding.Components.Get<IDirectiveFactory>();
+			plan.Directives.Add(directiveFactory.Create(binding, member));
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

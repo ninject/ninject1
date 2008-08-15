@@ -71,7 +71,7 @@ namespace Ninject.Core.Activation.Strategies
 					}
 
 					// Convert the value if necessary.
-					if (!converter.TryConvert(value, directive.Target.Type, out value))
+					if (!converter.Convert(value, directive.Target.Type, out value))
 						throw new ActivationException(ExceptionFormatter.CouldNotConvertValueForInjection(context, directive.Target, value));
 
 					// Get an injector that can set the property's value.

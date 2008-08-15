@@ -105,10 +105,10 @@ namespace Ninject.Core.Creation.Providers
 			int index = 0;
 			foreach (Argument argument in directive.Arguments)
 			{
-				// First, try to get the value from a transient parameter in the context.
+				// First, try to get the value from a context parameter.
 				object value = context.Parameters.GetValueOf<ConstructorArgumentParameter>(argument.Target.Name, context);
 
-				// Next, try to get the value from an inline argument associated with the binding.
+				// Next, try to get the value from a binding parameter.
 				if (value == null)
 					value = context.Binding.Parameters.GetValueOf<ConstructorArgumentParameter>(argument.Target.Name, context);
 
@@ -124,7 +124,7 @@ namespace Ninject.Core.Creation.Providers
 				}
 
 				// Convert the value if necessary.
-				if (!converter.TryConvert(value, argument.Target.Type, out value))
+				if (!converter.Convert(value, argument.Target.Type, out value))
 					throw new ActivationException(ExceptionFormatter.CouldNotConvertValueForInjection(context, argument.Target, value));
 
 				arguments[index++] = value;

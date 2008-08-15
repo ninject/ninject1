@@ -54,6 +54,7 @@ namespace Ninject.Core
 			typeof(IBindingSelector),
 			typeof(IBindingFactory),
 			typeof(IActivationPlanFactory),
+			typeof(IDirectiveFactory),
 			typeof(IProviderFactory),
 			typeof(IInjectorFactory),
 			typeof(IResolverFactory),

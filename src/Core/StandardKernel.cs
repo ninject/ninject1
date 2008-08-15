@@ -99,6 +99,7 @@ namespace Ninject.Core
 			components.Connect<IBindingSelector>(new StandardBindingSelector());
 			components.Connect<IBindingFactory>(new StandardBindingFactory());
 			components.Connect<IActivationPlanFactory>(new StandardActivationPlanFactory());
+			components.Connect<IDirectiveFactory>(new StandardDirectiveFactory());
 			components.Connect<IProviderFactory>(new StandardProviderFactory());
 			components.Connect<IResolverFactory>(new StandardResolverFactory());
 			components.Connect<IContextFactory>(new StandardContextFactory());

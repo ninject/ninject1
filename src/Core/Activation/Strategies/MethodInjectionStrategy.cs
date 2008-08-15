@@ -80,7 +80,7 @@ namespace Ninject.Core.Activation.Strategies
 				object value = argument.Resolver.Resolve(context, injectionContext);
 
 				// Convert the value if necessary.
-				if (!converter.TryConvert(value, argument.Target.Type, out value))
+				if (!converter.Convert(value, argument.Target.Type, out value))
 					throw new ActivationException(ExceptionFormatter.CouldNotConvertValueForInjection(context, argument.Target, value));
 
 				arguments[index] = value;

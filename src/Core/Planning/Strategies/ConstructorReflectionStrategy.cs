@@ -46,13 +46,8 @@ namespace Ninject.Core.Planning.Strategies
 		/// </returns>
 		public override StrategyResult Build(IBinding binding, Type type, IActivationPlan plan)
 		{
-			BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-
-			if (Kernel.Options.InjectNonPublicMembers)
-				flags |= BindingFlags.NonPublic;
-
 			// Get the list of candidate constructors.
-			ConstructorInfo[] candidates = type.GetConstructors(flags);
+			ConstructorInfo[] candidates = type.GetConstructors(Kernel.Options.GetBindingFlags());
 
 			// Use the constructor heuristic to select which constructor should be used.
 			var heuristic = binding.Components.Get<IConstructorHeuristic>();
@@ -60,31 +55,12 @@ namespace Ninject.Core.Planning.Strategies
 
 			// If an injection constructor was found, create an injection directive for it.
 			if (injectionConstructor != null)
-				plan.Directives.Add(CreateDirective(binding, injectionConstructor));
-
-			return StrategyResult.Proceed;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private ConstructorInjectionDirective CreateDirective(IBinding binding, ConstructorInfo constructor)
-		{
-			var resolverFactory = binding.Components.Get<IResolverFactory>();
-
-			// Create a new directive that will hold the injection information.
-			var directive = new ConstructorInjectionDirective(constructor);
-
-			foreach (ParameterInfo parameter in constructor.GetParameters())
 			{
-				ITarget target = new ParameterTarget(parameter);
-				IResolver resolver = resolverFactory.Create(binding, target);
-
-				// Determine if the dependency is optional.
-				bool optional = parameter.HasAttribute(Kernel.Options.OptionalAttributeType);
-
-				// Add the mapping between the injection point and the dependency resolver.
-				directive.Arguments.Add(new Argument(target, resolver, optional));
+				var directiveFactory = binding.Components.Get<IDirectiveFactory>();
+				plan.Directives.Add(directiveFactory.Create(binding, injectionConstructor));
 			}
 
-			return directive;
+			return StrategyResult.Proceed;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

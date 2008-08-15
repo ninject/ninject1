@@ -26,47 +26,22 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Core.Conversion
 {
 	/// <summary>
-	/// The stock implementation of a converter.
+	/// The stock implementation of an <see cref="IConverter"/>.
 	/// </summary>
-	public class StandardConverter : KernelComponentBase, IConverter
+	public class StandardConverter : ConverterBase
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Converts the specified value.
+		/// Initializes a new instance of the <see cref="StandardConverter"/> class.
 		/// </summary>
-		/// <param name="value">The value to convert.</param>
-		/// <param name="type">The type to convert the value to.</param>
-		/// <param name="result">The converted value.</param>
-		/// <returns><see langword="True"/> if the conversion succeeded or was unnecessary, otherwise <see langword="false"/>.</returns>
-		public bool TryConvert(object value, Type type, out object result)
+		public StandardConverter()
 		{
-			result = value;
-
-			if (value == null)
-				return true;
-
-			Type sourceType = value.GetType();
-
-			if (type.IsInstanceOfType(value) || type.IsAssignableFrom(sourceType))
-				return true;
-
-			TypeConverter converter = TypeDescriptor.GetConverter(type);
-
-			if (converter.CanConvertFrom(sourceType))
-			{
-				result = converter.ConvertFrom(value);
-				return true;
-			}
-
-			converter = TypeDescriptor.GetConverter(sourceType);
-
-			if (converter.CanConvertTo(type))
-			{
-				result = converter.ConvertTo(value, type);
-				return true;
-			}
-
-			return false;
+			RegisterPlugins();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		private void RegisterPlugins()
+		{
+			DefaultPlugin = new StandardConverterPlugin();
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}
