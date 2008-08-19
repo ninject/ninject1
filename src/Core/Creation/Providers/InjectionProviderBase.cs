@@ -19,13 +19,11 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
-using Ninject.Core.Binding;
 using Ninject.Core.Conversion;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Parameters;
 using Ninject.Core.Planning.Directives;
-using Ninject.Core.Planning.Targets;
 #endregion
 
 namespace Ninject.Core.Creation.Providers

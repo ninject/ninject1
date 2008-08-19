@@ -24,7 +24,6 @@ using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Parameters;
 using Ninject.Core.Planning.Directives;
-using Ninject.Core.Planning.Targets;
 #endregion
 
 namespace Ninject.Core.Activation.Strategies

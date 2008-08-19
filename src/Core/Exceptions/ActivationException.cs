@@ -18,8 +18,8 @@
 #endregion
 #region Using Directives
 using System;
-#if !NO_EXCEPTION_SERIALIZATION
 using System.Runtime.Serialization;
+#if !NO_EXCEPTION_SERIALIZATION
 #endif
 #endregion
 

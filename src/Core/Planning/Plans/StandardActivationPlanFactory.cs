@@ -18,9 +18,7 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Behavior;
 using Ninject.Core.Infrastructure;
-
 #endregion
 
 namespace Ninject.Core.Planning

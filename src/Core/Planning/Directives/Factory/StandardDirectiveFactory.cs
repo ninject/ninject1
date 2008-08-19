@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Directives;

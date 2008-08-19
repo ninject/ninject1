@@ -30,8 +30,8 @@ using Ninject.Core.Interception;
 using Ninject.Core.Logging;
 using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
-using Ninject.Core.Planning.Heuristics;
 using Ninject.Core.Resolution;
+using Ninject.Core.Selection;
 using Ninject.Core.Tracking;
 #endregion
 
@@ -54,6 +54,7 @@ namespace Ninject.Core
 			typeof(IBindingSelector),
 			typeof(IBindingFactory),
 			typeof(IActivationPlanFactory),
+			typeof(IMemberSelector),
 			typeof(IDirectiveFactory),
 			typeof(IProviderFactory),
 			typeof(IInjectorFactory),
@@ -63,11 +64,7 @@ namespace Ninject.Core
 			typeof(IRequestFactory),
 			typeof(ILoggerFactory),
 			typeof(IAdviceFactory),
-			typeof(IAdviceRegistry),
-			typeof(IConstructorHeuristic),
-			typeof(IPropertyHeuristic),
-			typeof(IMethodHeuristic),
-			typeof(IFieldHeuristic)
+			typeof(IAdviceRegistry)
 		};
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

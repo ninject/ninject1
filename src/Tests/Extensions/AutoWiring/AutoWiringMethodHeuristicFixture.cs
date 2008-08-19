@@ -31,7 +31,7 @@ namespace Ninject.Tests.Extensions.AutoWiring
 	{
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		public void HeuristicSelectsPropertiesIfTheyHaveMatchingBindings()
+		public void HeuristicSelectsMethodsIfTheyHaveMatchingBindings()
 		{
 			var testModule = new InlineModule(
 				m => m.Bind<PocoForMethodAutoWiring>().ToSelf(),

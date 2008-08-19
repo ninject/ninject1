@@ -20,7 +20,6 @@
 using System;
 using System.Collections.ObjectModel;
 using Ninject.Core.Activation;
-
 #endregion
 
 namespace Ninject.Core.Infrastructure

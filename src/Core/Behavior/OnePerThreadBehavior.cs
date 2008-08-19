@@ -19,7 +19,6 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;

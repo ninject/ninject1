@@ -19,7 +19,6 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation;
-using Ninject.Core.Creation.Providers;
 using Ninject.Core.Infrastructure;
 #endregion
 

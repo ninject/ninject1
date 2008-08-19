@@ -18,31 +18,33 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning;
 #endregion
 
-namespace Ninject.Core.Planning.Heuristics
+namespace Ninject.Core.Selection
 {
 	/// <summary>
-	/// Selects one or more fields to inject during activation by looking for those decorated
-	/// with injection attributes.
+	/// Selects one or more members to inject by seeing if they are decorated with the injection attribute.
 	/// </summary>
-	public class StandardFieldHeuristic : KernelComponentBase, IFieldHeuristic
+	public class StandardHeuristic<TMember> : IHeuristic<TMember>
+		where TMember : MemberInfo
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Returns a value indicating whether the specified member should be injected during activation.
 		/// </summary>
 		/// <param name="binding">The binding that points at the type whose activation plan being manipulated.</param>
-		/// <param name="type">The type whose activation plan is being manipulated.</param>
 		/// <param name="plan">The activation plan that is being manipulated.</param>
-		/// <param name="candidate">The member in question.</param>
+		/// <param name="candidates">The candidates that are available.</param>
+		/// <param name="member">The member in question.</param>
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
-		public bool ShouldInject(IBinding binding, Type type, IActivationPlan plan, FieldInfo candidate)
+		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<TMember> candidates, TMember member)
 		{
-			return candidate.HasAttribute(Kernel.Options.InjectAttributeType);
+			return member.HasAttribute(binding.Kernel.Options.InjectAttributeType);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

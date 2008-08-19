@@ -27,8 +27,8 @@ using Ninject.Core.Injection;
 using Ninject.Core.Interception;
 using Ninject.Core.Logging;
 using Ninject.Core.Planning;
-using Ninject.Core.Planning.Heuristics;
 using Ninject.Core.Resolution;
+using Ninject.Core.Selection;
 using Ninject.Core.Tracking;
 #endregion
 
@@ -99,6 +99,7 @@ namespace Ninject.Core
 			components.Connect<IBindingSelector>(new StandardBindingSelector());
 			components.Connect<IBindingFactory>(new StandardBindingFactory());
 			components.Connect<IActivationPlanFactory>(new StandardActivationPlanFactory());
+			components.Connect<IMemberSelector>(new StandardMemberSelector());
 			components.Connect<IDirectiveFactory>(new StandardDirectiveFactory());
 			components.Connect<IProviderFactory>(new StandardProviderFactory());
 			components.Connect<IResolverFactory>(new StandardResolverFactory());
@@ -117,11 +118,6 @@ namespace Ninject.Core
 			else
 				components.Connect<IInjectorFactory>(new DynamicInjectorFactory());
 #endif
-
-			components.Connect<IConstructorHeuristic>(new StandardConstructorHeuristic());
-			components.Connect<IPropertyHeuristic>(new StandardPropertyHeuristic());
-			components.Connect<IMethodHeuristic>(new StandardMethodHeuristic());
-			components.Connect<IFieldHeuristic>(new StandardFieldHeuristic());
 
 			return components;
 		}

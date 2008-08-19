@@ -18,31 +18,48 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning;
 #endregion
 
-namespace Ninject.Core.Planning.Heuristics
+namespace Ninject.Core.Selection
 {
 	/// <summary>
-	/// Selects one or more methods to inject during activation by looking for those decorated
-	/// with injection attributes.
+	/// Selects one or more members to inject by seeing if they are decorated with the injection attribute.
 	/// </summary>
-	public class StandardPropertyHeuristic : KernelComponentBase, IPropertyHeuristic
+	public class ConditionHeuristic<TMember> : IHeuristic<TMember>
+		where TMember : MemberInfo
 	{
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the condition that will be used to evaluate the candidates for injection.
+		/// </summary>
+		public ICondition<CandidateMember<TMember>> Condition { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConditionHeuristic{TMember}"/> class.
+		/// </summary>
+		/// <param name="condition">The condition to use to evaluate the candidates for injection.</param>
+		public ConditionHeuristic(ICondition<CandidateMember<TMember>> condition)
+		{
+			Ensure.ArgumentNotNull(condition, "condition");
+			Condition = condition;
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Returns a value indicating whether the specified member should be injected during activation.
 		/// </summary>
 		/// <param name="binding">The binding that points at the type whose activation plan being manipulated.</param>
-		/// <param name="type">The type whose activation plan is being manipulated.</param>
 		/// <param name="plan">The activation plan that is being manipulated.</param>
-		/// <param name="candidate">The member in question.</param>
+		/// <param name="candidates">The candidates that are available.</param>
+		/// <param name="member">The member in question.</param>
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
-		public bool ShouldInject(IBinding binding, Type type, IActivationPlan plan, PropertyInfo candidate)
+		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<TMember> candidates, TMember member)
 		{
-			return candidate.HasAttribute(Kernel.Options.InjectAttributeType);
+			return Condition.Matches(new CandidateMember<TMember>(binding, plan, candidates, member));
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

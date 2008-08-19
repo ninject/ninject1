@@ -21,7 +21,6 @@ using System;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Creation;
-using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Targets;
 #endregion
 

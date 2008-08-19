@@ -188,6 +188,25 @@ namespace Ninject.Core.Infrastructure
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Concatenates the specified series into the existing series.
+		/// </summary>
+		/// <typeparam name="T">The type of items.</typeparam>
+		/// <param name="items">The series of items.</param>
+		/// <param name="others">The other series of items.</param>
+		/// <returns>A concatenated series of items.</returns>
+		public static IEnumerable<T> Concat<T>(this IEnumerable<T> items, params IEnumerable<T>[] others)
+		{
+			foreach (T item in items)
+				yield return item;
+
+			foreach (IEnumerable<T> series in others)
+			{
+				foreach (T item in series)
+					yield return item;
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Creates a list from the series of items.
 		/// </summary>
 		/// <typeparam name="T">The type of items.</typeparam>

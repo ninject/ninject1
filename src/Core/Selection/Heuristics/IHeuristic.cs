@@ -18,17 +18,18 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
-using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning;
 #endregion
 
-namespace Ninject.Core.Planning.Heuristics
+namespace Ninject.Core.Selection
 {
 	/// <summary>
 	/// Determines if certain members should be injected during activation.
 	/// </summary>
-	public interface IMemberHeuristic<TMember> : IKernelComponent
+	public interface IHeuristic<TMember>
 		where TMember : MemberInfo
 	{
 		/*----------------------------------------------------------------------------------------*/
@@ -36,11 +37,11 @@ namespace Ninject.Core.Planning.Heuristics
 		/// Returns a value indicating whether the specified member should be injected during activation.
 		/// </summary>
 		/// <param name="binding">The binding that points at the type whose activation plan being manipulated.</param>
-		/// <param name="type">The type whose activation plan is being manipulated.</param>
 		/// <param name="plan">The activation plan that is being manipulated.</param>
-		/// <param name="candidate">The member in question.</param>
+		/// <param name="candidates">The candidates that are available.</param>
+		/// <param name="member">The member in question.</param>
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
-		bool ShouldInject(IBinding binding, Type type, IActivationPlan plan, TMember candidate);
+		bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<TMember> candidates, TMember member);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

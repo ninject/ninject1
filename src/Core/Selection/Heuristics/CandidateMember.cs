@@ -19,51 +19,64 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using Ninject.Core.Binding;
+using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning;
 #endregion
 
-namespace Ninject.Core.Binding
+namespace Ninject.Core.Selection
 {
 	/// <summary>
-	/// A collection of potential bindings for a service, within a specific context.
+	/// Describes a candidate member that may be injected. Used in conditional logic to
+	/// determine whether the member should receive an injection.
 	/// </summary>
-	public class BindingMatchCollection
+	/// <typeparam name="TMember">The type of the member.</typeparam>
+	public class CandidateMember<TMember>
+		where TMember : MemberInfo
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets or sets the default binding.
+		/// Gets the binding.
 		/// </summary>
-		public IBinding DefaultBinding { get; set; }
+		public IBinding Binding { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the conditional bindings.
+		/// Gets the activation plan.
 		/// </summary>
-		public IList<IBinding> ConditionalBindings { get; private set; }
+		public IActivationPlan Plan { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets a value indicating whether the collection has a default binding.
+		/// Gets or sets the candidate members that are available for the type.
 		/// </summary>
-		public bool HasDefaultBinding
-		{
-			get { return DefaultBinding != null; }
-		}
+		public IEnumerable<TMember> Candidates { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets a value indicating whether the collection has one or more conditional bindings.
+		/// Gets or sets the member in question.
 		/// </summary>
-		public bool HasConditionalBindings
-		{
-			get { return ConditionalBindings.Count > 0; }
-		}
+		public TMember Member { get; private set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="BindingMatchCollection"/> class.
+		/// Initializes a new instance of the <see cref="CandidateMember&lt;TMember&gt;"/> class.
 		/// </summary>
-		public BindingMatchCollection()
+		/// <param name="binding">The binding.</param>
+		/// <param name="plan">The activation plan.</param>
+		/// <param name="candidates">The candidate members that are available for the type.</param>
+		/// <param name="member">The member in question.</param>
+		public CandidateMember(IBinding binding, IActivationPlan plan, IEnumerable<TMember> candidates, TMember member)
 		{
-			ConditionalBindings = new List<IBinding>();
+			Ensure.ArgumentNotNull(binding, "binding");
+			Ensure.ArgumentNotNull(plan, "plan");
+			Ensure.ArgumentNotNull(candidates, "candidates");
+			Ensure.ArgumentNotNull(member, "member");
+
+			Binding = binding;
+			Plan = plan;
+			Candidates = candidates;
+			Member = member;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

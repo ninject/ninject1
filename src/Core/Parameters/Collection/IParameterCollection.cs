@@ -18,8 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion

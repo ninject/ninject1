@@ -46,9 +46,9 @@
     </Compile>
     <Compile Include="AutoWiringModule.cs" />
     <Compile Include="Infrastructure\AutoWiringConstructorHeuristic.cs" />
-    <Compile Include="Infrastructure\AutoWiringPropertyHeuristic.cs" />
     <Compile Include="Infrastructure\AutoWiringFieldHeuristic.cs" />
     <Compile Include="Infrastructure\AutoWiringMethodHeuristic.cs" />
+    <Compile Include="Infrastructure\AutoWiringPropertyHeuristic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

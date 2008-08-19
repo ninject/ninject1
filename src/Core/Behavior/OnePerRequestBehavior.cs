@@ -20,7 +20,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using System.Web;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;

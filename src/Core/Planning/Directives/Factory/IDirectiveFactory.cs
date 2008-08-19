@@ -19,7 +19,6 @@
 #region Using Directives
 using System;
 using System.Reflection;
-using System.Text;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Directives;

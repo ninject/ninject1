@@ -21,11 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
-using Ninject.Core.Infrastructure;
-using Ninject.Core.Planning.Directives;
-using Ninject.Core.Planning.Heuristics;
-using Ninject.Core.Planning.Targets;
-using Ninject.Core.Resolution;
 #endregion
 
 namespace Ninject.Core.Planning.Strategies
@@ -33,7 +28,7 @@ namespace Ninject.Core.Planning.Strategies
 	/// <summary>
 	/// Examines the implementation type via reflection to determine if any methods request injection.
 	/// </summary>
-	public class MethodReflectionStrategy : ReflectionStrategyBase<MethodInfo, IMethodHeuristic>
+	public class MethodReflectionStrategy : ReflectionStrategyBase<MethodInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

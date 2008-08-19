@@ -21,9 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
-using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning;
-using Ninject.Core.Planning.Heuristics;
+using Ninject.Core.Selection;
 #endregion
 
 namespace Ninject.Extensions.AutoWiring.Infrastructure
@@ -31,21 +30,21 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 	/// <summary>
 	/// Selects properties to inject by determining whether their types have bindings registered.
 	/// </summary>
-	public class AutoWiringPropertyHeuristic : KernelComponentBase, IPropertyHeuristic
+	public class AutoWiringPropertyHeuristic : IHeuristic<PropertyInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Returns a value indicating whether the specified member should be injected during activation.
 		/// </summary>
 		/// <param name="binding">The binding that points at the type whose activation plan being manipulated.</param>
-		/// <param name="type">The type whose activation plan is being manipulated.</param>
 		/// <param name="plan">The activation plan that is being manipulated.</param>
-		/// <param name="candidate">The member in question.</param>
+		/// <param name="candidates">The candidates that are available.</param>
+		/// <param name="member">The member in question.</param>
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
-		public bool ShouldInject(IBinding binding, Type type, IActivationPlan plan, PropertyInfo candidate)
+		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<PropertyInfo> candidates, PropertyInfo member)
 		{
 			var registry = binding.Components.Get<IBindingRegistry>();
-			return candidate.CanWrite && (candidate.GetSetMethod() != null) && registry.HasBinding(candidate.PropertyType);
+			return member.CanWrite && (member.GetSetMethod() != null) && registry.HasBinding(member.PropertyType);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

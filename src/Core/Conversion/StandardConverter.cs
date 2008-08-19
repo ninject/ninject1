@@ -18,9 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.ComponentModel;
-using Ninject.Core.Activation;
-using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Conversion

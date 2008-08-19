@@ -23,7 +23,7 @@ using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning;
-using Ninject.Core.Planning.Heuristics;
+using Ninject.Core.Selection;
 #endregion
 
 namespace Ninject.Extensions.AutoWiring.Infrastructure
@@ -32,24 +32,28 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 	/// Selects a constructor to call during activation by finding the candidate constructor
 	/// whose arguments have the most bindings defined.
 	/// </summary>
-	public class AutoWiringConstructorHeuristic : KernelComponentBase, IConstructorHeuristic
+	public class AutoWiringConstructorHeuristic : IHeuristic<ConstructorInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Selects the member that should be injected.
+		/// Returns a value indicating whether the specified member should be injected during activation.
 		/// </summary>
 		/// <param name="binding">The binding that points at the type whose activation plan being manipulated.</param>
-		/// <param name="type">The type whose activation plan is being manipulated.</param>
 		/// <param name="plan">The activation plan that is being manipulated.</param>
-		/// <param name="candidates">A collection of potential members.</param>
-		/// <returns>The member that should be injected.</returns>
-		public ConstructorInfo Select(IBinding binding, Type type, IActivationPlan plan, IList<ConstructorInfo> candidates)
+		/// <param name="candidates">The candidates that are available.</param>
+		/// <param name="member">The member in question.</param>
+		/// <returns>
+		/// 	<see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.
+		/// </returns>
+		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<ConstructorInfo> candidates, ConstructorInfo member)
 		{
-			if (candidates.Count == 1)
-				return candidates[0];
+			var list = candidates.ToList();
+
+			if (list.Count == 1)
+				return true;
 
 			var registry = binding.Components.Get<IBindingRegistry>();
-			return candidates.Best(c => c.GetParameterTypes().Count(registry.HasBinding));
+			return member == candidates.Best(c => c.GetParameterTypes().Count(registry.HasBinding));
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

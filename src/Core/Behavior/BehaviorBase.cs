@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using Ninject.Core.Activation;
-using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
 #endregion
 

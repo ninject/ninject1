@@ -19,7 +19,6 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
 
@@ -53,6 +52,7 @@ namespace Ninject.Core.Binding
 
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
 		/// <summary>
 		/// Registers a new binding.
 		/// </summary>
@@ -179,7 +179,7 @@ namespace Ninject.Core.Binding
 					if (Logger.IsDebugEnabled)
 					{
 						Logger.Debug("Validating {0} binding{1} for service {2}",
-							bindings.Count, (bindings.Count == 1 ? "" : "s"), Format.Type(service));
+						             bindings.Count, (bindings.Count == 1 ? "" : "s"), Format.Type(service));
 					}
 
 					// Ensure there are no bindings registered without providers.
@@ -201,6 +201,7 @@ namespace Ninject.Core.Binding
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Validation complete. All registered bindings are valid.");
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

@@ -19,7 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core;
-using Ninject.Core.Planning.Heuristics;
+using Ninject.Core.Selection;
 using Ninject.Extensions.AutoWiring.Infrastructure;
 #endregion
 
@@ -36,10 +36,15 @@ namespace Ninject.Extensions.AutoWiring
 		/// </summary>
 		public override void Load()
 		{
-			Kernel.Components.Connect<IConstructorHeuristic>(new AutoWiringConstructorHeuristic());
-			Kernel.Components.Connect<IPropertyHeuristic>(new AutoWiringPropertyHeuristic());
-			Kernel.Components.Connect<IMethodHeuristic>(new AutoWiringMethodHeuristic());
-			Kernel.Components.Connect<IFieldHeuristic>(new AutoWiringFieldHeuristic());
+			var selector = Kernel.Components.Get<IMemberSelector>();
+			var heuristics = selector.Heuristics;
+
+			heuristics.Clear();
+
+			heuristics.Add(new AutoWiringConstructorHeuristic());
+			heuristics.Add(new AutoWiringMethodHeuristic());
+			heuristics.Add(new AutoWiringPropertyHeuristic());
+			heuristics.Add(new AutoWiringFieldHeuristic());
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

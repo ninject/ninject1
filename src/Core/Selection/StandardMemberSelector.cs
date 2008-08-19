@@ -19,30 +19,30 @@
 #region Using Directives
 using System;
 using System.Reflection;
-using Ninject.Core.Binding;
-using Ninject.Core.Infrastructure;
 #endregion
 
-namespace Ninject.Core.Planning.Heuristics
+namespace Ninject.Core.Selection
 {
 	/// <summary>
-	/// Selects one or more methods to inject during activation by looking for those decorated
-	/// with injection attributes.
+	/// The stock definition of a <see cref="IMemberSelector"/>.
 	/// </summary>
-	public class StandardMethodHeuristic : KernelComponentBase, IMethodHeuristic
+	public class StandardMemberSelector : MemberSelectorBase
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Returns a value indicating whether the specified member should be injected during activation.
+		/// Initializes a new instance of the <see cref="StandardMemberSelector"/> class.
 		/// </summary>
-		/// <param name="binding">The binding that points at the type whose activation plan being manipulated.</param>
-		/// <param name="type">The type whose activation plan is being manipulated.</param>
-		/// <param name="plan">The activation plan that is being manipulated.</param>
-		/// <param name="candidate">The member in question.</param>
-		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
-		public bool ShouldInject(IBinding binding, Type type, IActivationPlan plan, MethodInfo candidate)
+		public StandardMemberSelector()
 		{
-			return candidate.HasAttribute(Kernel.Options.InjectAttributeType);
+			InitializeHeuristics();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		private void InitializeHeuristics()
+		{
+			Heuristics.Add(new StandardHeuristic<ConstructorInfo>());
+			Heuristics.Add(new StandardHeuristic<MethodInfo>());
+			Heuristics.Add(new StandardHeuristic<PropertyInfo>());
+			Heuristics.Add(new StandardHeuristic<FieldInfo>());
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

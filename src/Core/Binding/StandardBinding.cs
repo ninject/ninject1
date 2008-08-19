@@ -18,13 +18,12 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
 using Ninject.Core.Creation;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Parameters;
-using Ninject.Core.Planning;
+using Ninject.Core.Selection;
 #endregion
 
 namespace Ninject.Core.Binding
@@ -62,9 +61,9 @@ namespace Ninject.Core.Binding
 		public ICondition<IContext> Condition { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the directives defined on the binding.
+		/// Gets or sets the selection heuristics defined on the binding.
 		/// </summary>
-		public IDirectiveCollection Directives { get; set; }
+		public IHeuristicCollection Heuristics { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets any parameters that have been defined for the binding.
@@ -139,7 +138,7 @@ namespace Ninject.Core.Binding
 			Kernel = kernel;
 			Service = service;
 
-			Directives = new DirectiveCollection();
+			Heuristics = new HeuristicCollection();
 			Parameters = new ParameterCollection();
 			Components = new StandardComponentContainer(kernel, kernel.Components);
 		}

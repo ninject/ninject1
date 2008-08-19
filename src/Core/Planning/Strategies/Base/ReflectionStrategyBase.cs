@@ -22,8 +22,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Planning.Directives;
-using Ninject.Core.Planning.Heuristics;
+using Ninject.Core.Selection;
 #endregion
 
 namespace Ninject.Core.Planning.Strategies
@@ -32,9 +31,8 @@ namespace Ninject.Core.Planning.Strategies
 	/// Examines the implementation type via reflection to determine if a specific type of
 	/// member requests injection.
 	/// </summary>
-	public abstract class ReflectionStrategyBase<TMember, THeuristic> : PlanningStrategyBase
+	public abstract class ReflectionStrategyBase<TMember> : PlanningStrategyBase
 		where TMember : MemberInfo
-		where THeuristic : IMemberHeuristic<TMember>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
@@ -57,10 +55,10 @@ namespace Ninject.Core.Planning.Strategies
 			else 
 				candidates = GetCandidates(binding, type, BindingFlags.Public | BindingFlags.Instance);
 
-			var heuristic = binding.Components.Get<THeuristic>();
+			var selector = binding.Components.Get<IMemberSelector>();
 
 			// Add injection directives for each candidate member that matches the heuristic.
-			foreach (TMember member in candidates.Where(c => heuristic.ShouldInject(binding, type, plan, c)))
+			foreach (TMember member in selector.SelectMembers(binding, plan, candidates))
 				AddInjectionDirective(binding, type, plan, member);
 
 			return StrategyResult.Proceed;

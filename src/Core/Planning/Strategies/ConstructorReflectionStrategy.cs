@@ -21,10 +21,7 @@ using System;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
-using Ninject.Core.Planning.Directives;
-using Ninject.Core.Planning.Heuristics;
-using Ninject.Core.Planning.Targets;
-using Ninject.Core.Resolution;
+using Ninject.Core.Selection;
 #endregion
 
 namespace Ninject.Core.Planning.Strategies
@@ -49,9 +46,8 @@ namespace Ninject.Core.Planning.Strategies
 			// Get the list of candidate constructors.
 			ConstructorInfo[] candidates = type.GetConstructors(Kernel.Options.GetBindingFlags());
 
-			// Use the constructor heuristic to select which constructor should be used.
-			var heuristic = binding.Components.Get<IConstructorHeuristic>();
-			ConstructorInfo injectionConstructor = heuristic.Select(binding, type, plan, candidates);
+			var selector = binding.Components.Get<IMemberSelector>();
+			ConstructorInfo injectionConstructor = selector.SelectConstructor(binding, plan, candidates);
 
 			// If an injection constructor was found, create an injection directive for it.
 			if (injectionConstructor != null)

@@ -18,8 +18,6 @@
 #endregion
 #region Using Directives
 using System;
-using System.Reflection;
-using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Interception

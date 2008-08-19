@@ -19,7 +19,6 @@
 #region Using Directives
 using System;
 using Ninject.Core.Binding;
-using Ninject.Core.Creation;
 using Ninject.Core.Planning.Targets;
 using Ninject.Core.Resolution.Resolvers;
 #endregion
