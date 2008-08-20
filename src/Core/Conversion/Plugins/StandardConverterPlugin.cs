@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.ComponentModel;
+using System.Globalization;
 #endregion
 
 namespace Ninject.Core.Conversion
@@ -55,6 +56,17 @@ namespace Ninject.Core.Conversion
 			if (request.TargetType.IsInstanceOfType(request.Value) || request.TargetType.IsAssignableFrom(request.SourceType))
 				return true;
 
+#if NO_TYPE_CONVERTERS
+			try
+			{
+				result = System.Convert.ChangeType(request.Value, request.TargetType, CultureInfo.CurrentCulture);
+				return true;
+			}
+			catch (InvalidCastException)
+			{
+				return false;
+			}
+#else
 			TypeConverter converter = TypeDescriptor.GetConverter(request.TargetType);
 
 			if (converter.CanConvertFrom(request.SourceType))
@@ -72,6 +84,7 @@ namespace Ninject.Core.Conversion
 			}
 
 			return false;
+#endif
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

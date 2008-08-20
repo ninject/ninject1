@@ -1,4 +1,3 @@
-using System;
 #if !NET_35 && !SILVERLIGHT
 
 #region License

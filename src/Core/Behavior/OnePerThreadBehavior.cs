@@ -22,6 +22,9 @@ using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+#if NETCF
+using System.Threading;
+#endif
 #endregion
 
 namespace Ninject.Core.Behavior

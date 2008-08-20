@@ -1,4 +1,3 @@
-using System;
 #if !NET_35
 
 #region License
@@ -23,7 +22,7 @@ using System;
 using System;
 #endregion
 
-namespace Ninject.Core.Infrastructure
+namespace System
 {
 	/*----------------------------------------------------------------------------------------*/
 	/// <summary>

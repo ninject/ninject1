@@ -10,7 +10,7 @@
 	<property name="path.tools" value="${path.base}/tools"/>
 	<property name="path.tools.nunit" value="${path.tools}/nunit"/>
 
-	<property name="version" value="1.0.0.0" overwrite="false"/>
+	<property name="version" value="1.5.0.0" overwrite="false"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
@@ -112,7 +112,7 @@
 	<target name="config-platform-netcf20">
 		<property name="nant.settings.currentframework" value="netcf-2.0"/>
 		<property name="build.platform" value="netcf-2.0"/>
-		<property name="build.defines" value="${global.build.defines},NETCF,NETCF_20,NO_LCG,NO_WEB,NO_REMOTING,NO_STACKTRACE,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION"/>
+		<property name="build.defines" value="${global.build.defines},NETCF,NETCF_20,NO_LCG,NO_WEB,NO_REMOTING,NO_STACKTRACE,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_TYPE_CONVERTERS"/>
 		<property name="current.path.bin" value="${path.bin}/netcf-2.0/${build.config}"/>
 	</target>
 
@@ -126,7 +126,7 @@
 	<target name="config-platform-silverlight20">
 		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
 		<property name="build.platform" value="silverlight-2.0"/>
-		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_SKIP_VISIBILITY,NO_DEBUG_SYMBOLS"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_SKIP_VISIBILITY,NO_DEBUG_SYMBOLS,NO_TYPE_CONVERTERS"/>
 		<property name="current.path.bin" value="${path.bin}/silverlight-2.0/${build.config}"/>
 	</target>
 

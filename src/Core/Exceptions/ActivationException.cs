@@ -18,8 +18,8 @@
 #endregion
 #region Using Directives
 using System;
-using System.Runtime.Serialization;
 #if !NO_EXCEPTION_SERIALIZATION
+using System.Runtime.Serialization;
 #endif
 #endregion
 
@@ -28,7 +28,7 @@ namespace Ninject.Core
 	/// <summary>
 	/// Represents errors that occur during the activation of an instance.
 	/// </summary>
-#if !SILVERLIGHT
+#if !NO_EXCEPTION_SERIALIZATION
 	[Serializable]
 #endif
 	public class ActivationException : Exception
