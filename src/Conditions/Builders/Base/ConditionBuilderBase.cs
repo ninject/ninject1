@@ -36,7 +36,7 @@ namespace Ninject.Conditions.Builders
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private readonly IConditionBuilder<TRoot, TPrevious> _last;
-		private readonly Func<TRoot, TSubject> _directFunc;
+		private readonly Func<TRoot, TSubject> _directConverter;
 		private readonly Func<TPrevious, TSubject> _converter;
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ namespace Ninject.Conditions.Builders
 		protected ConditionBuilderBase(Func<TRoot, TSubject> converter)
 		{
 			Ensure.ArgumentNotNull(converter, "converter");
-			_directFunc = converter;
+			_directConverter = converter;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -122,7 +122,7 @@ namespace Ninject.Conditions.Builders
 				if (ReferenceEquals(default(TRoot), root))
 					return default(TSubject);
 				else
-					return _directFunc(root);
+					return _directConverter(root);
 			}
 			else
 			{

@@ -60,6 +60,7 @@
     <Compile Include="Conditions\ConditionalInterceptionFixture.cs" />
     <Compile Include="Conditions\ContextVariablesFixture.cs" />
     <Compile Include="Core\Binding\BindingParametersFixture.cs" />
+    <Compile Include="Core\Binding\BindingHeuristicsFixture.cs" />
     <Compile Include="Core\LoggingFixture.cs" />
     <Compile Include="Extensions\AutoWiring\AutoWiringConstructorHeuristicFixture.cs" />
     <Compile Include="Extensions\AutoWiring\AutoWiringPropertyHeuristicFixture.cs" />
@@ -68,7 +69,10 @@
     <Compile Include="Extensions\Cache\CacheFixture.cs" />
     <Compile Include="Extensions\MessageBroker\MessageBrokerFixture.cs" />
     <Compile Include="Integration\DynamicProxy2\DynamicProxy2Fixture.cs" />
-    <Compile Include="Mocks\TransientDirectivesPropertyMock.cs" />
+    <Compile Include="Mocks\RequestsMethodInjectionWithoutAttribute.cs" />
+    <Compile Include="Mocks\RequestsFieldInjectionWithoutAttribute.cs" />
+    <Compile Include="Mocks\RequestsConstructorInjectionWithoutAttribute.cs" />
+    <Compile Include="Mocks\RequestsPropertyInjectionWithoutAttribute.cs" />
     <Compile Include="Mocks\ObjectWithInterceptWithAttribute.cs" />
     <Compile Include="Mocks\PocoForFieldAutoWiring.cs" />
     <Compile Include="Mocks\PocoForMethodAutoWiring.cs" />

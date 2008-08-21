@@ -18,16 +18,20 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core;
 #endregion
 
-namespace Ninject.Core.Binding.Syntax
+namespace Ninject.Tests
 {
-	/// <summary>
-	/// Describes a fluent syntax for modifying the behavior of a binding, or adding
-	/// selection heuristics, transient components and parameters to it.
-	/// </summary>
-	public interface IBindingBehaviorHeuristicComponentOrParameterSyntax
-		: IBindingBehaviorSyntax, IBindingHeuristicSyntax, IBindingComponentSyntax, IBindingParameterSyntax
+	public class RequestsMethodInjectionWithoutAttribute : IMock
 	{
+		/*----------------------------------------------------------------------------------------*/
+		public SimpleObject Child { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		public void SetChild(SimpleObject child)
+		{
+			Child = child;
+		}
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

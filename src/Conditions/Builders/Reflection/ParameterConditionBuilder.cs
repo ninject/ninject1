@@ -18,40 +18,36 @@
 #endregion
 #region Using Directives
 using System;
-using System.Collections.Generic;
-using Ninject.Core.Infrastructure;
+using System.Reflection;
 #endregion
 
 namespace Ninject.Conditions.Builders
 {
 	/// <summary>
-	/// A condition builder that can examine collections. This class supports Ninject's EDSL and
-	/// should generally not be used directly.
+	/// A condition builder that deals with <see cref="PropertyInfo"/> objects. This class
+	/// supports Ninject's EDSL and should generally not be used directly.
 	/// </summary>
 	/// <typeparam name="TRoot">The root type of the conversion chain.</typeparam>
 	/// <typeparam name="TPrevious">The subject type of that the previous link in the condition chain.</typeparam>
-	/// <typeparam name="TSubject">The type of collection that this condition builder deals with.</typeparam>
-	/// <typeparam name="TItem">The type of object stored in the collection that this condition builder deals with.</typeparam>
-	public class CollectionConditionBuilder<TRoot, TPrevious, TSubject, TItem> : SimpleConditionBuilder<TRoot, TPrevious, TSubject>
-		where TSubject: ICollection<TItem>
+	public class ParameterConditionBuilder<TRoot, TPrevious> : AttributeConditionBuilder<TRoot, TPrevious, ParameterInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Creates a new CollectionConditionBuilder.
+		/// Creates a new ParameterConditionBuilder.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		public CollectionConditionBuilder(Func<TRoot, TSubject> converter)
+		public ParameterConditionBuilder(Func<TRoot, ParameterInfo> converter)
 			: base(converter)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new CollectionConditionBuilder.
+		/// Creates a new ParameterConditionBuilder.
 		/// </summary>
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
-		public CollectionConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, TSubject> converter)
+		public ParameterConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, ParameterInfo> converter)
 			: base(last, converter)
 		{
 		}
@@ -59,28 +55,19 @@ namespace Ninject.Conditions.Builders
 		/*----------------------------------------------------------------------------------------*/
 		#region EDSL Members
 		/// <summary>
-		/// Continues the condition chain, evaluating the number of items in the collection.
+		/// Continues the condition chain by examining the parameter's name.
 		/// </summary>
-		public Int32ConditionBuilder<TRoot, TSubject> Count
+		public StringConditionBuilder<TRoot, ParameterInfo> Name
 		{
-			get { return new Int32ConditionBuilder<TRoot, TSubject>(this, s => s.Count); }
+			get { return new StringConditionBuilder<TRoot, ParameterInfo>(this, p => p.Name); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a terminating condition that determines whether the collection is empty.
+		/// Continues the condition chain by examining the type of the parameter.
 		/// </summary>
-		public TerminatingCondition<TRoot, TSubject> IsEmpty
+		public TypeConditionBuilder<TRoot, ParameterInfo> ParameterType
 		{
-			get { return Terminate(s => s.Count == 0); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that determines whether the collection contains
-		/// the specified item.
-		/// </summary>
-		public TerminatingCondition<TRoot, TSubject> Contains(TItem item)
-		{
-			return Terminate(s => s.Contains(item));
+			get { return new TypeConditionBuilder<TRoot, ParameterInfo>(this, p => p.ParameterType); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

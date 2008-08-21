@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Ninject.Core.Activation;
 using Ninject.Core.Behavior;
 using Ninject.Core.Binding.Syntax;
@@ -27,6 +28,7 @@ using Ninject.Core.Creation;
 using Ninject.Core.Creation.Providers;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Parameters;
+using Ninject.Core.Selection;
 #endregion
 
 namespace Ninject.Core.Binding
@@ -36,10 +38,9 @@ namespace Ninject.Core.Binding
 	/// </summary>
 	public class StandardBindingBuilder : BindingBuilderBase,
 		IBindingTargetSyntax,
-		IBindingConditionBehaviorComponentOrParameterSyntax,
-		IBindingBehaviorOrParameterSyntax,
-		IBindingComponentOrParameterSyntax,
-		IBindingConditionComponentOrParameterSyntax
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax,
+		IBindingBehaviorHeuristicComponentOrParameterSyntax,
+		IBindingHeuristicComponentOrParameterSyntax
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
@@ -54,31 +55,31 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingTargetSyntax Members
-		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToSelf()
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.ToSelf()
 		{
 			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(Binding.Service);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.To<T>()
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.To<T>()
 		{
 			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(typeof(T));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.To(Type type)
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.To(Type type)
 		{
 			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(type);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToProvider<T>()
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.ToProvider<T>()
 		{
 			Binding.Provider = Binding.Kernel.Get<T>();
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToProvider(Type providerType)
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.ToProvider(Type providerType)
 		{
 			if (!typeof(IProvider).IsAssignableFrom(providerType))
 				throw new NotSupportedException(ExceptionFormatter.InvalidProviderType(Binding, providerType));
@@ -87,19 +88,19 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToProvider(IProvider provider)
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.ToProvider(IProvider provider)
 		{
 			Binding.Provider = provider;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToMethod<T>(Func<IContext, T> callback)
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.ToMethod<T>(Func<IContext, T> callback)
 		{
 			Binding.Provider = new CallbackProvider<T>(callback);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionBehaviorComponentOrParameterSyntax IBindingTargetSyntax.ToConstant<T>(T value)
+		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.ToConstant<T>(T value)
 		{
 			Binding.Provider = new ConstantProvider(value);
 			return this;
@@ -107,50 +108,50 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingConditionSyntax Members
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.Always()
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.Always()
 		{
 			Binding.Condition = null;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.Only(ICondition<IContext> condition)
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.Only(ICondition<IContext> condition)
 		{
 			Binding.Condition = condition;
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.Only<T>()
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.Only<T>()
 		{
 			Binding.Condition = Binding.Kernel.Get<T>();
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.OnlyIf(Predicate<IContext> predicate)
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.OnlyIf(Predicate<IContext> predicate)
 		{
 			Binding.Condition = new PredicateCondition<IContext>(predicate);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.ForMembersOf<T>()
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.ForMembersOf<T>()
 		{
 			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.ReflectedType == typeof(T));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.ForMembersOf(Type type)
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.ForMembersOf(Type type)
 		{
 			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.ReflectedType == type);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.WhereMemberHas<T>()
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.WhereMemberHas<T>()
 		{
 			// Uses non-generic version to dodge problem with generic constraints on the Mono compiler.
 			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.HasAttribute(typeof(T)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.WhereMemberHas(Type attribute)
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.WhereMemberHas(Type attribute)
 		{
 			if (!typeof(Attribute).IsAssignableFrom(attribute))
 				throw new NotSupportedException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, attribute));
@@ -159,14 +160,14 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.WhereTargetHas<T>()
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.WhereTargetHas<T>()
 		{
 			// Uses non-generic version to dodge problem with generic constraints on the Mono compiler.
 			Binding.Condition = new PredicateCondition<IContext>(ctx => ctx.Member.HasAttribute(typeof(T)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingBehaviorOrParameterSyntax IBindingConditionSyntax.WhereTargetHas(Type attribute)
+		IBindingBehaviorHeuristicComponentOrParameterSyntax IBindingConditionSyntax.WhereTargetHas(Type attribute)
 		{
 			if (!typeof(Attribute).IsAssignableFrom(attribute))
 				throw new NotSupportedException(ExceptionFormatter.InvalidAttributeTypeUsedInBindingCondition(Binding, attribute));
@@ -177,7 +178,7 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingBehaviorSyntax Members
-		IBindingComponentOrParameterSyntax IBindingBehaviorSyntax.Using<T>()
+		IBindingHeuristicComponentOrParameterSyntax IBindingBehaviorSyntax.Using<T>()
 		{
 			IBehavior behavior = new T();
 
@@ -187,7 +188,7 @@ namespace Ninject.Core.Binding
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingComponentOrParameterSyntax IBindingBehaviorSyntax.Using(IBehavior behavior)
+		IBindingHeuristicComponentOrParameterSyntax IBindingBehaviorSyntax.Using(IBehavior behavior)
 		{
 			behavior.Kernel = Binding.Kernel;
 			Binding.Behavior = behavior;
@@ -197,99 +198,155 @@ namespace Ninject.Core.Binding
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region IBindingParameterSyntax Members
-		IBindingParameterSyntax IBindingParameterSyntax.WithConstructorArgument(string name, object value)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithConstructorArgument(string name, object value)
 		{
 			Binding.Parameters.Add(new ConstructorArgumentParameter(name, value));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithConstructorArgument(string name, Func<IContext, object> valueProvider)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithConstructorArgument(string name, Func<IContext, object> valueProvider)
 		{
 			Binding.Parameters.Add(new ConstructorArgumentParameter(name, valueProvider));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithConstructorArguments(IDictionary arguments)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithConstructorArguments(IDictionary arguments)
 		{
 			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(arguments, (name, value) => new ConstructorArgumentParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithConstructorArguments(object arguments)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithConstructorArguments(object arguments)
 		{
 			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(arguments, (name, value) => new ConstructorArgumentParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithPropertyValue(string name, object value)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithPropertyValue(string name, object value)
 		{
 			Binding.Parameters.Add(new PropertyValueParameter(name, value));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithPropertyValue(string name, Func<IContext, object> valueProvider)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithPropertyValue(string name, Func<IContext, object> valueProvider)
 		{
 			Binding.Parameters.Add(new PropertyValueParameter(name, valueProvider));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithPropertyValues(IDictionary values)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithPropertyValues(IDictionary values)
 		{
 			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(values, (name, value) => new PropertyValueParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithPropertyValues(object values)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithPropertyValues(object values)
 		{
 			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(values, (name, value) => new PropertyValueParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithVariable(string name, object value)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithVariable(string name, object value)
 		{
 			Binding.Parameters.Add(new VariableParameter(name, value));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithVariable(string name, Func<IContext, object> valueProvider)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithVariable(string name, Func<IContext, object> valueProvider)
 		{
 			Binding.Parameters.Add(new VariableParameter(name, valueProvider));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithVariables(IDictionary variables)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithVariables(IDictionary variables)
 		{
 			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(variables, (name, value) => new VariableParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithVariables(object variables)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithVariables(object variables)
 		{
 			Binding.Parameters.AddRange(ParameterHelper.CreateFromDictionary(variables, (name, value) => new VariableParameter(name, value)));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithParameter<T>(T parameter)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithParameter<T>(T parameter)
 		{
 			Binding.Parameters.Add(parameter);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingParameterSyntax IBindingParameterSyntax.WithParameters<T>(IEnumerable<T> parameters)
+		IBindingHeuristicComponentOrParameterSyntax IBindingParameterSyntax.WithParameters<T>(IEnumerable<T> parameters)
 		{
 			Binding.Parameters.AddRange(parameters);
 			return this;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region IBindingHeuristicSyntax Members
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.InjectConstructor(ICondition<ConstructorInfo> condition)
+		{
+			Binding.Heuristics.Add(new ConditionHeuristic<ConstructorInfo>(condition));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.InjectConstructorWhere(Predicate<ConstructorInfo> predicate)
+		{
+			Binding.Heuristics.Add(new ConditionHeuristic<ConstructorInfo>(predicate));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.InjectMethods(ICondition<MethodInfo> condition)
+		{
+			Binding.Heuristics.Add(new ConditionHeuristic<MethodInfo>(condition));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.InjectMethodsWhere(Predicate<MethodInfo> predicate)
+		{
+			Binding.Heuristics.Add(new ConditionHeuristic<MethodInfo>(predicate));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.InjectProperties(ICondition<PropertyInfo> condition)
+		{
+			Binding.Heuristics.Add(new ConditionHeuristic<PropertyInfo>(condition));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.InjectPropertiesWhere(Predicate<PropertyInfo> predicate)
+		{
+			Binding.Heuristics.Add(new ConditionHeuristic<PropertyInfo>(predicate));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.InjectFields(ICondition<FieldInfo> condition)
+		{
+			Binding.Heuristics.Add(new ConditionHeuristic<FieldInfo>(condition));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.InjectFieldsWhere(Predicate<FieldInfo> predicate)
+		{
+			Binding.Heuristics.Add(new ConditionHeuristic<FieldInfo>(predicate));
+			return this;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		IBindingHeuristicComponentOrParameterSyntax IBindingHeuristicSyntax.WithHeuristic<TMember>(IHeuristic<TMember> heuristic)
+		{
+			Binding.Heuristics.Add(heuristic);
+			return this;
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
 		#region IBindingComponentSyntax Members
-		IBindingConditionComponentOrParameterSyntax IBindingComponentSyntax.WithComponent<T>(T component)
+		IBindingHeuristicComponentOrParameterSyntax IBindingComponentSyntax.WithComponent<T>(T component)
 		{
 			Binding.Components.Connect<T>(component);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
-		IBindingConditionComponentOrParameterSyntax IBindingComponentSyntax.WithComponent(Type type, IKernelComponent component)
+		IBindingHeuristicComponentOrParameterSyntax IBindingComponentSyntax.WithComponent(Type type, IKernelComponent component)
 		{
 			Binding.Components.Connect(type, component);
 			return this;

@@ -357,10 +357,9 @@ namespace Ninject.Core.Infrastructure
 		{
 			using (var sw = new StringWriter())
 			{
-				sw.Write("Error activating {0}: the implementation type {1} must either ",
+				sw.WriteLine("Error activating {0}: could not resolve a constructor to call on implementation type {1}",
 					Format.Type(context.Binding.Service),
 					Format.Type(context.Plan.Type));
-				sw.WriteLine("have a parameterless constructor or one decorated with an InjectAttribute.");
 
 				sw.WriteLine("Using {0}", Format.Binding(context.Binding));
 

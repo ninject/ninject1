@@ -33,68 +33,68 @@ namespace Ninject.Core.Binding.Syntax
 		/// <summary>
 		/// Indicates that the binding should be used by default.
 		/// </summary>
-		IBindingBehaviorOrParameterSyntax Always();
+		IBindingBehaviorHeuristicComponentOrParameterSyntax Always();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used if the specified condition is true
 		/// in the context in which the service is activated.
 		/// </summary>
 		/// <param name="condition">The condition to test.</param>
-		IBindingBehaviorOrParameterSyntax Only(ICondition<IContext> condition);
+		IBindingBehaviorHeuristicComponentOrParameterSyntax Only(ICondition<IContext> condition);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used if the an instance of the specified
 		/// condition type is true in the context in which the service is activated. The condition
 		/// will be activated via the kernel.
 		/// </summary>
-		IBindingBehaviorOrParameterSyntax Only<T>() where T : ICondition<IContext>;
+		IBindingBehaviorHeuristicComponentOrParameterSyntax Only<T>() where T : ICondition<IContext>;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used if the specified predicate evalutes to
 		/// true when the component is being activated.
 		/// </summary>
 		/// <param name="predicate">The predicate to invoke.</param>
-		IBindingBehaviorOrParameterSyntax OnlyIf(Predicate<IContext> predicate);
+		IBindingBehaviorHeuristicComponentOrParameterSyntax OnlyIf(Predicate<IContext> predicate);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used for members declared by the specified type.
 		/// </summary>
 		/// <typeparam name="T">The type in question.</typeparam>
-		IBindingBehaviorOrParameterSyntax ForMembersOf<T>();
+		IBindingBehaviorHeuristicComponentOrParameterSyntax ForMembersOf<T>();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used for members declared by the specified type.
 		/// </summary>
 		/// <param name="type">The type in question.</param>
-		IBindingBehaviorOrParameterSyntax ForMembersOf(Type type);
+		IBindingBehaviorHeuristicComponentOrParameterSyntax ForMembersOf(Type type);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used when the member being injected is decorated
 		/// with the specified attribute.
 		/// </summary>
 		/// <typeparam name="T">The attribute to look for.</typeparam>
-		IBindingBehaviorOrParameterSyntax WhereMemberHas<T>() where T : Attribute;
+		IBindingBehaviorHeuristicComponentOrParameterSyntax WhereMemberHas<T>() where T : Attribute;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used when the member being injected is decorated
 		/// with the specified attribute.
 		/// </summary>
 		/// <param name="attribute">The attribute to look for.</param>
-		IBindingBehaviorOrParameterSyntax WhereMemberHas(Type attribute);
+		IBindingBehaviorHeuristicComponentOrParameterSyntax WhereMemberHas(Type attribute);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used when the injection target is decorated
 		/// with the specified attribute.
 		/// </summary>
 		/// <typeparam name="T">The attribute to look for.</typeparam>
-		IBindingBehaviorOrParameterSyntax WhereTargetHas<T>() where T : Attribute;
+		IBindingBehaviorHeuristicComponentOrParameterSyntax WhereTargetHas<T>() where T : Attribute;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Indicates that the binding should only be used when the injection target is decorated
 		/// with the specified attribute.
 		/// </summary>
 		/// <param name="attribute">The attribute to look for.</param>
-		IBindingBehaviorOrParameterSyntax WhereTargetHas(Type attribute);
+		IBindingBehaviorHeuristicComponentOrParameterSyntax WhereTargetHas(Type attribute);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

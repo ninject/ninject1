@@ -18,74 +18,51 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 #endregion
 
 namespace Ninject.Conditions.Builders
 {
 	/// <summary>
-	/// A condition builder that deals with <see cref="MethodInfo"/> objects. This class
+	/// A condition builder that deals with lists of <see cref="Type"/> objects. This class
 	/// supports Ninject's EDSL and should generally not be used directly.
 	/// </summary>
 	/// <typeparam name="TRoot">The root type of the conversion chain.</typeparam>
 	/// <typeparam name="TPrevious">The subject type of that the previous link in the condition chain.</typeparam>
-	public class MethodConditionBuilder<TRoot, TPrevious> : MemberConditionBuilder<TRoot, TPrevious, MethodInfo>
+	/// <typeparam name="TList">The type of list the condition builder deals with.</typeparam>
+	public class TypeListConditionBuilder<TRoot, TPrevious, TList> : ListConditionBuilder<TRoot, TPrevious, TList, Type, TypeConditionBuilder<TRoot, TList>>
+		where TList : IList<Type>
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Creates a new MethodConditionBuilder.
+		/// Creates a new TypeListConditionBuilder.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		public MethodConditionBuilder(Func<TRoot, MethodInfo> converter)
+		public TypeListConditionBuilder(Func<TRoot, TList> converter)
 			: base(converter)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new MethodConditionBuilder.
+		/// Creates a new TypeListConditionBuilder.
 		/// </summary>
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
-		public MethodConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, MethodInfo> converter)
+		public TypeListConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, TList> converter)
 			: base(last, converter)
 		{
 		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region EDSL Members
-		/// <summary>
-		/// Continues the conditional chain, examining the return type of the method.
-		/// </summary>
-		public TypeConditionBuilder<TRoot, MethodInfo> ReturnType
-		{
-			get { return new TypeConditionBuilder<TRoot, MethodInfo>(this, s => s.ReturnType); }
-		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Continues the conditional chain, examining the method's generic type definition.
+		/// Creates a condition builder for an item in the list.
 		/// </summary>
-		public MethodConditionBuilder<TRoot, MethodInfo> GenericTypeDefinition
+		/// <param name="converter">The converter that reads the item from the list.</param>
+		/// <returns>The created condition builder.</returns>
+		protected override TypeConditionBuilder<TRoot, TList> CreateBuilderForItem(Func<TList, Type> converter)
 		{
-			get { return new MethodConditionBuilder<TRoot, MethodInfo>(this, s => s.GetGenericMethodDefinition()); }
+			return new TypeConditionBuilder<TRoot, TList>(this, converter);
 		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that evaluates whether the method is abstract.
-		/// </summary>
-		public TerminatingCondition<TRoot, MethodInfo> IsAbstract
-		{
-			get { return Terminate(s => s.IsAbstract); }
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Creates a terminating condition that evaluates whether the method is a generic method.
-		/// </summary>
-		public TerminatingCondition<TRoot, MethodInfo> IsGenericMethod
-		{
-			get { return Terminate(s => s.IsGenericMethod); }
-		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

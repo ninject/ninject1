@@ -38,92 +38,92 @@ namespace Ninject.Core.Binding.Syntax
 		/// </summary>
 		/// <param name="name">The name of the argument.</param>
 		/// <param name="value">The value to inject.</param>
-		IBindingParameterSyntax WithConstructorArgument(string name, object value);
+		IBindingHeuristicComponentOrParameterSyntax WithConstructorArgument(string name, object value);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Overrides the value for a constructor argument.
 		/// </summary>
 		/// <param name="name">The name of the argument.</param>
 		/// <param name="valueProvider">The callback to trigger to get the value to inject.</param>
-		IBindingParameterSyntax WithConstructorArgument(string name, Func<IContext, object> valueProvider);
+		IBindingHeuristicComponentOrParameterSyntax WithConstructorArgument(string name, Func<IContext, object> valueProvider);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Overrides the values for a group of constructor arguments.
 		/// </summary>
 		/// <param name="arguments">A dictionary of key/value pairs that represent the arguments to override.</param>
-		IBindingParameterSyntax WithConstructorArguments(IDictionary arguments);
+		IBindingHeuristicComponentOrParameterSyntax WithConstructorArguments(IDictionary arguments);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Overrides the values for a group of constructor arguments.
 		/// </summary>
 		/// <param name="arguments">An object whose public properties represent the values to inject.</param>
-		IBindingParameterSyntax WithConstructorArguments(object arguments);
+		IBindingHeuristicComponentOrParameterSyntax WithConstructorArguments(object arguments);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Overrides the value for a property injection.
 		/// </summary>
 		/// <param name="name">The name of the property.</param>
 		/// <param name="value">The value to inject.</param>
-		IBindingParameterSyntax WithPropertyValue(string name, object value);
+		IBindingHeuristicComponentOrParameterSyntax WithPropertyValue(string name, object value);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Overrides the value for a property injection.
 		/// </summary>
 		/// <param name="name">The name of the property.</param>
 		/// <param name="valueProvider">The callback to trigger to get the value to inject.</param>
-		IBindingParameterSyntax WithPropertyValue(string name, Func<IContext, object> valueProvider);
+		IBindingHeuristicComponentOrParameterSyntax WithPropertyValue(string name, Func<IContext, object> valueProvider);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Overrides the values for a group of properties.
 		/// </summary>
 		/// <param name="values">A dictionary of key/value pairs that represent the arguments to override.</param>
-		IBindingParameterSyntax WithPropertyValues(IDictionary values);
+		IBindingHeuristicComponentOrParameterSyntax WithPropertyValues(IDictionary values);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Overrides the values for a group of properties.
 		/// </summary>
 		/// <param name="values">An object whose public properties represent the values to inject.</param>
-		IBindingParameterSyntax WithPropertyValues(object values);
+		IBindingHeuristicComponentOrParameterSyntax WithPropertyValues(object values);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Defines a variable that can be read by the context.
 		/// </summary>
 		/// <param name="name">The name of the variable.</param>
 		/// <param name="value">The value for the variable.</param>
-		IBindingParameterSyntax WithVariable(string name, object value);
+		IBindingHeuristicComponentOrParameterSyntax WithVariable(string name, object value);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Defines a variable that can be read by the context.
 		/// </summary>
 		/// <param name="name">The name of the variable.</param>
 		/// <param name="valueProvider">The callback to trigger to get the value for the variable.</param>
-		IBindingParameterSyntax WithVariable(string name, Func<IContext, object> valueProvider);
+		IBindingHeuristicComponentOrParameterSyntax WithVariable(string name, Func<IContext, object> valueProvider);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Defines a group of variables that can be read by the context.
 		/// </summary>
 		/// <param name="variables">A dictionary of key/value pairs that represent the variables.</param>
-		IBindingParameterSyntax WithVariables(IDictionary variables);
+		IBindingHeuristicComponentOrParameterSyntax WithVariables(IDictionary variables);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Defines a group of variables that can be read by the context.
 		/// </summary>
 		/// <param name="variables">An object whose public properties will become variables.</param>
-		IBindingParameterSyntax WithVariables(object variables);
+		IBindingHeuristicComponentOrParameterSyntax WithVariables(object variables);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Defines a custom parameter which can be read by the context.
 		/// </summary>
 		/// <typeparam name="T">The type of parameter.</typeparam>
 		/// <param name="parameter">The parameter to define.</param>
-		IBindingParameterSyntax WithParameter<T>(T parameter) where T : class, IParameter;
+		IBindingHeuristicComponentOrParameterSyntax WithParameter<T>(T parameter) where T : class, IParameter;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Defines a group of custom parameters which can be read by the context.
 		/// </summary>
 		/// <typeparam name="T">The type of parameters.</typeparam>
 		/// <param name="parameters">The parameters to define.</param>
-		IBindingParameterSyntax WithParameters<T>(IEnumerable<T> parameters) where T : class, IParameter;
+		IBindingHeuristicComponentOrParameterSyntax WithParameters<T>(IEnumerable<T> parameters) where T : class, IParameter;
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

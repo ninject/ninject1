@@ -18,37 +18,36 @@
 #endregion
 #region Using Directives
 using System;
-using Ninject.Core.Planning.Targets;
+using System.Reflection;
 #endregion
 
 namespace Ninject.Conditions.Builders
 {
 	/// <summary>
-	/// A condition builder that deals with <see cref="ITarget"/> objects. This class
+	/// A condition builder that deals with <see cref="PropertyInfo"/> objects. This class
 	/// supports Ninject's EDSL and should generally not be used directly.
 	/// </summary>
 	/// <typeparam name="TRoot">The root type of the conversion chain.</typeparam>
 	/// <typeparam name="TPrevious">The subject type of that the previous link in the condition chain.</typeparam>
-	public class TargetConditionBuilder<TRoot, TPrevious> : AttributeConditionBuilder<TRoot, TPrevious, ITarget>
+	public class PropertyConditionBuilder<TRoot, TPrevious> : MemberConditionBuilder<TRoot, TPrevious, PropertyInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Constructors
 		/// <summary>
-		/// Creates a new TargetConditionBuilder.
+		/// Creates a new PropertyConditionBuilder.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		public TargetConditionBuilder(Func<TRoot, ITarget> converter)
+		public PropertyConditionBuilder(Func<TRoot, PropertyInfo> converter)
 			: base(converter)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new TargetConditionBuilder.
+		/// Creates a new PropertyConditionBuilder.
 		/// </summary>
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
-		public TargetConditionBuilder(IConditionBuilder<TRoot, TPrevious> last,
-			Func<TPrevious, ITarget> converter)
+		public PropertyConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, PropertyInfo> converter)
 			: base(last, converter)
 		{
 		}
@@ -56,19 +55,43 @@ namespace Ninject.Conditions.Builders
 		/*----------------------------------------------------------------------------------------*/
 		#region EDSL Members
 		/// <summary>
-		/// Continues the condition chain, examining the injection point's name.
+		/// Continues the condition chain, evaluating the property's getter.
 		/// </summary>
-		public StringConditionBuilder<TRoot, ITarget> Name
+		public MethodConditionBuilder<TRoot, PropertyInfo> GetMethod
 		{
-			get { return new StringConditionBuilder<TRoot, ITarget>(this, t => t.Name); }
+			get { return new MethodConditionBuilder<TRoot, PropertyInfo>(this, p => p.GetGetMethod()); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Continues the condition chain, examining the injection point's type.
+		/// Continues the condition chain, evaluating the property's getter.
 		/// </summary>
-		public TypeConditionBuilder<TRoot, ITarget> TargetType
+		public MethodConditionBuilder<TRoot, PropertyInfo> SetMethod
 		{
-			get { return new TypeConditionBuilder<TRoot, ITarget>(this, t => t.Type); }
+			get { return new MethodConditionBuilder<TRoot, PropertyInfo>(this, p => p.GetSetMethod()); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Continues the condition chain, evaluating the type of the property.
+		/// </summary>
+		public TypeConditionBuilder<TRoot, PropertyInfo> PropertyType
+		{
+			get { return new TypeConditionBuilder<TRoot, PropertyInfo>(this, p => p.PropertyType); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that evaluates whether the property can be read.
+		/// </summary>
+		public TerminatingCondition<TRoot, PropertyInfo> CanRead
+		{
+			get { return Terminate(p => p.CanRead); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a terminating condition that evaluates whether the property can be written.
+		/// </summary>
+		public TerminatingCondition<TRoot, PropertyInfo> CanWrite
+		{
+			get { return Terminate(p => p.CanWrite); }
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

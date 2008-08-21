@@ -18,14 +18,17 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core;
 #endregion
 
-namespace Ninject.Core.Binding.Syntax
+namespace Ninject.Tests
 {
-	/// <summary>
-	/// Describes a fluent syntax for adding transient components and parameters to a binding.
-	/// </summary>
-	public interface IBindingComponentOrParameterSyntax : IBindingComponentSyntax, IBindingParameterSyntax
+	public class RequestsPropertyInjectionWithoutAttribute : IMock
 	{
+		/*----------------------------------------------------------------------------------------*/
+		public SimpleObject InjectMe { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		public SimpleObject DoNotInject { get; set; }
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

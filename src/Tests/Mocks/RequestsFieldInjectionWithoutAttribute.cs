@@ -18,14 +18,17 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core;
 #endregion
 
-namespace Ninject.Core.Binding.Syntax
+namespace Ninject.Tests
 {
-	/// <summary>
-	/// Describes a fluent syntax for modifying the behavior of a binding or adding parameters.
-	/// </summary>
-	public interface IBindingBehaviorOrParameterSyntax : IBindingBehaviorSyntax, IBindingParameterSyntax
+	public class RequestsFieldInjectionWithoutAttribute : IMock
 	{
+		/*----------------------------------------------------------------------------------------*/
+		public SimpleObject InjectMe;
+		/*----------------------------------------------------------------------------------------*/
+		public SimpleObject DoNotInject;
+		/*----------------------------------------------------------------------------------------*/
 	}
 }

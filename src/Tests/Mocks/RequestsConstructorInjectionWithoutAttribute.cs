@@ -23,10 +23,20 @@ using Ninject.Core;
 
 namespace Ninject.Tests
 {
-	public class TransientDirectivesPropertyMock : IMock
+	public class RequestsConstructorInjectionWithoutAttribute : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
-		public SimpleObject Child { get; set; }
+		public SimpleObject Child { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		public RequestsConstructorInjectionWithoutAttribute(SimpleObject child)
+		{
+			Child = child;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		public RequestsConstructorInjectionWithoutAttribute(SimpleObject child, string foo)
+		{
+			Child = child;
+		}
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

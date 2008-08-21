@@ -19,61 +19,50 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
-using Ninject.Core.Infrastructure;
+using System.Reflection;
 #endregion
 
 namespace Ninject.Conditions.Builders
 {
 	/// <summary>
-	/// A condition builder that can examine lists. This class supports Ninject's EDSL and
-	/// should generally not be used directly.
+	/// A condition builder that deals with lists of <see cref="ParameterInfo"/> objects. This class
+	/// supports Ninject's EDSL and should generally not be used directly.
 	/// </summary>
 	/// <typeparam name="TRoot">The root type of the conversion chain.</typeparam>
 	/// <typeparam name="TPrevious">The subject type of that the previous link in the condition chain.</typeparam>
-	/// <typeparam name="TSubject">The type of list that this condition builder deals with.</typeparam>
-	/// <typeparam name="TItem">The type of object stored in the list that this condition builder deals with.</typeparam>
-	public class ListConditionBuilder<TRoot, TPrevious, TSubject, TItem> : CollectionConditionBuilder<TRoot, TPrevious, TSubject, TItem>
-		where TSubject: IList<TItem>
+	/// <typeparam name="TList">The type of list the condition builder deals with.</typeparam>
+	public class ParameterListConditionBuilder<TRoot, TPrevious, TList> : ListConditionBuilder<TRoot, TPrevious, TList, ParameterInfo, ParameterConditionBuilder<TRoot, TList>>
+		where TList : IList<ParameterInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Creates a new ListConditionBuilder.
+		/// Creates a new ParameterConditionBuilder.
 		/// </summary>
 		/// <param name="converter">A converter delegate that directly translates from the root of the condition chain to this builder's subject.</param>
-		public ListConditionBuilder(Func<TRoot, TSubject> converter)
+		public ParameterListConditionBuilder(Func<TRoot, TList> converter)
 			: base(converter)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new ListConditionBuilder.
+		/// Creates a new ParameterConditionBuilder.
 		/// </summary>
 		/// <param name="last">The previous builder in the conditional chain.</param>
 		/// <param name="converter">A step converter delegate that translates from the previous step's output to this builder's subject.</param>
-		public ListConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, TSubject> converter)
+		public ParameterListConditionBuilder(IConditionBuilder<TRoot, TPrevious> last, Func<TPrevious, TList> converter)
 			: base(last, converter)
 		{
 		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region EDSL Members
-		/// <summary>
-		/// Continues the condition chain, evaluating the item at the specified index.
-		/// </summary>
-		public SimpleConditionBuilder<TRoot, TSubject, object> this[int index]
-		{
-			get { return new SimpleConditionBuilder<TRoot, TSubject, object>(this, s => s[index]); }
-		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Continues the condition chain, evaluating the index of the specified item.
+		/// Creates a condition builder for an item in the list.
 		/// </summary>
-		public Int32ConditionBuilder<TRoot, TSubject> IndexOf(TItem item)
+		/// <param name="converter">The converter that reads the item from the list.</param>
+		/// <returns>The created condition builder.</returns>
+		protected override ParameterConditionBuilder<TRoot, TList> CreateBuilderForItem(Func<TList, ParameterInfo> converter)
 		{
-			return new Int32ConditionBuilder<TRoot, TSubject>(this, s => s.IndexOf(item));
+			return new ParameterConditionBuilder<TRoot, TList>(this, converter);
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

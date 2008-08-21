@@ -74,6 +74,15 @@ namespace Ninject.Conditions.Builders
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Continues the conditional chain, examining the implementation type currently being
+		/// activated within the context.
+		/// </summary>
+		public TypeConditionBuilder<TRoot, IContext> Implementation
+		{
+			get { return new TypeConditionBuilder<TRoot, IContext>(this, ctx => ctx.Implementation); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Continues the conditional chain, examining the member that will be injected with the value
 		/// that is resolved within the context.
 		/// </summary>
@@ -97,6 +106,14 @@ namespace Ninject.Conditions.Builders
 		public Int32ConditionBuilder<TRoot, IContext> Level
 		{
 			get { return new Int32ConditionBuilder<TRoot, IContext>(this, ctx => ctx.Level); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Continues the conditional chain, examining the generic arguments of the context.
+		/// </summary>
+		public TypeListConditionBuilder<TRoot, IContext, Type[]> GenericArguments
+		{
+			get { return new TypeListConditionBuilder<TRoot, IContext, Type[]>(this, ctx => ctx.GenericArguments); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

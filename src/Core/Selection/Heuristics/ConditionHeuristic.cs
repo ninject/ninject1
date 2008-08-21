@@ -37,16 +37,26 @@ namespace Ninject.Core.Selection
 		/// <summary>
 		/// Gets the condition that will be used to evaluate the candidates for injection.
 		/// </summary>
-		public ICondition<CandidateMember<TMember>> Condition { get; private set; }
+		public ICondition<TMember> Condition { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ConditionHeuristic{TMember}"/> class.
 		/// </summary>
 		/// <param name="condition">The condition to use to evaluate the candidates for injection.</param>
-		public ConditionHeuristic(ICondition<CandidateMember<TMember>> condition)
+		public ConditionHeuristic(ICondition<TMember> condition)
 		{
 			Ensure.ArgumentNotNull(condition, "condition");
 			Condition = condition;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConditionHeuristic{TMember}"/> class.
+		/// </summary>
+		/// <param name="predicate">The predicate to use to evaluate the candidates for injection.</param>
+		public ConditionHeuristic(Predicate<TMember> predicate)
+		{
+			Ensure.ArgumentNotNull(predicate, "predicate");
+			Condition = new PredicateCondition<TMember>(predicate);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -59,7 +69,7 @@ namespace Ninject.Core.Selection
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
 		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<TMember> candidates, TMember member)
 		{
-			return Condition.Matches(new CandidateMember<TMember>(binding, plan, candidates, member));
+			return Condition.Matches(member);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

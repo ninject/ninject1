@@ -35,7 +35,7 @@ namespace Ninject.Core.Binding.Syntax
 		/// </summary>
 		/// <typeparam name="T">The type of the component.</typeparam>
 		/// <param name="component">The component instance to connect.</param>
-		IBindingConditionComponentOrParameterSyntax WithComponent<T>(T component) where T : IKernelComponent;
+		IBindingHeuristicComponentOrParameterSyntax WithComponent<T>(T component) where T : IKernelComponent;
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Attaches the specified kernel component to the binding, overriding any component with
@@ -43,7 +43,7 @@ namespace Ninject.Core.Binding.Syntax
 		/// </summary>
 		/// <param name="type">The type of the component.</param>
 		/// <param name="component">The component instance to connect.</param>
-		IBindingConditionComponentOrParameterSyntax WithComponent(Type type, IKernelComponent component);
+		IBindingHeuristicComponentOrParameterSyntax WithComponent(Type type, IKernelComponent component);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

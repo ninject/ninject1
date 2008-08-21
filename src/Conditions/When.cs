@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Reflection;
 using Ninject.Core;
 using Ninject.Core.Activation;
 using Ninject.Conditions.Builders;
@@ -52,6 +53,38 @@ namespace Ninject.Conditions
 		public static RequestConditionBuilder<IRequest, IRequest> Request
 		{
 			get { return new RequestConditionBuilder<IRequest, IRequest>(r => r); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Begins a conditional chain that examines a constructor injection candidate.
+		/// </summary>
+		public static ConstructorConditionBuilder<ConstructorInfo, ConstructorInfo> Constructor
+		{
+			get { return new ConstructorConditionBuilder<ConstructorInfo, ConstructorInfo>(c => c); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Begins a conditional chain that examines a method injection candidate.
+		/// </summary>
+		public static MethodConditionBuilder<MethodInfo, MethodInfo> Method
+		{
+			get { return new MethodConditionBuilder<MethodInfo, MethodInfo>(m => m); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Begins a conditional chain that examines a property injection candidate.
+		/// </summary>
+		public static PropertyConditionBuilder<PropertyInfo, PropertyInfo> Property
+		{
+			get { return new PropertyConditionBuilder<PropertyInfo, PropertyInfo>(p => p); }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Begins a conditional chain that examines a field injection candidate.
+		/// </summary>
+		public static FieldConditionBuilder<FieldInfo, FieldInfo> Field
+		{
+			get { return new FieldConditionBuilder<FieldInfo, FieldInfo>(f => f); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

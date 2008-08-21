@@ -85,17 +85,17 @@ namespace Ninject.Conditions.Builders
 		/// <summary>
 		/// Continues the conditional chain, examining the list of arguments.
 		/// </summary>
-		public ListConditionBuilder<TRoot, IRequest, object[], object> Arguments
+		public ObjectListConditionBuilder<TRoot, IRequest, object[]> Arguments
 		{
-			get { return new ListConditionBuilder<TRoot, IRequest, object[], object>(this, r => r.Arguments); }
+			get { return new ObjectListConditionBuilder<TRoot, IRequest, object[]>(this, r => r.Arguments); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Continues the conditional chain, examining the list of generic type arguments.
 		/// </summary>
-		public ListConditionBuilder<TRoot, IRequest, Type[], Type> GenericArguments
+		public TypeListConditionBuilder<TRoot, IRequest, Type[]> GenericArguments
 		{
-			get { return new ListConditionBuilder<TRoot, IRequest, Type[], Type>(this, r => r.GenericArguments); }
+			get { return new TypeListConditionBuilder<TRoot, IRequest, Type[]>(this, r => r.GenericArguments); }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
