@@ -43,7 +43,7 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets or sets the kernel associated with the module.
+		/// Gets or sets the kernel the module has been loaded into, if any.
 		/// </summary>
 		/// <value></value>
 		public IKernel Kernel { get; set; }
@@ -54,6 +54,14 @@ namespace Ninject.Core
 		public virtual string Name
 		{
 			get { return GetType().Name; }
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets a value indicating whether the module is loaded into a kernel.
+		/// </summary>
+		public bool IsLoaded
+		{
+			get { return Kernel != null; }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -115,7 +123,7 @@ namespace Ninject.Core
 		/// </summary>
 		public virtual void Unload()
 		{
-			if (Kernel == null)
+			if (!IsLoaded)
 				throw new InvalidOperationException(ExceptionFormatter.CannotUnloadModuleThatIsNotLoaded(this));
 
 			Bindings.Each(Kernel.RemoveBinding);

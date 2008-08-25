@@ -40,6 +40,15 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
+		/// Gets or sets a value indicating the kernel configuration to use.
+		/// </summary>
+		/// <remarks>
+		/// This value can be used in conditional bindings to activate instances of different
+		/// types depending on the situation (i.e. production vs. test).
+		/// </remarks>
+		public string Configuration { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets or sets a value indicating whether automatic self-binding is enabled.
 		/// </summary>
 		/// <remarks>

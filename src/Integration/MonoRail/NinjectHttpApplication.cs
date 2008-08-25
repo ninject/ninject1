@@ -58,7 +58,7 @@ namespace Ninject.Integration.MonoRail
 		public void Application_OnStart()
 		{
 			_kernel = CreateKernel();
-			_kernel.Load(new MonoRailModule());
+			_kernel.Modules.Load(new MonoRailModule());
 
 			ServiceProviderLocator.Instance.AddLocatorStrategy(new NinjectAccessorStrategy());
 

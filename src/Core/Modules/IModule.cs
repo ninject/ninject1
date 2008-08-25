@@ -31,7 +31,7 @@ namespace Ninject.Core
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the kernel associated with the module.
+		/// Gets or sets the kernel the module has been loaded into, if any.
 		/// </summary>
 		IKernel Kernel { get; set; }
 		/*----------------------------------------------------------------------------------------*/
@@ -39,6 +39,11 @@ namespace Ninject.Core
 		/// Gets the name of the module.
 		/// </summary>
 		string Name { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Returns a value indicating whether the module is loaded into a kernel.
+		/// </summary>
+		bool IsLoaded { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Loads the module into the kernel.

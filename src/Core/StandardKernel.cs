@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Conversion;
@@ -46,7 +47,26 @@ namespace Ninject.Core
 		/// </summary>
 		/// <param name="modules">One or more modules to load into the kernel.</param>
 		public StandardKernel(params IModule[] modules)
-			: this(KernelOptions.Default, null, modules)
+			: base(KernelOptions.Default, modules)
+		{
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StandardKernel"/> class.
+		/// </summary>
+		/// <param name="modules">One or more modules to load into the kernel.</param>
+		public StandardKernel(IEnumerable<IModule> modules)
+			: base(KernelOptions.Default, modules)
+		{
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StandardKernel"/> class.
+		/// </summary>
+		/// <param name="options">The kernel options to use.</param>
+		/// <param name="modules">One or more modules to load into the kernel.</param>
+		public StandardKernel(KernelOptions options, IEnumerable<IModule> modules)
+			: base(options, modules)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
@@ -56,28 +76,7 @@ namespace Ninject.Core
 		/// <param name="options">The kernel options to use.</param>
 		/// <param name="modules">One or more modules to load into the kernel.</param>
 		public StandardKernel(KernelOptions options, params IModule[] modules)
-			: this(options, null, modules)
-		{
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Initializes a new instance of the <see cref="StandardKernel"/> class.
-		/// </summary>
-		/// <param name="configuration">The name of the configuration to use.</param>
-		/// <param name="modules">One or more modules to load into the kernel.</param>
-		public StandardKernel(string configuration, params IModule[] modules)
-			: this(KernelOptions.Default, configuration, modules)
-		{
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Initializes a new instance of the <see cref="StandardKernel"/> class.
-		/// </summary>
-		/// <param name="options">The kernel options to use.</param>
-		/// <param name="configuration">The name of the configuration to use.</param>
-		/// <param name="modules">One or more modules to load into the kernel.</param>
-		public StandardKernel(KernelOptions options, string configuration, params IModule[] modules)
-			: base(options, configuration, modules)
+			: base(options, modules)
 		{
 		}
 		#endregion

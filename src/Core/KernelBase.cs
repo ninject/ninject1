@@ -28,6 +28,7 @@ using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Interception;
 using Ninject.Core.Logging;
+using Ninject.Core.Modules;
 using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
 using Ninject.Core.Resolution;
@@ -74,15 +75,14 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
+		/// Gets the collection of modules loaded in the kernel.
+		/// </summary>
+		public IModuleCollection Modules { get; private set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the kernel's component container.
 		/// </summary>
 		public IComponentContainer Components { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the name of the configuration that the kernel is currently using. This
-		/// value can be referred to in conditions to alter bindings.
-		/// </summary>
-		public string Configuration { get; private set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets an object containing configuration information about the kernel.
@@ -126,9 +126,8 @@ namespace Ninject.Core
 		/// Initializes a new instance of the <see cref="KernelBase"/> class.
 		/// </summary>
 		/// <param name="options">The options to use.</param>
-		/// <param name="configuration">The name of the configuration to use.</param>
 		/// <param name="modules">The modules to load into the kernel.</param>
-		protected KernelBase(KernelOptions options, string configuration, IEnumerable<IModule> modules)
+		protected KernelBase(KernelOptions options, IEnumerable<IModule> modules)
 		{
 			Ensure.ArgumentNotNull(options, "options");
 
@@ -136,7 +135,6 @@ namespace Ninject.Core
 			Logger = NullLogger.Instance;
 
 			Options = options;
-			Configuration = configuration;
 
 			Components = InitializeComponents();
 			ValidateComponents();
@@ -144,7 +142,9 @@ namespace Ninject.Core
 			// If the user has connected a real logger factory, get a real logger.
 			Logger = Components.Get<ILoggerFactory>().GetLogger(GetType());
 
-			LoadModules(modules);
+			Modules = new ModuleCollection(this);
+			Modules.Load(modules);
+
 			ActivateEagerServices();
 		}
 		#endregion
@@ -176,10 +176,8 @@ namespace Ninject.Core
 		/// <param name="modules">The modules to load.</param>
 		public void Load(params IModule[] modules)
 		{
-			Ensure.ArgumentNotNull(modules, "modules");
 			Ensure.NotDisposed(this);
-
-			LoadModules(modules);
+			Modules.Load(modules);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -188,10 +186,8 @@ namespace Ninject.Core
 		/// <param name="modules">The modules to load.</param>
 		public void Load(IEnumerable<IModule> modules)
 		{
-			Ensure.ArgumentNotNull(modules, "modules");
 			Ensure.NotDisposed(this);
-
-			LoadModules(modules);
+			Modules.Load(modules);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -200,10 +196,8 @@ namespace Ninject.Core
 		/// <param name="modules">The modules to unload.</param>
 		public void Unload(params IModule[] modules)
 		{
-			Ensure.ArgumentNotNull(modules, "modules");
 			Ensure.NotDisposed(this);
-
-			UnloadModules(modules);
+			Modules.Unload(modules);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -212,10 +206,8 @@ namespace Ninject.Core
 		/// <param name="modules">The modules to unload.</param>
 		public void Unload(IEnumerable<IModule> modules)
 		{
-			Ensure.ArgumentNotNull(modules, "modules");
 			Ensure.NotDisposed(this);
-
-			UnloadModules(modules);
+			Modules.Unload(modules);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -403,48 +395,6 @@ namespace Ninject.Core
 
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Eager activation complete.");
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Protected Methods: Modules
-		/// <summary>
-		/// Loads the specified modules into the kernel.
-		/// </summary>
-		protected virtual void LoadModules(IEnumerable<IModule> modules)
-		{
-			modules.Each(m => m.Kernel = this);
-
-			modules.Each(m =>
-			{
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Loading module {0}", m.Name);
-
-				m.Load();
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Finished loading module {0}", m.Name);
-			});
-
-			Components.Get<IBindingRegistry>().ValidateBindings();
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Unloads the specified modules from the kernel.
-		/// </summary>
-		protected virtual void UnloadModules(IEnumerable<IModule> modules)
-		{
-			modules.Each(m =>
-			{
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Unloading module {0}", m.Name);
-
-				m.Unload();
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Finished unloading module {0}", m.Name);
-			});
-
-			Components.Get<IBindingRegistry>().ValidateBindings();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

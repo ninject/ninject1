@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Modules;
 using Ninject.Core.Parameters;
 using Ninject.Core.Tracking;
 #endregion
@@ -36,15 +37,14 @@ namespace Ninject.Core
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
+		/// Gets the collection of modules loaded in the kernel.
+		/// </summary>
+		IModuleCollection Modules { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets the kernel's component container.
 		/// </summary>
 		IComponentContainer Components { get; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets the name of the configuration that the kernel is currently using. This
-		/// value can be referred to in conditions to alter bindings.
-		/// </summary>
-		string Configuration { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets an object containing configuration information about the kernel.

@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET_35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\Release\Ninject.Core.xml</DocumentationFile>
@@ -65,6 +65,8 @@
     <Compile Include="Conversion\StandardConverter.cs" />
     <Compile Include="Conversion\IConverter.cs" />
     <Compile Include="Infrastructure\Structures\ITypedCollection.cs" />
+    <Compile Include="Modules\Collection\ModuleCollection.cs" />
+    <Compile Include="Modules\Collection\IModuleCollection.cs" />
     <Compile Include="Parameters\ParameterHelper.cs" />
     <Compile Include="Parameters\Model\ConstructorArgumentParameter.cs" />
     <Compile Include="Parameters\Model\VariableParameter.cs" />

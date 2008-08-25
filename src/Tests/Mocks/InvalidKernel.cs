@@ -28,7 +28,7 @@ namespace Ninject.Tests
 	{
 		/*----------------------------------------------------------------------------------------*/
 		public InvalidKernel(params IModule[] modules)
-			: base(KernelOptions.Default, null, modules)
+			: base(KernelOptions.Default, modules)
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/

@@ -61,7 +61,7 @@ namespace Ninject.Tests
 				Assert.That(two, Is.Not.Null);
 				Assert.That(two, Is.InstanceOfType(typeof(ServiceImplB)));
 
-				kernel.Unload(moduleA);
+				kernel.Modules.Unload(moduleA);
 
 				var bindingRegistry = kernel.Components.Get<IBindingRegistry>();
 				Assert.That(bindingRegistry.HasBinding(typeof(IServiceA)), Is.False);
@@ -74,7 +74,7 @@ namespace Ninject.Tests
 			var moduleA = new MockModuleA();
 
 			using (var kernel = new StandardKernel())
-				kernel.Unload(moduleA);
+				kernel.Modules.Unload(moduleA);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}
