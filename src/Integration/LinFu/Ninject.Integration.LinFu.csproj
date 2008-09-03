@@ -54,9 +54,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core.csproj">
+    <ProjectReference Include="..\..\Core\Ninject.Core.csproj">
       <Project>{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}</Project>
-      <Name>Core</Name>
+      <Name>Ninject.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

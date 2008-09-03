@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{82404394-A1B7-475A-BCF5-3C5708E36979}</ProjectGuid>
+    <ProjectGuid>{A7151D7B-5A99-4DDA-9D0B-C6BBDCC218B7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ninject.Integration.MonoRail</RootNamespace>
-    <AssemblyName>Ninject.Integration.MonoRail</AssemblyName>
+    <RootNamespace>Ninject.Integration.AjaxPro</RootNamespace>
+    <AssemblyName>Ninject.Integration.AjaxPro</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
@@ -26,7 +26,7 @@
     <DefineConstants>TRACE;DEBUG;NET_35</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Debug\Ninject.Integration.MonoRail.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Debug\Ninject.Integration.AjaxPro.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,16 +35,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\..\bin\Release\Ninject.Integration.MonoRail.xml</DocumentationFile>
+    <DocumentationFile>..\..\..\bin\Release\Ninject.Integration.AjaxPro.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="AjaxPro.2, Version=7.7.31.1, Culture=neutral, PublicKeyToken=eabb1b8f6347d5af, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.MonoRail.Framework, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\lib\Castle.MonoRail.Framework.dll</HintPath>
+      <HintPath>..\..\..\lib\AjaxPro.2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -56,19 +52,19 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Infrastructure\NinjectHelperFactory.cs" />
-    <Compile Include="Infrastructure\NinjectViewComponentFactory.cs" />
-    <Compile Include="Infrastructure\NinjectAccessorStrategy.cs" />
-    <Compile Include="MonoRailModule.cs" />
-    <Compile Include="Infrastructure\NinjectFilterFactory.cs" />
-    <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
-    <Compile Include="NinjectHttpApplication.cs" />
+    <Compile Include="AjaxPageBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core.csproj">
+    <ProjectReference Include="..\..\Core\Ninject.Core.csproj">
       <Project>{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}</Project>
-      <Name>Core</Name>
+      <Name>Ninject.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Web\Ninject.Framework.Web.csproj">
+      <Project>{C46075DB-A0FB-466B-BA76-C093227FA9C7}</Project>
+      <Name>Ninject.Framework.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

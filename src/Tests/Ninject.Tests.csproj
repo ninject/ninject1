@@ -195,57 +195,57 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Conditions\Conditions.csproj">
+    <ProjectReference Include="..\Conditions\Ninject.Conditions.csproj">
       <Project>{2844FFB6-2929-4188-A4F6-11184E0F3A5D}</Project>
-      <Name>Conditions</Name>
+      <Name>Ninject.Conditions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\Core.csproj">
+    <ProjectReference Include="..\Core\Ninject.Core.csproj">
       <Project>{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}</Project>
-      <Name>Core</Name>
+      <Name>Ninject.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Extensions\AutoWiring\Extensions.AutoWiring.csproj">
+    <ProjectReference Include="..\Extensions\AutoWiring\Ninject.Extensions.AutoWiring.csproj">
       <Project>{9D7B121D-BF64-4074-B941-F39C3826E1F8}</Project>
-      <Name>Extensions.AutoWiring</Name>
+      <Name>Ninject.Extensions.AutoWiring</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Extensions\Cache\Extensions.Cache.csproj">
+    <ProjectReference Include="..\Extensions\Cache\Ninject.Extensions.Cache.csproj">
       <Project>{BA11E656-071A-4C58-AF4C-82DB1843EEDC}</Project>
-      <Name>Extensions.Cache</Name>
+      <Name>Ninject.Extensions.Cache</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Extensions\MessageBroker\Extensions.MessageBroker.csproj">
+    <ProjectReference Include="..\Extensions\MessageBroker\Ninject.Extensions.MessageBroker.csproj">
       <Project>{4E0B835D-4DBE-4211-8E6A-678C36B1837B}</Project>
-      <Name>Extensions.MessageBroker</Name>
+      <Name>Ninject.Extensions.MessageBroker</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Framework\Web\Framework.Web.csproj">
+    <ProjectReference Include="..\Framework\Web\Ninject.Framework.Web.csproj">
       <Project>{C46075DB-A0FB-466B-BA76-C093227FA9C7}</Project>
-      <Name>Framework.Web</Name>
+      <Name>Ninject.Framework.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Framework\WinForms\Framework.WinForms.csproj">
+    <ProjectReference Include="..\Framework\WinForms\Ninject.Framework.WinForms.csproj">
       <Project>{0A16E885-951D-4E84-A42E-FFAAE5C8B340}</Project>
-      <Name>Framework.WinForms</Name>
+      <Name>Ninject.Framework.WinForms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Integration\AjaxPro\Integration.AjaxPro.csproj">
+    <ProjectReference Include="..\Integration\AjaxPro\Ninject.Integration.AjaxPro.csproj">
       <Project>{A7151D7B-5A99-4DDA-9D0B-C6BBDCC218B7}</Project>
-      <Name>Integration.AjaxPro</Name>
+      <Name>Ninject.Integration.AjaxPro</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Integration\DynamicProxy2\Integration.DynamicProxy2.csproj">
+    <ProjectReference Include="..\Integration\DynamicProxy2\Ninject.Integration.DynamicProxy2.csproj">
       <Project>{E961E104-56DB-4C4F-ABDC-D2D81C4A6BCA}</Project>
-      <Name>Integration.DynamicProxy2</Name>
+      <Name>Ninject.Integration.DynamicProxy2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Integration\LinFu\Integration.LinFu.csproj">
+    <ProjectReference Include="..\Integration\LinFu\Ninject.Integration.LinFu.csproj">
       <Project>{50251B1C-0CE7-4117-B12C-536D0343FEA2}</Project>
-      <Name>Integration.LinFu</Name>
+      <Name>Ninject.Integration.LinFu</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Integration\Log4net\Integration.Log4net.csproj">
+    <ProjectReference Include="..\Integration\Log4net\Ninject.Integration.Log4net.csproj">
       <Project>{17FBF64E-E523-412D-B507-077B5DE726AD}</Project>
-      <Name>Integration.Log4net</Name>
+      <Name>Ninject.Integration.Log4net</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Integration\MonoRail\Integration.MonoRail.csproj">
+    <ProjectReference Include="..\Integration\MonoRail\Ninject.Integration.MonoRail.csproj">
       <Project>{82404394-A1B7-475A-BCF5-3C5708E36979}</Project>
-      <Name>Integration.MonoRail</Name>
+      <Name>Ninject.Integration.MonoRail</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Integration\NLog\Integration.NLog.csproj">
+    <ProjectReference Include="..\Integration\NLog\Ninject.Integration.NLog.csproj">
       <Project>{3BDACDF8-ADCB-42FD-AB5F-E7E54A674D93}</Project>
-      <Name>Integration.NLog</Name>
+      <Name>Ninject.Integration.NLog</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

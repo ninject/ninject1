@@ -14,37 +14,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{6FEE6E27-F567-4C31-A716-1EF9A552860D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\Core\Core.csproj", "{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Core", "src\Core\Ninject.Core.csproj", "{2B1E6AB3-720A-4A47-9AC8-20D392BD6747}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conditions", "src\Conditions\Conditions.csproj", "{2844FFB6-2929-4188-A4F6-11184E0F3A5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Conditions", "src\Conditions\Ninject.Conditions.csproj", "{2844FFB6-2929-4188-A4F6-11184E0F3A5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.Log4net", "src\Integration\Log4net\Integration.Log4net.csproj", "{17FBF64E-E523-412D-B507-077B5DE726AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Integration.Log4net", "src\Integration\Log4net\Ninject.Integration.Log4net.csproj", "{17FBF64E-E523-412D-B507-077B5DE726AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.WinForms", "src\Framework\WinForms\Framework.WinForms.csproj", "{0A16E885-951D-4E84-A42E-FFAAE5C8B340}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Framework.WinForms", "src\Framework\WinForms\Ninject.Framework.WinForms.csproj", "{0A16E885-951D-4E84-A42E-FFAAE5C8B340}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Web", "src\Framework\Web\Framework.Web.csproj", "{C46075DB-A0FB-466B-BA76-C093227FA9C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Framework.Web", "src\Framework\Web\Ninject.Framework.Web.csproj", "{C46075DB-A0FB-466B-BA76-C093227FA9C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.AjaxPro", "src\Integration\AjaxPro\Integration.AjaxPro.csproj", "{A7151D7B-5A99-4DDA-9D0B-C6BBDCC218B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Integration.AjaxPro", "src\Integration\AjaxPro\Ninject.Integration.AjaxPro.csproj", "{A7151D7B-5A99-4DDA-9D0B-C6BBDCC218B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.MonoRail", "src\Integration\MonoRail\Integration.MonoRail.csproj", "{82404394-A1B7-475A-BCF5-3C5708E36979}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Integration.MonoRail", "src\Integration\MonoRail\Ninject.Integration.MonoRail.csproj", "{82404394-A1B7-475A-BCF5-3C5708E36979}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.LinFu", "src\Integration\LinFu\Integration.LinFu.csproj", "{50251B1C-0CE7-4117-B12C-536D0343FEA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Integration.LinFu", "src\Integration\LinFu\Ninject.Integration.LinFu.csproj", "{50251B1C-0CE7-4117-B12C-536D0343FEA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.DynamicProxy2", "src\Integration\DynamicProxy2\Integration.DynamicProxy2.csproj", "{E961E104-56DB-4C4F-ABDC-D2D81C4A6BCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Integration.DynamicProxy2", "src\Integration\DynamicProxy2\Ninject.Integration.DynamicProxy2.csproj", "{E961E104-56DB-4C4F-ABDC-D2D81C4A6BCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.Cache", "src\Extensions\Cache\Extensions.Cache.csproj", "{BA11E656-071A-4C58-AF4C-82DB1843EEDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Extensions.Cache", "src\Extensions\Cache\Ninject.Extensions.Cache.csproj", "{BA11E656-071A-4C58-AF4C-82DB1843EEDC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{7F2F1683-1C5A-42E9-98E6-0F00DB2E469C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.MessageBroker", "src\Extensions\MessageBroker\Extensions.MessageBroker.csproj", "{4E0B835D-4DBE-4211-8E6A-678C36B1837B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Extensions.MessageBroker", "src\Extensions\MessageBroker\Ninject.Extensions.MessageBroker.csproj", "{4E0B835D-4DBE-4211-8E6A-678C36B1837B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration.NLog", "src\Integration\NLog\Integration.NLog.csproj", "{3BDACDF8-ADCB-42FD-AB5F-E7E54A674D93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Integration.NLog", "src\Integration\NLog\Ninject.Integration.NLog.csproj", "{3BDACDF8-ADCB-42FD-AB5F-E7E54A674D93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "src\Tests\Tests.csproj", "{D8064AA7-4F53-4E95-AF41-E033E0258489}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Tests", "src\Tests\Ninject.Tests.csproj", "{D8064AA7-4F53-4E95-AF41-E033E0258489}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions.AutoWiring", "src\Extensions\AutoWiring\Extensions.AutoWiring.csproj", "{9D7B121D-BF64-4074-B941-F39C3826E1F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Extensions.AutoWiring", "src\Extensions\AutoWiring\Ninject.Extensions.AutoWiring.csproj", "{9D7B121D-BF64-4074-B941-F39C3826E1F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Mvc", "src\Framework\Mvc\Framework.Mvc.csproj", "{4133C1E9-200E-47E2-9107-40E031E65645}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ninject.Framework.Mvc", "src\Framework\Mvc\Ninject.Framework.Mvc.csproj", "{4133C1E9-200E-47E2-9107-40E031E65645}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
