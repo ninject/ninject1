@@ -55,7 +55,7 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 			foreach (SubscriptionDirective subscription in subscriptions)
 			{
 				IMessageChannel channel = messageBroker.GetChannel(subscription.Channel);
-				channel.AddSubscription(context.Instance, subscription.Injector);
+				channel.AddSubscription(context.Instance, subscription.Injector, subscription.Thread);
 			}
 
 			return StrategyResult.Proceed;

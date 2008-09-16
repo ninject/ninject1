@@ -87,13 +87,6 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 		/// </summary>
 		/// <param name="subscriber">The object that will subscribe to events.</param>
 		/// <param name="injector">The injector that will be triggered when an event occurs.</param>
-		void AddSubscription(object subscriber, IMethodInjector injector);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Adds a subscription to the channel.
-		/// </summary>
-		/// <param name="subscriber">The object that will subscribe to events.</param>
-		/// <param name="injector">The injector that will be triggered when an event occurs.</param>
 		/// <param name="thread">The thread on which the message should be delivered.</param>
 		void AddSubscription(object subscriber, IMethodInjector injector, DeliveryThread thread);
 		/*----------------------------------------------------------------------------------------*/
