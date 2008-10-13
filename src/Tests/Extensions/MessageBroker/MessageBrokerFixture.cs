@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using Ninject.Core;
+using Ninject.Core.Tracking;
 using Ninject.Extensions.MessageBroker;
 using Ninject.Extensions.MessageBroker.Infrastructure;
 using NUnit.Framework;
@@ -178,6 +179,28 @@ namespace Ninject.Tests.Extensions.MessageBroker
 
 				pub.SendMessage("Hello, world!");
 				Assert.That(sub.LastMessage, Is.Null);
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void DisposingObjectRemovesSubscriptionsRequestedByIt()
+		{
+			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
+
+			using (var kernel = new StandardKernel(options, new MessageBrokerModule()))
+			{
+				var pub = kernel.Get<PublisherMock>();
+				Assert.That(pub, Is.Not.Null);
+
+				var sub = kernel.Get<SubscriberMock>();
+				Assert.That(sub, Is.Not.Null);
+
+				var messageBroker = kernel.Components.Get<IMessageBroker>();
+				var channel = messageBroker.GetChannel("message://PublisherMock/MessageReceived");
+				Assert.That(channel.Subscriptions.Count, Is.EqualTo(1));
+
+				kernel.Release(sub);
+				Assert.That(channel.Subscriptions, Is.Empty);
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
