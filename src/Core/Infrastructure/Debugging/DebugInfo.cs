@@ -153,7 +153,7 @@ namespace Ninject.Core.Infrastructure
 		#region Private Methods
 		private static bool ShouldIgnoreType(Type type)
 		{
-			return type.Namespace.StartsWith(CoreNamespace);
+			return type.Namespace != null && type.Namespace.StartsWith(CoreNamespace);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
