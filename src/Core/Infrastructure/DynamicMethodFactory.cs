@@ -139,7 +139,7 @@ namespace Ninject.Core.Infrastructure
 
 			Type returnType = property.PropertyType;
 			ILGenerator il = callable.GetILGenerator();
-			MethodInfo method = property.GetGetMethod();
+			MethodInfo method = property.GetGetMethod(true);
 
 			il.Emit(OpCodes.Ldarg_0);
 			EmitUnboxOrCast(il, property.DeclaringType);
@@ -198,7 +198,7 @@ namespace Ninject.Core.Infrastructure
 
 			Type returnType = property.PropertyType;
 			ILGenerator il = callable.GetILGenerator();
-			MethodInfo method = property.GetSetMethod();
+			MethodInfo method = property.GetSetMethod(true);
 
 			il.DeclareLocal(returnType);
 

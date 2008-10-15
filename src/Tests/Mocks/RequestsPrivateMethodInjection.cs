@@ -23,7 +23,7 @@ using Ninject.Core;
 
 namespace Ninject.Tests
 {
-	public class RequestsPrivateMethodInjectionBase : IMock
+	public class RequestsPrivateMethodInjection : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
 		private SimpleObject _child;
@@ -34,14 +34,10 @@ namespace Ninject.Tests
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Inject]
-		public void SetChild(SimpleObject child)
+		private void SetChild(SimpleObject child)
 		{
 			_child = child;
 		}
 		/*----------------------------------------------------------------------------------------*/
-	}
-
-	public class RequestsPrivateMethodInjection : RequestsPrivateMethodInjectionBase
-	{
 	}
 }

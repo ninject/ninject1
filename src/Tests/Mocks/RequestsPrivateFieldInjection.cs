@@ -23,7 +23,7 @@ using Ninject.Core;
 
 namespace Ninject.Tests
 {
-	public class RequestsPrivateFieldInjectionBase : IMock
+	public class RequestsPrivateFieldInjection : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
 		[Inject] private SimpleObject _child = null;
@@ -33,9 +33,5 @@ namespace Ninject.Tests
 			get { return _child; }
 		}
 		/*----------------------------------------------------------------------------------------*/
-	}
-
-	public class RequestsPrivateFieldInjection : RequestsPrivateFieldInjectionBase
-	{
 	}
 }

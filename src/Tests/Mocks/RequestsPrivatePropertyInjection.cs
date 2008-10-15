@@ -23,21 +23,23 @@ using Ninject.Core;
 
 namespace Ninject.Tests
 {
-	public class RequestsPrivatePropertyInjectionBase : IMock
+	public class RequestsPrivatePropertyInjection : IMock
 	{
 		/*----------------------------------------------------------------------------------------*/
 		private SimpleObject _child;
 		/*----------------------------------------------------------------------------------------*/
 		[Inject]
+		private SimpleObject ChildInjectable
+		{
+			get { return _child; }
+			set { _child = value; }
+		}
+		/*----------------------------------------------------------------------------------------*/
 		public SimpleObject Child
 		{
 			get { return _child; }
 			set { _child = value; }
 		}
 		/*----------------------------------------------------------------------------------------*/
-	}
-
-	public class RequestsPrivatePropertyInjection : RequestsPrivateFieldInjectionBase
-	{
 	}
 }
