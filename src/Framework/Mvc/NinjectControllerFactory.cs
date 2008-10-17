@@ -31,10 +31,10 @@ namespace Ninject.Framework.Mvc
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Disposes of the specified controller.
+		/// Releases the controller.
 		/// </summary>
 		/// <param name="controller">The controller.</param>
-		public void DisposeController(IController controller)
+		public void ReleaseController(IController controller)
 		{
 			KernelContainer.Kernel.Release(controller);
 		}
