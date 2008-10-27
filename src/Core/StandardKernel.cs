@@ -27,6 +27,8 @@ using Ninject.Core.Infrastructure;
 using Ninject.Core.Injection;
 using Ninject.Core.Interception;
 using Ninject.Core.Logging;
+using Ninject.Core.Modules;
+using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
 using Ninject.Core.Resolution;
 using Ninject.Core.Selection;
@@ -90,10 +92,11 @@ namespace Ninject.Core
 			var components = new StandardComponentContainer(this);
 
 			components.Connect<ILoggerFactory>(new NullLoggerFactory());
+			components.Connect<IModuleManager>(new StandardModuleManager());
 			components.Connect<IActivator>(new StandardActivator());
 			components.Connect<IPlanner>(new StandardPlanner());
-			components.Connect<ITracker>(new StandardTracker());
 			components.Connect<IConverter>(new StandardConverter());
+			components.Connect<ITracker>(new StandardTracker());
 			components.Connect<IBindingRegistry>(new StandardBindingRegistry());
 			components.Connect<IBindingSelector>(new StandardBindingSelector());
 			components.Connect<IBindingFactory>(new StandardBindingFactory());

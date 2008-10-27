@@ -24,6 +24,7 @@ using Ninject.Core.Infrastructure;
 using Ninject.Core.Parameters;
 using Ninject.Core.Planning;
 using Ninject.Core.Planning.Targets;
+using Ninject.Core.Tracking;
 #endregion
 
 namespace Ninject.Core.Activation
@@ -39,6 +40,12 @@ namespace Ninject.Core.Activation
 		/// Gets or sets the kernel that is processing the activation request.
 		/// </summary>
 		public IKernel Kernel { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets the scope in which the activation is occurring.
+		/// </summary>
+		/// <value></value>
+		public IScope Scope { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets or sets the parent context of this context. If this is a root context, this value
@@ -114,6 +121,18 @@ namespace Ninject.Core.Activation
 		public bool IsOptional { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Gets or sets a value indicating whether the dependency resolution occurring in this context
+		/// is an eager activation, which occurs when the kernel is first initialized.
+		/// </summary>
+		public bool IsEagerActivation { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets or sets a value indicating whether the instance activated in this context should
+		/// be tracked by the kernel.
+		/// </summary>
+		public bool ShouldTrackInstance { get; set; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Gets a value indicating whether this is a root context (that is, it originated from an
 		/// active request from client code and not passively via dependency resolution).
 		/// </summary>
@@ -153,40 +172,75 @@ namespace Ninject.Core.Activation
 		/// </summary>
 		/// <param name="kernel">The kernel that is processing the activation request.</param>
 		/// <param name="service">The service being activated.</param>
-		public StandardContext(IKernel kernel, Type service)
+		/// <param name="scope">The scope the activation is occuring in.</param>
+		public StandardContext(IKernel kernel, Type service, IScope scope)
 		{
 			Ensure.ArgumentNotNull(kernel, "kernel");
 			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(scope, "scope");
 
 			Kernel = kernel;
 			Level = 0;
 
 			Service = service;
+			Scope = scope;
 
-			if (service.IsGenericType)
-				GenericArguments = service.GetGenericArguments();
-
-			Parameters = new ParameterCollection();
+			Initialize();
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a new child context.
 		/// </summary>
-		/// <param name="parentContext">The parent context containing the new child context.</param>
+		/// <param name="kernel">The kernel that is processing the activation request.</param>
 		/// <param name="service">The service that will be activated in the new child context.</param>
-		public StandardContext(IContext parentContext, Type service)
+		/// <param name="parent">The parent context containing the new context.</param>
+		public StandardContext(IKernel kernel, Type service, IContext parent)
 		{
-			Ensure.ArgumentNotNull(parentContext, "parentContext");
+			Ensure.ArgumentNotNull(parent, "parent");
 			Ensure.ArgumentNotNull(service, "service");
 
-			ParentContext = parentContext;
-			Kernel = parentContext.Kernel;
-			Level = parentContext.Level + 1;
+			ParentContext = parent;
+			Kernel = kernel;
+			Level = parent.Level + 1;
 
 			Service = service;
+			Scope = parent.Scope;
 
-			if (service.IsGenericType)
-				GenericArguments = service.GetGenericArguments();
+			Initialize();
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Public Methods
+		/// <summary>
+		/// Prepares the context to activate an instance for the specified binding.
+		/// </summary>
+		/// <param name="binding">The binding that will be used during activation.</param>
+		public void PrepareForActivation(IBinding binding)
+		{
+			Ensure.ArgumentNotNull(binding, "binding");
+
+			Binding = binding;
+
+			if (!Kernel.Options.IgnoreProviderCompatibility && !binding.Provider.IsCompatibleWith(this))
+				throw new ActivationException(ExceptionFormatter.ProviderIncompatibleWithService(this));
+
+			Implementation = binding.Provider.GetImplementationType(this);
+			Plan = binding.Components.Planner.GetPlan(binding, Implementation);
+
+			ShouldTrackInstance = Plan.Behavior.ShouldTrackInstances;
+    }
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Private Methods
+		private void Initialize()
+		{
+			if (Service.IsGenericType)
+				GenericArguments = Service.GetGenericArguments();
+
+#if !NO_STACKTRACE
+			if (Kernel.Options.GenerateDebugInfo)
+				DebugInfo = DebugInfo.FromStackTrace();
+#endif
 
 			Parameters = new ParameterCollection();
 		}

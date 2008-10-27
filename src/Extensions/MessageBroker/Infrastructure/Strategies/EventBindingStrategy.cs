@@ -44,6 +44,9 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 
 			IList<PublicationDirective> publications = context.Plan.Directives.GetAll<PublicationDirective>();
 
+			if (publications.Count > 0)
+				context.ShouldTrackInstance = true;
+
 			foreach (PublicationDirective publication in publications)
 			{
 				IMessageChannel channel = messageBroker.GetChannel(publication.Channel);
@@ -51,6 +54,9 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 			}
 
 			IList<SubscriptionDirective> subscriptions = context.Plan.Directives.GetAll<SubscriptionDirective>();
+
+			if (subscriptions.Count > 0)
+				context.ShouldTrackInstance = true;
 
 			foreach (SubscriptionDirective subscription in subscriptions)
 			{

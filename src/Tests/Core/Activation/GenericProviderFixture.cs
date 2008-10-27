@@ -41,8 +41,8 @@ namespace Ninject.Tests.Activation
 			using (var kernel = new StandardKernel(module))
 			{
 				Type type = typeof(IGenericObject<>);
-				IContext context = new StandardContext(kernel, type);
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
+				IContext context = kernel.Components.ContextFactory.Create(type);
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(type, context);
 
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(binding.Provider, Is.InstanceOfType(typeof(GenericProvider)));

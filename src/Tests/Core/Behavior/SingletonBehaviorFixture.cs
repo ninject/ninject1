@@ -58,14 +58,13 @@ namespace Ninject.Tests.Behavior
 			using (var kernel = new StandardKernel(options, module))
 			{
 				Type type = typeof(ObjectWithSingletonBehavior);
-				IContext context = new StandardContext(kernel, type);
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
+
+				IContext context = kernel.Components.ContextFactory.Create(type);
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(type, context);
 
 				Assert.That(binding, Is.Not.Null);
 
-				var planner = binding.Components.Get<IPlanner>();
-				IActivationPlan plan = planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
-
+				IActivationPlan plan = binding.Components.Planner.GetPlan(binding, type);
 				var behavior = plan.Behavior as SingletonBehavior;
 				Assert.That(behavior, Is.Not.Null);
 
@@ -82,14 +81,13 @@ namespace Ninject.Tests.Behavior
 			using (var kernel = new StandardKernel(options, module))
 			{
 				Type type = typeof(ObjectWithSingletonBehavior);
-				IContext context = new StandardContext(kernel, type);
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
+
+				IContext context = kernel.Components.ContextFactory.Create(type);
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(type, context);
 
 				Assert.That(binding, Is.Not.Null);
 
-				var planner = binding.Components.Get<IPlanner>();
-				IActivationPlan plan = planner.GetPlan(binding, typeof(ObjectWithSingletonBehavior));
-
+				IActivationPlan plan = binding.Components.Planner.GetPlan(binding, type);
 				var behavior = plan.Behavior as SingletonBehavior;
 				Assert.That(behavior, Is.Not.Null);
 
@@ -107,7 +105,7 @@ namespace Ninject.Tests.Behavior
 				var threads = new List<Thread>();
 
 				for (int idx = 0; idx < count; idx++)
-					threads.Add(new Thread(x => { items.Add(kernel.Get<ObjectWithSingletonBehavior>()); }));
+					threads.Add(new Thread(x => items.Add(kernel.Get<ObjectWithSingletonBehavior>())));
 
 				threads.ForEach(t => t.Start());
 				threads.ForEach(t => t.Join());

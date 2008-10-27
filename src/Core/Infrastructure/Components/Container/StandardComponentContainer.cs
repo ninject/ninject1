@@ -33,23 +33,11 @@ namespace Ninject.Core.Infrastructure
 	/// <summary>
 	/// The stock implementation of a component container.
 	/// </summary>
-	public class StandardComponentContainer : DisposableObject, IComponentContainer
+	public class StandardComponentContainer : ComponentContainerBase, IComponentContainer
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
 		private readonly Dictionary<Type, IKernelComponent> _components = new Dictionary<Type, IKernelComponent>();
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Properties
-		/// <summary>
-		/// Gets the kernel whose components are managed by the container.
-		/// </summary>
-		public IKernel Kernel { get; private set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets or sets the parent container.
-		/// </summary>
-		public IComponentContainer ParentContainer { get; set; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Disposal
@@ -86,9 +74,8 @@ namespace Ninject.Core.Infrastructure
 		/// </summary>
 		/// <param name="kernel">The kernel whose components the container will manage.</param>
 		public StandardComponentContainer(IKernel kernel)
+			: base(kernel)
 		{
-			Ensure.ArgumentNotNull(kernel, "kernel");
-			Kernel = kernel;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -97,104 +84,8 @@ namespace Ninject.Core.Infrastructure
 		/// <param name="kernel">The kernel whose components the container will manage.</param>
 		/// <param name="parentContainer">The parent container.</param>
 		public StandardComponentContainer(IKernel kernel, IComponentContainer parentContainer)
-			: this(kernel)
+			: base(kernel, parentContainer)
 		{
-			Ensure.ArgumentNotNull(parentContainer, "parentContainer");
-			ParentContainer = parentContainer;
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
-		/// <summary>
-		/// Connects a component to the kernel. If a component with the specified service is
-		/// already connected, it will be disconnected first.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <param name="component">The instance of the component.</param>
-		public void Connect<T>(T component)
-			where T : IKernelComponent
-		{
-			DoConnect(typeof(T), component);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Connects a component to the kernel. If a component with the specified service is
-		/// already connected, it will be disconnected first.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <param name="component">The instance of the component.</param>
-		public void Connect(Type type, IKernelComponent component)
-		{
-			DoConnect(type, component);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Disconnects a component from the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		public void Disconnect<T>()
-			where T : IKernelComponent
-		{
-			DoDisconnect(typeof(T));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Disconnects a component from the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		public void Disconnect(Type type)
-		{
-			DoDisconnect(type);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves a component from the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <returns>The instance of the component.</returns>
-		public T Get<T>()
-			where T : IKernelComponent
-		{
-			return (T)DoGet(typeof(T));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves a component from the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <returns>The instance of the component.</returns>
-		public IKernelComponent Get(Type type)
-		{
-			return DoGet(type);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Determines whether a component with the specified service type has been added to the kernel.
-		/// </summary>
-		/// <typeparam name="T">The service that the component provides.</typeparam>
-		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
-		public bool Has<T>()
-			where T : IKernelComponent
-		{
-			return DoHas(typeof(T));
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Determines whether a component with the specified service type has been added to the kernel.
-		/// </summary>
-		/// <param name="type">The service that the component provides.</param>
-		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
-		public bool Has(Type type)
-		{
-			return DoHas(type);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Validates the components in the container to ensure they have been configured properly.
-		/// </summary>
-		public void ValidateAll()
-		{
-			DoValidateAll();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -204,7 +95,7 @@ namespace Ninject.Core.Infrastructure
 		/// </summary>
 		/// <param name="type">The service that the component provides.</param>
 		/// <param name="component">The instance of the component.</param>
-		protected virtual void DoConnect(Type type, IKernelComponent component)
+		protected override void DoConnect(Type type, IKernelComponent component)
 		{
 			Ensure.ArgumentNotNull(type, "type");
 			Ensure.ArgumentNotNull(component, "member");
@@ -225,7 +116,7 @@ namespace Ninject.Core.Infrastructure
 		/// Disconnects a component from the kernel.
 		/// </summary>
 		/// <param name="type">The service that the component provides.</param>
-		protected virtual void DoDisconnect(Type type)
+		protected override void DoDisconnect(Type type)
 		{
 			Ensure.NotDisposed(this);
 
@@ -247,7 +138,7 @@ namespace Ninject.Core.Infrastructure
 		/// </summary>
 		/// <param name="type">The service that the component provides.</param>
 		/// <returns>The instance of the component.</returns>
-		protected virtual IKernelComponent DoGet(Type type)
+		protected override IKernelComponent DoGet(Type type)
 		{
 			Ensure.NotDisposed(this);
 
@@ -270,7 +161,7 @@ namespace Ninject.Core.Infrastructure
 		/// </summary>
 		/// <param name="type">The service that the component provides.</param>
 		/// <returns><see langword="true"/> if the component has been added, otherwise <see langword="false"/>.</returns>
-		protected virtual bool DoHas(Type type)
+		protected override bool DoHas(Type type)
 		{
 			Ensure.NotDisposed(this);
 
@@ -289,7 +180,7 @@ namespace Ninject.Core.Infrastructure
 		/// <summary>
 		/// Validates the components in the container to ensure they have been configured properly.
 		/// </summary>
-		protected virtual void DoValidateAll()
+		protected override void DoValidateAll()
 		{
 			Ensure.NotDisposed(this);
 

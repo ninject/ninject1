@@ -26,10 +26,6 @@ namespace Ninject.Core.Tracking
 	/// <summary>
 	/// The stock definition of a <see cref="IScopeFactory"/>.
 	/// </summary>
-	/// <remarks>
-	/// I know, this looks like overkill. :) It exists to allow users to inject custom
-	/// implementations into the kernel for more exotic situations.
-	/// </remarks>
 	public class StandardScopeFactory : KernelComponentBase, IScopeFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
@@ -40,6 +36,21 @@ namespace Ninject.Core.Tracking
 		public IScope Create()
 		{
 			return new StandardScope(Kernel);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a child scope.
+		/// </summary>
+		/// <param name="parent">The parent scope.</param>
+		/// <returns>The newly-created scope.</returns>
+		public IScope CreateChild(IScope parent)
+		{
+			IScope scope = Create();
+
+			scope.Parent = parent;
+			parent.Children.Add(scope);
+
+			return scope;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

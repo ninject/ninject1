@@ -57,19 +57,19 @@ namespace Ninject.Core.Binding
 		#region IBindingTargetSyntax Members
 		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.ToSelf()
 		{
-			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(Binding.Service);
+			Binding.Provider = Binding.Components.ProviderFactory.Create(Binding.Service);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.To<T>()
 		{
-			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(typeof(T));
+			Binding.Provider = Binding.Components.ProviderFactory.Create(typeof(T));
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		IBindingConditionBehaviorHeuristicComponentOrParameterSyntax IBindingTargetSyntax.To(Type type)
 		{
-			Binding.Provider = Binding.Components.Get<IProviderFactory>().Create(type);
+			Binding.Provider = Binding.Components.ProviderFactory.Create(type);
 			return this;
 		}
 		/*----------------------------------------------------------------------------------------*/

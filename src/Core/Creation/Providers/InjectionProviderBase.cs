@@ -79,8 +79,7 @@ namespace Ninject.Core.Creation.Providers
 			object[] arguments = ResolveConstructorArguments(context, directive);
 
 			// Get an injector that can call the injection constructor.
-			var injectorFactory = context.Binding.Components.Get<IInjectorFactory>();
-			IConstructorInjector injector = injectorFactory.GetInjector(directive.Member);
+			IConstructorInjector injector = context.Binding.Components.InjectorFactory.GetInjector(directive.Member);
 
 			// Call the constructor and return the created object.
 			return injector.Invoke(arguments);
@@ -95,8 +94,8 @@ namespace Ninject.Core.Creation.Providers
 		/// <returns>An array of arguments that can be passed to the constructor.</returns>
 		protected virtual object[] ResolveConstructorArguments(IContext context, ConstructorInjectionDirective directive)
 		{
-			var contextFactory = context.Binding.Components.Get<IContextFactory>();
-			var converter = context.Binding.Components.Get<IConverter>();
+			var contextFactory = context.Binding.Components.ContextFactory;
+			var converter = context.Binding.Components.Converter;
 
 			var arguments = new object[directive.Arguments.Count];
 

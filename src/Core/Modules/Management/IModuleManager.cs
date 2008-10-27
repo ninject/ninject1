@@ -19,6 +19,7 @@
 #region Using Directives
 using System;
 using System.Collections.Generic;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Modules
@@ -26,13 +27,8 @@ namespace Ninject.Core.Modules
 	/// <summary>
 	/// Controls loading and unloading of modules to/from the kernel.
 	/// </summary>
-	public interface IModuleCollection : IEnumerable<IModule>
+	public interface IModuleManager : IKernelComponent
 	{
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Gets or sets the kernel associated with the module collection.
-		/// </summary>
-		IKernel Kernel { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the count of modules loaded.

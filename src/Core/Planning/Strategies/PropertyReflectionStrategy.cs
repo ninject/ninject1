@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Ninject.Core.Binding;
+using Ninject.Core.Planning.Directives;
 #endregion
 
 namespace Ninject.Core.Planning.Strategies
@@ -51,8 +52,8 @@ namespace Ninject.Core.Planning.Strategies
 		/// <param name="member">The member to create a directive for.</param>
 		protected override void AddInjectionDirective(IBinding binding, Type type, IActivationPlan plan, PropertyInfo member)
 		{
-			var directiveFactory = binding.Components.Get<IDirectiveFactory>();
-			plan.Directives.Add(directiveFactory.Create(binding, member));
+			PropertyInjectionDirective directive = binding.Components.DirectiveFactory.Create(binding, member);
+			plan.Directives.Add(directive);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

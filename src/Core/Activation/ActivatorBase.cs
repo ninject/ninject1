@@ -19,7 +19,10 @@
 #region Using Directives
 using System;
 using Ninject.Core.Activation.Strategies;
+using Ninject.Core.Binding;
+using Ninject.Core.Creation;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning;
 #endregion
 
 namespace Ninject.Core.Activation
@@ -42,6 +45,9 @@ namespace Ninject.Core.Activation
 
 			if (context.Instance == null)
 			{
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Will create instance of type {0} for service {1}", Format.Type(context.Implementation), Format.Type(context.Service));
+
 				Strategies.ExecuteForChain(s => s.BeforeCreate(context));
 
 				// Request a new instance from the binding's provider.
@@ -51,6 +57,9 @@ namespace Ninject.Core.Activation
 					throw new ActivationException(ExceptionFormatter.ProviderCouldNotCreateInstance(context));
 
 				Strategies.ExecuteForChain(s => s.AfterCreate(context));
+
+				if (Logger.IsDebugEnabled)
+					Logger.Debug("Instance of service {0} resolved successfully", Format.Type(context.Service));
 			}
 
 			Strategies.ExecuteForChain(s => s.Initialize(context));

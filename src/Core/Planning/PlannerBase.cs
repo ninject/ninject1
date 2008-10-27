@@ -96,7 +96,7 @@ namespace Ninject.Core.Planning
 					return Plans[type];
 				}
 
-				IActivationPlan plan = binding.Components.Get<IActivationPlanFactory>().Create(type);
+				IActivationPlan plan = binding.Components.ActivationPlanFactory.Create(type);
 				Plans.Add(type, plan);
 
 				if (Logger.IsDebugEnabled)

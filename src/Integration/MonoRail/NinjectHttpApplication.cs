@@ -24,6 +24,7 @@ using Castle.MonoRail.Framework;
 using Ninject.Core;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
+using Ninject.Core.Tracking;
 using Ninject.Integration.MonoRail.Infrastructure;
 using IContextAware=Castle.MonoRail.Framework.IContextAware;
 #endregion
@@ -58,7 +59,7 @@ namespace Ninject.Integration.MonoRail
 		public void Application_OnStart()
 		{
 			_kernel = CreateKernel();
-			_kernel.Modules.Load(new MonoRailModule());
+			_kernel.Load(new MonoRailModule());
 
 			ServiceProviderLocator.Instance.AddLocatorStrategy(new NinjectAccessorStrategy());
 
@@ -87,7 +88,7 @@ namespace Ninject.Integration.MonoRail
 		/// <returns>An instance of the specified service, or <see langword="null"/> if none have been registered.</returns>
 		public T GetService<T>() where T : class
 		{
-			IContext context = new StandardContext(Kernel, typeof(T));
+			IContext context = Kernel.Components.ContextFactory.Create(typeof(T));
 			context.IsOptional = true;
 
 			return Kernel.Get<T>(context);
@@ -100,7 +101,7 @@ namespace Ninject.Integration.MonoRail
 		/// <returns>An instance of the specified service, or <see langword="null"/> if none have been registered.</returns>
 		public object GetService(Type serviceType)
 		{
-			IContext context = new StandardContext(Kernel, serviceType);
+			IContext context = Kernel.Components.ContextFactory.Create(serviceType);
 			context.IsOptional = true;
 
 			return Kernel.Get(serviceType, context);

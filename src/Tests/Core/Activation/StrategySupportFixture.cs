@@ -35,11 +35,9 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void DisposableObjectIsDisposedWhenReleased()
 		{
-			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
-
-			using (var kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel())
 			{
-				DisposableMock mock = kernel.Get<DisposableMock>();
+				var mock = kernel.Get<DisposableMock>();
 				Assert.That(mock, Is.Not.Null);
 
 				kernel.Release(mock);
@@ -52,7 +50,7 @@ namespace Ninject.Tests.Activation
 		{
 			using (var kernel = new StandardKernel())
 			{
-				InitializableMock mock = kernel.Get<InitializableMock>();
+				var mock = kernel.Get<InitializableMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Initialized, Is.True);
 			}
@@ -63,7 +61,7 @@ namespace Ninject.Tests.Activation
 		{
 			using (var kernel = new StandardKernel())
 			{
-				StartableMock mock = kernel.Get<StartableMock>();
+				var mock = kernel.Get<StartableMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Started, Is.True);
 			}
@@ -72,11 +70,9 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void StartableObjectIsStoppedWhenReleased()
 		{
-			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
-
-			using (var kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel())
 			{
-				StartableMock mock = kernel.Get<StartableMock>();
+				var mock = kernel.Get<StartableMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock.Started, Is.True);
 
@@ -93,8 +89,10 @@ namespace Ninject.Tests.Activation
 			using (var kernel = new StandardKernel(module))
 			{
 				Type type = typeof(ContextAwareMock);
-				IContext context = new StandardContext(kernel, type);
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
+
+				IContext context = kernel.Components.ContextFactory.Create(type);
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(type, context);
+
 				Assert.That(binding, Is.Not.Null);
 
 				var mock = kernel.Get<ContextAwareMock>();

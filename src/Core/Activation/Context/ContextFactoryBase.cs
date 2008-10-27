@@ -28,9 +28,9 @@ using Ninject.Core.Tracking;
 namespace Ninject.Core.Activation
 {
 	/// <summary>
-	/// Creates <see cref="IContext"/>s that contain information about an activation process.
+	/// The default implementation of a <see cref="IContextFactory"/>.
 	/// </summary>
-	public interface IContextFactory : IKernelComponent
+	public abstract class ContextFactoryBase : KernelComponentBase, IContextFactory
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -38,7 +38,11 @@ namespace Ninject.Core.Activation
 		/// </summary>
 		/// <param name="service">The type that was requested.</param>
 		/// <returns>The root context.</returns>
-		IContext Create(Type service);
+		public IContext Create(Type service)
+		{
+			IScope scope = Kernel.Components.Tracker.GetScope(Kernel);
+			return Create(service, scope);
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a new root context.
@@ -46,24 +50,46 @@ namespace Ninject.Core.Activation
 		/// <param name="service">The type that was requested.</param>
 		/// <param name="scope">The scope in which the activation is occurring.</param>
 		/// <returns>The root context.</returns>
-		IContext Create(Type service, IScope scope);
+		public IContext Create(Type service, IScope scope)
+		{
+			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(scope, "scope");
+
+			IContext context = CreateRootContext(service, scope);
+
+			return context;
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a new root context.
 		/// </summary>
 		/// <param name="service">The type that was requested.</param>
-		/// <param name="parameters">A collection of transient parameters.</param>
+		/// <param name="parameters">A collection of transient parameters to apply to the context.</param>
 		/// <returns>The root context.</returns>
-		IContext Create(Type service, IParameterCollection parameters);
+		public IContext Create(Type service, IParameterCollection parameters)
+		{
+			IScope scope = Kernel.Components.Tracker.GetScope(Kernel);
+			return Create(service, scope, parameters);
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a new root context.
 		/// </summary>
 		/// <param name="service">The type that was requested.</param>
 		/// <param name="scope">The scope in which the activation is occurring.</param>
-		/// <param name="parameters">A collection of transient parameters.</param>
+		/// <param name="parameters">A collection of transient parameters to apply to the context.</param>
 		/// <returns>The root context.</returns>
-		IContext Create(Type service, IScope scope, IParameterCollection parameters);
+		public IContext Create(Type service, IScope scope, IParameterCollection parameters)
+		{
+			Ensure.ArgumentNotNull(service, "service");
+			Ensure.ArgumentNotNull(scope, "scope");
+			Ensure.ArgumentNotNull(parameters, "parameters");
+
+			IContext context = CreateRootContext(service, scope);
+			context.Parameters = parameters;
+
+			return context;
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a child context using the specified context as its parent.
@@ -73,7 +99,36 @@ namespace Ninject.Core.Activation
 		/// <param name="target">The target that is being injected.</param>
 		/// <param name="optional"><see langword="True"/> if the child context's resolution is optional, otherwise, <see langword="false"/>.</param>
 		/// <returns>The child context.</returns>
-		IContext CreateChild(IContext parent, MemberInfo member, ITarget target, bool optional);
+		public IContext CreateChild(IContext parent, MemberInfo member, ITarget target, bool optional)
+		{
+			Ensure.ArgumentNotNull(parent, "parent");
+			Ensure.ArgumentNotNull(member, "member");
+			Ensure.ArgumentNotNull(target, "target");
+
+			var child = CreateChildContext(target.Type, parent);
+
+			child.Member = member;
+			child.Target = target;
+			child.IsOptional = optional;
+
+			return child;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates an empty context for the specified service.
+		/// </summary>
+		/// <param name="service">The service that the context should be created for.</param>
+		/// <param name="scope">The scope that the activation is occurring in.</param>
+		/// <returns>The newly-created context.</returns>
+		protected abstract IContext CreateRootContext(Type service, IScope scope);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Creates a child context for the specified service.
+		/// </summary>
+		/// <param name="service">The service that the context should be created for.</param>
+		/// <param name="parent">The parent context.</param>
+		/// <returns>The newly-created context.</returns>
+		protected abstract IContext CreateChildContext(Type service, IContext parent);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

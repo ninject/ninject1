@@ -21,6 +21,7 @@ using System;
 using Ninject.Core;
 using Ninject.Core.Activation;
 using Ninject.Core.Binding;
+using Ninject.Core.Tracking;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 #endregion
@@ -39,8 +40,8 @@ namespace Ninject.Tests
 
 			using (var kernel = new StandardKernel(options, module))
 			{
-				IContext context = new StandardContext(kernel, typeof(IMock));
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(typeof(IMock), context);
+				IContext context = kernel.Components.ContextFactory.Create(typeof(IMock));
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(typeof(IMock), context);
 
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(binding.DebugInfo, Is.Not.Null);
@@ -55,8 +56,8 @@ namespace Ninject.Tests
 
 			using (var kernel = new StandardKernel(options, module))
 			{
-				IContext context = new StandardContext(kernel, typeof(IMock));
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(typeof(IMock), context);
+				IContext context = kernel.Components.ContextFactory.Create(typeof(IMock));
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(typeof(IMock), context);
 
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(binding.DebugInfo, Is.Not.Null);

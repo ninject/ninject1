@@ -47,7 +47,7 @@ namespace Ninject.Core.Infrastructure
 			get 
 			{
 				if (_logger == null)
-					_logger = Kernel.Components.Get<ILoggerFactory>().GetLogger(GetType());
+					_logger = Kernel.Components.LoggerFactory.GetLogger(GetType());
 
 				return _logger;
 			}

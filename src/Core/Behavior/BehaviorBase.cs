@@ -99,7 +99,7 @@ namespace Ninject.Core.Behavior
 			{
 				contexts.Each(ctx =>
 				{
-					ctx.Binding.Components.Get<IActivator>().Destroy(ctx);
+					ctx.Binding.Components.Activator.Destroy(ctx);
 					DisposeMember(ctx);
 				});
 			}

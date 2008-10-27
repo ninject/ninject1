@@ -40,7 +40,10 @@ namespace Ninject.Core.Activation.Strategies
 			var startable = context.Instance as IStartable;
 
 			if (startable != null)
+			{
 				startable.Start();
+				context.ShouldTrackInstance = true;
+			}
 
 			return StrategyResult.Proceed;
 		}

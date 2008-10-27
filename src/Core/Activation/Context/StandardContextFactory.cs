@@ -21,6 +21,7 @@ using System;
 using System.Reflection;
 using Ninject.Core.Infrastructure;
 using Ninject.Core.Planning.Targets;
+using Ninject.Core.Tracking;
 #endregion
 
 namespace Ninject.Core.Activation
@@ -28,40 +29,29 @@ namespace Ninject.Core.Activation
 	/// <summary>
 	/// The default implementation of a <see cref="IContextFactory"/>.
 	/// </summary>
-	public class StandardContextFactory : KernelComponentBase, IContextFactory
+	public class StandardContextFactory : ContextFactoryBase
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a new root context.
+		/// Creates an empty context for the specified service.
 		/// </summary>
-		/// <param name="service">The type that was requested.</param>
-		/// <returns>The root context.</returns>
-		public IContext Create(Type service)
+		/// <param name="service">The service that the context should be created for.</param>
+		/// <param name="scope">The scope that the activation is occurring in.</param>
+		/// <returns>The newly-created context.</returns>
+		protected override IContext CreateRootContext(Type service, IScope scope)
 		{
-			return new StandardContext(Kernel, service);
+			return new StandardContext(Kernel, service, scope);
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Creates a child context using the specified context as its parent.
+		/// Creates a child context for the specified service.
 		/// </summary>
+		/// <param name="service">The service that the context should be created for.</param>
 		/// <param name="parent">The parent context.</param>
-		/// <param name="member">The member that the child context will be injecting.</param>
-		/// <param name="target">The target that is being injected.</param>
-		/// <param name="optional"><see langword="True"/> if the child context's resolution is optional, otherwise, <see langword="false"/>.</param>
-		/// <returns>The child context.</returns>
-		public IContext CreateChild(IContext parent, MemberInfo member, ITarget target, bool optional)
+		/// <returns>The newly-created context.</returns>
+		protected override IContext CreateChildContext(Type service, IContext parent)
 		{
-			Ensure.ArgumentNotNull(member, "member");
-			Ensure.ArgumentNotNull(target, "target");
-			Ensure.NotDisposed(this);
-
-			var child = new StandardContext(Kernel, target.Type);
-
-			child.Member = member;
-			child.Target = target;
-			child.IsOptional = optional;
-
-			return child;
+			return new StandardContext(Kernel, service, parent);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

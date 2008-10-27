@@ -29,7 +29,7 @@ namespace Ninject.Core.Modules
 	/// <summary>
 	/// Controls loading and unloading of modules to/from the kernel.
 	/// </summary>
-	public class ModuleCollection : IModuleCollection
+	public class StandardModuleManager : KernelComponentBase, IModuleManager
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
@@ -38,28 +38,11 @@ namespace Ninject.Core.Modules
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
 		/// <summary>
-		/// Gets or sets the kernel associated with the module collection.
-		/// </summary>
-		public IKernel Kernel { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Gets the count of modules loaded.
 		/// </summary>
 		public int Count
 		{
 			get { return _modules.Count; }
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ModuleCollection"/> class.
-		/// </summary>
-		/// <param name="kernel">The kernel to associate with the module collection.</param>
-		public ModuleCollection(IKernel kernel)
-		{
-			Ensure.ArgumentNotNull(kernel, "kernel");
-			Kernel = kernel;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -186,7 +169,7 @@ namespace Ninject.Core.Modules
 			module.Kernel = Kernel;
 			module.Load();
 
-			Kernel.Components.Get<IBindingRegistry>().ValidateBindings();
+			Kernel.Components.BindingRegistry.ValidateBindings();
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -202,24 +185,7 @@ namespace Ninject.Core.Modules
 			module.Unload();
 			module.Kernel = null;
 
-			Kernel.Components.Get<IBindingRegistry>().ValidateBindings();
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region IEnumerable Implementation
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>An <see cref="IEnumerator{TModule}"/> that can be used to iterate through the collection.</returns>
-		public IEnumerator<IModule> GetEnumerator()
-		{
-			foreach (IModule module in _modules.Values)
-				yield return module;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
+			Kernel.Components.BindingRegistry.ValidateBindings();
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

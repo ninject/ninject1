@@ -31,6 +31,19 @@ namespace Ninject.Core.Activation.Strategies
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
+		/// Executed after the instance is initialized.
+		/// </summary>
+		/// <param name="context">The activation context.</param>
+		/// <returns>A value indicating whether to proceed or stop the execution of the strategy chain.</returns>
+		public override StrategyResult AfterInitialize(IContext context)
+		{
+			if (context.Instance is IDisposable)
+				context.ShouldTrackInstance = true;
+
+			return StrategyResult.Proceed;
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
 		/// Executed after the instance is destroyed.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>

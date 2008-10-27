@@ -65,55 +65,53 @@ namespace Ninject.Tests
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		public void TrackerTracksEachInstanceOfTransientServiceSeparately()
+		public void InstancesOfTransietnServicesAreNotTracked()
 		{
-			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
-
-			using (var kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel())
 			{
 				var obj1 = kernel.Get<ObjectWithTransientBehavior>();
-				var obj2 = kernel.Get<ObjectWithTransientBehavior>();
 				Assert.That(obj1, Is.Not.Null);
+
+				var obj2 = kernel.Get<ObjectWithTransientBehavior>();
 				Assert.That(obj2, Is.Not.Null);
 
-				var tracker = kernel.Components.Get<ITracker>();
-				Assert.That(tracker.ReferenceCount, Is.EqualTo(2));
+				var scope = kernel.Components.Tracker.GetScope(kernel);
+				Assert.That(scope.Count, Is.EqualTo(0));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
-		public void TrackerTracksOnlyOneInstanceForSingletonService()
+		public void OnlyOneInstanceOfSingletonServiceIsTracked()
 		{
 			using (var kernel = new StandardKernel())
 			{
 				var obj1 = kernel.Get<ObjectWithSingletonBehavior>();
-				var obj2 = kernel.Get<ObjectWithSingletonBehavior>();
 				Assert.That(obj1, Is.Not.Null);
+
+				var obj2 = kernel.Get<ObjectWithSingletonBehavior>();
 				Assert.That(obj2, Is.Not.Null);
 
-				var tracker = kernel.Components.Get<ITracker>();
-				Assert.That(tracker.ReferenceCount, Is.EqualTo(1));
+				var scope = kernel.Components.Tracker.GetScope(kernel);
+				Assert.That(scope.Count, Is.EqualTo(1));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		[Test]
 		public void AllTrackedInstancesAreReleasedWhenKernelIsDisposed()
 		{
-			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
-
 			DisposableMock obj1;
 			DisposableMock obj2;
 
-			using (var kernel = new StandardKernel(options))
+			using (var kernel = new StandardKernel())
 			{
 				obj1 = kernel.Get<DisposableMock>();
-				obj2 = kernel.Get<DisposableMock>();
-
 				Assert.That(obj1, Is.Not.Null);
+
+				obj2 = kernel.Get<DisposableMock>();
 				Assert.That(obj2, Is.Not.Null);
 
-				var tracker = kernel.Components.Get<ITracker>();
-				Assert.That(tracker.ReferenceCount, Is.EqualTo(2));
+				var scope = kernel.Components.Tracker.GetScope(kernel);
+				Assert.That(scope.Count, Is.EqualTo(2));
 			}
 
 			Assert.That(obj1.Disposed, Is.True);
@@ -132,9 +130,9 @@ namespace Ninject.Tests
 
 				Assert.That(obj1, Is.Not.Null);
 
-				using (kernel.BeginScope())
+				using (var scope = kernel.CreateScope())
 				{
-					obj2 = kernel.Get<DisposableMock>();
+					obj2 = scope.Get<DisposableMock>();
 					Assert.That(obj2, Is.Not.Null);
 				}
 

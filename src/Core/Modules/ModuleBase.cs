@@ -77,7 +77,7 @@ namespace Ninject.Core
 			get
 			{
 				if (_logger == null)
-					_logger = Kernel.Components.Get<ILoggerFactory>().GetLogger(GetType());
+					_logger = Kernel.Components.LoggerFactory.GetLogger(GetType());
 
 				return _logger;
 			}
@@ -185,7 +185,7 @@ namespace Ninject.Core
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Declaring binding for service {0}", Format.Type(type));
 
-			IBinding binding = Kernel.Components.Get<IBindingFactory>().Create(type);
+			IBinding binding = Kernel.Components.BindingFactory.Create(type);
 
 #if !NO_STACKTRACE
 			if (Kernel.Options.GenerateDebugInfo)
@@ -208,8 +208,8 @@ namespace Ninject.Core
 		/// <returns>An advice builder.</returns>
 		protected virtual TAdviceBuilder DoIntercept(MethodInfo method)
 		{
-			IAdvice advice = Kernel.Components.Get<IAdviceFactory>().Create(method);
-			Kernel.Components.Get<IAdviceRegistry>().Register(advice);
+			IAdvice advice = Kernel.Components.AdviceFactory.Create(method);
+			Kernel.Components.AdviceRegistry.Register(advice);
 
 			return CreateAdviceBuilder(advice);
 		}
@@ -221,8 +221,8 @@ namespace Ninject.Core
 		/// <returns>An advice builder.</returns>
 		protected virtual TAdviceBuilder DoIntercept(ICondition<IRequest> condition)
 		{
-			IAdvice advice = Kernel.Components.Get<IAdviceFactory>().Create(condition);
-			Kernel.Components.Get<IAdviceRegistry>().Register(advice);
+			IAdvice advice = Kernel.Components.AdviceFactory.Create(condition);
+			Kernel.Components.AdviceRegistry.Register(advice);
 
 			return CreateAdviceBuilder(advice);
 		}

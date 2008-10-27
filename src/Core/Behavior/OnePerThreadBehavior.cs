@@ -58,7 +58,7 @@ namespace Ninject.Core.Behavior
 			{
 				_references.Each(ctx =>
 				{
-					ctx.Binding.Components.Get<IActivator>().Destroy(ctx);
+					ctx.Binding.Components.Activator.Destroy(ctx);
 					DisposeMember(ctx);
 				});
 
@@ -107,7 +107,7 @@ namespace Ninject.Core.Behavior
 				map.Add(context.Binding, cache);
 			}
 
-			context.Binding.Components.Get<IActivator>().Activate(context);
+			context.Binding.Components.Activator.Activate(context);
 			cache.Add(context);
 
 			_references.Add(context);

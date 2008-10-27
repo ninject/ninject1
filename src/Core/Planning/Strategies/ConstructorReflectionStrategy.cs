@@ -21,6 +21,7 @@ using System;
 using System.Reflection;
 using Ninject.Core.Binding;
 using Ninject.Core.Infrastructure;
+using Ninject.Core.Planning.Directives;
 using Ninject.Core.Selection;
 #endregion
 
@@ -45,15 +46,13 @@ namespace Ninject.Core.Planning.Strategies
 		{
 			// Get the list of candidate constructors.
 			ConstructorInfo[] candidates = type.GetConstructors(Kernel.Options.GetBindingFlags());
-
-			var selector = binding.Components.Get<IMemberSelector>();
-			ConstructorInfo injectionConstructor = selector.SelectConstructor(binding, plan, candidates);
+			ConstructorInfo injectionConstructor = binding.Components.MemberSelector.SelectConstructor(binding, plan, candidates);
 
 			// If an injection constructor was found, create an injection directive for it.
 			if (injectionConstructor != null)
 			{
-				var directiveFactory = binding.Components.Get<IDirectiveFactory>();
-				plan.Directives.Add(directiveFactory.Create(binding, injectionConstructor));
+				ConstructorInjectionDirective directive = binding.Components.DirectiveFactory.Create(binding, injectionConstructor);
+				plan.Directives.Add(directive);
 			}
 
 			return StrategyResult.Proceed;

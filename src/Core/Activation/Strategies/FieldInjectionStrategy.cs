@@ -44,9 +44,9 @@ namespace Ninject.Core.Activation.Strategies
 
 			if (directives.Count > 0)
 			{
-				var contextFactory = context.Binding.Components.Get<IContextFactory>();
-				var injectorFactory = context.Binding.Components.Get<IInjectorFactory>();
-				var converter = context.Binding.Components.Get<IConverter>();
+				var contextFactory = context.Binding.Components.ContextFactory;
+				var injectorFactory = context.Binding.Components.InjectorFactory;
+				var converter = context.Binding.Components.Converter;
 
 				foreach (FieldInjectionDirective directive in directives)
 				{

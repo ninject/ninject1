@@ -56,13 +56,15 @@ namespace Ninject.Core.Creation.Providers
 			Type implementation = GetImplementationType(context);
 			return context.Service.IsAssignableFrom(implementation);
 		}
+		#endregion
 		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
 		/// <summary>
 		/// Gets the concrete implementation type that will be instantiated for the provided context.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
 		/// <returns>The concrete type that will be instantiated.</returns>
-		public override Type GetImplementationType(IContext context)
+		protected override Type DoGetImplementationType(IContext context)
 		{
 			Ensure.ArgumentNotNull(context, "context");
 			Ensure.NotDisposed(this);

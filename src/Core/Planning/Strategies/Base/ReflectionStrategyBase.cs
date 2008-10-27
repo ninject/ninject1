@@ -55,10 +55,8 @@ namespace Ninject.Core.Planning.Strategies
 			else 
 				candidates = GetCandidates(binding, type, BindingFlags.Public | BindingFlags.Instance);
 
-			var selector = binding.Components.Get<IMemberSelector>();
-
 			// Add injection directives for each candidate member that matches the heuristic.
-			foreach (TMember member in selector.SelectMembers(binding, plan, candidates))
+			foreach (TMember member in binding.Components.MemberSelector.SelectMembers(binding, plan, candidates))
 				AddInjectionDirective(binding, type, plan, member);
 
 			return StrategyResult.Proceed;

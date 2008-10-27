@@ -66,7 +66,11 @@ namespace Ninject.Core.Creation.Providers
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
 		/// <returns>The concrete type that will be instantiated.</returns>
-		public abstract Type GetImplementationType(IContext context);
+		public Type GetImplementationType(IContext context)
+		{
+			Ensure.ArgumentNotNull(context, "context");
+			return context.Instance != null ? context.Instance.GetType() : DoGetImplementationType(context);
+		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates instances of types by calling a constructor via a lightweight dynamic method,
@@ -75,6 +79,15 @@ namespace Ninject.Core.Creation.Providers
 		/// <param name="context">The context in which the activation is occurring.</param>
 		/// <returns>The instance of the type.</returns>
 		public abstract object Create(IContext context);
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
+		/// <summary>
+		/// Gets the concrete implementation type that will be instantiated for the provided context.
+		/// </summary>
+		/// <param name="context">The context in which the activation is occurring.</param>
+		/// <returns>The concrete type that will be instantiated.</returns>
+		protected abstract Type DoGetImplementationType(IContext context);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

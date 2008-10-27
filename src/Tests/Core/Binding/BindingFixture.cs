@@ -40,8 +40,8 @@ namespace Ninject.Tests.Binding
 
 			using (var kernel = new StandardKernel(module))
 			{
-				IContext context = new StandardContext(kernel, typeof(IMock));
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(typeof(IMock), context);
+				IContext context = kernel.Components.ContextFactory.Create(typeof(IMock));
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(typeof(IMock), context);
 
 				var provider = binding.Provider as StandardProvider;
 				Assert.That(binding, Is.Not.Null);
@@ -58,8 +58,8 @@ namespace Ninject.Tests.Binding
 
 			using (var kernel = new StandardKernel(module))
 			{
-				IContext context = new StandardContext(kernel, typeof(string));
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(typeof(string), context);
+				IContext context = kernel.Components.ContextFactory.Create(typeof(string));
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(typeof(string), context);
 
 				var provider = binding.Provider as ConstantProvider;
 				Assert.That(binding, Is.Not.Null);

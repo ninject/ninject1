@@ -52,7 +52,7 @@ namespace Ninject.Core.Resolution.Resolvers
 		/// <returns>An object that satisfies the dependency.</returns>
 		protected override object ResolveInstance(IContext outerContext, IContext innerContext)
 		{
-			var selector = outerContext.Binding.Components.Get<IBindingSelector>();
+			var selector = outerContext.Binding.Components.BindingSelector;
 			IBinding binding = selector.SelectBinding(innerContext.Service, innerContext);
 
 			return (binding == null) ? null : binding.Provider;

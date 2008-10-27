@@ -36,8 +36,7 @@ namespace Ninject.Extensions.AutoWiring
 		/// </summary>
 		public override void Load()
 		{
-			var selector = Kernel.Components.Get<IMemberSelector>();
-			var heuristics = selector.Heuristics;
+			var heuristics = Kernel.Components.MemberSelector.Heuristics;
 
 			heuristics.Clear();
 

@@ -18,129 +18,132 @@
 #endregion
 #region Using Directives
 using System;
-using System.Reflection;
+using Ninject.Core.Activation;
 using Ninject.Core.Binding;
-using Ninject.Core.Infrastructure;
-using Ninject.Core.Parameters;
+using Ninject.Core.Conversion;
+using Ninject.Core.Creation;
+using Ninject.Core.Injection;
+using Ninject.Core.Interception;
+using Ninject.Core.Logging;
+using Ninject.Core.Modules;
 using Ninject.Core.Planning;
-using Ninject.Core.Planning.Targets;
+using Ninject.Core.Resolution;
+using Ninject.Core.Selection;
 using Ninject.Core.Tracking;
 #endregion
 
-namespace Ninject.Core.Activation
+namespace Ninject.Core.Infrastructure
 {
 	/// <summary>
-	/// The context in which an activation process occurs.
+	/// Provides shortcuts to standard components inside of an <see cref="IComponentContainer"/>.
 	/// </summary>
-	public interface IContext : IDebugInfoProvider
+	public interface IComponentShortcuts
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the kernel that is processing the activation request.
+		/// Gets the module manager.
 		/// </summary>
-		IKernel Kernel { get; }
+		IModuleManager ModuleManager { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the scope in which the activation is occurring.
+		/// Gets the activator.
 		/// </summary>
-		IScope Scope { get; }
+		IActivator Activator { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the parent context of this context. If this is a root context, this value
-		/// is <see langword="null"/>.
+		/// Gets the planner.
 		/// </summary>
-		IContext ParentContext { get; }
+		IPlanner Planner { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the type of service that is being activated.
+		/// Gets the tracker.
 		/// </summary>
-		Type Service { get; }
+		ITracker Tracker { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the implementation type that will be returned.
+		/// Gets the converter.
 		/// </summary>
-		Type Implementation { get; }
+		IConverter Converter { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the numeric nesting level for the context.
+		/// Gets the binding registry.
 		/// </summary>
-		int Level { get; }
+		IBindingRegistry BindingRegistry { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the binding being used to activate items within the context.
+		/// Gets the binding selector.
 		/// </summary>
-		IBinding Binding { get; }
+		IBindingSelector BindingSelector { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the activation plan that is being used to activate the service.
+		/// Gets the binding factory.
 		/// </summary>
-		IActivationPlan Plan { get; }
+		IBindingFactory BindingFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the instance that is being activated.
+		/// Gets the activation plan factory.
 		/// </summary>
-		object Instance { get; set; }
+		IActivationPlanFactory ActivationPlanFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the generic type arguments associated with the service, if applicable.
+		/// Gets the member selector.
 		/// </summary>
-		Type[] GenericArguments { get; }
+		IMemberSelector MemberSelector { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the transient parameters for the context, if any are defined.
+		/// Gets the directive factory.
 		/// </summary>
-		IParameterCollection Parameters { get; set; }
+		IDirectiveFactory DirectiveFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the member that is being activated.
+		/// Gets the provider factory.
 		/// </summary>
-		MemberInfo Member { get; set; }
+		IProviderFactory ProviderFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the injection target.
+		/// Gets the injector factory.
 		/// </summary>
-		/// <remarks>
-		/// In the case of method and constructor injection, this will represent the current
-		/// parameter that is being resolved. In the case of field and property injection, it will
-		/// be the member.
-		/// </remarks>
-		ITarget Target { get; set; }
+		IInjectorFactory InjectorFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets a value indicating whether the dependency resolution occuring in this
-		/// context is optional.
+		/// Gets the resolver factory.
 		/// </summary>
-		/// <remarks>
-		/// If an optional request is made for a service, and an automatic binding cannot be
-		/// created (if the requested service is not self-bindable, or automatic bindings are disabled),
-		/// the kernel will simply inject a <see langword="null"/> value rather than throwing an
-		/// <see cref="ActivationException"/>.
-		/// </remarks>
-		bool IsOptional { get; set; }
+		IResolverFactory ResolverFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets a value indicating whether the dependency resolution occurring in this context
-		/// is an eager activation, which occurs when the kernel is first initialized.
+		/// Gets the context factory.
 		/// </summary>
-		bool IsEagerActivation { get; set; }
+		IContextFactory ContextFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets a value indicating whether the instance activated in this context should
-		/// be tracked by the kernel.
+		/// Gets the scope factory.
 		/// </summary>
-		bool ShouldTrackInstance { get; set; }
+		IScopeFactory ScopeFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets a value indicating whether this is a root context (that is, it originated from an
-		/// active request from client code and not passively via dependency resolution).
+		/// Gets the request factory.
 		/// </summary>
-		bool IsRoot { get; }
+		IRequestFactory RequestFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Prepares the context to activate an instance for the specified binding.
+		/// Gets the logger factory.
 		/// </summary>
-		/// <param name="binding">The binding that will be used during activation.</param>
-		void PrepareForActivation(IBinding binding);
+		ILoggerFactory LoggerFactory { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the advice factory.
+		/// </summary>
+		IAdviceFactory AdviceFactory { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the advice registry.
+		/// </summary>
+		IAdviceRegistry AdviceRegistry { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Gets the proxy factory.
+		/// </summary>
+		IProxyFactory ProxyFactory { get; }
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

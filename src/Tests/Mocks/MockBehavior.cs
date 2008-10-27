@@ -40,7 +40,7 @@ namespace Ninject.Tests
 		{
 			if (_context == null)
 			{
-				Kernel.Components.Get<IActivator>().Activate(context);
+				Kernel.Components.Activator.Activate(context);
 				_context = context;
 			}
 

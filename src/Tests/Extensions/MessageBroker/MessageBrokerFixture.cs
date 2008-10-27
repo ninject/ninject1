@@ -185,9 +185,7 @@ namespace Ninject.Tests.Extensions.MessageBroker
 		[Test]
 		public void DisposingObjectRemovesSubscriptionsRequestedByIt()
 		{
-			var options = new KernelOptions { InstanceTrackingMode = InstanceTrackingMode.TrackEverything };
-
-			using (var kernel = new StandardKernel(options, new MessageBrokerModule()))
+			using (var kernel = new StandardKernel(new MessageBrokerModule()))
 			{
 				var pub = kernel.Get<PublisherMock>();
 				Assert.That(pub, Is.Not.Null);

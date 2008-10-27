@@ -47,7 +47,7 @@ namespace Ninject.Tests.Conditions
 
 				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 
-				IContext context = new StandardContext(kernel, typeof(ObjectWithMethodInterceptor));
+				IContext context = kernel.Components.ContextFactory.Create(typeof(ObjectWithMethodInterceptor));
 
 				IRequest request = new StandardRequest(
 					context,
@@ -57,8 +57,7 @@ namespace Ninject.Tests.Conditions
 					Type.EmptyTypes
 				);
 
-				var registry = kernel.Components.Get<IAdviceRegistry>();
-				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
+				ICollection<IInterceptor> interceptors = kernel.Components.AdviceRegistry.GetInterceptors(request);
 				Assert.That(interceptors.Count, Is.EqualTo(2));
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();
@@ -88,7 +87,7 @@ namespace Ninject.Tests.Conditions
 
 				var obj = kernel.Get<ObjectWithMethodInterceptor>();
 
-				IContext context = new StandardContext(kernel, typeof(ObjectWithMethodInterceptor));
+				IContext context = kernel.Components.ContextFactory.Create(typeof(ObjectWithMethodInterceptor));
 
 				IRequest request = new StandardRequest(
 					context,
@@ -98,8 +97,7 @@ namespace Ninject.Tests.Conditions
 					Type.EmptyTypes
 				);
 
-				var registry = kernel.Components.Get<IAdviceRegistry>();
-				ICollection<IInterceptor> interceptors = registry.GetInterceptors(request);
+				ICollection<IInterceptor> interceptors = kernel.Components.AdviceRegistry.GetInterceptors(request);
 				Assert.That(interceptors.Count, Is.EqualTo(2));
 
 				IEnumerator<IInterceptor> enumerator = interceptors.GetEnumerator();

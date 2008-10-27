@@ -83,7 +83,7 @@ namespace Ninject.Core.Behavior
 					return ContextCache[context.Implementation].Instance;
 
 				ContextCache.Add(context);
-				context.Binding.Components.Get<IActivator>().Activate(context);
+				context.Binding.Components.Activator.Activate(context);
 
 				return context.Instance;
 			}

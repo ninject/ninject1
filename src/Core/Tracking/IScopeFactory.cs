@@ -18,31 +18,29 @@
 #endregion
 #region Using Directives
 using System;
+using Ninject.Core.Infrastructure;
 #endregion
 
 namespace Ninject.Core.Tracking
 {
 	/// <summary>
-	/// Describes the method by which the kernel will track instances for deterministic disposal.
+	/// Creates <see cref="IScope"/>s which can be used for deterministic disposal.
 	/// </summary>
-	public enum InstanceTrackingMode
+	public interface IScopeFactory : IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that only instances of services whose behaviors with a <c>ShouldTrackInstances</c>
-		/// equal to <see langword="true"/> should be tracked.
+		/// Creates a new root-level scope.
 		/// </summary>
-		Default,
+		/// <returns>The newly-created scope.</returns>
+		IScope Create();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Indicates that all instances should be tracked, regardless of what their behavior says.
+		/// Creates a child scope.
 		/// </summary>
-		TrackEverything,
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Indicates that no instances should be tracked, regardless of what their behavior says.
-		/// </summary>
-		TrackNothing,
+		/// <param name="parent">The parent scope.</param>
+		/// <returns>The newly-created scope.</returns>
+		IScope CreateChild(IScope parent);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

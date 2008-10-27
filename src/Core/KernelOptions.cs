@@ -123,18 +123,6 @@ namespace Ninject.Core
 		public bool IgnoreProviderCompatibility { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets or sets the mode by which the kernel will track instances. When the kernel is disposed,
-		/// all tracked instances will be released by passing them to the <c>Release()</c> method on
-		/// the kernel.
-		/// </summary>
-		/// <remarks>
-		/// By default, the kernel will use <c>InstanceTrackingMode.Default</c>, which means that only
-		/// instances of services whose behaviors are marked as <c>ShouldTrackInstances</c> will
-		/// be tracked.
-		/// </remarks>
-		public InstanceTrackingMode InstanceTrackingMode { get; set; }
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Gets or sets the built-in behavior that should be used for services registered without
 		/// a behavior defined.
 		/// </summary>

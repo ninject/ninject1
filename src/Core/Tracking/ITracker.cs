@@ -18,6 +18,7 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Ninject.Core.Activation;
 using Ninject.Core.Infrastructure;
 #endregion
@@ -25,43 +26,41 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Core.Tracking
 {
 	/// <summary>
-	/// Tracks contextualized instances so they can be properly disposed of.
+	/// Keeps track of scopes, which are registered to control lifetimes of activated instances.
 	/// </summary>
-	public interface ITracker : IKernelComponent
+	public interface ITracker: IKernelComponent
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Gets the number of instances currently being tracked.
+		/// Gets the scope with the specified key.
 		/// </summary>
-		int ReferenceCount { get; }
+		/// <param name="key">The key.</param>
+		/// <returns></returns>
+		IScope GetScope(object key);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Begins tracking the specified instance.
+		/// Registers the specified scope with the specified key.
 		/// </summary>
-		/// <param name="instance">The instance to track.</param>
-		/// <param name="context">The context in which it was activated.</param>
-		void Track(object instance, IContext context);
+		/// <param name="key">The scope's key.</param>
+		/// <param name="scope">The scope to register.</param>
+		void RegisterScope(object key, IScope scope);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Releases the specified instance via the binding which was used to activate it, and
-		/// stops tracking it.
+		/// Releases the scope with the specified key.
 		/// </summary>
-		/// <param name="instance">The instance to release.</param>
-		/// <returns><see langword="True"/> if the instance was being tracked, otherwise <see langword="false"/>.</returns>
-		bool Release(object instance);
+		/// <param name="key">The key of the scope to release.</param>
+		void ReleaseScopeWithKey(object key);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Releases the instance in the specified context via the binding which was used to activate it,
-		/// and stops tracking it if it was being tracked.
+		/// Releases the specified scope.
 		/// </summary>
-		/// <param name="context">The context to release.</param>
-		/// <returns><see langword="True"/> if the context was being tracked, otherwise <see langword="false"/>.</returns>
-		bool Release(IContext context);
+		/// <param name="scope">The scope to release.</param>
+		void ReleaseScope(IScope scope);
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Releases all of the instances that are currently being tracked.
+		/// Releases all currently-tracked scopes.
 		/// </summary>
-		void ReleaseAll();
+		void ReleaseAllScopes();
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

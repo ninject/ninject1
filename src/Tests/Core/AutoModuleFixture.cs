@@ -40,7 +40,7 @@ namespace Ninject.Tests
 
 			using (var kernel = new StandardKernel(module))
 			{
-				ICollection<IBinding> bindings = kernel.Components.Get<IBindingRegistry>().GetBindings(typeof(IMock));
+				ICollection<IBinding> bindings = kernel.Components.BindingRegistry.GetBindings(typeof(IMock));
 				Assert.That(bindings, Is.Not.Null);
 				Assert.That(bindings, Is.Not.Empty);
 
@@ -57,7 +57,7 @@ namespace Ninject.Tests
 
 			using (var kernel = new StandardKernel(module))
 			{
-				ICollection<IBinding> bindings = kernel.Components.Get<IBindingRegistry>().GetBindings(typeof(ObjectWithSelfBindingServiceAttribute));
+				ICollection<IBinding> bindings = kernel.Components.BindingRegistry.GetBindings(typeof(ObjectWithSelfBindingServiceAttribute));
 				Assert.That(bindings, Is.Not.Null);
 				Assert.That(bindings, Is.Not.Empty);
 
@@ -74,8 +74,9 @@ namespace Ninject.Tests
 			using (var kernel = new StandardKernel(module))
 			{
 				Type type = typeof(ObjectWithProviderBindingServiceAttribute);
-				IContext context = new StandardContext(kernel, type);
-				IBinding binding = kernel.Components.Get<IBindingSelector>().SelectBinding(type, context);
+
+				IContext context = kernel.Components.ContextFactory.Create(type);
+				IBinding binding = kernel.Components.BindingSelector.SelectBinding(type, context);
 
 				Assert.That(binding, Is.Not.Null);
 				Assert.That(binding.Provider, Is.InstanceOfType(typeof(ServiceAttributeObjectProvider)));

@@ -28,7 +28,7 @@ namespace Ninject.Core.Creation.Providers
 	/// <summary>
 	/// A provider that always returns a constant value.
 	/// </summary>
-	public class ConstantProvider : InjectionProviderBase
+	public class ConstantProvider : ProviderBase
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
@@ -92,19 +92,6 @@ namespace Ninject.Core.Creation.Providers
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
-		/// Gets the concrete implementation type that will be instantiated for the provided context.
-		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <returns>The concrete type that will be instantiated.</returns>
-		public override Type GetImplementationType(IContext context)
-		{
-			Ensure.ArgumentNotNull(context, "context");
-			Ensure.NotDisposed(this);
-
-			return Prototype;
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Returns the constant value associated with the provider.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
@@ -115,6 +102,21 @@ namespace Ninject.Core.Creation.Providers
 			Ensure.NotDisposed(this);
 
 			return Value;
+		}
+		#endregion
+		/*----------------------------------------------------------------------------------------*/
+		#region Protected Methods
+		/// <summary>
+		/// Gets the concrete implementation type that will be instantiated for the provided context.
+		/// </summary>
+		/// <param name="context">The context in which the activation is occurring.</param>
+		/// <returns>The concrete type that will be instantiated.</returns>
+		protected override Type DoGetImplementationType(IContext context)
+		{
+			Ensure.ArgumentNotNull(context, "context");
+			Ensure.NotDisposed(this);
+
+			return Prototype;
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

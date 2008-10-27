@@ -26,67 +26,37 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Core.Tracking
 {
 	/// <summary>
-	/// A stock implementation of a scope.
+	/// An activation scope. When a scope is disposed, all instances registered in it will be
+	/// released via the kernel.
 	/// </summary>
-	public class StandardScope : DisposableObject, IScope
+	public interface IScope : IDisposableEx, ILocator
 	{
 		/*----------------------------------------------------------------------------------------*/
-		#region Fields
-		private List<IContext> _contextCache = new List<IContext>();
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Properties
 		/// <summary>
 		/// Gets the kernel associated with the scope.
 		/// </summary>
-		/// <value></value>
-		public IKernel Kernel { get; private set; }
-		#endregion
+		IKernel Kernel { get; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Disposal
 		/// <summary>
-		/// Releases all resources currently held by the object.
+		/// Gets or sets the parent scope.
 		/// </summary>
-		/// <param name="disposing"><see langword="True"/> if managed objects should be disposed, otherwise <see langword="false"/>.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && !IsDisposed)
-			{
-				_contextCache.Each(ctx => Kernel.Release(ctx));
-				_contextCache.Clear();
-				_contextCache = null;
-
-				Kernel.EndScope();
-				Kernel = null;
-			}
-
-			base.Dispose(disposing);
-		}
-		#endregion
+		IScope Parent { get; set; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Constructors
 		/// <summary>
-		/// Initializes a new instance of the <see cref="StandardScope"/> class.
+		/// Gets all child scopes.
 		/// </summary>
-		/// <param name="kernel">The kernel to associate with the scope.</param>
-		public StandardScope(IKernel kernel)
-		{
-			Ensure.ArgumentNotNull(kernel, "kernel");
-			Kernel = kernel;
-		}
-		#endregion
+		ICollection<IScope> Children { get; }
 		/*----------------------------------------------------------------------------------------*/
-		#region Public Methods
 		/// <summary>
-		/// Registers the specified context in the scope. The instance contained therein will
-		/// be released when the scope is disposed.
+		/// Gets the number of items being tracked in the scope.
+		/// </summary>
+		int Count { get; }
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Registers the specified context with the scope.
 		/// </summary>
 		/// <param name="context">The context to register.</param>
-		public void Register(IContext context)
-		{
-			_contextCache.Add(context);
-		}
-		#endregion
+		void Register(IContext context);
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

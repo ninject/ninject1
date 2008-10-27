@@ -27,25 +27,16 @@ namespace Ninject.Tests
 	public class MockProvider : InjectionProviderBase
 	{
 		/*----------------------------------------------------------------------------------------*/
-		private bool _returnB;
-		/*----------------------------------------------------------------------------------------*/
-		public bool ReturnB
-		{
-			get { return _returnB; }
-			set { _returnB = value; }
-		}
+		public bool ReturnB { get; set; }
 		/*----------------------------------------------------------------------------------------*/
 		public MockProvider()
 			: base(typeof(IMock))
 		{
 		}
 		/*----------------------------------------------------------------------------------------*/
-		public override Type GetImplementationType(IContext context)
+		protected override Type DoGetImplementationType(IContext context)
 		{
-			if (_returnB)
-				return typeof(ImplB);
-			else
-				return typeof(ImplA);
+			return ReturnB ? typeof(ImplB) : typeof(ImplA);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

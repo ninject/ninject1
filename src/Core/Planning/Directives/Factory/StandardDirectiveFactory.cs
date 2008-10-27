@@ -102,7 +102,7 @@ namespace Ninject.Core.Planning
 		/*----------------------------------------------------------------------------------------*/
 		private Argument CreateArgument(IBinding binding, ITarget target)
 		{
-			IResolver resolver = binding.Components.Get<IResolverFactory>().Create(binding, target);
+			IResolver resolver = binding.Components.ResolverFactory.Create(binding, target);
 			bool optional = target.HasAttribute(Kernel.Options.OptionalAttributeType);
 
 			return new Argument(target, resolver, optional);

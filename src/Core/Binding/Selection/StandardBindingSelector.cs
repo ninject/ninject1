@@ -45,7 +45,7 @@ namespace Ninject.Core.Binding
 			if (Logger.IsDebugEnabled)
 				Logger.Debug("Resolving binding for {0}", Format.Context(context));
 
-			ICollection<IBinding> bindings = Kernel.Components.Get<IBindingRegistry>().GetBindings(service);
+			ICollection<IBinding> bindings = Kernel.Components.BindingRegistry.GetBindings(service);
 
 			if (bindings == null)
 			{

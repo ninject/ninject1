@@ -52,7 +52,7 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 			if (list.Count == 1)
 				return true;
 
-			var registry = binding.Components.Get<IBindingRegistry>();
+			var registry = binding.Components.BindingRegistry;
 			return member == candidates.Best(c => c.GetParameterTypes().Count(registry.HasBinding));
 		}
 		/*----------------------------------------------------------------------------------------*/

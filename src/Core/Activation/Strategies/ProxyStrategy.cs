@@ -43,7 +43,7 @@ namespace Ninject.Core.Activation.Strategies
 				if (!context.Binding.Components.Has<IProxyFactory>())
 					throw new InvalidOperationException(ExceptionFormatter.NoProxyFactoryAvailable(context));
 
-				context.Instance = context.Binding.Components.Get<IProxyFactory>().Wrap(context);
+				context.Instance = context.Binding.Components.ProxyFactory.Wrap(context);
 			}
 
 			return StrategyResult.Proceed;
@@ -57,7 +57,7 @@ namespace Ninject.Core.Activation.Strategies
 		public override StrategyResult BeforeDestroy(IContext context)
 		{
 			if (context.Binding.Components.Has<IProxyFactory>())
-				context.Instance = context.Binding.Components.Get<IProxyFactory>().Unwrap(context);
+				context.Instance = context.Binding.Components.ProxyFactory.Unwrap(context);
 
 			return StrategyResult.Proceed;
 		}
@@ -69,11 +69,9 @@ namespace Ninject.Core.Activation.Strategies
 		/// <returns><see langword="True"/> if the instance should be proxied, otherwise <see langword="false"/>.</returns>
 		protected virtual bool ShouldProxy(IContext context)
 		{
-			var registry = context.Binding.Components.Get<IAdviceRegistry>();
-
 			// If dynamic interceptors have been defined, all types will be proxied, regardless
 			// of whether or not they request interceptors.
-			if (registry.HasDynamicAdvice)
+			if (context.Binding.Components.AdviceRegistry.HasDynamicAdvice)
 				return true;
       
 			// Otherwise, check the type's activation plan.

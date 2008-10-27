@@ -51,8 +51,7 @@ namespace Ninject.Core.Resolution.Resolvers
 		/// <returns>An object that satisfies the dependency.</returns>
 		protected override object ResolveInstance(IContext outerContext, IContext innerContext)
 		{
-			var loggerFactory = outerContext.Binding.Components.Get<ILoggerFactory>();
-			return loggerFactory.GetLogger(outerContext.Plan.Type);
+			return outerContext.Binding.Components.LoggerFactory.GetLogger(outerContext.Plan.Type);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

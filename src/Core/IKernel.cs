@@ -32,15 +32,10 @@ namespace Ninject.Core
 	/// <summary>
 	/// A super-factory that can create objects of all kinds, following hints provided by <see cref="IBinding"/>s.
 	/// </summary>
-	public interface IKernel : IServiceProvider, IDisposable
+	public interface IKernel : ILocator, IServiceProvider, IDisposableEx
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Properties
-		/// <summary>
-		/// Gets the collection of modules loaded in the kernel.
-		/// </summary>
-		IModuleCollection Modules { get; }
-		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Gets the kernel's component container.
 		/// </summary>
@@ -52,77 +47,7 @@ namespace Ninject.Core
 		KernelOptions Options { get; }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Methods: Instances
-		/// <summary>
-		/// Retrieves an instance of the specified type from the kernel.
-		/// </summary>
-		/// <typeparam name="T">The type to retrieve.</typeparam>
-		/// <returns>An instance of the requested type.</returns>
-		T Get<T>();
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves an instance of the specified type from the kernel.
-		/// </summary>
-		/// <typeparam name="T">The type to retrieve.</typeparam>
-		/// <param name="parameters">A collection of transient parameters to use.</param>
-		/// <returns>An instance of the requested type.</returns>
-		T Get<T>(IParameterCollection parameters);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves an instance of the specified type from the kernel, within an existing context.
-		/// </summary>
-		/// <typeparam name="T">The type to retrieve.</typeparam>
-		/// <param name="context">The context under which to resolve the type's binding.</param>
-		/// <returns>An instance of the requested type.</returns>
-		T Get<T>(IContext context);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves an instance of the specified type from the kernel.
-		/// </summary>
-		/// <param name="type">The type to retrieve.</param>
-		/// <returns>An instance of the requested type.</returns>
-		object Get(Type type);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves an instance of the specified type from the kernel.
-		/// </summary>
-		/// <param name="type">The type to retrieve.</param>
-		/// <param name="parameters">A collection of transient parameters to use.</param>
-		/// <returns>An instance of the requested type.</returns>
-		object Get(Type type, IParameterCollection parameters);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Retrieves an instance of the specified type from the kernel, within an existing context.
-		/// </summary>
-		/// <param name="type">The type to retrieve.</param>
-		/// <param name="context">The context under which to resolve the type's binding.</param>
-		/// <returns>An instance of the requested type.</returns>
-		object Get(Type type, IContext context);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Injects dependencies into an existing instance of a service. This should not be used
-		/// for most cases; instead, see <c>Get()</c>.
-		/// </summary>
-		/// <param name="instance">The instance to inject.</param>
-		void Inject(object instance);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Releases the specfied instance. This method should be called after the instance is no
-		/// longer needed.
-		/// </summary>
-		/// <param name="instance">The instance to release.</param>
-		/// <returns><see langword="True"/> if the instance was being tracked, otherwise <see langword="false"/>.</returns>
-		bool Release(object instance);
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Releases the instance contained in the specifeid context.
-		/// </summary>
-		/// <param name="context">The context containing the instance to release.</param>
-		/// <returns><see langword="True"/> if the context was being tracked, otherwise <see langword="false"/>.</returns>
-		bool Release(IContext context);
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Methods: Bindings
+		#region Public Methods: Bindings
 		/// <summary>
 		/// Registers the specified binding with the kernel.
 		/// </summary>
@@ -136,7 +61,7 @@ namespace Ninject.Core
 		void RemoveBinding(IBinding binding);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Methods: Modules
+		#region Public Methods: Modules
 		/// <summary>
 		/// Loads the specified modules into the kernel.
 		/// </summary>
@@ -162,18 +87,27 @@ namespace Ninject.Core
 		void Unload(IEnumerable<IModule> modules);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Methods: Scopes
+		#region Public Methods: Scopes
 		/// <summary>
-		/// Begins a new activation scope. When the scope is disposed, all instances activated
+		/// Creates a new activation scope. When the scope is disposed, all instances activated
 		/// within it will be released.
 		/// </summary>
 		/// <returns>The newly-created scope.</returns>
-		IScope BeginScope();
+		IScope CreateScope();
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Ends the previous scope.
+		/// Creates a new activation scope. When the scope is disposed, all instances activated
+		/// within it will be released.
 		/// </summary>
-		void EndScope();
+		/// <param name="key">The key to associate with the scope.</param>
+		/// <returns>The newly-created scope.</returns>
+		IScope CreateScope(object key);
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases the activation scope with the specified key.
+		/// </summary>
+		/// <param name="key">The key of the scope to release.</param>
+		void ReleaseScope(object key);
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

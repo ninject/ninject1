@@ -26,140 +26,80 @@ using Ninject.Core.Infrastructure;
 namespace Ninject.Core.Tracking
 {
 	/// <summary>
-	/// Tracks contextualized instances so they can be properly disposed of.
+	/// The stock definition of an <see cref="ITracker"/>.
 	/// </summary>
-	public class StandardTracker : KernelComponentBase, ITracker
+	public class StandardTracker: KernelComponentBase, ITracker
 	{
 		/*----------------------------------------------------------------------------------------*/
 		#region Fields
-		private readonly Dictionary<object, IContext> _contextCache = new Dictionary<object, IContext>();
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Properties
-		/// <summary>
-		/// Gets the number of instances currently being tracked.
-		/// </summary>
-		public int ReferenceCount
-		{
-			get { return _contextCache.Count; }
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Disposal
-		/// <summary>
-		/// Releases all resources held by the object.
-		/// </summary>
-		/// <param name="disposing"><see langword="True"/> if managed objects should be disposed, otherwise <see langword="false"/>.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && !IsDisposed)
-				ReleaseAll();
-
-			base.Dispose(disposing);
-		}
+		private readonly Dictionary<object, IScope> _scopes = new Dictionary<object, IScope>();
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
-		/// Begins tracking the specified instance.
+		/// Gets the scope with the specified key.
 		/// </summary>
-		/// <param name="instance">The instance to track.</param>
-		/// <param name="context">The context in which it was activated.</param>
-		public void Track(object instance, IContext context)
+		/// <param name="key">The key.</param>
+		/// <returns></returns>
+		public IScope GetScope(object key)
 		{
-			lock (_contextCache)
+			Ensure.NotDisposed(this);
+			return _scopes[key];
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Registers the specified scope with the specified key.
+		/// </summary>
+		/// <param name="key">The scope's key.</param>
+		/// <param name="scope">The scope to register.</param>
+		public void RegisterScope(object key, IScope scope)
+		{
+			Ensure.NotDisposed(this);
+			_scopes.Add(key, scope);
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases the scope with the specified key.
+		/// </summary>
+		/// <param name="key">The key of the scope to release.</param>
+		public void ReleaseScopeWithKey(object key)
+		{
+			// TODO
+			if (!_scopes.ContainsKey(key))
+				throw new InvalidOperationException("No scope with the specified key has been registered in the tracker.");
+
+			IScope scope = _scopes[key];
+			_scopes.Remove(key);
+
+			scope.Dispose();
+		}
+		/*----------------------------------------------------------------------------------------*/
+		/// <summary>
+		/// Releases the specified scope.
+		/// </summary>
+		/// <param name="scope">The scope to release.</param>
+		public void ReleaseScope(IScope scope)
+		{
+			// TODO
+			if (!_scopes.ContainsValue(scope))
+				throw new InvalidOperationException("The specified scope is not being tracked.");
+
+			foreach (KeyValuePair<object, IScope> entry in _scopes)
 			{
-				// Make sure that we should be tracking the instance.
-				if (!ShouldTrack(context))
-					return;
-
-				if (Logger.IsDebugEnabled)
-					Logger.Debug("Starting to track instance resulting from {0}", Format.Context(context));
-
-				_contextCache[instance] = context;
+				if (entry.Value == scope)
+				{
+					ReleaseScopeWithKey(entry.Key);
+					break;
+				}
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
-		/// Releases the specified instance via the binding which was used to activate it, and
-		/// stops tracking it.
+		/// Releases all currently-tracked scopes.
 		/// </summary>
-		/// <param name="instance">The instance to release.</param>
-		/// <returns><see langword="True"/> if the instance was being tracked, otherwise <see langword="false"/>.</returns>
-		public bool Release(object instance)
+		public void ReleaseAllScopes()
 		{
-			lock (_contextCache)
-			{
-				if (!_contextCache.ContainsKey(instance))
-					return false;
-
-				IContext context = _contextCache[instance];
-
-				DoRelease(context);
-				_contextCache.Remove(instance);
-
-				return true;
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Releases the instance in the specified context via the binding which was used to activate it,
-		/// and stops tracking it if it was being tracked.
-		/// </summary>
-		/// <param name="context">The context to release.</param>
-		/// <returns><see langword="True"/> if the context was being tracked, otherwise <see langword="false"/>.</returns>
-		public bool Release(IContext context)
-		{
-			lock (_contextCache)
-			{
-				DoRelease(context);
-
-				if (!_contextCache.ContainsKey(context.Instance))
-					return false;
-
-				_contextCache.Remove(context.Instance);
-				return true;
-			}
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
-		/// Releases all of the instances that are currently being tracked.
-		/// </summary>
-		public void ReleaseAll()
-		{
-			lock (_contextCache)
-			{
-				_contextCache.Values.Each(DoRelease);
-				_contextCache.Clear();
-			}
-		}
-		#endregion
-		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		private void DoRelease(IContext context)
-		{
-			if (Logger.IsDebugEnabled)
-				Logger.Debug("Releasing tracked instance resulting from {0}", Format.Context(context));
-
-			context.Plan.Behavior.Release(context);
-
-			if (Logger.IsDebugEnabled)
-				Logger.Debug("Instance released");
-		}
-		/*----------------------------------------------------------------------------------------*/
-		private bool ShouldTrack(IContext context)
-		{
-			switch (Kernel.Options.InstanceTrackingMode)
-			{
-				case InstanceTrackingMode.TrackEverything:
-					return true;
-
-				case InstanceTrackingMode.TrackNothing:
-					return false;
-
-				default:
-					return context.Plan.Behavior.ShouldTrackInstances;
-			}
+			_scopes.Keys.Each(ReleaseScopeWithKey);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

@@ -45,16 +45,6 @@ namespace Ninject.Core.Creation
 		/*----------------------------------------------------------------------------------------*/
 		#region Public Methods
 		/// <summary>
-		/// Gets the concrete implementation type that will be instantiated for the provided context.
-		/// </summary>
-		/// <param name="context">The context in which the activation is occurring.</param>
-		/// <returns>The concrete type that will be instantiated.</returns>
-		public override Type GetImplementationType(IContext context)
-		{
-			return typeof(T);
-		}
-		/*----------------------------------------------------------------------------------------*/
-		/// <summary>
 		/// Creates a new instance of the type.
 		/// </summary>
 		/// <param name="context">The context in which the activation is occurring.</param>
@@ -67,6 +57,16 @@ namespace Ninject.Core.Creation
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Protected Methods
+		/// <summary>
+		/// Gets the concrete implementation type that will be instantiated for the provided context.
+		/// </summary>
+		/// <param name="context">The context in which the activation is occurring.</param>
+		/// <returns>The concrete type that will be instantiated.</returns>
+		protected override Type DoGetImplementationType(IContext context)
+		{
+			return typeof(T);
+		}
+		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a new instance of the type.
 		/// </summary>
