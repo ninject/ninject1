@@ -54,6 +54,7 @@
     <Compile Include="Activation\Context\StandardContextFactory.cs" />
     <Compile Include="Activation\Context\IContextFactory.cs" />
     <Compile Include="Activation\Context\IContext.cs" />
+    <Compile Include="Behavior\OnePerRequestModule.cs" />
     <Compile Include="Binding\Syntax\IBindingHeuristicSyntax.cs" />
     <Compile Include="Binding\Syntax\IBindingComponentSyntax.cs" />
     <Compile Include="Binding\Syntax\Unions\IBindingHeuristicComponentOrParameterSyntax.cs" />

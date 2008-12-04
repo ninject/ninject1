@@ -611,6 +611,7 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+				<include name="System.Web.dll"/>
 				<include name="Castle.Core.dll"/>
 				<include name="Castle.DynamicProxy2.dll"/>
 				<include name="LinFu.DynamicProxy.dll"/>

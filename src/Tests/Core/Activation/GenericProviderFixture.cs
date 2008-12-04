@@ -103,6 +103,7 @@ namespace Ninject.Tests.Activation
 		[Test]
 		public void CanActivateGenericTypeViaGenericTypeDefinitionBindingWithOnePerRequestBehavior()
 		{
+			OnePerRequestModule.TestMode = true;
 			var module = new InlineModule(m => m.Bind(typeof(IGenericObject<>)).To(typeof(GenericImpl<>)).Using<OnePerRequestBehavior>());
 
 			using (var kernel = new StandardKernel(module))

@@ -504,10 +504,7 @@ namespace Ninject.Core
 		/// <returns>An instance of the requested type, or <see langword="null"/> if there is no default binding.</returns>
 		object IServiceProvider.GetService(Type service)
 		{
-			IContext context = CreateRootContext(service, null);
-			IBinding binding = Components.BindingSelector.SelectBinding(service, context);
-
-			return (binding == null) ? null : Get(service);
+			return Get(service);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/

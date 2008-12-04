@@ -81,14 +81,22 @@ namespace Ninject.Core.Behavior
 
 			lock (this)
 			{
+				if (!OnePerRequestModule.TestMode)
+				{
+					if (HttpContext.Current == null)
+						throw new InvalidOperationException("The OnePerRequestBehavior cannot be used outside of ASP.NET applications.");
+
+					if (!OnePerRequestModule.Initialized)
+						throw new InvalidOperationException("The OnePerRequestModule has not been loaded.");
+				}
+
 				if (ContextCache.Contains(context.Implementation))
 					return ContextCache[context.Implementation].Instance;
 
 				ContextCache.Add(context);
 				context.Binding.Components.Activator.Activate(context);
 
-				if (HttpContext.Current != null)
-					HttpContext.Current.ApplicationInstance.EndRequest += (sender, evt) => CleanUpInstances();
+				OnePerRequestModule.Register(this);
 
 				return context.Instance;
 			}
@@ -101,10 +109,11 @@ namespace Ninject.Core.Behavior
 		public override void Release(IContext context)
 		{
 		}
-		#endregion
 		/*----------------------------------------------------------------------------------------*/
-		#region Private Methods
-		private void CleanUpInstances()
+		/// <summary>
+		/// Cleans up any instances that were activated.
+		/// </summary>
+		public void CleanUpInstances()
 		{
 			DestroyAll(ContextCache);
 			ContextCache.Clear();
