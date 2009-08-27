@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="Ninject" default="all">
 
 	<property name="path.base" value="${project::get-base-directory()}"/>
@@ -67,16 +67,7 @@
 		<property name="global.build.defines" value="TRACE,STRONG"/>
 	</target>
 
-	<target name="get-subversion-revision-number">
-		<if test="${version.revision=='0'}">
-			<!-- Credit to Ayende Rahien -->
-			<exec program="svn" commandline='info "${project::get-base-directory()}" --xml' output="_svn.xml" failonerror="false"/>
-			<xmlpeek file="_svn.xml" xpath="/info/entry/@revision" property="version.revision" failonerror="false"/>
-			<delete file="_svn.xml" failonerror="false"/>
-		</if>
-	</target>
-
-	<target name="create-assembly-info" depends="get-subversion-revision-number">
+	<target name="create-assembly-info">
 		<asminfo output="${path.src}/${build.asminfo}" language="CSharp">
 			<imports>
 				<import namespace="System"/>
@@ -86,7 +77,7 @@
 			<attributes>
 				<attribute type="AssemblyProductAttribute" value="Ninject: Dependency Injector for .NET"/>
 				<attribute type="AssemblyCompanyAttribute" value="Enkari, Ltd. and contributors"/>
-				<attribute type="AssemblyCopyrightAttribute" value="Copyright ©2007-2008, Enkari, Ltd. and contributors"/>
+				<attribute type="AssemblyCopyrightAttribute" value="Copyright ©2007-2009, Enkari, Ltd. and contributors"/>
 				<attribute type="AssemblyVersionAttribute" value="${build.version}"/>
 				<attribute type="ComVisibleAttribute" value="false"/>
 				<attribute type="CLSCompliantAttribute" value="true"/>

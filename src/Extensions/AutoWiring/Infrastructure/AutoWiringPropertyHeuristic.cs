@@ -41,7 +41,7 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 		/// <param name="candidates">The candidates that are available.</param>
 		/// <param name="member">The member in question.</param>
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
-		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<PropertyInfo> candidates, PropertyInfo member)
+		public override bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<PropertyInfo> candidates, PropertyInfo member)
 		{
 			var registry = binding.Components.BindingRegistry;
 			if(member.CanWrite && (member.GetSetMethod() != null) && registry.HasBinding(member.PropertyType))
