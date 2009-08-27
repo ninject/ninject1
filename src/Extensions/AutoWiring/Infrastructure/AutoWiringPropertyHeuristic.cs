@@ -30,7 +30,7 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 	/// <summary>
 	/// Selects properties to inject by determining whether their types have bindings registered.
 	/// </summary>
-	public class AutoWiringPropertyHeuristic : IHeuristic<PropertyInfo>
+	public class AutoWiringPropertyHeuristic : StandardHeuristic<PropertyInfo>
 	{
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -44,7 +44,9 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<PropertyInfo> candidates, PropertyInfo member)
 		{
 			var registry = binding.Components.BindingRegistry;
-			return member.CanWrite && (member.GetSetMethod() != null) && registry.HasBinding(member.PropertyType);
+			if(member.CanWrite && (member.GetSetMethod() != null) && registry.HasBinding(member.PropertyType))
+				return true;
+			return base.ShouldInject(binding, plan, candidates, member);
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

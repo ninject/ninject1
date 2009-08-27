@@ -70,6 +70,8 @@
     <Compile Include="Extensions\Cache\CacheFixture.cs" />
     <Compile Include="Extensions\MessageBroker\MessageBrokerFixture.cs" />
     <Compile Include="Integration\DynamicProxy2\DynamicProxy2Fixture.cs" />
+    <Compile Include="Mocks\ConfigurationSettings.cs" />
+    <Compile Include="Mocks\IConfigurationSettings.cs" />
     <Compile Include="Mocks\RequestsMethodInjectionWithoutAttribute.cs" />
     <Compile Include="Mocks\RequestsFieldInjectionWithoutAttribute.cs" />
     <Compile Include="Mocks\RequestsConstructorInjectionWithoutAttribute.cs" />

@@ -42,7 +42,7 @@ namespace Ninject.Core.Selection
 		/// <param name="candidates">The candidates that are available.</param>
 		/// <param name="member">The member in question.</param>
 		/// <returns><see langword="True"/> if the member should be injected, otherwise <see langword="false"/>.</returns>
-		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<TMember> candidates, TMember member)
+		public virtual bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<TMember> candidates, TMember member)
 		{
 			return member.HasAttribute(binding.Kernel.Options.InjectAttributeType);
 		}

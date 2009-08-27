@@ -18,7 +18,9 @@
 #endregion
 #region Using Directives
 using System;
+using System.Collections.Generic;
 using Ninject.Core;
+using Ninject.Core.Behavior;
 using Ninject.Extensions.AutoWiring;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -75,5 +77,32 @@ namespace Ninject.Tests.Extensions.AutoWiring
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/
+        [Test]
+        public void PropertiesAreInjectedWhenWithPropertiesAreUsedAndInjectAttributeIsSpecified()
+        {
+            var testModule = new InlineModule(
+                m => m.Bind<IConfigurationSettings>()
+                         .To<ConfigurationSettings>()
+                         .Using<SingletonBehavior>()
+                         .WithPropertyValues(new Dictionary<string, string>
+                                             {
+                                                 {"RootUrl", "http://localhost:2161"},
+                                                 {"PrimaryEmail", "d@d.com"},
+                                                 {"SupportEmail", "d@d.com"},
+                                                 {"SiteTitle", "Test"},
+                                                 {"ActivationUrl", "http://localhost:2161/activate/{0}"}
+                                             }
+                         ) );
+            using(var kernel = new StandardKernel(testModule))
+            {
+                var configSettings = kernel.Get<IConfigurationSettings>();
+                Assert.AreEqual("http://localhost:2161", configSettings.RootUrl);
+                Assert.AreEqual("d@d.com", configSettings.PrimaryEmail);
+                Assert.AreEqual("d@d.com", configSettings.SupportEmail);
+                Assert.AreEqual("Test", configSettings.SiteTitle);
+                Assert.AreEqual("http://localhost:2161/activate/{0}", configSettings.ActivationUrl);
+            }
+        }
+	    /*----------------------------------------------------------------------------------------*/
 	}
 }
