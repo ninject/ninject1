@@ -65,8 +65,12 @@ namespace Ninject.Conditions.Builders
 		/// <param name="converter">The converter callback to execute.</param>
 		public EnumerableConditionBuilder<TRoot, TSubject, IEnumerable<TOutput>, TOutput> Convert<TOutput>(Func<TItem, TOutput> converter)
 		{
+#if !MONO
 			return new EnumerableConditionBuilder<TRoot, TSubject, IEnumerable<TOutput>, TOutput>(this, e => e.Convert(converter));
-		}
+#else
+            return new EnumerableConditionBuilder<TRoot, TSubject, IEnumerable<TOutput>, TOutput>(this, e => ExtensionsForIEnumerable.Convert(e,converter));
+#endif
+        }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Continues the conditional chain, examining only items in the series that match the specified predicate.
@@ -74,8 +78,12 @@ namespace Ninject.Conditions.Builders
 		/// <param name="predicate">The predicate to execute.</param>
 		public EnumerableConditionBuilder<TRoot, TSubject, IEnumerable<TItem>, TItem> Where(Predicate<TItem> predicate)
 		{
+#if !MONO
 			return new EnumerableConditionBuilder<TRoot, TSubject, IEnumerable<TItem>, TItem>(this, e => e.Where(predicate));
-		}
+#else
+            return new EnumerableConditionBuilder<TRoot, TSubject, IEnumerable<TItem>, TItem>(this, e => ExtensionsForIEnumerable.Where(e,predicate));
+#endif
+        }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Continues the conditional chain by counting the number of items in the collection that match
@@ -84,8 +92,12 @@ namespace Ninject.Conditions.Builders
 		/// <param name="predicate">The predicate to execute.</param>
 		public Int32ConditionBuilder<TRoot, TSubject> CountMatches(Predicate<TItem> predicate)
 		{
+#if !MONO
 			return new Int32ConditionBuilder<TRoot, TSubject>(this, e => e.Count(predicate));
-		}
+#else
+			return new Int32ConditionBuilder<TRoot, TSubject>(this, e => ExtensionsForIEnumerable.Count(e, predicate));
+#endif
+        }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a terminating condition that determines whether all items in the series match the predicate.
@@ -93,8 +105,12 @@ namespace Ninject.Conditions.Builders
 		/// <param name="predicate">The predicate to execute.</param>
 		public TerminatingCondition<TRoot, TSubject> All(Predicate<TItem> predicate)
 		{
+#if !MONO
 			return Terminate(e => e.All(predicate));
-		}
+#else
+			return Terminate(e => ExtensionsForIEnumerable.All(e, predicate));
+#endif
+        }
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
 		/// Creates a terminating condition that determines whether any items in the series match the predicate.
@@ -102,8 +118,12 @@ namespace Ninject.Conditions.Builders
 		/// <param name="predicate">The predicate to execute.</param>
 		public TerminatingCondition<TRoot, TSubject> Has(Predicate<TItem> predicate)
 		{
+#if !MONO
 			return Terminate(e => e.Has(predicate));
-		}
+#else
+			return Terminate(e => ExtensionsForIEnumerable.Has(e, predicate));
+#endif
+        }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

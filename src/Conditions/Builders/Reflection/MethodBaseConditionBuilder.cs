@@ -71,7 +71,19 @@ namespace Ninject.Conditions.Builders
 		/// </summary>
 		public TypeListConditionBuilder<TRoot, TMethod, IList<Type>> ParameterTypes
 		{
-			get { return new TypeListConditionBuilder<TRoot, TMethod, IList<Type>>(this, m => m.GetParameters().Convert(p => p.ParameterType).ToList()); }
+			get
+			{
+#if !MONO
+				return new TypeListConditionBuilder<TRoot, TMethod, IList<Type>>(this, m => m.GetParameters().Convert(p => p.ParameterType).ToList());
+#else
+				return new TypeListConditionBuilder<TRoot, TMethod, IList<Type>>(this,
+																					m =>
+																					ExtensionsForIEnumerable.ToList(
+																						ExtensionsForIEnumerable.Convert(
+																							m.GetParameters(),
+																							p => p.ParameterType ) ) );
+#endif
+            }
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>

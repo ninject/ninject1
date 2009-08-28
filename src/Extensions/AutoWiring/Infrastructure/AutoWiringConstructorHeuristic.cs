@@ -47,14 +47,25 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 		/// </returns>
 		public bool ShouldInject(IBinding binding, IActivationPlan plan, IEnumerable<ConstructorInfo> candidates, ConstructorInfo member)
 		{
+#if !MONO
 			var list = candidates.ToList();
+#else
+			var list = ExtensionsForIEnumerable.ToList(candidates);
+#endif
 
 			if (list.Count == 1)
 				return true;
 
 			var registry = binding.Components.BindingRegistry;
+#if !MONO
 			return member == candidates.Best(c => c.GetParameterTypes().Count(registry.HasBinding));
-		}
+#else
+			return member == ExtensionsForIEnumerable
+								.Best(candidates,
+									c =>
+									ExtensionsForIEnumerable.Count(ExtensionsForMethodBase.GetParameterTypes(c), registry.HasBinding));
+#endif
+        }
 		/*----------------------------------------------------------------------------------------*/
 	}
 }

@@ -46,7 +46,11 @@ namespace Ninject.Framework.Mvc
 		/// <param name="assemblyNames">The names of assemblies which should be scanned for controllers.</param>
 		public AutoControllerModule(IEnumerable<string> assemblyNames)
 		{
+#if !MONO
 			_assemblies = assemblyNames.Convert(s => Assembly.Load(s));
+#else
+			_assemblies = ExtensionsForIEnumerable.Convert(assemblyNames, s => Assembly.Load(s));
+#endif
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -55,7 +59,11 @@ namespace Ninject.Framework.Mvc
 		/// <param name="assemblyNames">The names of assemblies which should be scanned for controllers.</param>
 		public AutoControllerModule(params string[] assemblyNames)
 		{
+#if !MONO
 			_assemblies = assemblyNames.Convert(s => Assembly.Load(s));
+#else
+			_assemblies = ExtensionsForIEnumerable.Convert(assemblyNames, s => Assembly.Load(s));
+#endif
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
@@ -65,8 +73,12 @@ namespace Ninject.Framework.Mvc
 		/// </summary>
 		public override void Load()
 		{
+#if !MONO
 			_assemblies.Each(RegisterControllers);
-		}
+#else
+			ExtensionsForIEnumerable.Each(_assemblies, RegisterControllers);
+#endif
+        }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 		#region Private Methods

@@ -47,7 +47,14 @@ namespace Ninject.Extensions.AutoWiring.Infrastructure
 			var registry = binding.Components.BindingRegistry;
 
 			ParameterInfo[] parameters = member.GetParameters();
+#if !MONO
 			return parameters.Length > 0 && parameters.Convert(p => p.ParameterType).All(registry.HasBinding);
+#else
+			return parameters.Length > 0 &&
+					ExtensionsForIEnumerable.All(
+						ExtensionsForIEnumerable.Convert(parameters, p => p.ParameterType),
+						registry.HasBinding);
+#endif
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

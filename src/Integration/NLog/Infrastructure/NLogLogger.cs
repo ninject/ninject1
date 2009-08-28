@@ -88,7 +88,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// <param name="exception">The exception to log.</param>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Debug(Exception exception, string format, object[] args)
+#else
+		public override void Debug(Exception exception, string format, params object[] args)
+#endif
 		{
 			_nlogLogger.DebugException(string.Format(format, args), exception);
 		}
@@ -98,7 +102,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// </summary>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Debug(string format, object[] args)
+#else
+		public override void Debug(string format, params object[] args)
+#endif
 		{
 			_nlogLogger.Debug(format, args);
 		}
@@ -109,7 +117,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// <param name="exception">The exception to log.</param>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Error(Exception exception, string format, object[] args)
+#else
+		public override void Error(Exception exception, string format, params object[] args)
+#endif
 		{
 			_nlogLogger.ErrorException(string.Format(format, args), exception);
 		}
@@ -119,7 +131,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// </summary>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Error(string format, object[] args)
+#else
+		public override void Error(string format, params object[] args)
+#endif
 		{
 			_nlogLogger.Error(format, args);
 		}
@@ -129,7 +145,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// </summary>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Fatal(string format, object[] args)
+#else
+		public override void Fatal(string format, params object[] args)
+#endif
 		{
 			_nlogLogger.Fatal(format, args);
 		}
@@ -140,7 +160,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// <param name="exception">The exception to log.</param>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Fatal(Exception exception, string format, object[] args)
+#else
+		public override void Fatal(Exception exception, string format, params object[] args)
+#endif
 		{
 			_nlogLogger.FatalException(string.Format(format, args), exception);
 		}
@@ -150,7 +174,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// </summary>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Info(string format, object[] args)
+#else
+		public override void Info(string format, params object[] args)
+#endif
 		{
 			_nlogLogger.Info(format, args);
 		}
@@ -161,8 +189,12 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// <param name="exception">The exception to log.</param>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Info(Exception exception, string format, object[] args)
-		{
+#else
+        public override void Info(Exception exception, string format, params object[] args)
+#endif
+        {
 			_nlogLogger.InfoException(string.Format(format, args), exception);
 		}
 
@@ -171,7 +203,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// </summary>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Warn(string format, object[] args)
+#else
+		public override void Warn(string format, params object[] args)
+#endif
 		{
 			_nlogLogger.Warn(format, args);
 		}
@@ -182,7 +218,11 @@ namespace Ninject.Integration.NLog.Infrastructure
 		/// <param name="exception">The exception to log.</param>
 		/// <param name="format">The message or format template.</param>
 		/// <param name="args">Any arguments required for the format template.</param>
+#if !MONO
 		public override void Warn(Exception exception, string format, object[] args)
+#else
+		public override void Warn(Exception exception, string format, params object[] args)
+#endif
 		{
 			_nlogLogger.WarnException(string.Format(format, args), exception);
 		}

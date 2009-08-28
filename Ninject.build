@@ -35,9 +35,10 @@
 		<call target="platform-net35"/>
 		<call target="platform-net20"/>
 		<call target="platform-netcf20"/>
+		<call target="platform-netcf35"/>
 		<call target="platform-silverlight20"/>
-		<!-- Mono is currently unsupported because of compiler bugs :( -->
-		<!--<call target="platform-mono20"/>-->
+		<call target="platform-silverlight30"/>
+		<call target="platform-mono20"/>
 	</target>
 
 	<target name="clean">
@@ -100,11 +101,18 @@
 		<property name="current.path.bin" value="${path.bin}/net-2.0/${build.config}"/>
 	</target>
 
-	<target name="config-platform-netcf20">
+		<target name="config-platform-netcf20">
 		<property name="nant.settings.currentframework" value="netcf-2.0"/>
 		<property name="build.platform" value="netcf-2.0"/>
 		<property name="build.defines" value="${global.build.defines},NETCF,NETCF_20,NO_LCG,NO_WEB,NO_REMOTING,NO_STACKTRACE,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_TYPE_CONVERTERS"/>
 		<property name="current.path.bin" value="${path.bin}/netcf-2.0/${build.config}"/>
+	</target>
+
+	<target name="config-platform-netcf35">
+		<property name="nant.settings.currentframework" value="netcf-3.5"/>
+		<property name="build.platform" value="netcf-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NETCF,NETCF_20,NETCF_35,NO_LCG,NO_WEB,NO_REMOTING,NO_STACKTRACE,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_TYPE_CONVERTERS"/>
+		<property name="current.path.bin" value="${path.bin}/netcf-3.5/${build.config}"/>
 	</target>
 
 	<target name="config-platform-mono20">
@@ -119,6 +127,13 @@
 		<property name="build.platform" value="silverlight-2.0"/>
 		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_SKIP_VISIBILITY,NO_DEBUG_SYMBOLS,NO_TYPE_CONVERTERS"/>
 		<property name="current.path.bin" value="${path.bin}/silverlight-2.0/${build.config}"/>
+	</target>
+
+	<target name="config-platform-silverlight30">
+		<property name="nant.settings.currentframework" value="silverlight-3.0"/>
+		<property name="build.platform" value="silverlight-3.0"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,SILVERLIGHT_30,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_SKIP_VISIBILITY,NO_DEBUG_SYMBOLS,NO_TYPE_CONVERTERS"/>
+		<property name="current.path.bin" value="${path.bin}/silverlight-3.0/${build.config}"/>
 	</target>
 
 	<target name="ensure-platform-selected">
@@ -174,6 +189,19 @@
 		</if>
 	</target>
 
+	<target name="platform-netcf35" depends="config">
+		<if test="${framework::exists('netcf-3.5')}">
+			<echo message="Building Ninject ${build.version} for .NET Compact Framework v3.5."/>
+			<call target="config-platform-netcf35"/>
+			<call target="core"/>
+			<call target="conditions"/>
+			<call target="package-platform"/>
+		</if>
+		<if test="${not(framework::exists('netcf-3.5'))}">
+			<echo message=".NET Compact Framework v3.5 is not available. Skipping platform."/>
+		</if>
+	</target>
+
 	<target name="platform-mono20" depends="config">
 		<if test="${framework::exists('mono-2.0')}">
 			<echo message="Building Ninject ${build.version} for Mono v2.0."/>
@@ -204,6 +232,20 @@
 		</if>
 	</target>
 
+	<target name="platform-silverlight30" depends="config">
+		<if test="${framework::exists('silverlight-3.0')}">
+			<echo message="Building Ninject ${build.version} for Silverlight v3.0."/>
+			<call target="config-platform-silverlight30"/>
+			<call target="core"/>
+			<call target="conditions"/>
+			<call target="extensions"/>
+			<call target="package-platform"/>
+		</if>
+		<if test="${not(framework::exists('silverlight-3.0'))}">
+			<echo message="Silverlight v3.0 is not available. Skipping platform."/>
+		</if>
+	</target>
+
 	<target name="extensions">
 		<call target="extension-autowiring"/>
 		<call target="extension-cache"/>
@@ -211,9 +253,9 @@
 	</target>
 
 	<target name="frameworks">
-    <call target="framework-web"/>
-    <call target="framework-mvc"/>
-    <call target="framework-winforms"/>
+		<call target="framework-web"/>
+		<call target="framework-mvc"/>
+		<call target="framework-winforms"/>
 	</target>
 
 	<target name="integrations">
@@ -221,15 +263,15 @@
 		<call target="integration-dynamicproxy2"/>
 		<call target="integration-linfu"/>
 		<call target="integration-log4net"/>
-		<call target="integration-monorail"/>
+		<call target="integration-monorail" unless="${build.platform == 'mono-2.0'}"/>
 		<call target="integration-nlog"/>
 	</target>
 
 	<target name="core" depends="config, ensure-platform-selected">
 		<mkdir dir="${current.path.bin}"/>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Core.dll"
-         doc="${current.path.bin}/Ninject.Core.xml">
+			output="${current.path.bin}/Ninject.Core.dll"
+			doc="${current.path.bin}/Ninject.Core.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Core/**/*.cs"/>
@@ -238,8 +280,9 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Web.dll"/>
-        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
-				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />        
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-3.0'}" />
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -250,8 +293,8 @@
 	<target name="conditions" depends="core">
 		<mkdir dir="${current.path.bin}"/>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Conditions.dll"
-         doc="${current.path.bin}/Ninject.Conditions.xml">
+			output="${current.path.bin}/Ninject.Conditions.dll"
+			doc="${current.path.bin}/Ninject.Conditions.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Conditions/**/*.cs"/>
@@ -260,7 +303,8 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
-        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-3.0'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -272,8 +316,8 @@
 	<target name="extension-autowiring" depends="core">
 		<mkdir dir="${current.path.bin}"/>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Extensions.AutoWiring.dll"
-         doc="${current.path.bin}/Ninject.Extensions.AutoWiring.xml">
+			output="${current.path.bin}/Ninject.Extensions.AutoWiring.dll"
+			doc="${current.path.bin}/Ninject.Extensions.AutoWiring.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Extensions/AutoWiring/**/*.cs"/>
@@ -282,7 +326,8 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
-        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-3.0'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -294,8 +339,8 @@
 	<target name="extension-cache" depends="core">
 		<mkdir dir="${current.path.bin}"/>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Extensions.Cache.dll"
-         doc="${current.path.bin}/Ninject.Extensions.Cache.xml">
+			output="${current.path.bin}/Ninject.Extensions.Cache.dll"
+			doc="${current.path.bin}/Ninject.Extensions.Cache.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Extensions/Cache/**/*.cs"/>
@@ -304,7 +349,8 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
-        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-3.0'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -316,8 +362,8 @@
 	<target name="extension-messagebroker" depends="core">
 		<mkdir dir="${current.path.bin}"/>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Extensions.MessageBroker.dll"
-         doc="${current.path.bin}/Ninject.Extensions.MessageBroker.xml">
+			output="${current.path.bin}/Ninject.Extensions.MessageBroker.dll"
+			doc="${current.path.bin}/Ninject.Extensions.MessageBroker.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Extensions/MessageBroker/**/*.cs"/>
@@ -326,7 +372,8 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
-        <include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-2.0'}" />
+				<include name="System.Core.dll" if="${build.platform == 'silverlight-3.0'}" />
 				<include name="Ninject.Core.dll"/>
 			</references>
 			<nowarn>
@@ -335,64 +382,64 @@
 		</csc>
 	</target>
 
-  <target name="framework-web" depends="core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Framework.Web.dll"
-         doc="${current.path.bin}/Ninject.Framework.Web.xml">
-      <sources basedir="${path.src}">
-        <include name="${build.asminfo}"/>
-        <include name="Framework/Web/**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Web.dll"/>
-        <include name="System.Web.Services.dll"/>
-        <include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
-
-  <target name="framework-mvc" depends="core">
-    <mkdir dir="${current.path.bin}"/>
-    <copy todir="${current.path.bin}">
-      <fileset basedir="${path.lib}">
-        <include name="System.Web.Mvc.dll"/>
-        <include name="System.Web.Routing.dll"/>
-      </fileset>
-    </copy>
-    <csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Framework.Mvc.dll"
-         doc="${current.path.bin}/Ninject.Framework.Mvc.xml">
-      <sources basedir="${path.src}">
-        <include name="${build.asminfo}"/>
-        <include name="Framework/Mvc/**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Web.dll"/>
-        <include name="System.Web.Mvc.dll"/>
-        <include name="System.Web.Routing.dll"/>
-        <include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
-        <include name="Ninject.Core.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
-
-  <target name="framework-winforms" depends="core">
+	<target name="framework-web" depends="core">
 		<mkdir dir="${current.path.bin}"/>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Framework.WinForms.dll"
-         doc="${current.path.bin}/Ninject.Framework.WinForms.xml">
+			output="${current.path.bin}/Ninject.Framework.Web.dll"
+			doc="${current.path.bin}/Ninject.Framework.Web.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Framework/Web/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Web.dll"/>
+				<include name="System.Web.Services.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="framework-mvc" depends="core">
+		<mkdir dir="${current.path.bin}"/>
+		<copy todir="${current.path.bin}">
+			<fileset basedir="${path.lib}">
+				<include name="System.Web.Mvc.dll"/>
+				<include name="System.Web.Routing.dll"/>
+			</fileset>
+		</copy>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+			output="${current.path.bin}/Ninject.Framework.Mvc.dll"
+			doc="${current.path.bin}/Ninject.Framework.Mvc.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Framework/Mvc/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Web.dll"/>
+				<include name="System.Web.Mvc.dll"/>
+				<include name="System.Web.Routing.dll"/>
+				<include name="System.Core.dll" if="${build.platform == 'net-3.5'}" />
+				<include name="Ninject.Core.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="framework-winforms" depends="core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+			output="${current.path.bin}/Ninject.Framework.WinForms.dll"
+			doc="${current.path.bin}/Ninject.Framework.WinForms.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Framework/WinForms/**/*.cs"/>
@@ -418,8 +465,8 @@
 			</fileset>
 		</copy>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Integration.AjaxPro.dll"
-         doc="${current.path.bin}/Ninject.Integration.AjaxPro.xml">
+			output="${current.path.bin}/Ninject.Integration.AjaxPro.dll"
+			doc="${current.path.bin}/Ninject.Integration.AjaxPro.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Integration/AjaxPro/**/*.cs"/>
@@ -448,8 +495,8 @@
 			</fileset>
 		</copy>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Integration.DynamicProxy2.dll"
-         doc="${current.path.bin}/Ninject.Integration.DynamicProxy2.xml">
+			output="${current.path.bin}/Ninject.Integration.DynamicProxy2.dll"
+			doc="${current.path.bin}/Ninject.Integration.DynamicProxy2.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Integration/DynamicProxy2/**/*.cs"/>
@@ -476,8 +523,8 @@
 			</fileset>
 		</copy>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Integration.LinFu.dll"
-         doc="${current.path.bin}/Ninject.Integration.LinFu.xml">
+			output="${current.path.bin}/Ninject.Integration.LinFu.dll"
+			doc="${current.path.bin}/Ninject.Integration.LinFu.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Integration/LinFu/**/*.cs"/>
@@ -503,8 +550,8 @@
 			</fileset>
 		</copy>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Integration.Log4net.dll"
-         doc="${current.path.bin}/Ninject.Integration.Log4net.xml">
+			output="${current.path.bin}/Ninject.Integration.Log4net.dll"
+			doc="${current.path.bin}/Ninject.Integration.Log4net.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Integration/Log4net/**/*.cs"/>
@@ -531,8 +578,8 @@
 			</fileset>
 		</copy>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Integration.MonoRail.dll"
-         doc="${current.path.bin}/Ninject.Integration.MonoRail.xml">
+			output="${current.path.bin}/Ninject.Integration.MonoRail.dll"
+			doc="${current.path.bin}/Ninject.Integration.MonoRail.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Integration/MonoRail/**/*.cs"/>
@@ -560,8 +607,8 @@
 			</fileset>
 		</copy>
 		<csc keyfile="${path.src}/Ninject.snk" noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Ninject.Integration.NLog.dll"
-         doc="${current.path.bin}/Ninject.Integration.NLog.xml">
+			output="${current.path.bin}/Ninject.Integration.NLog.dll"
+			doc="${current.path.bin}/Ninject.Integration.NLog.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Integration/NLog/**/*.cs"/>

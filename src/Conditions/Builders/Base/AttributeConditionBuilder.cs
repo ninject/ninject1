@@ -98,10 +98,14 @@ namespace Ninject.Conditions.Builders
 		/// <param name="attribute">The attribute to compare against.</param>
 		/// <returns>A condition that terminates the chain.</returns>
 		public TerminatingCondition<TRoot, TSubject> HasMatchingAttribute<T>(T attribute)
-			where T : Attribute
+            where T : Attribute
 		{
+#if !MONO
 			return Terminate(s => s.HasMatchingAttribute(attribute));
-		}
+#else
+			return Terminate(s => ExtensionsForICustomAttributeProvider.HasMatchingAttribute(s, attribute));
+#endif
+        }
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
 	}

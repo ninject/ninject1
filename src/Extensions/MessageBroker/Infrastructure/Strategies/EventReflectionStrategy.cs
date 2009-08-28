@@ -50,7 +50,11 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 
 			foreach (EventInfo evt in events)
 			{
+#if !MONO
 				PublishAttribute[] attributes = evt.GetAllAttributes<PublishAttribute>();
+#else
+				PublishAttribute[] attributes = ExtensionsForICustomAttributeProvider.GetAllAttributes<PublishAttribute>(evt);
+#endif
 
 				foreach (PublishAttribute attribute in attributes)
 					plan.Directives.Add(new PublicationDirective(attribute.Channel, evt));
@@ -61,9 +65,12 @@ namespace Ninject.Extensions.MessageBroker.Infrastructure
 
 			foreach (MethodInfo method in methods)
 			{
+#if !MONO
 				SubscribeAttribute[] attributes = method.GetAllAttributes<SubscribeAttribute>();
-
-				foreach (SubscribeAttribute attribute in attributes)
+#else
+				SubscribeAttribute[] attributes = ExtensionsForICustomAttributeProvider.GetAllAttributes<SubscribeAttribute>(method);
+#endif
+                foreach (SubscribeAttribute attribute in attributes)
 				{
 					IMethodInjector injector = injectorFactory.GetInjector(method);
 					plan.Directives.Add(new SubscriptionDirective(attribute.Channel, injector, attribute.Thread));
