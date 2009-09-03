@@ -51,7 +51,9 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
@@ -72,6 +74,7 @@
     <Compile Include="Integration\DynamicProxy2\DynamicProxy2Fixture.cs" />
     <Compile Include="Mocks\ConfigurationSettings.cs" />
     <Compile Include="Mocks\IConfigurationSettings.cs" />
+    <Compile Include="Mocks\PocoForConstructorInjection.cs" />
     <Compile Include="Mocks\RequestsMethodInjectionWithoutAttribute.cs" />
     <Compile Include="Mocks\RequestsFieldInjectionWithoutAttribute.cs" />
     <Compile Include="Mocks\RequestsConstructorInjectionWithoutAttribute.cs" />

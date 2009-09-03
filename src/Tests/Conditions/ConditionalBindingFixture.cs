@@ -20,6 +20,7 @@
 using System;
 using Ninject.Conditions;
 using Ninject.Core;
+using Ninject.Core.Parameters;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 #endregion
@@ -138,6 +139,27 @@ namespace Ninject.Tests.Conditions
 				var mock = kernel.Get<IMock>();
 				Assert.That(mock, Is.Not.Null);
 				Assert.That(mock, Is.InstanceOfType(typeof(ImplA)));
+			}
+		}
+		/*----------------------------------------------------------------------------------------*/
+		[Test]
+		public void ContextVariablesCanBeUsedRecursivelyToAlterBindings()
+		{
+			var module = new InlineModule(
+				m => m.Bind<PocoForConstructorInjection>().ToSelf(),
+				m => m.Bind<IMock>().To<ImplA>().Only(When.Context.Variable("name").EqualTo("One")),
+				m => m.Bind<IMock>().To<ImplB>().Only(When.Context.Variable("name").IsNotDefined)
+			);
+
+			using (var kernel = new StandardKernel(module))
+			{
+				var mock = kernel.Get<PocoForConstructorInjection>();
+				Assert.That(mock, Is.Not.Null);
+				Assert.That(mock.Child, Is.InstanceOfType(typeof(ImplB)));
+
+				mock = kernel.Get<PocoForConstructorInjection>(With.Parameters.Variable("name", "One"));
+				Assert.That(mock, Is.Not.Null);
+				Assert.That(mock.Child, Is.InstanceOfType(typeof(ImplA)));
 			}
 		}
 		/*----------------------------------------------------------------------------------------*/

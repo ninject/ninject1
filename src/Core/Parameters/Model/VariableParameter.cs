@@ -37,6 +37,7 @@ namespace Ninject.Core.Parameters
 		public VariableParameter(string name, object value)
 			: base(name, value)
 		{
+			ShouldInherit = true;
 		}
 		/*----------------------------------------------------------------------------------------*/
 		/// <summary>
@@ -47,6 +48,7 @@ namespace Ninject.Core.Parameters
 		public VariableParameter(string name, Func<IContext, object> callback)
 			: base(name, callback)
 		{
+			ShouldInherit = true;
 		}
 		/*----------------------------------------------------------------------------------------*/
 	}

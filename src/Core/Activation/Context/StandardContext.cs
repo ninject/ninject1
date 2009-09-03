@@ -243,6 +243,8 @@ namespace Ninject.Core.Activation
 #endif
 
 			Parameters = new ParameterCollection();
+			if(ParentContext != null)
+				Parameters.InheritFrom(ParentContext.Parameters);
 		}
 		#endregion
 		/*----------------------------------------------------------------------------------------*/
