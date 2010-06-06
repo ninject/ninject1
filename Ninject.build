@@ -690,6 +690,7 @@
 	</target>
 
 	<target name="package-platform" if="${package}">
+		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
 		<zip zipfile="${path.dist}\Ninject-${build.version}-${build.config}-${build.platform}.zip" ziplevel="9">
 			<fileset basedir="${current.path.bin}">
 				<include name="*.dll"/>
@@ -700,13 +701,17 @@
 	</target>
 
 	<target name="package-source" if="${package}">
+		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
 		<zip zipfile="${path.dist}\Ninject-${build.version}-source.zip" ziplevel="9">
-			<fileset basedir="${path.src}">
+			<fileset basedir="${path.base}">
+				<include name="lib/*.*"/>
 				<include name="**/*.cs"/>
 				<include name="**/*.csproj"/>
 				<include name="**/*.sln"/>
 				<include name="**/*.txt"/>
 				<include name="**/*.build"/>
+				<include name="**/*.include"/>
+				<include name="**/*.snk"/>
 			</fileset>
 		</zip>
 	</target>
